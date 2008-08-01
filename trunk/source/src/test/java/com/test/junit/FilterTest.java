@@ -14,8 +14,7 @@ import com.trg.search.Filter;
 import com.trg.search.Search;
 import com.trg.test.TestCaseSpringAutoWire;
 
-public class SomeTest extends TestCaseSpringAutoWire {
-
+public class FilterTest extends TestCaseSpringAutoWire {
 	private PersonDAO personDAO;
 
 	private SessionFactory sessionFactory;
@@ -39,73 +38,7 @@ public class SomeTest extends TestCaseSpringAutoWire {
 		this.sessionFactory = sessionFactory;
 	}
 
-	public void testCreate() {
-		personDAO.create(grandpaA);
-
-		List<Person> list = personDAO.fetchAll();
-		assertEquals(1, list.size());
-		assertEquals(grandpaA, list.get(0));
-
-		assertEquals(grandpaA, personDAO.fetch(grandpaA.getId()));
-
-		personDAO.create(papaA);
-		personDAO.create(mamaA);
-		personDAO.create(joeA);
-
-		grandpaA.setFirstName("Dean");
-
-		assertEquals("Dean", personDAO.fetch(joeA.getId()).getFather()
-				.getFather().getFirstName());
-		
-		grandpaA.setFirstName("Grandpa");
-	}
-
-	public void testUpdate() {
-		initDB();
-		Person fred = copy(papaA);
-		fred.setFirstName("Fred");
-		personDAO.update(fred);
-
-		assertEquals("Fred", personDAO.fetch(joeA.getId()).getFather()
-				.getFirstName());
-	}
-
-	public void testDelete() {
-		initDB();
-
-		List<Person> list = personDAO.fetchAll();
-		int sizeBefore = list.size();
-
-		personDAO.deleteById(joeA.getId());
-		personDAO.deleteEntity(sallyA);
-
-		list = personDAO.fetchAll();
-		assertEquals(sizeBefore - 2, list.size());
-		for (Person person : list) {
-			if (person.getId().equals(joeA.getId())
-					|| person.getId().equals(sallyA.getId()))
-				fail("Neither Joe nor Sally should now be in the DB");
-		}
-
-		personDAO.create(joeA);
-		personDAO.create(sallyA);
-
-		list = personDAO.fetchAll();
-		assertEquals(sizeBefore, list.size());
-		boolean joeFound = false, sallyFound = false;
-		for (Person person : list) {
-			if (person.getFirstName().equals("Joe")
-					&& person.getLastName().equals("Alpha"))
-				joeFound = true;
-			if (person.getFirstName().equals("Sally")
-					&& person.getLastName().equals("Alpha"))
-				sallyFound = true;
-		}
-		assertTrue("Joe and Sally should now be back in the DB", joeFound
-				&& sallyFound);
-	}
-
-	public void testSearch() {
+	public void testGeneral() {
 		initDB();
 
 		Search s = new Search(Person.class);
@@ -123,103 +56,133 @@ public class SomeTest extends TestCaseSpringAutoWire {
 		assertListEqual(new Person[] { joeA }, personDAO.search(s));
 	}
 
-	public void testSearchOperators() {
+	public void testOperators() {
 		initDB();
-		
+
 		Search s = new Search(Person.class);
 		s.addFilterEqual("lastName", "Beta");
-		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB },
+				personDAO.search(s));
+
 		s.clear();
 		s.addFilterEqual("age", 10);
 		assertListEqual(new Person[] { joeA, joeB }, personDAO.search(s));
-		
+
 		s.clear();
 		s.addFilterNotEqual("lastName", "Alpha");
-		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB },
+				personDAO.search(s));
+
 		s.clear();
 		s.addFilterNotEqual("age", 10);
-		assertListEqual(new Person[] { sallyA, margretB, mamaA, papaA, mamaB, papaB, grandmaA, grandpaA }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { sallyA, margretB, mamaA, papaA, mamaB,
+				papaB, grandmaA, grandpaA }, personDAO.search(s));
+
 		s.clear();
 		s.addFilterLike("firstName", "%pa");
-		assertListEqual(new Person[] { papaA, papaB, grandpaA }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { papaA, papaB, grandpaA }, personDAO
+				.search(s));
+
 		s.clear();
 		s.addFilterLessThan("lastName", "Beta");
-		assertListEqual(new Person[] { joeA, sallyA, papaA, mamaA, grandpaA, grandmaA }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { joeA, sallyA, papaA, mamaA, grandpaA,
+				grandmaA }, personDAO.search(s));
+
 		s.clear();
 		s.addFilterLessThan("lastName", "Alpha");
-		assertListEqual(new Person[] {  }, personDAO.search(s));
-		
+		assertListEqual(new Person[] {}, personDAO.search(s));
+
 		s.clear();
 		s.addFilterLessThan("dob", mamaB.getDob());
-		assertListEqual(new Person[] { papaA, papaB, mamaA, grandpaA, grandmaA }, personDAO.search(s));
-		
+		assertListEqual(
+				new Person[] { papaA, papaB, mamaA, grandpaA, grandmaA },
+				personDAO.search(s));
+
 		s.clear();
 		s.addFilterGreaterThan("lastName", "Beta");
-		assertListEqual(new Person[] {  }, personDAO.search(s));
-		
+		assertListEqual(new Person[] {}, personDAO.search(s));
+
 		s.clear();
 		s.addFilterGreaterThan("lastName", "Alpha");
-		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB },
+				personDAO.search(s));
+
 		s.clear();
 		s.addFilterGreaterThan("dob", mamaB.getDob());
-		assertListEqual(new Person[] { joeA, joeB, sallyA, margretB }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { joeA, joeB, sallyA, margretB },
+				personDAO.search(s));
+
 		s.clear();
 		s.addFilterLessOrEqual("age", 39);
-		assertListEqual(new Person[] { joeA, joeB, sallyA, margretB, mamaB, papaA, papaB }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { joeA, joeB, sallyA, margretB, mamaB,
+				papaA, papaB }, personDAO.search(s));
+
 		s.clear();
 		s.addFilterGreaterOrEqual("age", 39);
-		assertListEqual(new Person[] { papaA, papaB, mamaA, grandmaA, grandpaA }, personDAO.search(s));
-		
+		assertListEqual(
+				new Person[] { papaA, papaB, mamaA, grandmaA, grandpaA },
+				personDAO.search(s));
+
 	}
 
-	public void testSearchNesting() {
+	public void testNesting() {
 		initDB();
-		
+
 		Search s = new Search(Person.class);
-		
+
 		s.addFilterEqual("father.id", papaA.getId());
 		assertListEqual(new Person[] { joeA, sallyA }, personDAO.search(s));
-		
+
 		s.clear();
 		s.addFilterEqual("father.firstName", "Papa");
-		assertListEqual(new Person[] { joeA, sallyA, joeB, margretB }, personDAO.search(s));
-		
+		assertListEqual(new Person[] { joeA, sallyA, joeB, margretB },
+				personDAO.search(s));
+
 		s.clear();
 		s.addFilterEqual("father.firstName", "Grandpa");
 		assertListEqual(new Person[] { papaA, mamaB }, personDAO.search(s));
-		
+
 		s.clear();
 		s.addFilterEqual("father.father.firstName", "Grandpa");
 		assertListEqual(new Person[] { joeA, sallyA }, personDAO.search(s));
-		
+
 		s.addFilterEqual("mother.father.firstName", "Grandpa");
 		s.setDisjunction(true);
-		assertListEqual(new Person[] { joeA, sallyA, joeB, margretB }, personDAO.search(s));
+		assertListEqual(new Person[] { joeA, sallyA, joeB, margretB },
+				personDAO.search(s));
 	}
 
-	public void testSearchLogicOperators() {
+	public void testLogicOperators() {
 		initDB();
 		Search s = new Search(Person.class);
-		
-		s.addFilterAnd(Filter.equal("lastName", "Alpha"), Filter.greaterOrEqual("age", 10), Filter.lessThan("age", 20));
+
+		s.addFilterAnd(Filter.equal("lastName", "Alpha"), Filter
+				.greaterOrEqual("age", 10), Filter.lessThan("age", 20));
 		assertListEqual(new Person[] { joeA }, personDAO.search(s));
-		
+
 		s.clear();
-		s.addFilterAnd(Filter.equal("lastName", "Alpha"), Filter.and(Filter.greaterOrEqual("age", 10), Filter.lessThan("age", 20)));
+		s.addFilterAnd(Filter.equal("lastName", "Alpha"), Filter.and(Filter
+				.greaterOrEqual("age", 10), Filter.lessThan("age", 20)));
 		assertListEqual(new Person[] { joeA }, personDAO.search(s));
-		
+
 		s.clear();
-		s.addFilterAnd(Filter.equal("lastName", "Alpha"), Filter.or(Filter.lessOrEqual("age", 10), Filter.greaterThan("age", 60)));
-		assertListEqual(new Person[] { joeA, sallyA, grandmaA, grandpaA }, personDAO.search(s));
-		
+		s.addFilterAnd(Filter.equal("lastName", "Alpha"), Filter.or(Filter
+				.lessOrEqual("age", 10), Filter.greaterThan("age", 60)));
+		assertListEqual(new Person[] { joeA, sallyA, grandmaA, grandpaA },
+				personDAO.search(s));
+
+		s.clear();
+		s.addFilterNot(Filter.and(Filter.equal("lastName", "Alpha"), Filter.or(
+				Filter.lessOrEqual("age", 10), Filter.greaterThan("age", 60))));
+		assertListEqual(new Person[] { joeB, margretB, papaA, papaB, mamaA,
+				mamaB }, personDAO.search(s));
+
+		s.clear();
+		s.addFilterOr(Filter.not(Filter.or(Filter.equal("firstName", "Joe"),
+				Filter.equal("lastName", "Alpha"))), Filter.and(Filter.equal(
+				"firstName", "Papa"), Filter.equal("lastName", "Alpha")));
+		assertListEqual(new Person[] { margretB, papaB, mamaB, papaA },
+				personDAO.search(s));
 	}
 
 	private void initDB() {
