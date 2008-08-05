@@ -6,7 +6,7 @@ import java.util.List;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
-public interface GenericDAO<T> {
+public interface GenericDAO<T, ID extends Serializable> {
 
 	/**
 	 * Add the specified object as a new entry in the database.
@@ -22,7 +22,7 @@ public interface GenericDAO<T> {
 	/**
 	 * Delete the object of this type with the specified id from the database.
 	 */
-	public void deleteById(Serializable id);
+	public void deleteById(ID id);
 
 	/**
 	 * Delete the specified object from the database.
@@ -32,7 +32,7 @@ public interface GenericDAO<T> {
 	/**
 	 * Get the object of this type with the specified id from the database.
 	 */
-	public T fetch(Serializable id);
+	public T fetch(ID id);
 
 	/**
 	 * Get a list of all the objects of this type.
