@@ -42,23 +42,32 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		if (object == null)
 			throw new NullPointerException("Cannot get ID from null object.");
 		try {
-			return (Serializable) object.getClass().getMethod("getId").invoke(object);
+			return (Serializable) object.getClass().getMethod("getId").invoke(
+					object);
 		} catch (IllegalArgumentException e) {
-			logger.error("Error getting id from entity: " + object.getClass().getName());
+			logger.error("Error getting id from entity: "
+					+ object.getClass().getName());
 		} catch (SecurityException e) {
-			logger.error("Error getting id from entity: " + object.getClass().getName());
+			logger.error("Error getting id from entity: "
+					+ object.getClass().getName());
 		} catch (IllegalAccessException e) {
-			logger.error("Error getting id from entity: " + object.getClass().getName());
+			logger.error("Error getting id from entity: "
+					+ object.getClass().getName());
 		} catch (InvocationTargetException e) {
-			logger.error("Error getting id from entity: " + object.getClass().getName());
+			logger.error("Error getting id from entity: "
+					+ object.getClass().getName());
 		} catch (NoSuchMethodException e) {
-			logger.error("Error getting id from entity, entity has not getId() method: " + object.getClass().getName());
+			logger
+					.error("Error getting id from entity, entity has not getId() method: "
+							+ object.getClass().getName());
 		} catch (ClassCastException e) {
-			logger.error("Error getting id from entity, getId() method returned value that is not Serializable: " + object.getClass().getName());
+			logger
+					.error("Error getting id from entity, getId() method returned value that is not Serializable: "
+							+ object.getClass().getName());
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Add the specified object as a new entry in the database. NOTE: The Java
 	 * object is also attached to the Hibernate session in persistent state.
@@ -199,7 +208,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 * property, and <code>result[PROPERTY]</code> is the name of the property
 	 * specified on that object.
 	 * 
-	 * @see parsePath()
+	 * @see HibernateDAOImpl#parsePath(String)
 	 */
 	protected static final int BASE = 0, PROPERTY = 1;
 
@@ -211,14 +220,14 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	protected static final String ROOT_CRIT = "";
 
 	/**
-	 * @see aliasErrorFix()
+	 * @see HibernateDAOImpl#aliasErrorFix(List, Search)
 	 */
 	protected static final String ALIAS_HACK_PREFIX = "///sadHaCk";
 
 	/**
 	 * Used in addPaging();
 	 * 
-	 * @see addPaging()
+	 * @see HibernateDAOImpl#addPaging(Criteria, Search), HibernateDAOImpl#initEagerCollections()
 	 */
 	protected static Map<String, List<String>> eagerCollections;
 
@@ -293,34 +302,44 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		// The rest of this code deals with the eager collection fetching paging
 		// conflict
 		if (search.calcFirstResult() > 0 || search.getMaxResults() > 0) {
-			if (eagerCollections == null) {
-				// eagerCollections should contain all collections that are to
-				// be loaded eagerly.
-				// the first time we use it we need to fill it.
-				eagerCollections = new HashMap<String, List<String>>();
-				for (Object o : getSessionFactory().getAllCollectionMetadata()
-						.entrySet()) {
-					Map.Entry entry = (Map.Entry) o;
-					if (!((CollectionMetadata) entry.getValue()).isLazy()) {
-						String key = (String) entry.getKey();
-						int pos = key.lastIndexOf('.');
-						List<String> list = eagerCollections.get(key.substring(
-								0, pos));
-						if (list == null) {
-							list = new ArrayList<String>(1);
-							eagerCollections.put(key.substring(0, pos), list);
-						}
-						list.add(key.substring(pos + 1));
-					}
-				}
-			}
-			// if any apply to the searchClass, set FetchMode.SELECT for those
+			initEagerCollections();
+			// if any eager collections apply to the searchClass, set FetchMode.SELECT for those
 			// properties.
 			List<String> myCollections = eagerCollections.get(search
 					.getSearchClass().getName());
 			if (myCollections != null) {
 				for (String property : myCollections) {
 					crit.setFetchMode(property, FetchMode.SELECT);
+				}
+			}
+		}
+	}
+
+	/**
+	 * This method initializes <code>eagerCollections</code>.
+	 * <code>eagerCollections</code> should contain all collections that are
+	 * to be loaded eagerly. Before we use it, we need to fill it using this
+	 * method.
+	 */
+	protected void initEagerCollections() {
+		if (eagerCollections == null) {
+			// eagerCollections should contain all collections that are to
+			// be loaded eagerly.
+			// the first time we use it we need to fill it.
+			eagerCollections = new HashMap<String, List<String>>();
+			for (Object o : getSessionFactory().getAllCollectionMetadata()
+					.entrySet()) {
+				Map.Entry entry = (Map.Entry) o;
+				if (!((CollectionMetadata) entry.getValue()).isLazy()) {
+					String key = (String) entry.getKey();
+					int pos = key.lastIndexOf('.');
+					List<String> list = eagerCollections.get(key.substring(0,
+							pos));
+					if (list == null) {
+						list = new ArrayList<String>(1);
+						eagerCollections.put(key.substring(0, pos), list);
+					}
+					list.add(key.substring(pos + 1));
 				}
 			}
 		}
@@ -452,7 +471,15 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 
 		switch (filter.operator) {
 		case Filter.OP_IN:
-			return Restrictions.in(aliasedPath, (Collection) filter.value);
+			if (filter.value instanceof Collection)
+				return Restrictions.in(aliasedPath, (Collection) filter.value);
+			else
+				return Restrictions.in(aliasedPath, (Object[]) filter.value);
+		case Filter.OP_NOT_IN:
+			if (filter.value instanceof Collection)
+				return Restrictions.not(Restrictions.in(aliasedPath, (Collection) filter.value));
+			else
+				return Restrictions.not(Restrictions.in(aliasedPath, (Object[]) filter.value));
 		case Filter.OP_EQUAL:
 			if (filter.value == null) {
 				return Restrictions.isNull(aliasedPath);

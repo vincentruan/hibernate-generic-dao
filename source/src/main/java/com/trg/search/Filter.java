@@ -2,6 +2,7 @@ package com.trg.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -68,7 +69,7 @@ public class Filter implements Serializable {
 	}
 
 	public static final int OP_EQUAL = 0, OP_LESS_THAN = 1, OP_GREATER_THAN = 2, OP_LESS_OR_EQUAL = 3, OP_GREATER_OR_EQUAL = 4,
-			OP_IN = 5, OP_LIKE = 6, OP_NOT_EQUAL = 7;
+			OP_IN = 5, OP_LIKE = 6, OP_NOT_EQUAL = 7, OP_NOT_IN = 8;
 	public static final int OP_AND = 100, OP_OR = 101, OP_NOT = 102;
 
 	public static Filter equal(String property, Object value) {
@@ -91,8 +92,20 @@ public class Filter implements Serializable {
 		return new Filter(property, value, OP_GREATER_OR_EQUAL);
 	}
 
-	public static Filter in(String property, Object value) {
+	public static Filter in(String property, Collection<?> value) {
 		return new Filter(property, value, OP_IN);
+	}
+	
+	public static Filter in(String property, Object... value) {
+		return new Filter(property, value, OP_IN);
+	}
+	
+	public static Filter notIn(String property, Collection<?> value) {
+		return new Filter(property, value, OP_NOT_IN);
+	}
+	
+	public static Filter notIn(String property, Object... value) {
+		return new Filter(property, value, OP_NOT_IN);
 	}
 
 	public static Filter like(String property, Object value) {

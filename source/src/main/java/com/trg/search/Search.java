@@ -2,9 +2,9 @@ package com.trg.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
 
 /**
  * The base search DTO (data transfer object). A Search object is passed into a
@@ -48,9 +48,9 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public class Search implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	/**
 	 * Select modes tell the search what form to use for the results:
 	 * <ul>
@@ -119,8 +119,20 @@ public class Search implements Serializable {
 		addFilter(new Filter(property, value, Filter.OP_GREATER_THAN));
 	}
 
-	public void addFilterIn(String property, Object value) {
+	public void addFilterIn(String property, Collection<?> value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
+	}
+	
+	public void addFilterIn(String property, Object... value) {
+		addFilter(new Filter(property, value, Filter.OP_IN));
+	}
+	
+	public void addFilterNotIn(String property, Collection<?> value) {
+		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
+	}
+	
+	public void addFilterNotIn(String property, Object... value) {
+		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
 	}
 
 	public void addFilterLessOrEqual(String property, Object value) {
@@ -208,7 +220,7 @@ public class Search implements Serializable {
 		sorts.remove(sort);
 	}
 
-	public void removeSortOnProperty(String property) {
+	public void removeSort(String property) {
 		if (property == null)
 			return;
 		Iterator<Sort> itr = sorts.iterator();
@@ -358,8 +370,8 @@ public class Search implements Serializable {
 	 *         <code>firstResult</code> if page is not specified.
 	 */
 	public int calcFirstResult() {
-		return (firstResult != -1) ? firstResult : (page != -1) ? page
-				* maxResults : 0;
+		return (firstResult > 0) ? firstResult : (page > 0 && maxResults > 0) ? page * maxResults
+				: 0;
 	}
 
 	public void clearPaging() {
@@ -369,9 +381,9 @@ public class Search implements Serializable {
 	}
 
 	/**
-	 * Create a copy of this search. All collections are copied into new collections,
-	 * but them items in those collections are not duplicated; they still point
-	 * to the same objects.
+	 * Create a copy of this search. All collections are copied into new
+	 * collections, but them items in those collections are not duplicated; they
+	 * still point to the same objects.
 	 */
 	public Search copy() {
 		Search dest = new Search();
