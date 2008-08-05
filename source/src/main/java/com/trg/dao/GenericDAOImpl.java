@@ -17,6 +17,16 @@ public class GenericDAOImpl<T> extends HibernateDAOImpl implements GenericDAO<T>
 		if (!persistentClass.isInstance(object)) throw new IllegalArgumentException("Object class does not match dao type.");
 		super._create(object);
 	}
+	
+	public boolean createOrUpdate(T object) {
+		if (_getId(object) == null) {
+			create(object);
+			return true;
+		} else {
+			update(object);
+			return false;
+		}
+	}
 
 	public void deleteById(Serializable id) {
 		super._deleteById(id, persistentClass);

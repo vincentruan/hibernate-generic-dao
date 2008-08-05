@@ -13,6 +13,16 @@ public class GeneralDAOImpl extends HibernateDAOImpl implements GeneralDAO {
 		super._create(object);
 	}
 	
+	public boolean createOrUpdate(Object object) {
+		if (_getId(object) == null) {
+			create(object);
+			return true;
+		} else {
+			update(object);
+			return false;
+		}
+	}
+	
 	public void deleteById(Serializable id, Class klass) {
 		super._deleteById(id, klass);
 	}
