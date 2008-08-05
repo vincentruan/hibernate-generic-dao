@@ -8,4 +8,13 @@
 	<bean id="homeDAO" class="com.test.dao.HomeDAOImpl"/>
 	<bean id="addressDAO" class="com.test.dao.AddressDAOImpl"/>
 	
+	<bean id="generalDAO" class="com.trg.dao.GeneralDAOImpl"/>
+	
+	<bean id="remoteDAO" class="com.trg.remote.RemoteDAO">
+		<property name="specificDAOs">
+			<map>
+				<entry key="com.test.model.Person" value-ref="homeDAO"/>
+			</map>
+		</property>
+	</bean>
 </beans>
