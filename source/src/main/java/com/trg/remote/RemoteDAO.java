@@ -160,6 +160,29 @@ public class RemoteDAO {
 			return object;
 		}
 	}
+	
+	public Object createOrupdate(Object object) throws Exception {
+		if (mockDelay != 0) Thread.sleep(mockDelay);
+		Object specificDao = specificDAOs.get(object.getClass().getName());
+		if (specificDao != null) {
+			try {
+				Method method = null;
+				try {
+					method = specificDao.getClass().getMethod("createOrUpdate", object.getClass());
+				} catch (NoSuchMethodException ex) {
+					method = specificDao.getClass().getMethod("createOrUpdate", Object.class);
+				}
+				method.invoke(specificDao, object);
+				return object;
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} else {
+			generalDao.createOrUpdate(object);
+			return object;
+		}
+	}	
 
 	public void deleteById(Serializable id, String className) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
