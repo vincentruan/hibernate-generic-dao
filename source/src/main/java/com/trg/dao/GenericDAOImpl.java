@@ -8,7 +8,7 @@ import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
 @SuppressWarnings("unchecked")
-public class GenericDAOImpl<T> extends HibernateDAOImpl implements GenericDAO<T> {
+public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOImpl implements GenericDAO<T, ID> {
 
 	private Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
 			.getActualTypeArguments()[0];
@@ -28,7 +28,7 @@ public class GenericDAOImpl<T> extends HibernateDAOImpl implements GenericDAO<T>
 		}
 	}
 
-	public void deleteById(Serializable id) {
+	public void deleteById(ID id) {
 		super._deleteById(id, persistentClass);
 	}
 
@@ -37,7 +37,7 @@ public class GenericDAOImpl<T> extends HibernateDAOImpl implements GenericDAO<T>
 		super._deleteEntity(object);
 	}
 
-	public T fetch(Serializable id) {
+	public T fetch(ID id) {
 		return (T) super._fetch(id, persistentClass);
 	}
 
