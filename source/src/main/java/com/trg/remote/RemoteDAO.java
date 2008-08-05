@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.trg.dao.GeneralDAO;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
@@ -18,24 +20,25 @@ import com.trg.search.SearchResult;
 public class RemoteDAO {
 	private static long mockDelay = 0;
 	
+	private Map<String, Object> specificDAOs;
+
+	@Autowired
+	private GeneralDAO generalDao;
+
 	/**
 	 * In practice some DAOs could be put into this map using Spring. If a DAO
 	 * is in this map, it will be used instead of the general DAO. This provides
 	 * a way to override the default implementation for objects with special
 	 * considerations.
 	 */
-	private Map<String, Object> specificDaos;
-
-	/**
-	 * This has default implementations for the standard DAO methods. Which
-	 * model class it uses is specified when calling the particular method.
-	 */
-	private GeneralDAO generalDao;
-
-	public void setSpecificDaos(Map<String, Object> specificDaos) {
-		this.specificDaos = specificDaos;
+	public void setSpecificDAOs(Map<String, Object> specificDAOs) {
+		this.specificDAOs = specificDAOs;
 	}
 
+	/**
+	 * GeneralDAO has default implementations for the standard DAO methods. Which
+	 * model class it uses is specified when calling the particular method.
+	 */
 	public void setGeneralDao(GeneralDAO generalDao) {
 		this.generalDao = generalDao;
 	}
@@ -54,7 +57,7 @@ public class RemoteDAO {
 
 	/**
 	 * <p>
-	 * Here is an example of one DAO method. That could be exposed remotely. The
+	 * Here is an example of one DAO method that could be exposed remotely. The
 	 * ID of the object and the class of the object to get are passed in and the
 	 * object from the database is returned.
 	 * <p>
@@ -74,7 +77,7 @@ public class RemoteDAO {
 		Class<?> idClass = klass.getMethod("getId").getReturnType();
 		id = convertId(id, idClass);
 
-		Object specificDao = specificDaos.get(klass.getName());
+		Object specificDao = specificDAOs.get(klass.getName());
 		if (specificDao != null) {
 			try {
 				return specificDao.getClass().getMethod("fetch", idClass)
@@ -98,7 +101,7 @@ public class RemoteDAO {
 			throw e;
 		}
 
-		Object specificDao = specificDaos.get(klass.getName());
+		Object specificDao = specificDAOs.get(klass.getName());
 		if (specificDao != null) {
 			try {
 				return (List) specificDao.getClass().getMethod("fetchAll")
@@ -114,7 +117,7 @@ public class RemoteDAO {
 
 	public Object create(Object object) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
-		Object specificDao = specificDaos.get(object.getClass().getName());
+		Object specificDao = specificDAOs.get(object.getClass().getName());
 		if (specificDao != null) {
 			try {
 				Method method = null;
@@ -137,7 +140,7 @@ public class RemoteDAO {
 
 	public Object update(Object object) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
-		Object specificDao = specificDaos.get(object.getClass().getName());
+		Object specificDao = specificDAOs.get(object.getClass().getName());
 		if (specificDao != null) {
 			try {
 				Method method = null;
@@ -171,7 +174,7 @@ public class RemoteDAO {
 		Class<?> idClass = klass.getMethod("getId").getReturnType();
 		id = convertId(id, idClass);
 
-		Object specificDao = specificDaos.get(klass.getName());
+		Object specificDao = specificDAOs.get(klass.getName());
 		if (specificDao != null) {
 			try {
 				specificDao.getClass().getMethod("deleteById", Serializable.class).invoke(
@@ -187,7 +190,7 @@ public class RemoteDAO {
 
 	public void deleteEntity(Object object) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
-		Object specificDao = specificDaos.get(object.getClass().getName());
+		Object specificDao = specificDAOs.get(object.getClass().getName());
 		if (specificDao != null) {
 			try {
 				Method method = null;
@@ -231,7 +234,7 @@ public class RemoteDAO {
 			throw e;
 		}
 
-		Object specificDao = specificDaos.get(search.getSearchClass().getName());
+		Object specificDao = specificDAOs.get(search.getSearchClass().getName());
 		if (specificDao != null) {
 			try {
 				return (List) specificDao.getClass().getMethod("search",
@@ -254,7 +257,7 @@ public class RemoteDAO {
 			throw e;
 		}
 
-		Object specificDao = specificDaos.get(search.getSearchClass().getName());
+		Object specificDao = specificDAOs.get(search.getSearchClass().getName());
 		if (specificDao != null) {
 			try {
 				return (Integer) specificDao.getClass().getMethod(
@@ -278,7 +281,7 @@ public class RemoteDAO {
 			throw e;
 		}
 
-		Object specificDao = specificDaos.get(search.getSearchClass().getName());
+		Object specificDao = specificDAOs.get(search.getSearchClass().getName());
 		if (specificDao != null) {
 			try {
 				return (SearchResult) specificDao.getClass().getMethod(
