@@ -12,30 +12,12 @@ import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.search.Filter;
 import com.trg.search.Search;
-import com.trg.test.TestCaseSpringAutoWire;
 
-public class FilterTest extends TestCaseSpringAutoWire {
+public class FilterTest extends TestBase {
 	private PersonDAO personDAO;
-
-	private SessionFactory sessionFactory;
-
-	private Person joeA, // 10
-			sallyA, // 9
-			papaA, // 39
-			mamaA, // 40
-			joeB, // 10
-			margretB, // 13
-			papaB, // 39
-			mamaB, // 38
-			grandpaA, // 65
-			grandmaA; // 65
 
 	public void setPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
-	}
-
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
 	}
 
 	public void testGeneral() {
@@ -123,6 +105,26 @@ public class FilterTest extends TestCaseSpringAutoWire {
 				new Person[] { papaA, papaB, mamaA, grandmaA, grandpaA },
 				personDAO.search(s));
 
+		s.clear();
+		s.addFilterIn("age", 9, 10, 14, 65);
+		assertListEqual(new Person[] { sallyA, joeA, joeB, margretB, grandmaA,
+				grandpaA }, personDAO.search(s));
+
+		s.clear();
+		s.addFilterIn("firstName", "Joe", "Papa");
+		assertListEqual(new Person[] { joeA, joeB, papaA, papaB }, personDAO
+				.search(s));
+
+		s.clear();
+		s.addFilterNotIn("age", 9, 10, 14, 65);
+		assertListEqual(new Person[] { papaA, mamaA, papaB, mamaB }, personDAO
+				.search(s));
+
+		s.clear();
+		s.addFilterNotIn("firstName", "Joe", "Papa", "Mama");
+		assertListEqual(new Person[] { sallyA, margretB, grandmaA, grandpaA }, personDAO
+				.search(s));
+
 	}
 
 	public void testNesting() {
@@ -185,110 +187,4 @@ public class FilterTest extends TestCaseSpringAutoWire {
 				personDAO.search(s));
 	}
 
-	private void initDB() {
-		Session session = sessionFactory.getCurrentSession();
-		session.save(setup(grandpaA));
-		session.save(setup(grandmaA));
-		session.save(setup(papaA));
-		session.save(setup(mamaA));
-		session.save(setup(papaB));
-		session.save(setup(mamaB));
-		session.save(setup(joeA));
-		session.save(setup(sallyA));
-		session.save(setup(joeB));
-		session.save(setup(margretB));
-
-		// detatch all our Java copies of these from hibernate.
-		session.flush();
-		session.evict(grandpaA);
-		session.evict(grandmaA);
-		session.evict(papaA);
-		session.evict(mamaA);
-		session.evict(papaB);
-		session.evict(mamaB);
-		session.evict(joeA);
-		session.evict(sallyA);
-		session.evict(joeB);
-		session.evict(margretB);
-	}
-
-	private Person copy(Person p) {
-		Person cpy = new Person();
-		cpy.setId(p.getId());
-		cpy.setFather(p.getFather());
-		cpy.setFirstName(p.getFirstName());
-		cpy.setLastName(p.getLastName());
-		cpy.setMother(p.getMother());
-		cpy.setAge(p.getAge());
-		cpy.setDob(p.getDob());
-		cpy.setWeight(p.getWeight());
-		return cpy;
-	}
-
-	private Person setup(Person p) {
-		Calendar cal = new GregorianCalendar();
-		cal.add(Calendar.YEAR, -p.getAge());
-		p.setDob(cal.getTime());
-		p.setWeight(100.0 + p.getAge() / 100.0);
-
-		return p;
-	}
-
-	private void assertListEqual(Person[] expected, List<Person> actual) {
-		assertEquals("The list did not have the expected length",
-				expected.length, actual.size());
-
-		HashMap<Long, Object> unmatched = new HashMap<Long, Object>();
-		for (Person person : expected) {
-			unmatched.put(person.getId(), "");
-		}
-		for (Person person : actual) {
-			unmatched.remove(person.getId());
-		}
-
-		if (unmatched.size() != 0)
-			fail("The list did not match the expected results.");
-	}
-
-	// --- Setters ---
-
-	public void setJoeA(Person joeA) {
-		this.joeA = joeA;
-	}
-
-	public void setSallyA(Person sallyA) {
-		this.sallyA = sallyA;
-	}
-
-	public void setPapaA(Person papaA) {
-		this.papaA = papaA;
-	}
-
-	public void setMamaA(Person mamaA) {
-		this.mamaA = mamaA;
-	}
-
-	public void setJoeB(Person joeB) {
-		this.joeB = joeB;
-	}
-
-	public void setMargretB(Person margretB) {
-		this.margretB = margretB;
-	}
-
-	public void setPapaB(Person papaB) {
-		this.papaB = papaB;
-	}
-
-	public void setMamaB(Person mamaB) {
-		this.mamaB = mamaB;
-	}
-
-	public void setGrandpaA(Person grandpaA) {
-		this.grandpaA = grandpaA;
-	}
-
-	public void setGrandmaA(Person grandmaA) {
-		this.grandmaA = grandmaA;
-	}
 }
