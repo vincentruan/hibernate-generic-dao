@@ -30,6 +30,10 @@ public class Person {
 	private Integer age;
 	private Date dob;
 	private Double weight;
+	
+	@ManyToOne
+	@JoinColumn(name="home_id")
+	private Home home;
 
 	public Long getId() {
 		return id;
@@ -95,17 +99,40 @@ public class Person {
 		this.weight = weight;
 	}
 	
-//	public boolean equals(Object o) {
-//		if (!(o instanceof Person)) return false;
-//		Person p = (Person) o;
-//		
-//		if (! (firstName == null ? p.firstName == null : firstName.equals(p.firstName)) ) return false;
-//		if (! (lastName == null ? p.lastName == null : lastName.equals(p.lastName)) ) return false;
-//		
-//		return true;
-//	}
-	
+	public Home getHome() {
+		return home;
+	}
+
+	public void setHome(Home home) {
+		this.home = home;
+	}
+
+	public boolean equals(Object o) {
+		if (!(o instanceof Person))
+			return false;
+		Person p = (Person) o;
+
+		if (!(firstName == null ? p.firstName == null : firstName
+				.equals(p.firstName)))
+			return false;
+		if (!(lastName == null ? p.lastName == null : lastName
+				.equals(p.lastName)))
+			return false;
+
+		return true;
+	}
+
 	public String toString() {
 		return "Person::id:" + id + ",firstName:" + firstName + ",lastName:" + lastName + ",age:" + age + ",dob:" + dob;
 	}
+
+	@Override
+	public int hashCode() {
+		int hash = 1;
+		hash = hash * 31 + (firstName == null ? 0 : firstName.hashCode());
+		hash = hash * 31 + (lastName == null ? 0 : lastName.hashCode());
+		return hash;
+	}
+	
+	
 }
