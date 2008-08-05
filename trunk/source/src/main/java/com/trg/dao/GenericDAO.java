@@ -12,7 +12,13 @@ public interface GenericDAO<T> {
 	 * Add the specified object as a new entry in the database.
 	 */
 	public void create(T object);
-
+	
+	/**
+	 * If the id of the object is null, create, otherwise update.
+	 * @return true if create; false if update.
+	 */
+	public boolean createOrUpdate(T object);
+	
 	/**
 	 * Delete the object of this type with the specified id from the database.
 	 */
@@ -59,12 +65,12 @@ public interface GenericDAO<T> {
 	public SearchResult<T> searchAndLength(Search options);
 
 	/**
-	 * Returns true if the object is connected to the current hibernate session.
+	 * Returns true if the object is connected to the current Hibernate session.
 	 */
 	public boolean isConnected(Object object);
 
 	/**
-	 * Flushes changes in the hibernate cache to the database. 
+	 * Flushes changes in the Hibernate cache to the database. 
 	 */
 	public void flush();
 }

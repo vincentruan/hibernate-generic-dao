@@ -38,6 +38,27 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		setSessionFactory(sessionFactory);
 	}
 
+	protected Serializable _getId(Object object) {
+		if (object == null)
+			throw new NullPointerException("Cannot get ID from null object.");
+		try {
+			return (Serializable) object.getClass().getMethod("getId").invoke(object);
+		} catch (IllegalArgumentException e) {
+			logger.error("Error getting id from entity: " + object.getClass().getName());
+		} catch (SecurityException e) {
+			logger.error("Error getting id from entity: " + object.getClass().getName());
+		} catch (IllegalAccessException e) {
+			logger.error("Error getting id from entity: " + object.getClass().getName());
+		} catch (InvocationTargetException e) {
+			logger.error("Error getting id from entity: " + object.getClass().getName());
+		} catch (NoSuchMethodException e) {
+			logger.error("Error getting id from entity, entity has not getId() method: " + object.getClass().getName());
+		} catch (ClassCastException e) {
+			logger.error("Error getting id from entity, getId() method returned value that is not Serializable: " + object.getClass().getName());
+		}
+		return null;
+	}
+	
 	/**
 	 * Add the specified object as a new entry in the database. NOTE: The Java
 	 * object is also attached to the Hibernate session in persistent state.
@@ -62,20 +83,9 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	protected void _deleteEntity(Object object) {
 		if (object == null)
 			return;
-		Serializable id;
-		try {
-			id = (Serializable) object.getClass().getMethod("getId").invoke(object);
+		Serializable id = _getId(object);
+		if (id != null) {
 			getSession().delete(getSession().get(object.getClass(), id));
-		} catch (IllegalArgumentException e) {
-			logger.error("Error getting id when attempting to delete entity: " + object.getClass().getName());
-		} catch (SecurityException e) {
-			logger.error("Error getting id when attempting to delete entity: " + object.getClass().getName());
-		} catch (IllegalAccessException e) {
-			logger.error("Error getting id when attempting to delete entity: " + object.getClass().getName());
-		} catch (InvocationTargetException e) {
-			logger.error("Error getting id when attempting to delete entity: " + object.getClass().getName());
-		} catch (NoSuchMethodException e) {
-			logger.error("Attempt to delete entity with no getId method: " + object.getClass().getName());
 		}
 	}
 
