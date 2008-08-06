@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListResourceBundle;
 import java.util.Map;
 
 import org.hibernate.Criteria;
@@ -22,7 +21,6 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.metadata.CollectionMetadata;
 import org.hibernate.transform.ResultTransformer;
-import org.hibernate.transform.ToListResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -230,8 +228,8 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	/**
 	 * Used in addPaging();
 	 * 
-	 * @see HibernateDAOImpl#addPaging(Criteria, Search),
-	 *      HibernateDAOImpl#initEagerCollections()
+	 * @see HibernateDAOImpl#addPaging(Criteria, Search)
+	 * @see HibernateDAOImpl#initEagerCollections()
 	 */
 	protected static Map<String, List<String>> eagerCollections;
 
@@ -380,8 +378,8 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 
 				crit.setFetchMode(parsed[PROPERTY], FetchMode.JOIN);
 			}
-			
-			// FetchMode Array, List, Map
+
+			// FetchMode Array, List, Map, Single
 		} else {
 			ProjectionList projectionList = Projections.projectionList();
 			Iterator<Fetch> selects = search.fetchIterator();
@@ -419,6 +417,10 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 				} else {
 					projectionList.add(Projections.property(path));
 				}
+
+				// with FETCH_SINGLE, only one fetch is allowed
+				if (search.getFetchMode() == Search.FETCH_SINGLE)
+					break;
 			}
 			critMap.get(ROOT_CRIT).setProjection(projectionList);
 			if (search.getFetchMode() == Search.FETCH_MAP) {
@@ -427,10 +429,10 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 			} else if (search.getFetchMode() == Search.FETCH_LIST) {
 				critMap.get(ROOT_CRIT).setResultTransformer(
 						Transformers.TO_LIST);
-			} else {
+			} else if (search.getFetchMode() == Search.FETCH_ARRAY) {
 				critMap.get(ROOT_CRIT).setResultTransformer(
 						TO_ARRAY_RESULT_TRANSFORMER);
-			}
+			} // else if FETCH_SINGLE use default result transformer
 		}
 	}
 
@@ -624,8 +626,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 * <code>ALIAS_HACK_PREFIX</code> and the index of the select. Then after
 	 * generating the result set we use this method to replace those map keys
 	 * with the original intended alias.
-	 */
-	/**
+	 * 
 	 * So the problem comes when a fetch alias is the same as a filter property
 	 * and that is a property of the base object (ie. the property path has no
 	 * "."s)
