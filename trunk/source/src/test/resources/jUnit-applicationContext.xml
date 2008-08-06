@@ -114,7 +114,7 @@
 		</property>
 	</bean>
 	<bean id="homeB" class="com.test.model.Home">
-		<property name="type" value="appartment"/>
+		<property name="type" value="apartment"/>
 		<property name="address">
 			<bean id="addressB" class="com.test.model.Address">
 				<property name="street" value="734 N Fairfield, Apt 3"/>
