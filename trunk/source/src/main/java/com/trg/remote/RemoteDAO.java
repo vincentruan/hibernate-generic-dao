@@ -161,7 +161,7 @@ public class RemoteDAO {
 		}
 	}
 	
-	public Object createOrupdate(Object object) throws Exception {
+	public Object createOrUpdate(Object object) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
 		Object specificDao = specificDAOs.get(object.getClass().getName());
 		if (specificDao != null) {
