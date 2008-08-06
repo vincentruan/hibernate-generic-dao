@@ -7,7 +7,7 @@ import com.test.dao.HomeDAO;
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
 
-public class BasicDaoTest extends TestBase {
+public class BasicDAOTest2 extends TestBase {
 
 	private PersonDAO personDAO;
 	private AddressDAO addressDAO;
@@ -36,6 +36,9 @@ public class BasicDaoTest extends TestBase {
 
 		assertEquals(grandpaA, personDAO.fetch(grandpaA.getId()));
 
+		addressDAO.create(papaA.getHome().getAddress());
+		homeDAO.create(papaA.getHome());
+		personDAO.create(grandmaA);
 		personDAO.create(papaA);
 		personDAO.create(mamaA);
 		personDAO.create(joeA);
