@@ -7,7 +7,7 @@ import com.test.dao.HomeDAO;
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
 
-public class BasicDAOTest2 extends TestBase {
+public class BasicDAOTest extends TestBase {
 
 	private PersonDAO personDAO;
 	private AddressDAO addressDAO;
