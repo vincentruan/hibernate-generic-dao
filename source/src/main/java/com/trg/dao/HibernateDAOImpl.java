@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListResourceBundle;
 import java.util.Map;
 
 import org.hibernate.Criteria;
@@ -20,6 +21,8 @@ import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.metadata.CollectionMetadata;
+import org.hibernate.transform.ResultTransformer;
+import org.hibernate.transform.ToListResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
@@ -227,7 +230,8 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	/**
 	 * Used in addPaging();
 	 * 
-	 * @see HibernateDAOImpl#addPaging(Criteria, Search), HibernateDAOImpl#initEagerCollections()
+	 * @see HibernateDAOImpl#addPaging(Criteria, Search),
+	 *      HibernateDAOImpl#initEagerCollections()
 	 */
 	protected static Map<String, List<String>> eagerCollections;
 
@@ -303,7 +307,8 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		// conflict
 		if (search.calcFirstResult() > 0 || search.getMaxResults() > 0) {
 			initEagerCollections();
-			// if any eager collections apply to the searchClass, set FetchMode.SELECT for those
+			// if any eager collections apply to the searchClass, set
+			// FetchMode.SELECT for those
 			// properties.
 			List<String> myCollections = eagerCollections.get(search
 					.getSearchClass().getName());
@@ -375,11 +380,9 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 
 				crit.setFetchMode(parsed[PROPERTY], FetchMode.JOIN);
 			}
+			
 			// FetchMode Array, List, Map
 		} else {
-			if (search.getFetchMode() == Search.FETCH_ENTITY)
-				return;
-
 			ProjectionList projectionList = Projections.projectionList();
 			Iterator<Fetch> selects = search.fetchIterator();
 			int i = -1;
@@ -387,32 +390,35 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 				i++;
 				Fetch select = selects.next();
 				if (select == null || select.property == null
-						|| "".equals(select.property) || select.key == null
-						|| "".equals(select.key))
+						|| "".equals(select.property))
 					continue;
 
 				String[] parsed = parsePath(select.property);
 				String path = select.property;
-				String alias = select.key;
 				if (!"".equals(parsed[BASE])) {
 					path = getCriteria(critMap, parsed[BASE]).getAlias() + "."
 							+ parsed[PROPERTY];
-					// if (alias.equals(parsed[PROPERTY]))
-					// alias = ALIAS_HACK_PREFIX + Integer.toString(i);
 				}
 
-				if (!alias.contains(".")) {
-					// if any of the filters uses this alias as a property
-					Iterator<Filter> filters = search.filterIterator();
-					while (filters.hasNext()) {
-						Filter filter = filters.next();
-						if (hasFilterOnProperty(filter, alias)) {
-							alias = ALIAS_HACK_PREFIX + alias;
-							break;
+				if (search.getFetchMode() == Search.FETCH_MAP) {
+					String alias = select.key;
+					if (alias == null | "".equals(alias))
+						alias = select.property;
+					if (!alias.contains(".")) {
+						// if any of the filters uses this alias as a property
+						Iterator<Filter> filters = search.filterIterator();
+						while (filters.hasNext()) {
+							Filter filter = filters.next();
+							if (hasFilterOnProperty(filter, alias)) {
+								alias = ALIAS_HACK_PREFIX + alias;
+								break;
+							}
 						}
 					}
+					projectionList.add(Projections.property(path), alias);
+				} else {
+					projectionList.add(Projections.property(path));
 				}
-				projectionList.add(Projections.property(path), alias);
 			}
 			critMap.get(ROOT_CRIT).setProjection(projectionList);
 			if (search.getFetchMode() == Search.FETCH_MAP) {
@@ -421,9 +427,28 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 			} else if (search.getFetchMode() == Search.FETCH_LIST) {
 				critMap.get(ROOT_CRIT).setResultTransformer(
 						Transformers.TO_LIST);
+			} else {
+				critMap.get(ROOT_CRIT).setResultTransformer(
+						TO_ARRAY_RESULT_TRANSFORMER);
 			}
 		}
 	}
+
+	/**
+	 * This is a ResultTransformer is used for fetchMode == Search.FETCH_ARRAY.
+	 * It transforms each result into an ordered array.
+	 */
+	protected static final ResultTransformer TO_ARRAY_RESULT_TRANSFORMER = new ResultTransformer() {
+		private static final long serialVersionUID = 1L;
+
+		public List transformList(List collection) {
+			return collection;
+		}
+
+		public Object transformTuple(Object[] tuple, String[] aliases) {
+			return tuple;
+		}
+	};
 
 	protected boolean hasFilterOnProperty(Filter filter, String prop) {
 		if (filter.operator == Filter.OP_AND || filter.operator == Filter.OP_OR) {
@@ -477,9 +502,11 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 				return Restrictions.in(aliasedPath, (Object[]) filter.value);
 		case Filter.OP_NOT_IN:
 			if (filter.value instanceof Collection)
-				return Restrictions.not(Restrictions.in(aliasedPath, (Collection) filter.value));
+				return Restrictions.not(Restrictions.in(aliasedPath,
+						(Collection) filter.value));
 			else
-				return Restrictions.not(Restrictions.in(aliasedPath, (Object[]) filter.value));
+				return Restrictions.not(Restrictions.in(aliasedPath,
+						(Object[]) filter.value));
 		case Filter.OP_EQUAL:
 			if (filter.value == null) {
 				return Restrictions.isNull(aliasedPath);

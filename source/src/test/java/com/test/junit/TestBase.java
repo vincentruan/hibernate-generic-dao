@@ -15,7 +15,7 @@ import com.trg.test.TestCaseSpringAutoWire;
 
 public class TestBase extends TestCaseSpringAutoWire {
 	
-	private SessionFactory sessionFactory;
+	protected SessionFactory sessionFactory;
 
 	protected Person joeA, // 10
 			sallyA, // 9
