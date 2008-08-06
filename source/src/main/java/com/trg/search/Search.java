@@ -64,7 +64,7 @@ public class Search implements Serializable {
 	 * </ul>
 	 */
 	public static final int FETCH_ENTITY = 0, FETCH_ARRAY = 1, FETCH_LIST = 2,
-			FETCH_MAP = 3;
+			FETCH_MAP = 3, FETCH_SINGLE = 4;
 
 	protected int firstResult = -1; // -1 stands for unspecified
 
@@ -122,15 +122,15 @@ public class Search implements Serializable {
 	public void addFilterIn(String property, Collection<?> value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
 	}
-	
+
 	public void addFilterIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
 	}
-	
+
 	public void addFilterNotIn(String property, Collection<?> value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
 	}
-	
+
 	public void addFilterNotIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
 	}
@@ -311,7 +311,7 @@ public class Search implements Serializable {
 	 * </ul>
 	 */
 	public void setFetchMode(int fetchMode) {
-		if (fetchMode < 0 || fetchMode > 3)
+		if (fetchMode < 0 || fetchMode > 4)
 			throw new IllegalArgumentException("Fetch Mode ( " + fetchMode
 					+ " ) is not a valid option.");
 		this.fetchMode = fetchMode;
@@ -370,8 +370,8 @@ public class Search implements Serializable {
 	 *         <code>firstResult</code> if page is not specified.
 	 */
 	public int calcFirstResult() {
-		return (firstResult > 0) ? firstResult : (page > 0 && maxResults > 0) ? page * maxResults
-				: 0;
+		return (firstResult > 0) ? firstResult
+				: (page > 0 && maxResults > 0) ? page * maxResults : 0;
 	}
 
 	public void clearPaging() {
@@ -387,6 +387,7 @@ public class Search implements Serializable {
 	 */
 	public Search copy() {
 		Search dest = new Search();
+		dest.searchClass = searchClass;
 		dest.disjunction = disjunction;
 		dest.fetchMode = fetchMode;
 		dest.firstResult = firstResult;
@@ -401,4 +402,37 @@ public class Search implements Serializable {
 
 		return dest;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Search))
+			return false;
+		Search s = (Search) obj;
+
+		if (searchClass == null ? s.searchClass != null : !searchClass
+				.equals(s.searchClass))
+			return false;
+		if (disjunction != s.disjunction || fetchMode != s.fetchMode
+				|| firstResult != s.firstResult || page != s.page
+				|| maxResults != s.maxResults)
+			return false;
+		if (!filters.equals(s.filters) || !sorts.equals(s.sorts)
+				|| !fetches.equals(s.fetches))
+			return false;
+
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return super.hashCode();
+	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+
 }
