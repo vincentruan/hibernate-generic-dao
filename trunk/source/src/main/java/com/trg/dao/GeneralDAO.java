@@ -6,6 +6,7 @@ import java.util.List;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
+@SuppressWarnings("unchecked")
 public interface GeneralDAO {
 
 	/**
@@ -37,7 +38,7 @@ public interface GeneralDAO {
 	/**
 	 * Get a list of all the objects of the specified type.
 	 */
-	public List<?> fetchAll(Class<?> klass);
+	public List fetchAll(Class<?> klass);
 
 	/**
 	 * Update the corresponding object in the database with the properties of
@@ -49,7 +50,7 @@ public interface GeneralDAO {
 	 * Search for objects given the search parameters in the
 	 * specified <code>Search</code> object.
 	 */
-	public List<?> search(Search search);
+	public List search(Search search);
 	
 	/**
 	 * Returns the total number of results that would be returned using the
@@ -62,7 +63,7 @@ public interface GeneralDAO {
 	 * results like <code>search()</code> and the total length like
 	 * <code>searchLength</code>.
 	 */
-	public SearchResult<?> searchAndLength(Search search);
+	public SearchResult searchAndLength(Search search);
 
 	/**
 	 * Returns true if the object is connected to the current Hibernate session.
