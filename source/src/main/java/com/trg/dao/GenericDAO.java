@@ -49,20 +49,20 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * Search for objects of this type given the search parameters in the
 	 * specified <code>Search</code> object.
 	 */
-	public List<T> search(Search options);
+	public List<T> search(Search search);
 
 	/**
 	 * Returns the total number of results that would be returned using the
 	 * given <code>Search</code> if there were no paging or maxResult limits.
 	 */
-	public int searchLength(Search options);
+	public int searchLength(Search search);
 
 	/**
 	 * Returns a <code>SearchResult</code> object that includes the list of
 	 * results like <code>search()</code> and the total length like
 	 * <code>searchLength</code>.
 	 */
-	public SearchResult<T> searchAndLength(Search options);
+	public SearchResult<T> searchAndLength(Search search);
 
 	/**
 	 * Returns true if the object is connected to the current Hibernate session.
