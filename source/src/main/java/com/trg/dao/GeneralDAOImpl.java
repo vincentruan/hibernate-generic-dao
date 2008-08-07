@@ -14,7 +14,8 @@ public class GeneralDAOImpl extends HibernateDAOImpl implements GeneralDAO {
 	}
 	
 	public boolean createOrUpdate(Object object) {
-		if (_getId(object) == null) {
+		Serializable id = _getId(object);
+		if (id == null || (new Long(0)).equals(id)) {
 			create(object);
 			return true;
 		} else {
