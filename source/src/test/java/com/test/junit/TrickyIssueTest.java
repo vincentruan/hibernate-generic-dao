@@ -3,9 +3,13 @@ package com.test.junit;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
+import com.test.model.Home;
 import com.test.model.Person;
 import com.trg.dao.GeneralDAO;
-import com.trg.dao.GenericDAO;
 import com.trg.search.Search;
 
 public class TrickyIssueTest extends TestBase {
@@ -14,7 +18,33 @@ public class TrickyIssueTest extends TestBase {
 	public void setGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
 	}
-
+	
+	public static void main(String[] args) {
+//		BeanFactoryLocator bfl = ContextSingletonBeanFactoryLocator.getInstance("classpath:beanRefContext.xml");
+//		BeanFactoryReference bfRef = bfl.useBeanFactory("e2e.application.context");
+//		BeanFactory beanFactory = bfRef.getFactory();
+		
+//		BeanFactory beanFactory = new XmlBeanFactory(new ClassPathResource("jUnit-applicationContext.xml"));
+		
+		ClassPathXmlApplicationContext appContext = new ClassPathXmlApplicationContext("jUnit-applicationContext.xml");
+		BeanFactory beanFactory = appContext;
+		
+		
+		TrickyIssueTest instance = new TrickyIssueTest();
+		
+		instance.setGeneralDAO((GeneralDAO) beanFactory.getBean("generalDAO"));
+		instance.setJoeA((Person) beanFactory.getBean("joeA"));
+		instance.setSallyA((Person) beanFactory.getBean("sallyA"));
+		instance.setMamaA((Person) beanFactory.getBean("mamaA"));
+		instance.setPapaA((Person) beanFactory.getBean("papaA"));
+		instance.setJoeB((Person) beanFactory.getBean("joeB"));
+		instance.setMargretB((Person) beanFactory.getBean("margretB"));
+		instance.setMamaB((Person) beanFactory.getBean("mamaB"));
+		instance.setPapaB((Person) beanFactory.getBean("papaB"));
+		instance.setGrandmaA((Person) beanFactory.getBean("grandmaA"));
+		instance.setGrandpaA((Person) beanFactory.getBean("grandpaA"));
+	}
+	
 	/**
 	 * The alias error occurs when using fetch mode FETCH_MAP. It occurs when
 	 * there is a fetch that has a key with no "." in it and is the same as a
@@ -68,6 +98,23 @@ public class TrickyIssueTest extends TestBase {
 	}
 
 	public void testEagerFetchingPagingError() {
+		initDB();
 		
+		Search s = new Search(Home.class);
+		
+		assertEquals(3, generalDAO.search(s).size());
+		
+		s.setMaxResults(3);
+		assertEquals(3, generalDAO.search(s).size());
+		
+		s.setMaxResults(2);
+		assertEquals(2, generalDAO.search(s).size());
+		
+		s.setMaxResults(1);
+		assertEquals(1, generalDAO.search(s).size());
+		
+		s.setMaxResults(2);
+		s.setPage(1);
+		assertEquals(1, generalDAO.search(s).size());
 	}
 }

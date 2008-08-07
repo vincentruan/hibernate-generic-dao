@@ -1,13 +1,5 @@
 package com.test.junit;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.search.Filter;
