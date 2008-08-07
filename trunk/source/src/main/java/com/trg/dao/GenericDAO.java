@@ -14,7 +14,7 @@ public interface GenericDAO<T, ID extends Serializable> {
 	public void create(T object);
 	
 	/**
-	 * If the id of the object is null, create, otherwise update.
+	 * If the id of the object is null or zero, create, otherwise update.
 	 * @return true if create; false if update.
 	 */
 	public boolean createOrUpdate(T object);
