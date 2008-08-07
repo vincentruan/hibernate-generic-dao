@@ -137,7 +137,6 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 
 		Criteria crit = buildCriteria(search);
 		List list = crit.list();
-		aliasErrorFix(list, search);
 
 		return list;
 	}
@@ -221,19 +220,6 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	protected static final String ROOT_CRIT = "";
 
 	/**
-	 * @see HibernateDAOImpl#aliasErrorFix(List, Search)
-	 */
-	protected static final String ALIAS_HACK_PREFIX = "///sadHaCk";
-
-	/**
-	 * Used in addPaging();
-	 * 
-	 * @see HibernateDAOImpl#addPaging(Criteria, Search)
-	 * @see HibernateDAOImpl#initEagerCollections()
-	 */
-	protected static Map<String, List<String>> eagerCollections;
-
-	/**
 	 * Build a hibernate <code>Criteria</code> using all the properties and
 	 * features of the given <code>Search</code>. The <code>Criteria</code>
 	 * that is returned is ready to be executed.
@@ -258,11 +244,11 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	}
 
 	/**
-	 * Build a hibernate <code>Criteria</code> using only the filter
-	 * properties of the given <code>Search</code>. Paging, Ordering,
-	 * Fetching, and Selects are ignored. This is useful for the
-	 * <code>_searchLength</code> operation. The <code>Criteria</code> that
-	 * is returned is ready to be executed.
+	 * Build a Hibernate <code>Criteria</code> using only the filter
+	 * properties of the given <code>Search</code>. Paging, Ordering and
+	 * Fetching are ignored. This is useful for the <code>_searchLength</code>
+	 * operation. The <code>Criteria</code> that is returned is ready to be
+	 * executed.
 	 */
 	protected Criteria buildCriteriaWithFiltersOnly(Search search) {
 		Map<String, Criteria> critMap = startCriteria(search);
@@ -272,6 +258,11 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 				Criteria.DISTINCT_ROOT_ENTITY);
 	}
 
+	/**
+	 * As we build a Criteria we keep track of the tree of Criteria that are
+	 * needed for all the nested properties (if any). This method initializes
+	 * the map data structure that is used to hold that tree.
+	 */
 	protected Map<String, Criteria> startCriteria(Search search) {
 		Map<String, Criteria> critMap = new HashMap<String, Criteria>();
 		critMap.put(ROOT_CRIT, getSession().createCriteria(
@@ -279,6 +270,10 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		return critMap;
 	}
 
+	/**
+	 * Apply the paging options (maxResults, page, firstResult) from the search
+	 * to the Criteria.
+	 */
 	protected void addPaging(Map<String, Criteria> critMap, Search search) {
 		addPaging(critMap.get(ROOT_CRIT), search);
 	}
@@ -319,6 +314,14 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	}
 
 	/**
+	 * Used in addPaging();
+	 * 
+	 * @see HibernateDAOImpl#addPaging(Criteria, Search)
+	 * @see HibernateDAOImpl#initEagerCollections()
+	 */
+	protected static Map<String, List<String>> eagerCollections;
+
+	/**
 	 * This method initializes <code>eagerCollections</code>.
 	 * <code>eagerCollections</code> should contain all collections that are
 	 * to be loaded eagerly. Before we use it, we need to fill it using this
@@ -348,6 +351,9 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		}
 	}
 
+	/**
+	 * Apply the ordering options (sorts) from the search to the Criteria.
+	 */
 	protected void addOrdering(Map<String, Criteria> critMap, Search search) {
 		Iterator<Sort> sorts = search.sortIterator();
 		while (sorts.hasNext()) {
@@ -365,6 +371,10 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		}
 	}
 
+	/**
+	 * Apply the fetching options (fetches, fetchMode) from the search to the
+	 * Criteria.
+	 */
 	protected void addFetching(Map<String, Criteria> critMap, Search search) {
 		// FetchMode Entity
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
@@ -402,17 +412,8 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 					String alias = select.key;
 					if (alias == null | "".equals(alias))
 						alias = select.property;
-					if (!alias.contains(".")) {
-						// if any of the filters uses this alias as a property
-						Iterator<Filter> filters = search.filterIterator();
-						while (filters.hasNext()) {
-							Filter filter = filters.next();
-							if (hasFilterOnProperty(filter, alias)) {
-								alias = ALIAS_HACK_PREFIX + alias;
-								break;
-							}
-						}
-					}
+					alias = ALIAS_PREFIX + alias;
+
 					projectionList.add(Projections.property(path), alias);
 				} else {
 					projectionList.add(Projections.property(path));
@@ -425,7 +426,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 			critMap.get(ROOT_CRIT).setProjection(projectionList);
 			if (search.getFetchMode() == Search.FETCH_MAP) {
 				critMap.get(ROOT_CRIT).setResultTransformer(
-						Transformers.ALIAS_TO_ENTITY_MAP);
+						new AliasToMapResultTransformer());
 			} else if (search.getFetchMode() == Search.FETCH_LIST) {
 				critMap.get(ROOT_CRIT).setResultTransformer(
 						Transformers.TO_LIST);
@@ -452,20 +453,68 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		}
 	};
 
-	protected boolean hasFilterOnProperty(Filter filter, String prop) {
-		if (filter.operator == Filter.OP_AND || filter.operator == Filter.OP_OR) {
-			for (Filter f : (List<Filter>) filter.value) {
-				if (hasFilterOnProperty(f, prop))
-					return true;
+	/**
+	 * @see HibernateDAOImpl.AliasToMapResultTransformer
+	 */
+	protected static final String ALIAS_PREFIX = "@@";
+
+	/**
+	 * <p>
+	 * There is an error with Hibernate (using a MySQL dialect).
+	 * 
+	 * <p>
+	 * The problem occurs when using fetch mode FETCH_MAP when one or more of
+	 * the aliases (a.k.a. keys) specified for the result map meets both of the
+	 * following criteria:
+	 * <ol>
+	 * <li> The alias is exactly equal to a property that is used for filtering.
+	 * <li> That property has no "."s in it. (i.e. it is a direct property of
+	 * the base search type.)
+	 * </ol>
+	 * <p>
+	 * To keep this from ever happening we simply add <code>ALIAS_PREFIX</code>
+	 * to the beginning of all aliases when using fetch mode FETCH_MAP. Then in
+	 * the result transformer (<code>AliasToMapResultTransformer</code>) we
+	 * take the prefix off before passing the results back.
+	 */
+	protected static class AliasToMapResultTransformer implements
+			ResultTransformer {
+		private static final long serialVersionUID = 1L;
+
+		private String[] correctedAliases;
+
+		public List transformList(List collection) {
+			return collection;
+		}
+
+		public Object transformTuple(Object[] tuple, String[] aliases) {
+			if (correctedAliases == null) {
+				correctedAliases = new String[aliases.length];
+				for (int i = 0; i < aliases.length; i++) {
+					String alias = aliases[i];
+					if (alias != null && !"".equals(alias)) {
+						correctedAliases[i] = alias.substring(ALIAS_PREFIX
+								.length());
+					}
+				}
 			}
-			return false;
-		} else if (filter.operator == Filter.OP_NOT) {
-			return hasFilterOnProperty((Filter) filter.value, prop);
-		} else {
-			return prop.equals(filter.property);
+
+			Map<String, Object> map = new HashMap<String, Object>();
+			for (int i = 0; i < correctedAliases.length; i++) {
+				String key = correctedAliases[i];
+				if (key != null) {
+					map.put(key, tuple[i]);
+				}
+			}
+
+			return map;
 		}
 	}
 
+	/**
+	 * Apply the filtering options (filters, disjunction) from the search to the
+	 * Criteria.
+	 */
 	protected void addFilters(Map<String, Criteria> critMap, Search search) {
 		Junction junction = search.isDisjunction() ? Restrictions.disjunction()
 				: Restrictions.conjunction();
@@ -480,6 +529,9 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		critMap.get(ROOT_CRIT).add(junction);
 	}
 
+	/**
+	 * Generate a single Criterion from a single Filter.
+	 */
 	protected Criterion getCriterionFromFilter(Map<String, Criteria> critMap,
 			Filter filter) {
 		if (filter == null
@@ -611,49 +663,11 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		}
 	}
 
+	/**
+	 * We give each nested Criteria an alias. The alias is a function of the
+	 * path to the criteria so that all aliases are unique.
+	 */
 	protected String generateAlias(String path) {
 		return "/" + path.replace('.', '/');
-	}
-
-	/**
-	 * There is an error with hibernate (possibly SQL Dialect specific ?) when
-	 * mapping an alias to a property with the same name as the alias. For
-	 * example, one cannot map Cat.firstKitten.name to the alias "name". We let
-	 * the user specify their own aliases when using
-	 * <code>selectMode == SELECT_MAP</code> to determine the map keys. To
-	 * keep this from ever happening we replace aliases that would cause this
-	 * conflict with unique aliases generated from the
-	 * <code>ALIAS_HACK_PREFIX</code> and the index of the select. Then after
-	 * generating the result set we use this method to replace those map keys
-	 * with the original intended alias.
-	 * 
-	 * So the problem comes when a fetch alias is the same as a filter property
-	 * and that is a property of the base object (ie. the property path has no
-	 * "."s)
-	 */
-	protected void aliasErrorFix(List list, Search search) {
-		if (search.getFetchMode() == Search.FETCH_MAP && list.size() > 0) {
-			List<String> hackedAliases = new ArrayList<String>();
-
-			// find keys that use the alias hack
-			for (Object o : ((Map) list.get(0)).keySet()) {
-				String key = (String) o;
-				if (key.startsWith(ALIAS_HACK_PREFIX)) {
-					hackedAliases.add(key);
-				}
-			}
-
-			// restore those keys to their proper value
-			for (String hackedAlias : hackedAliases) {
-				String alias = hackedAlias
-						.substring(ALIAS_HACK_PREFIX.length());
-				for (Object o : list) {
-					Map map = (Map) o;
-					Object value = map.get(hackedAlias);
-					map.remove(hackedAlias);
-					map.put(alias, value);
-				}
-			}
-		}
 	}
 }
