@@ -8,10 +8,12 @@ The framework also builds on top of these generic DAOs with a slightly altered i
 
 = Details =
 
+_The following pages are soon to come (8/8/08)._
+
 The framework's features can be divided into four categories
-  * GeneralDAO
-  * GenericDAO
-  * RemoteDAO
+  * [GeneralDAO]
+  * [GenericDAO]
+  * [RemoteDAO]
   * [Search]
 
 This site includes a couple of additional pieces that work with the core framework.
