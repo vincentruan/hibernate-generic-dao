@@ -8,7 +8,12 @@ The framework also builds on top of these generic DAOs with a slightly altered i
 
 = Details =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+The framework's features can be divided into four categories
+* GeneralDAO
+* GenericDAO
+* RemoteDAO
+* [Search]
+
+This site includes a couple of additional pieces that work with the core framework.
+* EclipsePlugin
+* FlexClientSideInterface
