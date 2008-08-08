@@ -9,11 +9,11 @@ The framework also builds on top of these generic DAOs with a slightly altered i
 = Details =
 
 The framework's features can be divided into four categories
-* GeneralDAO
-* GenericDAO
-* RemoteDAO
-* [Search]
+  * GeneralDAO
+  * GenericDAO
+  * RemoteDAO
+  * [Search]
 
 This site includes a couple of additional pieces that work with the core framework.
-* EclipsePlugin
-* FlexClientSideInterface
+  * EclipsePlugin
+  * FlexClientSideInterface
