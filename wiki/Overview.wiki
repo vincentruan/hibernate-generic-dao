@@ -1,0 +1,13 @@
+#summary Overview of framework features.
+
+= Introduction =
+
+The purpose of this framework is to save the time, tedium and possible inconsistency of hand coding DAO layer objects. To this end, the framework provides a generic implementation of DAO layer objects for an application using Spring and Hibernate. The generic implementation can be extended and overwritten on a method-by-method basis for each domain object individually or across the entire layer. This means that it is always possible to write code for an exceptional case, entirely bypassing the framework, yet for the usual case no code needs to be written at all.
+
+
+= Details =
+
+Add your content here.  Format your content with:
+  * Text in *bold* or _italic_
+  * Headings, paragraphs, and lists
+  * Automatic links to other wiki pages
