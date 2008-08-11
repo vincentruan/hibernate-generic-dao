@@ -2,7 +2,7 @@
 
 = Introduction =
 
-GeneralDAO has methods that require the developer to specify which type of domain object to use. An application only needs a single instance of the GeneralDAO class to access all domain objects.
+The GeneralDAO is a single DAO class that can be used to access all classes of domain objects. GeneralDAO has methods that require the developer to specify which type of domain object to use. An application only needs a single instance of the GeneralDAO class to access all domain objects.
 
 = Details =
 
