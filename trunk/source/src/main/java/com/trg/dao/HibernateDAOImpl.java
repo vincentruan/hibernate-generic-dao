@@ -1,6 +1,8 @@
 package com.trg.dao;
 
 import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.EntityMode;
 import org.hibernate.FetchMode;
+import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
@@ -42,8 +45,9 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	protected Serializable _getId(Object object) {
 		if (object == null)
 			throw new NullPointerException("Cannot get ID from null object.");
-		
-		return getSessionFactory().getClassMetadata(object.getClass()).getIdentifier(object, EntityMode.POJO);
+
+		return getSessionFactory().getClassMetadata(object.getClass())
+				.getIdentifier(object, EntityMode.POJO);
 	}
 
 	/**
@@ -71,13 +75,13 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		if (object == null)
 			return;
 		getSession().delete(object);
-		
-//		Serializable id = _getId(object);
-//		if (id != null) {
-//			object = getSession().get(object.getClass(), id);
-//			if (object != null)
-//				getSession().delete(object);
-//		}
+
+		// Serializable id = _getId(object);
+		// if (id != null) {
+		// object = getSession().get(object.getClass(), id);
+		// if (object != null)
+		// getSession().delete(object);
+		// }
 	}
 
 	/**
@@ -503,7 +507,8 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		Iterator<Filter> filters = search.filterIterator();
 		while (filters.hasNext()) {
 			Filter filter = filters.next();
-			Criterion criterion = getCriterionFromFilter(critMap, filter);
+			Criterion criterion = getCriterionFromFilter(critMap, filter,
+					search);
 			if (criterion != null)
 				junction.add(criterion);
 		}
@@ -514,7 +519,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 * Generate a single Criterion from a single Filter.
 	 */
 	protected Criterion getCriterionFromFilter(Map<String, Criteria> critMap,
-			Filter filter) {
+			Filter filter, Search search) {
 		if (filter == null
 				|| filter.property == null
 				|| "".equals(filter.property)
@@ -529,63 +534,70 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 					+ parsed[PROPERTY];
 		}
 
+		Object value = filter.value;
+		if (filter.operator != Filter.OP_AND && filter.operator != Filter.OP_OR
+				&& filter.operator != Filter.OP_NOT) {
+			value = convertIfNeeded(value, getExpectedClass(search
+					.getSearchClass(), filter.property));
+		}
+
 		switch (filter.operator) {
 		case Filter.OP_IN:
-			if (filter.value instanceof Collection)
-				return Restrictions.in(aliasedPath, (Collection) filter.value);
+			if (value instanceof Collection)
+				return Restrictions.in(aliasedPath, (Collection) value);
 			else
-				return Restrictions.in(aliasedPath, (Object[]) filter.value);
+				return Restrictions.in(aliasedPath, (Object[]) value);
 		case Filter.OP_NOT_IN:
-			if (filter.value instanceof Collection)
+			if (value instanceof Collection)
 				return Restrictions.not(Restrictions.in(aliasedPath,
-						(Collection) filter.value));
+						(Collection) value));
 			else
 				return Restrictions.not(Restrictions.in(aliasedPath,
-						(Object[]) filter.value));
+						(Object[]) value));
 		case Filter.OP_EQUAL:
-			if (filter.value == null) {
+			if (value == null) {
 				return Restrictions.isNull(aliasedPath);
 			} else {
-				return Restrictions.eq(aliasedPath, filter.value);
+				return Restrictions.eq(aliasedPath, value);
 			}
 		case Filter.OP_NOT_EQUAL:
-			if (filter.value == null) {
+			if (value == null) {
 				return Restrictions.isNotNull(aliasedPath);
 			} else {
-				return Restrictions.ne(aliasedPath, filter.value);
+				return Restrictions.ne(aliasedPath, value);
 			}
 		case Filter.OP_GREATER_THAN:
-			return Restrictions.gt(aliasedPath, filter.value);
+			return Restrictions.gt(aliasedPath, value);
 		case Filter.OP_LESS_THAN:
-			return Restrictions.lt(aliasedPath, filter.value);
+			return Restrictions.lt(aliasedPath, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return Restrictions.ge(aliasedPath, filter.value);
+			return Restrictions.ge(aliasedPath, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return Restrictions.le(aliasedPath, filter.value);
+			return Restrictions.le(aliasedPath, value);
 		case Filter.OP_LIKE:
-			return Restrictions.like(aliasedPath, filter.value);
+			return Restrictions.like(aliasedPath, value);
 		case Filter.OP_AND:
 		case Filter.OP_OR:
-			if (!(filter.value instanceof List)) {
+			if (!(value instanceof List)) {
 				return null;
 			}
 			Junction junction = filter.operator == Filter.OP_AND ? Restrictions
 					.conjunction() : Restrictions.disjunction();
-			for (Object o : ((List) filter.value)) {
+			for (Object o : ((List) value)) {
 				if (o instanceof Filter) {
 					Criterion criterion = getCriterionFromFilter(critMap,
-							(Filter) o);
+							(Filter) o, search);
 					if (criterion != null)
 						junction.add(criterion);
 				}
 			}
 			return junction;
 		case Filter.OP_NOT:
-			if (!(filter.value instanceof Filter)) {
+			if (!(value instanceof Filter)) {
 				return null;
 			}
 			Criterion criterion = getCriterionFromFilter(critMap,
-					(Filter) filter.value);
+					(Filter) value, search);
 			if (criterion == null)
 				return null;
 			return Restrictions.not(criterion);
@@ -650,5 +662,95 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 */
 	protected String generateAlias(String path) {
 		return "/" + path.replace('.', '/');
+	}
+
+	/**
+	 * Get the type of a property of a bean class. The property can be simple
+	 * ("name") or nested ("organization.name").
+	 * 
+	 * @throws PropertyNotFoundException
+	 *             if the class does not have the given bean property.
+	 */
+	protected Class<?> getExpectedClass(Class<?> rootClass, String propertyPath)
+			throws PropertyNotFoundException {
+		if (propertyPath == null || "".equals("propertyPath"))
+			return rootClass;
+		String[] chain = propertyPath.split("\\.");
+
+		Class<?> klass = rootClass;
+
+		for (String property : chain) {
+			String getMethod = "get" + property.substring(0, 1).toUpperCase()
+					+ property.substring(1);
+			String isMethod = "is" + property.substring(0, 1).toUpperCase()
+					+ property.substring(1);
+			boolean found = false;
+
+			for (Method method : klass.getMethods()) {
+				if (method.getParameterTypes().length == 0
+						&& (method.getName().equals(getMethod) || method
+								.getName().equals(isMethod))) {
+					klass = method.getReturnType();
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				throw new PropertyNotFoundException("Could not find property '"
+						+ propertyPath + "' on class " + rootClass + ".");
+		}
+
+		return klass;
+	}
+
+	/**
+	 * <p>
+	 * Return an instance of the given class type that has the given value. For
+	 * example, if type is <code>Long</code> and <code>Integer</code> type
+	 * with the value 13 is passed in, a new instance of <code>Long</code>
+	 * will be returned with the value 13.
+	 * 
+	 * <p>
+	 * If the value is already of the correct type, it is simply returned.
+	 * 
+	 * @throws ClassCastException
+	 *             if the value cannot be converted to the given type.
+	 */
+	protected Object convertIfNeeded(Object value, Class<?> type)
+			throws ClassCastException {
+		if (value == null)
+			return value;
+		if (type.isInstance(value))
+			return value;
+
+		if (Number.class.isAssignableFrom(type) && value instanceof Number) {
+			Number num = (Number) value;
+
+			if (type.equals(Double.class)) {
+				return new Double(num.doubleValue());
+			} else if (type.equals(Float.class)) {
+				return new Float(num.floatValue());
+			} else if (type.equals(Long.class)) {
+				return new Long(num.longValue());
+			} else if (type.equals(Integer.class)) {
+				return new Integer(num.intValue());
+			} else if (type.equals(Short.class)) {
+				return new Short(num.shortValue());
+			} else {
+				try {
+					return type.getConstructor(String.class).newInstance(
+							value.toString());
+				} catch (IllegalArgumentException e) {
+				} catch (SecurityException e) {
+				} catch (InstantiationException e) {
+				} catch (IllegalAccessException e) {
+				} catch (InvocationTargetException e) {
+				} catch (NoSuchMethodException e) {
+				}
+			}
+		}
+
+		throw new ClassCastException("Unable to convert value of type "
+				+ value.getClass().getName() + " to type " + type.getName());
 	}
 }
