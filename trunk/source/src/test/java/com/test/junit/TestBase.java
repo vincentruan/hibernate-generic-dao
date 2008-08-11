@@ -95,16 +95,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 
 		// detatch all our Java copies of these from hibernate.
 		session.flush();
-		session.evict(grandpaA);
-		session.evict(grandmaA);
-		session.evict(papaA);
-		session.evict(mamaA);
-		session.evict(papaB);
-		session.evict(mamaB);
-		session.evict(joeA);
-		session.evict(sallyA);
-		session.evict(joeB);
-		session.evict(margretB);
+		session.clear();
 	}
 
 	protected Person copy(Person p) {
