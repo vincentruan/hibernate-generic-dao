@@ -70,10 +70,14 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	protected void _deleteEntity(Object object) {
 		if (object == null)
 			return;
-		Serializable id = _getId(object);
-		if (id != null) {
-			getSession().delete(getSession().get(object.getClass(), id));
-		}
+		getSession().delete(object);
+		
+//		Serializable id = _getId(object);
+//		if (id != null) {
+//			object = getSession().get(object.getClass(), id);
+//			if (object != null)
+//				getSession().delete(object);
+//		}
 	}
 
 	/**
