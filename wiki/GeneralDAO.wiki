@@ -17,3 +17,6 @@ We use Spring auto-wire by type. So we simply use the following line and Spring 
 {{{
 <bean id="generalDAO" class="com.trg.dao.GeneralDAOImpl"/>
 }}}
+
+Here is the Javadoc that describes all the methods available with the GeneralDAO:
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/dao/GeneralDAO.html
