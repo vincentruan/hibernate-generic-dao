@@ -1,0 +1,19 @@
+#summary The GeneralDAO is a single DAO class that can be used to access all classes of domain objects.
+
+= Introduction =
+
+GeneralDAO has methods that require the developer to specify which type of domain object to use. An application only needs a single instance of the GeneralDAO class to access all domain objects.
+
+= Details =
+
+Spring configuration:
+{{{
+<bean id="generalDAO" class="com.trg.dao.GeneralDAOImpl">
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+}}}
+
+We use Spring auto-wire by type. So we simply use the following line and Spring fills in `sessionFactory` automatically:
+{{{
+<bean id="generalDAO" class="com.trg.dao.GeneralDAOImpl"/>
+}}}
