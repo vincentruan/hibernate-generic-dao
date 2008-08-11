@@ -3,7 +3,6 @@ package com.test.junit;
 import java.util.List;
 import java.util.Map;
 
-import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.dao.GeneralDAO;
 import com.trg.search.Search;
