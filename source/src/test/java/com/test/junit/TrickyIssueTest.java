@@ -124,5 +124,13 @@ public class TrickyIssueTest extends TestBase {
 		s.clear();
 		s.addFilterEqual("mother.home.address.id", new Float(mamaA.getHome().getAddress().getId().floatValue()));
 		assertListEqual(new Person[] { joeA, sallyA }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterIn("id", new Object[] { new Integer(joeA.getId().intValue()), new Integer(joeB.getId().intValue()) });
+		assertListEqual(new Person[] { joeA, joeB }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterIn("id", (Object[]) new Integer[] { new Integer(joeA.getId().intValue()), new Integer(joeB.getId().intValue()) });
+		assertListEqual(new Person[] { joeA, joeB }, generalDAO.search(s));
 	}
 }
