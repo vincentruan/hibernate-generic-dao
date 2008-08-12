@@ -2,7 +2,9 @@
 
 = Introduction =
 
-`RemoteDAO` provides a remotable interface to the generic DAO framework. It uses GeneralDAO by default and can be configured to use specific DAO implementations for some or all domain object types.
+`RemoteDAO` provides a remotable interface to the generic DAO framework. It has mostly the same methods as GeneralDAO. It uses GeneralDAO by default and can be configured to use specific DAO implementations for some or all domain object types.
+
+We use `RemoteDAO` with Adobe Flex RIAs. For most of our code we only need to use this single remote service to interact with the server. This saves us time, configuration, testing and other hassles.
 
 _NOTE: There are security concerns with exposing the entire database this way. Later we plan to add security configuration, probably with either method-specific or CRUD access per domain object. (8/12/2008)_
 
