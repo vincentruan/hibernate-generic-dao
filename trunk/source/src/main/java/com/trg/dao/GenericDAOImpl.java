@@ -83,8 +83,8 @@ public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOImpl
 		boolean classNull = false;
 		if (search == null) {
 			SearchResult<T> result = new SearchResult<T>();
-			result.result = fetchAll();
-			result.totalLength = result.result.size();
+			result.results = fetchAll();
+			result.totalLength = result.results.size();
 			return result;
 		}
 		if (search.getSearchClass() == null) {
