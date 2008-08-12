@@ -7,6 +7,9 @@ The purpose of this framework is to save the time, tedium and possible inconsist
 
 The framework also builds on top of these generic DAOs with an interface that is easily exposed as a web service or remote object. (_At The Revere Group ([http://www.reveregroup.com/services/enterprise-platforms/open-source.aspx Open Systems] division), we are using this for Adobe Flex and GWT R.I.A.s._) This becomes extremely powerful because of the extensive search options available in the framework.
 
+Javadoc:
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html
+
 = Details =
 
 _The following pages are soon to come (8/8/08)._
