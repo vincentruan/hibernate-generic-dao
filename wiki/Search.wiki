@@ -1,0 +1,20 @@
+#summary The framework features a powerful and flexible search functionality.
+
+= Introduction =
+
+The framework features a powerful and flexible search functionality. This is used by passing a `Search` object to search methods on general and generic DAOs.
+
+`Search` provides flexible search options:
+  * Filtering on properties using standard operators ( =, !=, >, <, >=, <=, LIKE, IN ).
+  * Combining individual filters with any combination of logical operators ( AND, OR, NOT ).
+  * Sorting on properties.
+  * Paging.
+  * Defining a search remotely from client code.
+  * Transforming search results into objects, lists, arrays and maps
+  * Specifying which properties to fetch eagerly.
+
+Javadoc:
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/search/Search.html
+
+= Details =
+
