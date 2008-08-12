@@ -69,6 +69,6 @@ int totalResults = projectDAO.searchLength(search);
 
 //get one page of results and the total number of results without paging
 SearchResult<Project> result = projectDAO.searchAndLength(search);
-results = result.result;
+results = result.results;
 totalResults = results.totalLength;
 }}}
