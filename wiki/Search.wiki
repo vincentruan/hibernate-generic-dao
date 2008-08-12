@@ -19,38 +19,56 @@ http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/search/
 = Details =
 Usage examples:
 {{{
-	Search search = new Search(Project.class);
-	
-	search.addFilterEqual("name", "hibernate-generic-dao");
-	
-	search.addFilterLessThan("completionDate", new Date());
-	
-	search.addFilterOr(
-			Filter.equal("name", "Jack"),
-			Filter.and(
-					Filter.equal("name", "Jill"),
-					Filter.like("location", "%Chicago%"),
-					Filter.greaterThan("age", 5)
-			)
-	);
-	
-	search.addFilterIn("name", "Jack", "Jill", "Bob");
-	
-	search.addFilterNot(Filter.in("name","Jack", "Jill", "Bob"));
-	
-	
-	search.addSort("name");
-	search.addSort("age", true); //descending
+Search search = new Search(Project.class);
 
-	//paging
-	search.setMaxResults(15);
-	search.setPage(3);
+search.addFilterEqual("name", "hibernate-generic-dao");
+
+search.addFilterLessThan("completionDate", new Date());
+
+search.addFilterOr(
+		Filter.equal("name", "Jack"),
+		Filter.and(
+				Filter.equal("name", "Jill"),
+				Filter.like("location", "%Chicago%"),
+				Filter.greaterThan("age", 5)
+		)
+);
+
+search.addFilterIn("name", "Jack", "Jill", "Bob");
+
+search.addFilterNot(Filter.in("name","Jack", "Jill", "Bob"));
+
+
+search.addSort("name");
+search.addSort("age", true); //descending
+
+//paging
+search.setMaxResults(15);
+search.setPage(3);
 }}}
 
 Nested properties are also fully supported...
 {{{
-	search.addFilterEqual("status.name", "active");
-	search.addFilterGreaterThan("workgroup.manager.salary", 75000.00);
-	
-	search.addSort("status.name");
+search.addFilterEqual("status.name", "active");
+search.addFilterGreaterThan("workgroup.manager.salary", 75000.00);
+
+search.addSort("status.name");
+}}}
+
+Calling a search:
+{{{
+Search search = new Search();
+search.addFilterGreaterThan("userCount", 500);
+search.setMaxResults(15);
+
+//get one page of results
+List<Project> results = projectDAO.search(search);
+
+//get the total number of results (ignores paging)
+int totalResults = projectDAO.searchLength(search);
+
+//get one page of results and the total number of results without paging
+SearchResult<Project> result = projectDAO.searchAndLength(search);
+results = result.result;
+totalResults = results.totalLength;
 }}}
