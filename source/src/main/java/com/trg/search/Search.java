@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * The base search DTO (data transfer object). A Search object is passed into a
- * DAO to define the parameters for a search. There are six types of parameters
+ * DAO to define the parameters for a search. There are five types of parameters
  * that can be set.
  * <ul>
  * <li>Class - The Class of the object(s) to search for. This is required. It
@@ -42,6 +42,9 @@ import java.util.List;
  * mode must also be set using <code>setFetchMode()</code>
  * </ul>
  * </ul>
+ * 
+ * @see Filter
+ * @see Fetch
  * 
  * @author dwolverton
  * 
@@ -107,58 +110,112 @@ public class Search implements Serializable {
 		filters.add(filter);
 	}
 
+	/**
+	 * Add a filter that uses the == operator.
+	 */
 	public void addFilterEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_EQUAL));
 	}
 
+	/**
+	 * Add a filter that uses the >= operator.
+	 */
 	public void addFilterGreaterOrEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_GREATER_OR_EQUAL));
 	}
 
+	/**
+	 * Add a filter that uses the > operator.
+	 */
 	public void addFilterGreaterThan(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_GREATER_THAN));
 	}
 
+	/**
+	 * Add a filter that uses the IN operator.
+	 */
 	public void addFilterIn(String property, Collection<?> value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
 	}
 
+	/**
+	 * Add a filter that uses the IN operator.
+	 * 
+	 * <p>This takes a variable number of parameters. Any number of
+	 * values can be specified.
+	 */
 	public void addFilterIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
 	}
 
+	/**
+	 * Add a filter that uses the NOT IN operator.
+	 */
 	public void addFilterNotIn(String property, Collection<?> value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
 	}
 
+	/**
+	 * Add a filter that uses the NOT IN operator.
+	 * 
+	 * <p>This takes a variable number of parameters. Any number of
+	 * values can be specified.
+	 */
 	public void addFilterNotIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
 	}
 
+	/**
+	 * Add a filter that uses the <= operator.
+	 */
 	public void addFilterLessOrEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_LESS_OR_EQUAL));
 	}
 
+	/**
+	 * Add a filter that uses the < operator.
+	 */
 	public void addFilterLessThan(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_LESS_THAN));
 	}
 
+	/**
+	 * Add a filter that uses the LIKE operator.
+	 */
 	public void addFilterLike(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_LIKE));
 	}
 
+	/**
+	 * Add a filter that uses the != operator.
+	 */
 	public void addFilterNotEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_EQUAL));
 	}
 
+	/**
+	 * Add a filter that uses the AND operator.
+	 * 
+	 * <p>This takes a variable number of parameters. Any number of
+	 * <code>Filter</code>s can be specified.
+	 */
 	public void addFilterAnd(Filter... filters) {
 		addFilter(Filter.and(filters));
 	}
 
+	/**
+	 * Add a filter that uses the OR operator.
+	 * 
+	 * <p>This takes a variable number of parameters. Any number of
+	 * <code>Filter</code>s can be specified.
+	 */
 	public void addFilterOr(Filter... filters) {
 		addFilter(Filter.or(filters));
 	}
 
+	/**
+	 * Add a filter that uses the NOT operator.
+	 */
 	public void addFilterNot(Filter filter) {
 		addFilter(Filter.not(filter));
 	}
@@ -167,6 +224,9 @@ public class Search implements Serializable {
 		filters.remove(filter);
 	}
 
+	/**
+	 * Remove all filters on the given property.
+	 */
 	public void removeFiltersOnProperty(String property) {
 		if (property == null)
 			return;
@@ -204,12 +264,19 @@ public class Search implements Serializable {
 		sorts.add(sort);
 	}
 
+	/**
+	 * Add ascending sort by property
+	 */
 	public void addSort(String property) {
 		if (property == null)
 			return; // null properties do nothing, don't bother to add them.
 		sorts.add(new Sort(property));
 	}
 
+	/**
+	 * Add sort by property. Ascending if <code>desc == false</code>,
+	 * descending if <code>desc == true</code>.
+	 */
 	public void addSort(String property, boolean desc) {
 		if (property == null)
 			return; // null properties do nothing, don't bother to add them.

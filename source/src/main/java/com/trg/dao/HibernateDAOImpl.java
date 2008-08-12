@@ -162,12 +162,12 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		result.page = search.getPage();
 		result.maxResults = search.getMaxResults();
 
-		result.result = _search(search);
+		result.results = _search(search);
 
 		if (search.getMaxResults() > 0) {
 			result.totalLength = _searchLength(search);
 		} else {
-			result.totalLength = result.result.size()
+			result.totalLength = result.results.size()
 					+ search.calcFirstResult();
 		}
 

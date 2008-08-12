@@ -2,6 +2,10 @@ package com.trg.search;
 
 import java.io.Serializable;
 
+/**
+ * Used to specify selection in <code>Search</code>.
+ * @see Search
+ */
 public class Fetch implements Serializable {
 
 	private static final long serialVersionUID = 1L;
