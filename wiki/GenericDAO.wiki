@@ -1,0 +1,42 @@
+#summary GenericDAO is a class that can be extended to make individual DAOs.
+
+= Introduction =
+
+`GenericDAO` is a class that can be extended to make individual DAOs. A basic domain-object-specific DAO is created by extending `GenericDAO` and specifying the domain object type with generic type parameters. The default implementation can be customized by adding and/or overriding methods.
+
+`GenericDAO` implements all the same methods as `GeneralDAO`. Here's the Javadoc:
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/dao/GenericDAO.html
+
+= Details =
+
+Here is all the code it usually takes to create a DAO interface and implementation for a `Project` domain object:
+{{{
+public interface ProjectDAO extends GenericDAO<Project, Long> {
+
+}
+
+public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements ProjectDAO {
+
+}
+}}}
+
+This could be customized by adding and/or overriding methods if needed:
+{{{
+public interface ProjectDAO extends GenericDAO<Project, Long> {
+	public Project fetchByName(String name);
+}
+
+public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements ProjectDAO {
+	public Project fetchByName(String name) {
+		Criteria crit getSession().createCriteria(Project.class);
+		crit.add(Restrictions.eq("name", name));
+		return crit.uniqueResult();
+	}
+
+	@Override
+	public void create(Project project) {
+		project.setStatus("NEW");
+		super.create(project);
+	}
+}
+}}}
