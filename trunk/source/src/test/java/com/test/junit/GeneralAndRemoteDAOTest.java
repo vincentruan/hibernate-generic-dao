@@ -61,7 +61,7 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 
 		assertEquals(2, generalDAO.searchLength(new Search(Person.class)));
 		assertListEqual(new Person[] { bob, fred }, generalDAO
-				.searchAndLength(new Search(Person.class)).result);
+				.searchAndLength(new Search(Person.class)).results);
 
 		generalDAO.deleteEntity(bob);
 		assertEquals(null, generalDAO.fetch(bob.getId(), Person.class));
@@ -116,7 +116,7 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 
 		assertEquals(2, remoteDAO.searchLength(s));
 		assertListEqual(new Person[] { bob, fred }, remoteDAO
-				.searchAndLength(s).result);
+				.searchAndLength(s).results);
 
 		remoteDAO.deleteEntity(bob);
 		assertEquals(null, remoteDAO.fetch(bob.getId(), Person.class.getName()));

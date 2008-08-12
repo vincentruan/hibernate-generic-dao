@@ -26,7 +26,7 @@ public class SearchResultTest extends TestBase {
 		assertEquals(s.getMaxResults(), result.maxResults);
 		assertEquals(s.getPage(), result.page);
 		assertEquals(6, result.totalLength);
-		assertListEqual(new Person[] { joeA, sallyA, papaA, mamaA, grandpaA, grandmaA }, result.result);
+		assertListEqual(new Person[] { joeA, sallyA, papaA, mamaA, grandpaA, grandmaA }, result.results);
 	}
 	
 }
