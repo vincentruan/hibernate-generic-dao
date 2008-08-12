@@ -24,7 +24,7 @@ public class RemoteDAO {
 	private Map<String, Object> specificDAOs;
 
 	@Autowired
-	private GeneralDAO generalDao;
+	private GeneralDAO generalDAO;
 
 	/**
 	 * In practice some DAOs could be put into this map using Spring. If a DAO
@@ -40,8 +40,8 @@ public class RemoteDAO {
 	 * GeneralDAO has default implementations for the standard DAO methods. Which
 	 * model class it uses is specified when calling the particular method.
 	 */
-	public void setGeneralDao(GeneralDAO generalDao) {
-		this.generalDao = generalDao;
+	public void setGeneralDAO(GeneralDAO generalDAO) {
+		this.generalDAO = generalDAO;
 	}
 	
 	private Object getSpecificDAO(String className) {
@@ -80,7 +80,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			return generalDao.fetch(id, klass);
+			return generalDAO.fetch(id, klass);
 		}
 	}
 
@@ -104,7 +104,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			return generalDao.fetchAll(klass);
+			return generalDAO.fetchAll(klass);
 		}
 	}
 
@@ -126,7 +126,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			generalDao.create(object);
+			generalDAO.create(object);
 			return object;
 		}
 	}
@@ -149,7 +149,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			generalDao.update(object);
+			generalDAO.update(object);
 			return object;
 		}
 	}
@@ -172,7 +172,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			generalDao.createOrUpdate(object);
+			generalDAO.createOrUpdate(object);
 			return object;
 		}
 	}	
@@ -200,7 +200,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			generalDao.deleteById(id, klass);
+			generalDAO.deleteById(id, klass);
 		}
 	}
 
@@ -221,7 +221,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			generalDao.deleteEntity(object);
+			generalDAO.deleteEntity(object);
 		}
 	}
 	
@@ -260,7 +260,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			return generalDao.search(search);
+			return generalDAO.search(search);
 		}
 	}
 
@@ -284,7 +284,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			return generalDao.searchLength(search);
+			return generalDAO.searchLength(search);
 		}
 	}
 
@@ -308,7 +308,7 @@ public class RemoteDAO {
 				throw e;
 			}
 		} else {
-			return generalDao.searchAndLength(search);
+			return generalDAO.searchAndLength(search);
 		}
 	}
 }
