@@ -25,7 +25,6 @@ Spring configuration:
 Using a specific implementation for `Project` domain objects...
 {{{
 <bean id="remoteDAO" class="com.trg.remote.RemoteDAO">
-	<property name="generalDAO" ref="generalDAO"/>
 	<property name="specificDAOs">
 		<map>
 			<entry key="com.sample.model.Project" value-ref="projectDAO"/>
