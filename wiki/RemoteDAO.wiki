@@ -1,0 +1,35 @@
+#summary RemoteDAO is a class that exposes the generic DAO methods remotely.
+
+= Introduction =
+
+`RemoteDAO` provides a remotable interface to the generic DAO framework. It uses GeneralDAO by default and can be configured to use specific DAO implementations for some or all domain object types.
+
+_NOTE: There are security concerns with exposing the entire database this way. Later we plan to add security configuration, probably with either method-specific or CRUD access per domain object._
+
+Javadoc:
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/remote/RemoteDAO.html
+
+= Details =
+
+Spring configuration:
+{{{
+<!-- without AUTO-WIRE -->
+<bean id="remoteDAO" class="com.trg.remote.RemoteDAO">
+	<property name="generalDAO" ref="generalDAO"/>
+</bean>
+
+<!-- with AUTO-WIRE -->
+<bean  id="remoteDAO" class="com.trg.remote.RemoteDAO"/>
+}}}
+
+Using a specific implementation for `Project` domain objects...
+{{{
+<bean id="remoteDAO" class="com.trg.remote.RemoteDAO">
+	<property name="generalDAO" ref="generalDAO"/>
+	<property name="specificDAOs">
+		<map>
+			<entry key="com.sample.model.Project" value-ref="projectDAO"/>
+		</map>
+	</property>
+</bean>
+}}}
