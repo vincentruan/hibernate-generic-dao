@@ -21,5 +21,5 @@ The framework's features can be divided into four categories
   * [Search]
 
 This site includes a couple of additional pieces that work with the core framework.
-  * EclipsePlugin
-  * FlexClientSideInterface
+  * EclipsePlugin (not yet posted)
+  * FlexClientSideInterface (not yet posted)
