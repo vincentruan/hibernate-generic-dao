@@ -77,7 +77,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	protected void _deleteEntity(Object object) {
 		if (object == null)
 			return;
-//		getSession().delete(object);
+		// getSession().delete(object);
 
 		Serializable id = _getId(object);
 		if (id != null) {
@@ -106,10 +106,19 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	/**
 	 * Update the corresponding object in the database with the properties of
 	 * the specified object. The corresponding object is determined by id. NOTE:
+	 * The Java object becomes attached to the Hibernate session.
+	 */
+	protected void _update(Object object) {
+		getSession().update(object);
+	}
+
+	/**
+	 * Update the corresponding object in the database with the properties of
+	 * the specified object. The corresponding object is determined by id. NOTE:
 	 * The Java object does not become attached to the Hibernate session. It
 	 * remains in its current state.
 	 */
-	protected void _update(Object object) {
+	protected void _merge(Object object) {
 		getSession().merge(object);
 	}
 
