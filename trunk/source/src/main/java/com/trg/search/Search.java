@@ -55,19 +55,90 @@ public class Search implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Select modes tell the search what form to use for the results:
-	 * <ul>
-	 * <li><code>FETCH_ENTITY</code> (default) returns the actual objects of
-	 * the specified <code>searchClass</code>
-	 * <li><code>FETCH_ARRAY</code> returns each object as an Object array (<code>Object[]</code>)
-	 * with the entries corresponding to the fetches added to the search.
-	 * <li><code>FETCH_LIST</code> returns each object as a list of Objects (<code>List&lt;Object&gt;</Code>).
-	 * <li><code>FETCH_MAP</code> returns each object as a map with
-	 * properties' names or aliases for keys to the corresponding values.
-	 * </ul>
+	 * Value for fetch mode. This is the default value.
+	 * <code>FETCH_ENTITY</code> returns the actual objects of the specified
+	 * <code>searchClass</code>
+	 * 
+	 * @see #setFetchMode(int)
 	 */
-	public static final int FETCH_ENTITY = 0, FETCH_ARRAY = 1, FETCH_LIST = 2,
-			FETCH_MAP = 3, FETCH_SINGLE = 4;
+	public static final int FETCH_ENTITY = 0;
+
+	/**
+	 * Value for fetch mode. This is the default value. <code>FETCH_ARRAY</code>
+	 * returns each object as an Object array (<code>Object[]</code>) with
+	 * the entries corresponding to the fetches added to the search. Here's an
+	 * example:
+	 * 
+	 * <pre>
+	 * Search s = new Search(Person.class);
+	 * s.setFetchMode(Search.FETCH_ARRAY);
+	 * s.addFetch(&quot;firstName&quot;);
+	 * s.addFetch(&quot;lastName&quot;);
+	 * for (Object[] array : dao.search(s)) {
+	 * 	System.out.println(array[0] + &quot; &quot; + array[1]);
+	 * }
+	 * </pre>
+	 * 
+	 * @see #setFetchMode(int)
+	 */
+	public static final int FETCH_ARRAY = 1;
+
+	/**
+	 * Value for fetch mode. This is the default value. <code>FETCH_LIST</code>
+	 * returns each object as a list of Objects (<code>List&lt;Object&gt;</Code>).
+	 * Here's an example:
+	 * 
+	 * <pre>
+	 * Search s = new Search(Person.class);
+	 * s.setFetchMode(Search.FETCH_LIST);
+	 * s.addFetch(&quot;firstName&quot;);
+	 * s.addFetch(&quot;lastName&quot;);
+	 * for (List&lt;Object&gt; list : dao.search(s)) {
+	 * 	System.out.println(list.get(0) + &quot; &quot; + list.get(1));
+	 * }
+	 * </pre>
+	 * 
+	 * @see #setFetchMode(int)
+	 */
+	public static final int FETCH_LIST = 2;
+
+	/**
+	 * Value for fetch mode. This is the default value. <code>FETCH_MAP</code>
+	 * returns each object as a map with properties' names or aliases for keys
+	 * to the corresponding values. Here's an example:
+	 * 
+	 * <pre>
+	 * Search s = new Search(Person.class);
+	 * s.setFetchMode(Search.FETCH_MAP;
+	 * s.addFetch(&quot;firstName&quot;);
+	 * s.addFetch(&quot;lastName&quot;, &quot;ln&quot;);
+	 * for (Map&lt;String, Object&gt; map : dao.search(s)) {
+	 * 	System.out.println(map.get(&quot;firstName&quot;) + &quot; &quot; + map.get(&quot;ln&quot;));
+	 * }
+	 * </pre>
+	 * 
+	 * @see #setFetchMode(int)
+	 */
+	public static final int FETCH_MAP = 3;
+
+	/**
+	 * Value for fetch mode. This is the default value.
+	 * <code>FETCH_SINGLE</code> - Exactly one fetch property must be
+	 * specified to use this fetch mode. The result list contains just the value
+	 * of that property for each element. Here's an example:
+	 * 
+	 * <pre>
+	 * Search s = new Search(Person.class);
+	 * s.setFetchMode(Search.FETCH_SINGLE);
+	 * s.addFetch(&quot;firstName&quot;);
+	 * for (String name : dao.search(s)) {
+	 * 	System.out.println(name);
+	 * }
+	 * </pre>
+	 * 
+	 * @see #setFetchMode(int)
+	 */
+	public static final int FETCH_SINGLE = 4;
 
 	protected int firstResult = -1; // -1 stands for unspecified
 
@@ -141,8 +212,9 @@ public class Search implements Serializable {
 	/**
 	 * Add a filter that uses the IN operator.
 	 * 
-	 * <p>This takes a variable number of parameters. Any number of
-	 * values can be specified.
+	 * <p>
+	 * This takes a variable number of parameters. Any number of values can be
+	 * specified.
 	 */
 	public void addFilterIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
@@ -158,8 +230,9 @@ public class Search implements Serializable {
 	/**
 	 * Add a filter that uses the NOT IN operator.
 	 * 
-	 * <p>This takes a variable number of parameters. Any number of
-	 * values can be specified.
+	 * <p>
+	 * This takes a variable number of parameters. Any number of values can be
+	 * specified.
 	 */
 	public void addFilterNotIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
@@ -196,7 +269,8 @@ public class Search implements Serializable {
 	/**
 	 * Add a filter that uses the AND operator.
 	 * 
-	 * <p>This takes a variable number of parameters. Any number of
+	 * <p>
+	 * This takes a variable number of parameters. Any number of
 	 * <code>Filter</code>s can be specified.
 	 */
 	public void addFilterAnd(Filter... filters) {
@@ -206,7 +280,8 @@ public class Search implements Serializable {
 	/**
 	 * Add a filter that uses the OR operator.
 	 * 
-	 * <p>This takes a variable number of parameters. Any number of
+	 * <p>
+	 * This takes a variable number of parameters. Any number of
 	 * <code>Filter</code>s can be specified.
 	 */
 	public void addFilterOr(Filter... filters) {
@@ -366,16 +441,16 @@ public class Search implements Serializable {
 	}
 
 	/**
-	 * Select modes tell the search what form to use for the results:
-	 * <ul>
-	 * <li><code>FETCH_ENTITY</code> (default) returns the actual objects of
-	 * the specified <code>searchClass</code>
-	 * <li><code>FETCH_ARRAY</code> returns each object as an Object array (<code>Object[]</code>)
-	 * with the entries corresponding to the fetches added to the search.
-	 * <li><code>FETCH_LIST</code> returns each object as a list of Objects (<code>List&lt;Object&gt;</Code>).
-	 * <li><code>FETCH_MAP</code> returns each object as a map with
-	 * properties' names or aliases for keys to the corresponding values.
-	 * </ul>
+	 * Select modes tell the search what form to use for the results. Options
+	 * include <code>FETCH_ENTITY</code>, <code>FETCH_ARRAY</code>,
+	 * <code>FETCH_LIST</code>, <code>FETCH_MAP</code> and
+	 * <code>FETCH_SINGLE</code>.
+	 * 
+	 * @see #FETCH_ENTITY
+	 * @see #FETCH_ARRAY
+	 * @see #FETCH_LIST
+	 * @see #FETCH_MAP
+	 * @see #FETCH_SINGLE
 	 */
 	public void setFetchMode(int fetchMode) {
 		if (fetchMode < 0 || fetchMode > 4)
