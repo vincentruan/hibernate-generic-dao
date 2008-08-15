@@ -97,6 +97,12 @@ public class TestBase extends TestCaseSpringAutoWire {
 		session.flush();
 		session.clear();
 	}
+	
+	protected void clearHibernate() {
+		Session session = sessionFactory.getCurrentSession();
+		session.flush();
+		session.clear();
+	}
 
 	protected Person copy(Person p) {
 		Person cpy = new Person();

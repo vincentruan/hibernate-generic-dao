@@ -77,10 +77,12 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 		generalDAO.createOrUpdate(bob);
 		generalDAO.create(fred);
 		
+		clearHibernate();
+		
 		Person bob2 = copy(bob);
 		bob2.setFirstName("Bobby");
 		generalDAO.update(bob2);
-		assertEquals("Bobby", bob.getFirstName());
+		assertEquals("Bobby", ((Person) generalDAO.fetch(bob.getId(), bob.getClass())).getFirstName() );
 	}
 	
 	public void testRemoteDAOGeneral() throws Exception {
@@ -132,10 +134,12 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 		remoteDAO.createOrUpdate(bob);
 		remoteDAO.create(fred);
 		
+		clearHibernate();
+		
 		Person bob2 = copy(bob);
 		bob2.setFirstName("Bobby");
 		remoteDAO.update(bob2);
-		assertEquals("Bobby", bob.getFirstName());		
+		assertEquals("Bobby", ((Person) generalDAO.fetch(bob.getId(), bob.getClass())).getFirstName());		
 	}
 	
 	public void testRemoteDAOSpecific() throws Exception {
