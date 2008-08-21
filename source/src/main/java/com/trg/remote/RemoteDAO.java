@@ -311,4 +311,28 @@ public class RemoteDAO {
 			return generalDAO.searchAndLength(search);
 		}
 	}
+	
+	public Object searchUnique(RemoteSearch search) throws Exception {
+		if (mockDelay != 0) Thread.sleep(mockDelay);
+		try {
+			search.setSearchClass(Class.forName(search.getClassName()));
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw e;
+		}
+
+		Object specificDao = getSpecificDAO(search.getSearchClass().getName());
+		if (specificDao != null) {
+			try {
+				return specificDao.getClass().getMethod(
+						"searchUnique", Search.class).invoke(specificDao,
+						search);
+			} catch (Exception e) {
+				e.printStackTrace();
+				throw e;
+			}
+		} else {
+			return generalDAO.searchUnique(search);
+		}
+	}
 }

@@ -3,6 +3,8 @@ package com.trg.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.NonUniqueResultException;
+
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
@@ -16,10 +18,11 @@ public interface GeneralDAO {
 
 	/**
 	 * If the id of the object is null or zero, create, otherwise update.
+	 * 
 	 * @return true if create; false if update.
 	 */
 	public boolean createOrUpdate(Object object);
-	
+
 	/**
 	 * Delete the object with the specified id and class from the database.
 	 */
@@ -34,7 +37,7 @@ public interface GeneralDAO {
 	 * Get the object with the specified id and class from the database.
 	 */
 	public Object fetch(Serializable id, Class<?> klass);
-	
+
 	/**
 	 * Get a list of all the objects of the specified type.
 	 */
@@ -47,17 +50,17 @@ public interface GeneralDAO {
 	public void update(Object object);
 
 	/**
-	 * Search for objects given the search parameters in the
-	 * specified <code>Search</code> object.
+	 * Search for objects given the search parameters in the specified
+	 * <code>Search</code> object.
 	 */
 	public List search(Search search);
-	
+
 	/**
 	 * Returns the total number of results that would be returned using the
 	 * given <code>Search</code> if there were no paging or maxResult limits.
 	 */
 	public int searchLength(Search search);
-	
+
 	/**
 	 * Returns a <code>SearchResult</code> object that includes the list of
 	 * results like <code>search()</code> and the total length like
@@ -66,13 +69,22 @@ public interface GeneralDAO {
 	public SearchResult searchAndLength(Search search);
 
 	/**
+	 * Search for a single result using the given parameters.
+	 */
+	public Object searchUnique(Search search) throws NonUniqueResultException;
+
+	/**
 	 * Returns true if the object is connected to the current Hibernate session.
 	 */
 	public void flush();
-	
+
 	/**
-	 * Flushes changes in the Hibernate cache to the database. 
+	 * Flushes changes in the Hibernate cache to the database.
 	 */
 	public boolean isConnected(Object object);
-
+	
+	/**
+	 * Refresh the content of the given entity from the current database state.
+	 */
+	public void refresh(Object object);
 }

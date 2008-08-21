@@ -3,6 +3,8 @@ package com.trg.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.NonUniqueResultException;
+
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
@@ -10,7 +12,7 @@ import com.trg.search.SearchResult;
 public class GeneralDAOImpl extends HibernateDAOImpl implements GeneralDAO {
 
 	public void create(Object object) {
-		super._create(object);
+		_create(object);
 	}
 	
 	public boolean createOrUpdate(Object object) {
@@ -24,43 +26,52 @@ public class GeneralDAOImpl extends HibernateDAOImpl implements GeneralDAO {
 		}
 	}
 	
-	public void deleteById(Serializable id, Class klass) {
-		super._deleteById(id, klass);
+	public void deleteById(Serializable id, Class<?> klass) {
+		_deleteById(id, klass);
 	}
 	
 	public void deleteEntity(Object object) {
-		super._deleteEntity(object);
+		_deleteEntity(object);
 	}
 	
-	public Object fetch(Serializable id, Class klass) {
-		return super._fetch(id, klass);
+	public Object fetch(Serializable id, Class<?> klass) {
+		return _fetch(id, klass);
 	}
 
-	public List fetchAll(Class klass) {
-		return super._fetchAll(klass);
+	public List fetchAll(Class<?> klass) {
+		return _fetchAll(klass);
 	}
 	
 	public void update(Object object) {
-		super._update(object);
+		_update(object);
 	}
 	
 	public List search(Search search) {
-		return super._search(search);
+		return _search(search);
 	}
 	
 	public int searchLength(Search search) {
-		return super._searchLength(search);
+		return _searchLength(search);
 	}
 	
 	public SearchResult searchAndLength(Search search) {
-		return super._searchAndLength(search);
+		return _searchAndLength(search);
 	}
 	
 	public void flush() {
-		super._flush();
+		_flush();
 	}
 
 	public boolean isConnected(Object object) {
-		return super._isConnected(object);
+		return _isConnected(object);
+	}
+
+	public Object searchUnique(Search search) throws NonUniqueResultException {
+		return _searchUnique(search);
+	}
+
+	public void refresh(Object object) {
+		// TODO Auto-generated method stub
+		
 	}
 }

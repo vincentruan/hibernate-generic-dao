@@ -13,6 +13,7 @@ import java.util.Map;
 import org.hibernate.Criteria;
 import org.hibernate.EntityMode;
 import org.hibernate.FetchMode;
+import org.hibernate.NonUniqueResultException;
 import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
@@ -132,7 +133,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 		if (search == null)
 			return null;
 
-		Criteria crit = buildCriteria(search);
+		Criteria crit = buildCriteria(search, true, true, true, true);
 		List list = crit.list();
 
 		return list;
@@ -149,7 +150,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 			return 0;
 
 		Criteria crit;
-		crit = buildCriteriaWithFiltersOnly(search);
+		crit = buildCriteria(search, true, false, false, false);
 		crit.setProjection(Projections.rowCount());
 		return ((Integer) crit.uniqueResult()).intValue();
 	}
@@ -184,6 +185,18 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	}
 
 	/**
+	 * Search for a single result using the given parameters.
+	 */
+	public Object _searchUnique(Search search) throws NonUniqueResultException {
+		if (search == null)
+			return null;
+
+		Criteria crit;
+		crit = buildCriteria(search, true, false, false, true);
+		return crit.uniqueResult();
+	}
+
+	/**
 	 * Returns true if the object is connected to the current hibernate session.
 	 */
 	protected boolean _isConnected(Object o) {
@@ -195,6 +208,13 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 */
 	protected void _flush() {
 		getSession().flush();
+	}
+
+	/**
+	 * Refresh the content of the given entity from the current database state.
+	 */
+	protected void _refresh(Object o) {
+		getSession().refresh(o);
 	}
 
 	// ---- Search helpers ----
@@ -217,42 +237,32 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	protected static final String ROOT_CRIT = "";
 
 	/**
-	 * Build a hibernate <code>Criteria</code> using all the properties and
-	 * features of the given <code>Search</code>. The <code>Criteria</code>
-	 * that is returned is ready to be executed.
+	 * Build a hibernate <code>Criteria</code> using the specified features of
+	 * the given <code>Search</code>. The <code>Criteria</code> that is
+	 * returned is ready to be executed.
 	 */
-	protected Criteria buildCriteria(Search search) {
+	protected Criteria buildCriteria(Search search, boolean doFiltering,
+			boolean doPaging, boolean doOrdering, boolean doFetching) {
 		Map<String, Criteria> critMap = startCriteria(search);
 
 		// if related collections are fetched eagerly (by join), this
 		// DISTINCT_ROOT_ENTITY result transformer is needed to make sure each
-		// result only shows up once. Note that when using any of the fetch mode
+		// result only shows up once. Note that when any of the fetch mode
 		// options other than FETCH_ENTITY is used, this technique does not
 		// work.
 		critMap.get(ROOT_CRIT).setResultTransformer(
 				Criteria.DISTINCT_ROOT_ENTITY);
 
-		addFilters(critMap, search);
-		addPaging(critMap, search);
-		addOrdering(critMap, search);
-		addFetching(critMap, search);
+		if (doFiltering)
+			addFilters(critMap, search);
+		if (doPaging)
+			addPaging(critMap, search);
+		if (doOrdering)
+			addOrdering(critMap, search);
+		if (doFetching)
+			addFetching(critMap, search);
 
 		return critMap.get(ROOT_CRIT);
-	}
-
-	/**
-	 * Build a Hibernate <code>Criteria</code> using only the filter
-	 * properties of the given <code>Search</code>. Paging, Ordering and
-	 * Fetching are ignored. This is useful for the <code>_searchLength</code>
-	 * operation. The <code>Criteria</code> that is returned is ready to be
-	 * executed.
-	 */
-	protected Criteria buildCriteriaWithFiltersOnly(Search search) {
-		Map<String, Criteria> critMap = startCriteria(search);
-		addFilters(critMap, search);
-
-		return critMap.get(ROOT_CRIT).setResultTransformer(
-				Criteria.DISTINCT_ROOT_ENTITY);
 	}
 
 	/**
