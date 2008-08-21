@@ -3,6 +3,8 @@ package com.trg.dao;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.NonUniqueResultException;
+
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
@@ -65,6 +67,19 @@ public interface GenericDAO<T, ID extends Serializable> {
 	public SearchResult<T> searchAndLength(Search search);
 
 	/**
+	 * Search for objects given the search parameters in the specified
+	 * <code>Search</code> object. Return an untyped result list. The result
+	 * type can be determined by fetch mode and fetches on the search.
+	 */
+	@SuppressWarnings("unchecked")
+	public List searchGeneric(Search search);
+
+	/**
+	 * Search for a single result using the given parameters.
+	 */
+	public Object searchUnique(Search search) throws NonUniqueResultException;
+	
+	/**
 	 * Returns true if the object is connected to the current Hibernate session.
 	 */
 	public boolean isConnected(Object object);
@@ -73,4 +88,9 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * Flushes changes in the Hibernate cache to the database. 
 	 */
 	public void flush();
+	
+	/**
+	 * Refresh the content of the given entity from the current database state.
+	 */
+	public void refresh(Object object);
 }
