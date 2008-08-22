@@ -39,7 +39,12 @@ import java.util.List;
  * actual objects, a collection of specified properties can be returned for each
  * row in the result set. These properties can be returned in maps, lists or
  * arrays. Fetches are specified using <code>addFetch()</code>. The fetch
- * mode must also be set using <code>setFetchMode()</code>
+ * mode must also be set using <code>setFetchMode()</code>.<br/><br/>
+ * 
+ * Additionally, fetches can be specified using column operators: COUNT, COUNT
+ * DISTINCT, SUM, AVG, MAX, MIN. Note that fetches with column operators can not
+ * be mixed with fetches that do not use column operators and can also not be
+ * used with <code>fetchMode == FETCH_ENTITY</code>.
  * </ul>
  * </ul>
  * 
@@ -417,7 +422,7 @@ public class Search implements Serializable {
 			return; // null properties do nothing, don't bother to add them.
 		fetches.add(new Fetch(property, operator));
 	}
-	
+
 	/**
 	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
 	 * <code>key</code> will be used as the key for this value in the map.
@@ -428,7 +433,7 @@ public class Search implements Serializable {
 			return; // null properties do nothing, don't bother to add them.
 		fetches.add(new Fetch(property, operator, key));
 	}
-	
+
 	public void removeFetch(Fetch fetch) {
 		fetches.remove(fetch);
 	}
