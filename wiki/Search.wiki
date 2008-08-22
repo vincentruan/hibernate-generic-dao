@@ -72,4 +72,9 @@ int totalResults = projectDAO.searchLength(search);
 SearchResult<Project> result = projectDAO.searchAndLength(search);
 results = result.results;
 totalResults = results.totalLength;
+
+//get the average userCount for project matching the filter criteria
+search.setFetchMode(Search.FETCH_SINGLE)
+search.addFetch("userCount", Fetch.OP_AVG);
+int avgCount = (int) projectDAO.uniqueResult(search);
 }}}
