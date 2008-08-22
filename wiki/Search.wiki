@@ -12,6 +12,7 @@ The framework features a powerful and flexible search functionality. This is use
   * Defining a search remotely from client code.
   * Transforming search results into objects, lists, arrays and maps
   * Specifying which properties to fetch eagerly.
+  * Specifying column operators such as COUNT, SUM, AVG, MAX, etc.
 
 Javadoc:
 http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/search/Search.html
