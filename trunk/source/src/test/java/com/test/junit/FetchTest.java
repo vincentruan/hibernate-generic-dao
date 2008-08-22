@@ -3,9 +3,11 @@ package com.test.junit;
 import java.util.List;
 import java.util.Map;
 
+import com.test.TestBase;
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.dao.GeneralDAO;
+import com.trg.search.Fetch;
 import com.trg.search.Search;
 
 
@@ -246,5 +248,88 @@ public class FetchTest extends TestBase {
 		assertEquals("apartment", resultMap.get(1).get("homeType"));
 		assertEquals(null, resultMap.get(1).get("father.mother.home.address.street"));
 		assertEquals("Margret", resultMap.get(1).get("home.type"));		
+	}
+	
+	public void testColumnOperators() {
+		initDB();
+		
+		Search s = new Search(Person.class);
+		
+		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addFilterEqual("lastName", "Beta");
+		
+		//ages 10, 14, 38, 39
+		
+		s.addFetch("age", Fetch.OP_COUNT);
+		assertEquals(4, generalDAO.searchUnique(s));
+		
+		s.clearFetch();
+		s.addFetch("age", Fetch.OP_COUNT_DISTINCT);
+		assertEquals(4, generalDAO.searchUnique(s));
+		
+		s.clearFetch();
+		s.addFetch("age", Fetch.OP_MAX);
+		assertEquals(39, generalDAO.searchUnique(s));
+		
+		s.clearFetch();
+		s.addFetch("age", Fetch.OP_MIN);
+		assertEquals(10, generalDAO.searchUnique(s));
+		
+		s.clearFetch();
+		s.addFetch("age", Fetch.OP_SUM);
+		assertEquals(101, generalDAO.searchUnique(s));
+		
+		s.clearFetch();
+		s.addFetch("age", Fetch.OP_AVG);
+		assertEquals(25.0, generalDAO.searchUnique(s));
+		
+		
+		//38, 38, 65
+		
+		s.clearFetch();
+		s.addFetch("mother.age", Fetch.OP_COUNT);
+		assertEquals(3, generalDAO.searchUnique(s));
+		
+		s.clearFetch();
+		s.addFetch("mother.age", Fetch.OP_COUNT_DISTINCT);
+		assertEquals(2, generalDAO.searchUnique(s));
+		
+		s.clearFetch();
+		s.addFetch("mother.age", Fetch.OP_SUM);
+		assertEquals(141, generalDAO.searchUnique(s));
+		
+		s.setFetchMode(Search.FETCH_ARRAY);
+		s.clearFetch();
+		s.addFetch("age", Fetch.OP_SUM);
+		s.addFetch("mother.age", Fetch.OP_SUM);
+		Object[] arrayResult = (Object[]) generalDAO.searchUnique(s);
+		assertEquals(101, arrayResult[0]);
+		assertEquals(141, arrayResult[1]);
+		
+		s.setFetchMode(Search.FETCH_LIST);
+		List listResult = (List) generalDAO.searchUnique(s);
+		assertEquals(101, listResult.get(0));
+		assertEquals(141, listResult.get(1));
+		
+		s.setFetchMode(Search.FETCH_MAP);
+		Map mapResult = (Map) generalDAO.searchUnique(s);
+		assertEquals(101, mapResult.get("age"));
+		assertEquals(141, mapResult.get("mother.age"));
+		
+		try {
+			s.setFetchMode(Search.FETCH_ENTITY);
+			generalDAO.searchUnique(s);
+			fail("Searching with fetch operators and fetch mode = FETCH_ENTITY should throw an Error");
+		} catch (Error err) {
+			
+		}
+		
+		s.setFetchMode(Search.FETCH_MAP);
+		s.clearFetch();
+		s.addFetch("age", Fetch.OP_SUM, "myAge");
+		s.addFetch("mother.age", Fetch.OP_SUM, "myMomsAge");
+		mapResult = (Map) generalDAO.searchUnique(s);
+		assertEquals(101, mapResult.get("myAge"));
+		assertEquals(141, mapResult.get("myMomsAge"));		
 	}
 }

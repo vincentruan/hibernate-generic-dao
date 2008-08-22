@@ -1,8 +1,6 @@
 package com.trg.dao;
 
 import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,12 +12,12 @@ import org.hibernate.Criteria;
 import org.hibernate.EntityMode;
 import org.hibernate.FetchMode;
 import org.hibernate.NonUniqueResultException;
-import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Junction;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
@@ -383,11 +381,32 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 * Criteria.
 	 */
 	protected void addFetching(Map<String, Criteria> critMap, Search search) {
+		Iterator<Fetch> fetchItr = search.fetchIterator();
+		boolean usesColumnOperators = false;
+		boolean notUsesColumnOperators = false;
+		while (fetchItr.hasNext()) {
+			if (fetchItr.next().operator != Fetch.OP_PROPERTY) {
+				usesColumnOperators = true;
+				if (notUsesColumnOperators)
+					throw new Error(
+							"A search can not have a mix of fetches with operators and fetches without operators.");
+			} else {
+				notUsesColumnOperators = true;
+				if (usesColumnOperators)
+					throw new Error(
+							"A search can not have a mix of fetches with operators and fetches without operators.");
+			}
+		}
+
 		// FetchMode Entity
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
-			Iterator<Fetch> fetches = search.fetchIterator();
-			while (fetches.hasNext()) {
-				String property = fetches.next().property;
+			if (usesColumnOperators) {
+				throw new Error(
+						"A search with fetch mode FETCH_ENTITY cannot have fetches with operators. Change the fetch mode.");
+			}
+			fetchItr = search.fetchIterator();
+			while (fetchItr.hasNext()) {
+				String property = fetchItr.next().property;
 				if (property == null || "".equals(property))
 					continue;
 				String[] parsed = parsePath(property);
@@ -399,11 +418,11 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 			// FetchMode Array, List, Map, Single
 		} else {
 			ProjectionList projectionList = Projections.projectionList();
-			Iterator<Fetch> selects = search.fetchIterator();
+			fetchItr = search.fetchIterator();
 			int i = -1;
-			while (selects.hasNext()) {
+			while (fetchItr.hasNext()) {
 				i++;
-				Fetch select = selects.next();
+				Fetch select = fetchItr.next();
 				if (select == null || select.property == null
 						|| "".equals(select.property))
 					continue;
@@ -415,15 +434,40 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 							+ parsed[PROPERTY];
 				}
 
+				Projection projection;
+				switch (select.operator) {
+				case Fetch.OP_AVG:
+					projection = Projections.avg(path);
+					break;
+				case Fetch.OP_COUNT:
+					projection = Projections.count(path);
+					break;
+				case Fetch.OP_COUNT_DISTINCT:
+					projection = Projections.countDistinct(path);
+					break;
+				case Fetch.OP_MAX:
+					projection = Projections.max(path);
+					break;
+				case Fetch.OP_MIN:
+					projection = Projections.min(path);
+					break;
+				case Fetch.OP_SUM:
+					projection = Projections.sum(path);
+					break;
+				default:
+					projection = Projections.property(path);
+					break;
+				}
+
 				if (search.getFetchMode() == Search.FETCH_MAP) {
 					String alias = select.key;
 					if (alias == null | "".equals(alias))
 						alias = select.property;
 					alias = ALIAS_PREFIX + alias;
 
-					projectionList.add(Projections.property(path), alias);
+					projectionList.add(projection, alias);
 				} else {
-					projectionList.add(Projections.property(path));
+					projectionList.add(projection);
 				}
 
 				// with FETCH_SINGLE, only one fetch is allowed

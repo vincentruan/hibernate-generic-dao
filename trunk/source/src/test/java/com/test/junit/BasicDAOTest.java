@@ -2,6 +2,7 @@ package com.test.junit;
 
 import java.util.List;
 
+import com.test.TestBase;
 import com.test.dao.AddressDAO;
 import com.test.dao.HomeDAO;
 import com.test.dao.PersonDAO;
