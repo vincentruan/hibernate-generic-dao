@@ -1,4 +1,4 @@
-package com.test.junit;
+package com.test;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;

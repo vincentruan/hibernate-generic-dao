@@ -407,6 +407,28 @@ public class Search implements Serializable {
 		fetches.add(new Fetch(property, key));
 	}
 
+	/**
+	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
+	 * <code>property</code> will also be used as the key for this value in
+	 * the map.
+	 */
+	public void addFetch(String property, int operator) {
+		if (property == null || "".equals(property))
+			return; // null properties do nothing, don't bother to add them.
+		fetches.add(new Fetch(property, operator));
+	}
+	
+	/**
+	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
+	 * <code>key</code> will be used as the key for this value in the map.
+	 */
+	public void addFetch(String property, int operator, String key) {
+		if (property == null || "".equals(property) || key == null
+				|| "".equals(key))
+			return; // null properties do nothing, don't bother to add them.
+		fetches.add(new Fetch(property, operator, key));
+	}
+	
 	public void removeFetch(Fetch fetch) {
 		fetches.remove(fetch);
 	}

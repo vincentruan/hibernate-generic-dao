@@ -1,5 +1,6 @@
 package com.test.junit;
 
+import com.test.TestBase;
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.search.Filter;
