@@ -35,7 +35,7 @@ public class GeneralDAOImpl extends HibernateDAOImpl implements GeneralDAO {
 	}
 	
 	public <T> T fetch(Serializable id, Class<T> klass) {
-		return (T) _fetch(id, klass);
+		return _fetch(id, klass);
 	}
 
 	public <T> List<T> fetchAll(Class<T> klass) {
