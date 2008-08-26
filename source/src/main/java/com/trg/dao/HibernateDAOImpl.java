@@ -90,14 +90,14 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 * Get the object of the specified class with the specified id from the
 	 * database.
 	 */
-	protected Object _fetch(Serializable id, Class klass) {
-		return getSession().get(klass, id);
+	protected <T> T _fetch(Serializable id, Class<T> klass) {
+		return (T) getSession().get(klass, id);
 	}
 
 	/**
 	 * Get a list of all the objects of the specified class.
 	 */
-	protected List _fetchAll(Class klass) {
+	protected <T> List<T> _fetchAll(Class<T> klass) {
 		return getSession().createCriteria(klass).setResultTransformer(
 				Criteria.DISTINCT_ROOT_ENTITY).list();
 	}
