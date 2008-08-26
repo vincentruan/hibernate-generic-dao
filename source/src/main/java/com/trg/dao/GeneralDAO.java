@@ -36,12 +36,12 @@ public interface GeneralDAO {
 	/**
 	 * Get the object with the specified id and class from the database.
 	 */
-	public Object fetch(Serializable id, Class<?> klass);
+	public <T> T fetch(Serializable id, Class<T> klass);
 
 	/**
 	 * Get a list of all the objects of the specified type.
 	 */
-	public List fetchAll(Class<?> klass);
+	public <T> List<T> fetchAll(Class<T> klass);
 
 	/**
 	 * Update the corresponding object in the database with the properties of

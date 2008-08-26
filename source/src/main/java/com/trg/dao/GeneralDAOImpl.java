@@ -34,11 +34,11 @@ public class GeneralDAOImpl extends HibernateDAOImpl implements GeneralDAO {
 		_deleteEntity(object);
 	}
 	
-	public Object fetch(Serializable id, Class<?> klass) {
-		return _fetch(id, klass);
+	public <T> T fetch(Serializable id, Class<T> klass) {
+		return (T) _fetch(id, klass);
 	}
 
-	public List fetchAll(Class<?> klass) {
+	public <T> List<T> fetchAll(Class<T> klass) {
 		return _fetchAll(klass);
 	}
 	

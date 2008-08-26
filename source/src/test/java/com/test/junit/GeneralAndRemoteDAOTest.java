@@ -87,7 +87,7 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 		Person bob2 = copy(bob);
 		bob2.setFirstName("Bobby");
 		generalDAO.update(bob2);
-		assertEquals("Bobby", ((Person) generalDAO.fetch(bob.getId(), bob.getClass())).getFirstName() );
+		assertEquals("Bobby", (generalDAO.fetch(bob.getId(), bob.getClass())).getFirstName() );
 	}
 	
 	public void testRemoteDAOGeneral() throws Exception {
