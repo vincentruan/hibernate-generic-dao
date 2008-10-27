@@ -9,7 +9,7 @@ import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
 @SuppressWarnings("unchecked")
-public class GeneralDAOImpl extends HibernateDAOImpl implements GeneralDAO {
+public class GeneralDAOImpl extends HibernateDAOHQLImpl implements GeneralDAO {
 
 	public void create(Object object) {
 		_create(object);

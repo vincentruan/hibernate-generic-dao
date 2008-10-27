@@ -12,6 +12,8 @@
 	<bean id="homeDAO" class="com.test.dao.HomeDAOImpl"/>
 	<bean id="addressDAO" class="com.test.dao.AddressDAOImpl"/>
 	
+	<bean id="directDAO" class="com.test.dao.DirectDAO"/>
+	
 	<bean id="generalDAO" class="com.trg.dao.GeneralDAOImpl"/>
 	
 	<bean id="remoteDAO" class="com.trg.remote.RemoteDAO">

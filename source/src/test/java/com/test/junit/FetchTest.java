@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.test.TestBase;
+import com.test.dao.DirectDAO;
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.dao.GeneralDAO;
@@ -23,9 +24,23 @@ public class FetchTest extends TestBase {
 	public void setPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
-
+	
 	public void testFetchEntity() {
+		initDB();
+		List<Person> results;
+		
+		Search s = new Search(Person.class);
+		results = personDAO.search(s);
+		
+		s.addFetch("mother");
+		results = personDAO.search(s);
+		s.addFetch("father");
+		results = personDAO.search(s);
+		s.addFetch("home.address");
+		results = personDAO.search(s);
+		
 		//TODO how can we test which entities are being loaded lazily?
+		fail("Test not implemented.");
 	}
 	
 	public void testFetchOther() {
@@ -261,11 +276,11 @@ public class FetchTest extends TestBase {
 		//ages 10, 14, 38, 39
 		
 		s.addFetch("age", Fetch.OP_COUNT);
-		assertEquals(4, generalDAO.searchUnique(s));
+		assertEquals(4, ((Number) generalDAO.searchUnique(s)).intValue());
 		
 		s.clearFetch();
 		s.addFetch("age", Fetch.OP_COUNT_DISTINCT);
-		assertEquals(4, generalDAO.searchUnique(s));
+		assertEquals(4, ((Number) generalDAO.searchUnique(s)).intValue());
 		
 		s.clearFetch();
 		s.addFetch("age", Fetch.OP_MAX);
@@ -277,7 +292,7 @@ public class FetchTest extends TestBase {
 		
 		s.clearFetch();
 		s.addFetch("age", Fetch.OP_SUM);
-		assertEquals(101, generalDAO.searchUnique(s));
+		assertEquals(101, ((Number) generalDAO.searchUnique(s)).intValue());
 		
 		s.clearFetch();
 		s.addFetch("age", Fetch.OP_AVG);
@@ -288,33 +303,33 @@ public class FetchTest extends TestBase {
 		
 		s.clearFetch();
 		s.addFetch("mother.age", Fetch.OP_COUNT);
-		assertEquals(3, generalDAO.searchUnique(s));
+		assertEquals(3, ((Number) generalDAO.searchUnique(s)).intValue());
 		
 		s.clearFetch();
 		s.addFetch("mother.age", Fetch.OP_COUNT_DISTINCT);
-		assertEquals(2, generalDAO.searchUnique(s));
+		assertEquals(2, ((Number) generalDAO.searchUnique(s)).intValue());
 		
 		s.clearFetch();
 		s.addFetch("mother.age", Fetch.OP_SUM);
-		assertEquals(141, generalDAO.searchUnique(s));
+		assertEquals(141, ((Number) generalDAO.searchUnique(s)).intValue());
 		
 		s.setFetchMode(Search.FETCH_ARRAY);
 		s.clearFetch();
 		s.addFetch("age", Fetch.OP_SUM);
 		s.addFetch("mother.age", Fetch.OP_SUM);
 		Object[] arrayResult = (Object[]) generalDAO.searchUnique(s);
-		assertEquals(101, arrayResult[0]);
-		assertEquals(141, arrayResult[1]);
+		assertEquals(101, ((Number) arrayResult[0]).intValue());
+		assertEquals(141, ((Number) arrayResult[1]).intValue());
 		
 		s.setFetchMode(Search.FETCH_LIST);
 		List listResult = (List) generalDAO.searchUnique(s);
-		assertEquals(101, listResult.get(0));
-		assertEquals(141, listResult.get(1));
+		assertEquals(101, ((Number) listResult.get(0)).intValue());
+		assertEquals(141, ((Number) listResult.get(1)).intValue());
 		
 		s.setFetchMode(Search.FETCH_MAP);
 		Map mapResult = (Map) generalDAO.searchUnique(s);
-		assertEquals(101, mapResult.get("age"));
-		assertEquals(141, mapResult.get("mother.age"));
+		assertEquals(101, ((Number) mapResult.get("age")).intValue());
+		assertEquals(141, ((Number) mapResult.get("mother.age")).intValue());
 		
 		try {
 			s.setFetchMode(Search.FETCH_ENTITY);
@@ -329,7 +344,7 @@ public class FetchTest extends TestBase {
 		s.addFetch("age", Fetch.OP_SUM, "myAge");
 		s.addFetch("mother.age", Fetch.OP_SUM, "myMomsAge");
 		mapResult = (Map) generalDAO.searchUnique(s);
-		assertEquals(101, mapResult.get("myAge"));
-		assertEquals(141, mapResult.get("myMomsAge"));		
+		assertEquals(101, ((Number) mapResult.get("myAge")).intValue());
+		assertEquals(141, ((Number) mapResult.get("myMomsAge")).intValue());		
 	}
 }
