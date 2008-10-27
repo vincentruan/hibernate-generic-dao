@@ -10,7 +10,7 @@ import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
 @SuppressWarnings("unchecked")
-public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOImpl implements GenericDAO<T, ID> {
+public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOHQLImpl implements GenericDAO<T, ID> {
 
 	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
 			.getActualTypeArguments()[0];

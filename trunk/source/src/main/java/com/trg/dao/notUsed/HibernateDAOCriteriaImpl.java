@@ -1,4 +1,4 @@
-package com.trg.dao;
+package com.trg.dao.notUsed;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,6 +27,7 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.trg.dao.Util;
 import com.trg.search.Fetch;
 import com.trg.search.Filter;
 import com.trg.search.Search;
@@ -34,7 +35,7 @@ import com.trg.search.SearchResult;
 import com.trg.search.Sort;
 
 @SuppressWarnings("unchecked")
-public class HibernateDAOImpl extends HibernateDaoSupport {
+public class HibernateDAOCriteriaImpl extends HibernateDaoSupport {
 
 	@Autowired
 	public void setSessionFactoryAutowire(SessionFactory sessionFactory) {
@@ -223,7 +224,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	 * property, and <code>result[PROPERTY]</code> is the name of the property
 	 * specified on that object.
 	 * 
-	 * @see HibernateDAOImpl#parsePath(String)
+	 * @see HibernateDAOCriteriaImpl#parsePath(String)
 	 */
 	protected static final int BASE = 0, PROPERTY = 1;
 
@@ -321,8 +322,8 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	/**
 	 * Used in addPaging();
 	 * 
-	 * @see HibernateDAOImpl#addPaging(Criteria, Search)
-	 * @see HibernateDAOImpl#initEagerCollections()
+	 * @see HibernateDAOCriteriaImpl#addPaging(Criteria, Search)
+	 * @see HibernateDAOCriteriaImpl#initEagerCollections()
 	 */
 	protected static Map<String, List<String>> eagerCollections;
 
@@ -505,7 +506,7 @@ public class HibernateDAOImpl extends HibernateDaoSupport {
 	};
 
 	/**
-	 * @see HibernateDAOImpl.AliasToMapResultTransformer
+	 * @see HibernateDAOCriteriaImpl.AliasToMapResultTransformer
 	 */
 	protected static final String ALIAS_PREFIX = "@@";
 
