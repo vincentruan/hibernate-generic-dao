@@ -1,10 +1,13 @@
 package com.test.junit;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.proxy.pojo.cglib.CGLIBLazyInitializer;
+
 import com.test.TestBase;
-import com.test.dao.DirectDAO;
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.dao.GeneralDAO;
@@ -25,22 +28,29 @@ public class FetchTest extends TestBase {
 		this.personDAO = personDAO;
 	}
 	
-	public void testFetchEntity() {
+	public void testFetchEntity() throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		initDB();
 		List<Person> results;
 		
 		Search s = new Search(Person.class);
+		s.addSort("age");
 		results = personDAO.search(s);
+		assertFalse(isEntityFetched(results.get(3).getHome()));
 		
 		s.addFetch("mother");
 		results = personDAO.search(s);
+		assertFalse(isEntityFetched(results.get(3).getHome()));
+		
 		s.addFetch("father");
-		results = personDAO.search(s);
+		
 		s.addFetch("home.address");
 		results = personDAO.search(s);
-		
-		//TODO how can we test which entities are being loaded lazily?
-		fail("Test not implemented.");
+		assertTrue(isEntityFetched(results.get(3).getHome()));
+	}
+	
+	private boolean isEntityFetched(Object entity) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+		Method getHibernateLazyInitializer = entity.getClass().getMethod("getHibernateLazyInitializer");
+		return !((CGLIBLazyInitializer) getHibernateLazyInitializer.invoke(entity)).isUninitialized();
 	}
 	
 	public void testFetchOther() {
