@@ -132,7 +132,6 @@ public class HibernateDAOHQLImpl extends HibernateDaoSupport {
 
 		List<Object> paramList = new ArrayList<Object>();
 		String hql = searchToQLProcessor.generateQL(search, paramList);
-		System.out.println(hql);
 		Query query = getSession().createQuery(hql);
 		addParams(query, paramList);
 		addPaging(query, search);
@@ -153,7 +152,6 @@ public class HibernateDAOHQLImpl extends HibernateDaoSupport {
 
 		List<Object> paramList = new ArrayList<Object>();
 		String hql = searchToQLProcessor.generateRowCountQL(search, paramList);
-		System.out.println(hql);
 		Query query = getSession().createQuery(hql);
 		addParams(query, paramList);
 
@@ -198,7 +196,6 @@ public class HibernateDAOHQLImpl extends HibernateDaoSupport {
 
 		List<Object> paramList = new ArrayList<Object>();
 		String hql = searchToQLProcessor.generateQL(search, paramList);
-		System.out.println(hql);
 		Query query = getSession().createQuery(hql);
 		addParams(query, paramList);
 		addFetchMode(query, search);
