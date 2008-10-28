@@ -35,6 +35,7 @@ import com.trg.search.SearchResult;
 import com.trg.search.Sort;
 
 @SuppressWarnings("unchecked")
+@Deprecated
 public class HibernateDAOCriteriaImpl extends HibernateDaoSupport {
 
 	@Autowired

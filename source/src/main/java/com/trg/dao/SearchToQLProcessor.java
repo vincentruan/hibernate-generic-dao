@@ -13,7 +13,6 @@ import com.trg.search.Filter;
 import com.trg.search.Search;
 import com.trg.search.Sort;
 
-//TODO: check input strings for SQL hacks
 /**
  * This class provides two methods for generating query language to fulfill a
  * <code>Search</code>.
