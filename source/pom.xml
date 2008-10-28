@@ -4,7 +4,7 @@
 	<groupId>com.trg</groupId>
 	<artifactId>dao</artifactId>
 	<name>Hibernate Generic DAO</name>
-	<version>0.1</version>
+	<version>0.3.1</version>
 	<url>http://code.google.com/p/hibernate-generic-dao</url>
 	<inceptionYear>2008</inceptionYear>
 	<build>
@@ -39,6 +39,15 @@
 					<source>1.5</source>
 					<target>1.5</target>
 					<tasks></tasks>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/TestBase.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 		</plugins>

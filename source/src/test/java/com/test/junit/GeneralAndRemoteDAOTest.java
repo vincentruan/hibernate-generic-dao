@@ -33,6 +33,7 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 	 * same implementation as generic. So the thorough testing using generic is
 	 * sufficient.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testGeneralDAO() {
 		Person fred = new Person();
 		fred.setFirstName("Fred");
@@ -90,6 +91,7 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 		assertEquals("Bobby", (generalDAO.fetch(bob.getId(), bob.getClass())).getFirstName() );
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testRemoteDAOGeneral() throws Exception {
 		Person fred = new Person();
 		fred.setFirstName("Fred");
