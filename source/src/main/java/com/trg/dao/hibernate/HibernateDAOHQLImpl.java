@@ -18,20 +18,22 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-import com.trg.dao.SearchToQLProcessor;
 import com.trg.search.Fetch;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
+/**
+ * Base class for DAOs that uses HibernateDaoSupport and HQL for searches. It
+ * also fills in <code>sessionFactory</code> automatically using Spring
+ * Autowire.
+ * 
+ * @author dwolverton
+ * 
+ */
 @SuppressWarnings("unchecked")
 public class HibernateDAOHQLImpl extends HibernateDaoSupport {
 
-	SearchToQLProcessor searchToQLProcessor;
-	
-	@Autowired
-	public void setSearchToQLProcessor(SearchToQLProcessor searchToQLProcessor) {
-		this.searchToQLProcessor = searchToQLProcessor;
-	}
+	private static HibernateSearchToQLProcessor searchToQLProcessor = new HibernateSearchToQLProcessor();
 
 	@Autowired
 	public void setSessionFactoryAutowire(SessionFactory sessionFactory) {

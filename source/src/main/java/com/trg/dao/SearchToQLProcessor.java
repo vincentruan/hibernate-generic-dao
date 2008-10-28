@@ -33,9 +33,10 @@ import com.trg.search.Sort;
  * parameter list: [3, 'Mittens']
  * </pre>
  * 
- * 
- * Currently only HQL query language is supported. The current implementation
- * could be used for EQL query language as well with no or minor modifications.
+ * This is an abstract class. A subclass must be used to implement individual
+ * query languages. Currently only HQL query language is supported (<code>com.trg.dao.hibernate.HibernateSearchToQLProcessor</code>).
+ * The that implementation could be used for EQL query language as well with no
+ * or minor modifications.
  */
 public abstract class SearchToQLProcessor {
 
@@ -541,7 +542,8 @@ public abstract class SearchToQLProcessor {
 	}
 
 	/**
-	 * Used by <code>securityCheck()</code> to check a property string for injection attack.
+	 * Used by <code>securityCheck()</code> to check a property string for
+	 * injection attack.
 	 */
 	protected void securityCheckProperty(String property) {
 		if (!INJECTION_CHECK.matcher(property).matches())

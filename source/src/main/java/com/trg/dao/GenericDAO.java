@@ -8,19 +8,34 @@ import org.hibernate.NonUniqueResultException;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
+/**
+ * Interface for a Data Access Object that can be used for a single specified
+ * type domain object. A single instance implementing this interface can be used
+ * only for the type of domain object specified in the type parameters.
+ * 
+ * @author dwolverton
+ * 
+ * @param <T>
+ *            The type of the domain object for which this instance is to be
+ *            used.
+ * @param <ID>
+ *            The type of the id of the domain object for which this instance is
+ *            to be used.
+ */
 public interface GenericDAO<T, ID extends Serializable> {
 
 	/**
 	 * Add the specified object as a new entry in the database.
 	 */
 	public void create(T object);
-	
+
 	/**
 	 * If the id of the object is null or zero, create, otherwise update.
+	 * 
 	 * @return true if create; false if update.
 	 */
 	public boolean createOrUpdate(T object);
-	
+
 	/**
 	 * Delete the object of this type with the specified id from the database.
 	 */
@@ -78,17 +93,17 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * Search for a single result using the given parameters.
 	 */
 	public Object searchUnique(Search search) throws NonUniqueResultException;
-	
+
 	/**
 	 * Returns true if the object is connected to the current Hibernate session.
 	 */
 	public boolean isConnected(Object object);
 
 	/**
-	 * Flushes changes in the Hibernate cache to the database. 
+	 * Flushes changes in the Hibernate cache to the database.
 	 */
 	public void flush();
-	
+
 	/**
 	 * Refresh the content of the given entity from the current database state.
 	 */

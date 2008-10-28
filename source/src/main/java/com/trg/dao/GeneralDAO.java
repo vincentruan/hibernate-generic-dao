@@ -8,6 +8,13 @@ import org.hibernate.NonUniqueResultException;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
+/**
+ * Interface for general Data Access Object that can be used for any type domain
+ * object. A single instance implementing this interface can be used for
+ * multiple types of domain objects.
+ * 
+ * @author dwolverton
+ */
 @SuppressWarnings("unchecked")
 public interface GeneralDAO {
 
@@ -82,7 +89,7 @@ public interface GeneralDAO {
 	 * Flushes changes in the Hibernate cache to the database.
 	 */
 	public boolean isConnected(Object object);
-	
+
 	/**
 	 * Refresh the content of the given entity from the current database state.
 	 */
