@@ -196,17 +196,15 @@
 			<artifactId>hsqldb</artifactId>
 			<version>1.8.0.7</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>2.5.5</version>
+			<type>jar</type>
+			<scope>compile</scope>
+		</dependency>
 	</dependencies>
 	<reporting>
 		<outputDirectory>target/site</outputDirectory>
 	</reporting>
-	<distributionManagement>
-		<repository>
-			<id>dev-upload</id>
-			<name>Revere Group dev repository</name>
-			<url>
-				scp://root@192.168.30.109/usr/share/tomcat5/webapps/maven2/
-			</url>
-		</repository>
-	</distributionManagement>
 </project>
