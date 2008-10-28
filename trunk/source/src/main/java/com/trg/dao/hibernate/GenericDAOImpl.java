@@ -1,4 +1,4 @@
-package com.trg.dao;
+package com.trg.dao.hibernate;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.hibernate.NonUniqueResultException;
 
+import com.trg.dao.GenericDAO;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 

@@ -2,7 +2,7 @@ package com.test.dao;
 
 import java.util.List;
 
-import com.trg.dao.HibernateDAOHQLImpl;
+import com.trg.dao.hibernate.HibernateDAOHQLImpl;
 
 public class DirectDAO extends HibernateDAOHQLImpl {
 	public List<?> executeQuery(String hql) {
