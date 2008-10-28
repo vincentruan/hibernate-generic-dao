@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import com.trg.search.Fetch;
 import com.trg.search.Filter;
 import com.trg.search.Search;
@@ -27,8 +30,8 @@ import com.trg.search.Sort;
  * returned:
  * 
  * <pre>
- * select _it_ from com.example.Cat _it_
- *   where _it_.age &gt; :p1 and _it_.name != :p2
+ * select _it from com.example.Cat _it
+ *   where _it.age &gt; :p1 and _it.name != :p2
  *   
  * parameter list: [3, 'Mittens']
  * </pre>
@@ -40,12 +43,14 @@ import com.trg.search.Sort;
  */
 public abstract class SearchToQLProcessor {
 
+	private static Log log = LogFactory.getLog(SearchToQLProcessor.class);
+	
 	protected static int QLTYPE_HQL = 0;
 	protected static int QLTYPE_EQL = 1;
 
 	protected int qlType;
 
-	protected String rootAlias = "_it_";
+	protected String rootAlias = "_it";
 
 	protected SearchToQLProcessor(int qlType) {
 		this.qlType = qlType;
@@ -53,9 +58,9 @@ public abstract class SearchToQLProcessor {
 
 	/**
 	 * This is the string used to represent the root entity of the search within
-	 * the query. The default value is <code>"_it_"</code>. It may be
+	 * the query. The default value is <code>"_it"</code>. It may be
 	 * necessary to use a different alias if there are entities in the data
-	 * model with the name or property "_it_".
+	 * model with the name or property "_it".
 	 */
 	public void setRootAlias(String alias) {
 		this.rootAlias = alias;
@@ -86,7 +91,9 @@ public abstract class SearchToQLProcessor {
 		sb.append(" ");
 		sb.append(orderBy);
 
-		return sb.toString();
+		String query = sb.toString();
+		if (log.isDebugEnabled()) log.debug("generateQL:\n  " + query);
+		return query;
 	}
 
 	/**
@@ -112,7 +119,9 @@ public abstract class SearchToQLProcessor {
 		sb.append(" ");
 		sb.append(where);
 
-		return sb.toString();
+		String query = sb.toString();
+		if (log.isDebugEnabled()) log.debug("generateRowCountQL:\n  " + query);
+		return query;
 	}
 
 	/**

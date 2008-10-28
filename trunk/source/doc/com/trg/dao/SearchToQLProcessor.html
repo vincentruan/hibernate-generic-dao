@@ -117,8 +117,8 @@ This class provides two methods for generating query language to fulfill a
  returned:
  
  <pre>
- select _it_ from com.example.Cat _it_
-   where _it_.age &gt; :p1 and _it_.name != :p2
+ select _it from com.example.Cat _it
+   where _it.age &gt; :p1 and _it.name != :p2
    
  parameter list: [3, 'Mittens']
  </pre>
@@ -452,9 +452,9 @@ setRootAlias</H3>
 public void <B>setRootAlias</B>(java.lang.String&nbsp;alias)</PRE>
 <DL>
 <DD>This is the string used to represent the root entity of the search within
- the query. The default value is <code>"_it_"</code>. It may be
+ the query. The default value is <code>"_it"</code>. It may be
  necessary to use a different alias if there are entities in the data
- model with the name or property "_it_".
+ model with the name or property "_it".
 <P>
 <DD><DL>
 </DL>
