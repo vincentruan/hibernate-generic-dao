@@ -10,17 +10,33 @@ import com.trg.dao.GenericDAO;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
+/**
+ * Implementation of <code>GeneralDAO</code> using SpringHibernateSupport and
+ * HQL for searches.
+ * 
+ * @author dwolverton
+ * 
+ * @param <T>
+ *            The type of the domain object for which this instance is to be
+ *            used.
+ * @param <ID>
+ *            The type of the id of the domain object for which this instance is
+ *            to be used.
+ */
 @SuppressWarnings("unchecked")
-public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOHQLImpl implements GenericDAO<T, ID> {
+public class GenericDAOImpl<T, ID extends Serializable> extends
+		HibernateDAOHQLImpl implements GenericDAO<T, ID> {
 
-	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass())
-			.getActualTypeArguments()[0];
+	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass()
+			.getGenericSuperclass()).getActualTypeArguments()[0];
 
 	public void create(T object) {
-		if (!persistentClass.isInstance(object)) throw new IllegalArgumentException("Object class does not match dao type.");
+		if (!persistentClass.isInstance(object))
+			throw new IllegalArgumentException(
+					"Object class does not match dao type.");
 		_create(object);
 	}
-	
+
 	public boolean createOrUpdate(T object) {
 		Serializable id = _getId(object);
 		if (id == null || (new Long(0)).equals(id)) {
@@ -37,7 +53,9 @@ public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOHQLI
 	}
 
 	public void deleteEntity(T object) {
-		if (!persistentClass.isInstance(object)) throw new IllegalArgumentException("Object class does not match dao type.");
+		if (!persistentClass.isInstance(object))
+			throw new IllegalArgumentException(
+					"Object class does not match dao type.");
 		_deleteEntity(object);
 	}
 
@@ -50,38 +68,46 @@ public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOHQLI
 	}
 
 	public void update(T object) {
-		if (!persistentClass.isInstance(object)) throw new IllegalArgumentException("Object class does not match dao type.");
+		if (!persistentClass.isInstance(object))
+			throw new IllegalArgumentException(
+					"Object class does not match dao type.");
 		_update(object);
 	}
 
 	public List<T> search(Search search) {
 		boolean classNull = false;
-		if (search == null) return fetchAll();
+		if (search == null)
+			return fetchAll();
 		if (search.getSearchClass() == null) {
 			search.setSearchClass(persistentClass);
 			classNull = true;
 		} else if (!persistentClass.equals(search.getSearchClass())) {
-			throw new IllegalArgumentException("Search class does not match dao type.");
+			throw new IllegalArgumentException(
+					"Search class does not match dao type.");
 		}
 		List<T> result = _search(search);
-		if (classNull) search.setSearchClass(null);
+		if (classNull)
+			search.setSearchClass(null);
 		return result;
 	}
-	
+
 	public int searchLength(Search search) {
 		boolean classNull = false;
-		if (search == null) return 0;
+		if (search == null)
+			return 0;
 		if (search.getSearchClass() == null) {
 			search.setSearchClass(persistentClass);
 			classNull = true;
 		} else if (!persistentClass.equals(search.getSearchClass())) {
-			throw new IllegalArgumentException("Search class does not match dao type.");
+			throw new IllegalArgumentException(
+					"Search class does not match dao type.");
 		}
 		int result = _searchLength(search);
-		if (classNull) search.setSearchClass(null);
+		if (classNull)
+			search.setSearchClass(null);
 		return result;
 	}
-	
+
 	public SearchResult<T> searchAndLength(Search search) {
 		boolean classNull = false;
 		if (search == null) {
@@ -94,17 +120,19 @@ public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOHQLI
 			search.setSearchClass(persistentClass);
 			classNull = true;
 		} else if (!persistentClass.equals(search.getSearchClass())) {
-			throw new IllegalArgumentException("Search class does not match dao type.");
+			throw new IllegalArgumentException(
+					"Search class does not match dao type.");
 		}
 		SearchResult<T> result = _searchAndLength(search);
-		if (classNull) search.setSearchClass(null);
+		if (classNull)
+			search.setSearchClass(null);
 		return result;
 	}
 
 	public boolean isConnected(Object object) {
 		return _isConnected(object);
 	}
-	
+
 	public void flush() {
 		_flush();
 	}
@@ -115,29 +143,35 @@ public class GenericDAOImpl<T, ID extends Serializable> extends HibernateDAOHQLI
 
 	public List searchGeneric(Search search) {
 		boolean classNull = false;
-		if (search == null) return fetchAll();
+		if (search == null)
+			return fetchAll();
 		if (search.getSearchClass() == null) {
 			search.setSearchClass(persistentClass);
 			classNull = true;
 		} else if (!persistentClass.equals(search.getSearchClass())) {
-			throw new IllegalArgumentException("Search class does not match dao type.");
+			throw new IllegalArgumentException(
+					"Search class does not match dao type.");
 		}
 		List result = _search(search);
-		if (classNull) search.setSearchClass(null);
+		if (classNull)
+			search.setSearchClass(null);
 		return result;
 	}
 
 	public Object searchUnique(Search search) throws NonUniqueResultException {
 		boolean classNull = false;
-		if (search == null) return fetchAll();
+		if (search == null)
+			return fetchAll();
 		if (search.getSearchClass() == null) {
 			search.setSearchClass(persistentClass);
 			classNull = true;
 		} else if (!persistentClass.equals(search.getSearchClass())) {
-			throw new IllegalArgumentException("Search class does not match dao type.");
+			throw new IllegalArgumentException(
+					"Search class does not match dao type.");
 		}
 		Object result = _searchUnique(search);
-		if (classNull) search.setSearchClass(null);
+		if (classNull)
+			search.setSearchClass(null);
 		return result;
 	}
 
