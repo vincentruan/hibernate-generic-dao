@@ -5,6 +5,10 @@ import java.lang.reflect.Method;
 
 import org.hibernate.PropertyNotFoundException;
 
+/**
+ * Utilities for TRG Generic DAO 
+ * @author dwolverton
+ */
 public class Util {
 	/**
 	 * Get the type of a property of a bean class. The property can be simple

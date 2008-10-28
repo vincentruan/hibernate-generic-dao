@@ -95,7 +95,7 @@ public class PagingAndSortingTest extends TestBase {
 		// Test multiple sort
 		s.clearFilters();
 		s.addSort("firstName", false);
-		assertListEqual(new Person[] { grandmaA, grandpaA, joeB, mamaB,
+		assertListOrderEqual(new Person[] { grandmaA, grandpaA, joeB, mamaB,
 				margretB, papaB, joeA, mamaA, papaA, sallyA }, personDAO
 				.search(s));
 	}

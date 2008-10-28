@@ -6,34 +6,76 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import com.trg.search.Fetch;
 import com.trg.search.Filter;
 import com.trg.search.Search;
 import com.trg.search.Sort;
 
-//TODO: use left joins for order by
 //TODO: check input strings for SQL hacks
-public class SearchToQLProcessor {
+/**
+ * This class provides two methods for generating query language to fulfill a
+ * <code>Search</code>.
+ * <ol>
+ * <li><code>generateQL()</code> - is used for getting the actual search
+ * results.</li>
+ * <li><code>generateRowCountQL()</code> - is used for getting just the
+ * number of results.</li>
+ * </ol>
+ * Both methods return a query language sting and a list of values for filling
+ * named parameters. For example the following query and parameter list might be
+ * returned:
+ * 
+ * <pre>
+ * select _it_ from com.example.Cat _it_
+ *   where _it_.age &gt; :p1 and _it_.name != :p2
+ *   
+ * parameter list: [3, 'Mittens']
+ * </pre>
+ * 
+ * 
+ * Currently only HQL query language is supported. The current implementation
+ * could be used for EQL query language as well with no or minor modifications.
+ */
+public abstract class SearchToQLProcessor {
 
-	public static String QLTYPE_HQL = "HQL";
-	public static String QLTYPE_EQL = "EQL";
-	
-	protected String qlType;
-	
-	public SearchToQLProcessor(String qlType) {
+	protected static int QLTYPE_HQL = 0;
+	protected static int QLTYPE_EQL = 1;
+
+	protected int qlType;
+
+	protected String rootAlias = "_it_";
+
+	protected SearchToQLProcessor(int qlType) {
 		this.qlType = qlType;
 	}
-	
+
+	/**
+	 * This is the string used to represent the root entity of the search within
+	 * the query. The default value is <code>"_it_"</code>. It may be
+	 * necessary to use a different alias if there are entities in the data
+	 * model with the name or property "_it_".
+	 */
+	public void setRootAlias(String alias) {
+		this.rootAlias = alias;
+	}
+
+	/**
+	 * Generate the QL string for a given search. Fill paramList with the values
+	 * to be used for the query. All parameters within the query string are
+	 * specified as named parameters ":pX", where X is the index of the
+	 * parameter value in paramList.
+	 */
 	public String generateQL(Search search, List<Object> paramList) {
+		securityCheck(search);
+
 		Map<String, String> aliases = new HashMap<String, String>();
 
-		String select, from, where, orderBy;
-
-		select = generateSelectClause(search, aliases);
-		where = generateWhereClause(search, paramList, aliases);
-		from = generateFromClause(search, aliases);
-		orderBy = generateOrderByClause(search);
+		String select = generateSelectClause(search, aliases);
+		String where = generateWhereClause(search, paramList, aliases);
+		String orderBy = generateOrderByClause(search, aliases);
+		String from = generateFromClause(search, aliases);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(select);
@@ -46,25 +88,38 @@ public class SearchToQLProcessor {
 
 		return sb.toString();
 	}
-	
+
+	/**
+	 * Generate the QL string that will query the total number of results from a
+	 * given search (paging is ignored). Fill paramList with the values to be
+	 * used for the query. All parameters within the query string are specified
+	 * as named parameters ":pX", where X is the index of the parameter value in
+	 * paramList.
+	 */
 	public String generateRowCountQL(Search search, List<Object> paramList) {
+		securityCheck(search);
+
 		Map<String, String> aliases = new HashMap<String, String>();
-		
-		String from, where;
-		
-		StringBuilder sb = new StringBuilder("select count(distinct main.id) ");
-		
-		where = generateWhereClause(search, paramList, aliases);
-		from = generateFromClause(search, aliases);
-		
+
+		String where = generateWhereClause(search, paramList, aliases);
+		String from = generateFromClause(search, aliases);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("select count(distinct ");
+		sb.append(rootAlias);
+		sb.append(".id) ");
 		sb.append(from);
 		sb.append(" ");
 		sb.append(where);
-		
+
 		return sb.toString();
 	}
 
-	private String generateSelectClause(Search search,
+	/**
+	 * Internal method for generating the select clause based on the fetches of
+	 * the given search (if <code>fetchMode != FETCH_ENTITY</code>)
+	 */
+	protected String generateSelectClause(Search search,
 			Map<String, String> aliases) {
 		Iterator<Fetch> fetchItr = search.fetchIterator();
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
@@ -74,7 +129,7 @@ public class SearchToQLProcessor {
 							"A search with fetch mode FETCH_ENTITY cannot have fetches with operators. Change the fetch mode.");
 				}
 			}
-			return "select main";
+			return "select " + rootAlias;
 		} else {
 			StringBuilder sb = null;
 			boolean useOperator = false, notUseOperator = false;
@@ -142,11 +197,21 @@ public class SearchToQLProcessor {
 		}
 	}
 
-	private String generateFromClause(Search search, Map<String, String> aliases) {
+	/**
+	 * Internal method for generating from clause. This method should be called
+	 * after generating other clauses because it relies on the aliases they
+	 * create. This method takes every path that is called for in the other
+	 * clauses and makes it available as an alias using left joins. It also adds
+	 * entities that should be fetched with
+	 * <code>fetchMode == FETCH_ENTITY</code>.
+	 */
+	protected String generateFromClause(Search search,
+			Map<String, String> aliases) {
 		Map<String, Object> fetchPaths = new HashMap<String, Object>();
-		
+
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
-			//Mark all the paths that should be fetched eagerly by adding them to fetchPaths
+			// Mark all the paths that should be fetched eagerly by adding them
+			// to fetchPaths
 			Iterator<Fetch> fetchItr = search.fetchIterator();
 			while (fetchItr.hasNext()) {
 				Fetch fetch = fetchItr.next();
@@ -159,18 +224,18 @@ public class SearchToQLProcessor {
 				}
 			}
 		}
-		
-		
+
 		StringBuilder sb = new StringBuilder("from ");
 		sb.append(search.getSearchClass().getName());
-		sb.append(" main");
+		sb.append(" ");
+		sb.append(rootAlias);
 
 		Map<String, String> usedAliases = new HashMap<String, String>();
 		int aliasCount = aliases.size();
 
 		for (Map.Entry<String, String> entry : aliases.entrySet()) {
 			String wholePath = entry.getKey();
-			String alias = "main";
+			String alias = rootAlias;
 			int lastPos = -1;
 			int pos = wholePath.indexOf('.');
 			while (pos != -1) {
@@ -213,7 +278,12 @@ public class SearchToQLProcessor {
 		return sb.toString();
 	}
 
-	private String generateOrderByClause(Search search) {
+	/**
+	 * Internal method for generating order by clause. Uses sort options from
+	 * search.
+	 */
+	protected String generateOrderByClause(Search search,
+			Map<String, String> aliases) {
 		Iterator<Sort> sortItr = search.sortIterator();
 		StringBuilder sb = null;
 		boolean first = true;
@@ -225,8 +295,7 @@ public class SearchToQLProcessor {
 			} else {
 				sb.append(", ");
 			}
-			sb.append("main.");
-			sb.append(sort.property);
+			sb.append(getPath(aliases, sort.property));
 			sb.append(sort.desc ? " desc" : " asc");
 		}
 		if (first) {
@@ -235,7 +304,11 @@ public class SearchToQLProcessor {
 		return sb.toString();
 	}
 
-	private String generateWhereClause(Search search, List<Object> params,
+	/**
+	 * Internal method for generating where clause for given search. Uses filter
+	 * options from search.
+	 */
+	protected String generateWhereClause(Search search, List<Object> params,
 			Map<String, String> aliases) {
 		List<Filter> filters = new ArrayList<Filter>();
 		Iterator<Filter> filterItr = search.filterIterator();
@@ -254,13 +327,20 @@ public class SearchToQLProcessor {
 		}
 	}
 
-	private String param(List<Object> params, Object value) {
+	/**
+	 * Add value to paramList and return the "X" part of the named parameter
+	 * string ":pX".
+	 */
+	protected String param(List<Object> params, Object value) {
 		params.add(value);
 		return Integer.toString(params.size());
 	}
 
+	/**
+	 * Recursively generate the QL fragment for a given search filter option.
+	 */
 	@SuppressWarnings("unchecked")
-	private String filterToString(Search search, Filter filter,
+	protected String filterToString(Search search, Filter filter,
 			List<Object> params, Map<String, String> aliases) {
 		Object value = filter.value;
 
@@ -375,17 +455,28 @@ public class SearchToQLProcessor {
 		}
 	}
 
-	private String getPath(Map<String, String> aliases, String property) {
+	/**
+	 * Given a full path to a property (ex. department.manager.salary), return
+	 * the reference to that property that uses the appropriate alias (ex.
+	 * a4_manager.salary).
+	 */
+	protected String getPath(Map<String, String> aliases, String property) {
 		int pos = property.lastIndexOf('.');
 		if (pos == -1) {
-			return "main." + property;
+			return rootAlias + "." + property;
 		} else {
 			String aliasPath = property.substring(0, pos);
-			return getAlias(aliases, aliasPath) + "." + property.substring(pos + 1);
+			return getAlias(aliases, aliasPath) + "."
+					+ property.substring(pos + 1);
 		}
 	}
-	
-	private String getAlias(Map<String, String> aliases, String path) {
+
+	/**
+	 * Given a full path to an entity (ex. department.manager), return the alias
+	 * to reference that entity (ex. a4_manager). If there is no alias for the
+	 * given path, one will be created.
+	 */
+	protected String getAlias(Map<String, String> aliases, String path) {
 		if (aliases.containsKey(path)) {
 			return aliases.get(path);
 		} else {
@@ -394,7 +485,69 @@ public class SearchToQLProcessor {
 					+ path.substring(pos + 1);
 			aliases.put(path, alias);
 			return alias;
-		}		
+		}
 	}
 
+	// ---- SECURITY CHECK ---- //
+
+	/**
+	 * Regex pattern for a valid property name/path.
+	 */
+	protected Pattern INJECTION_CHECK = Pattern.compile("^[\\w\\.]+$");
+
+	/**
+	 * Checks to make sure the search will not violate security.<br/><br/>
+	 * 
+	 * Current checks:
+	 * <ul>
+	 * <li>INJECTION - We check each property sepcified in the search to make
+	 * sure it only contains valid Java identifier characters</li>
+	 * </ul>
+	 */
+	protected void securityCheck(Search search) {
+		Iterator<Fetch> fetchItr = search.fetchIterator();
+		while (fetchItr.hasNext()) {
+			securityCheckProperty(fetchItr.next().property);
+		}
+
+		Iterator<Sort> sortItr = search.sortIterator();
+		while (sortItr.hasNext()) {
+			securityCheckProperty(sortItr.next().property);
+		}
+
+		Iterator<Filter> filterItr = search.filterIterator();
+		while (filterItr.hasNext()) {
+			securityCheckFilter(filterItr.next());
+		}
+	}
+
+	/**
+	 * Used by <code>securityCheck()</code> to recursively check filters.
+	 */
+	@SuppressWarnings("unchecked")
+	protected void securityCheckFilter(Filter filter) {
+		if (filter.operator == Filter.OP_AND || filter.operator == Filter.OP_OR) {
+			if (filter.value instanceof List) {
+				for (Filter f : (List<Filter>) filter.value) {
+					securityCheckFilter(f);
+				}
+			}
+		} else if (filter.operator == Filter.OP_NOT) {
+			if (filter.value instanceof Filter) {
+				securityCheckFilter((Filter) filter.value);
+			}
+		} else {
+			securityCheckProperty(filter.property);
+		}
+	}
+
+	/**
+	 * Used by <code>securityCheck()</code> to check a property string for injection attack.
+	 */
+	protected void securityCheckProperty(String property) {
+		if (!INJECTION_CHECK.matcher(property).matches())
+			throw new IllegalArgumentException(
+					"A property used in a Search may only contain word characters (alphabetic, numberic and underscore \"_\") and dot \".\" seperators. This constraint was violated: "
+							+ property);
+	}
 }

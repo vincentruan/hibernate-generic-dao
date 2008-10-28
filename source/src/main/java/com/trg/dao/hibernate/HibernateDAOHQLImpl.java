@@ -1,4 +1,4 @@
-package com.trg.dao;
+package com.trg.dao.hibernate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
+import com.trg.dao.SearchToQLProcessor;
 import com.trg.search.Fetch;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;

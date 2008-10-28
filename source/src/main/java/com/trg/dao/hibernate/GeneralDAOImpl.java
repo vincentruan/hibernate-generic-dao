@@ -1,10 +1,11 @@
-package com.trg.dao;
+package com.trg.dao.hibernate;
 
 import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.NonUniqueResultException;
 
+import com.trg.dao.GeneralDAO;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
@@ -71,7 +72,6 @@ public class GeneralDAOImpl extends HibernateDAOHQLImpl implements GeneralDAO {
 	}
 
 	public void refresh(Object object) {
-		// TODO Auto-generated method stub
-		
+		_refresh(object);
 	}
 }
