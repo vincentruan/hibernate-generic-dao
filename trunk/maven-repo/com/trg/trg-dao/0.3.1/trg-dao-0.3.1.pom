@@ -7,6 +7,7 @@
 	<version>0.3.1</version>
 	<url>http://code.google.com/p/hibernate-generic-dao</url>
 	<inceptionYear>2008</inceptionYear>
+	<properties></properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
@@ -49,6 +50,19 @@
 						<exclude>**/TestBase.java</exclude>
 					</excludes>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
