@@ -8,15 +8,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.hibernate.Criteria;
 import org.hibernate.EntityMode;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
+import org.springframework.stereotype.Repository;
 
 import com.trg.search.Fetch;
 import com.trg.search.Search;
@@ -31,13 +33,24 @@ import com.trg.search.SearchResult;
  * 
  */
 @SuppressWarnings("unchecked")
-public class HibernateDAOHQLImpl extends HibernateDaoSupport {
+@Repository
+public class HibernateDAOHQLImpl {
 
 	private static HibernateSearchToQLProcessor searchToQLProcessor = new HibernateSearchToQLProcessor();
+	
+	private SessionFactory sessionFactory;
 
-	@Autowired
-	public void setSessionFactoryAutowire(SessionFactory sessionFactory) {
-		setSessionFactory(sessionFactory);
+	public SessionFactory getSessionFactory() {
+		return sessionFactory;
+	}
+
+	@Resource
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	protected Session getSession() {
+		return sessionFactory.getCurrentSession();
 	}
 
 	/**

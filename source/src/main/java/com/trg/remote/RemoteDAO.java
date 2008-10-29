@@ -5,6 +5,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.trg.dao.GeneralDAO;
@@ -23,7 +25,7 @@ public class RemoteDAO {
 	
 	private Map<String, Object> specificDAOs;
 
-	@Autowired
+	@Resource
 	private GeneralDAO generalDAO;
 
 	/**
