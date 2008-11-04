@@ -1,7 +1,7 @@
 #summary Details for adding this framework as a Maven dependency
 #labels Featured
 
-= Add to pom.xml =
+= pom.xml =
 {{{
 <repository>
 	<id>trg-dao-repo</id>
