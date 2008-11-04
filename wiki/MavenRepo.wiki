@@ -1,0 +1,12 @@
+#summary Details for adding this framework as a Maven dependency
+
+= Introduction =
+
+Repository
+{{{
+<repository>
+	<id>trg-dao-repo</id>
+	<name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
+	<url>http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/</url>
+</repository>
+}}}
