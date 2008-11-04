@@ -12,6 +12,6 @@
 <dependency>
 	<groupId>com.trg</groupId>
 	<artifactId>trg-dao</artifactId>
-	<version>0.3.1</version> <!-- or whatever the latest version is-->
+	<version>0.3.1</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
