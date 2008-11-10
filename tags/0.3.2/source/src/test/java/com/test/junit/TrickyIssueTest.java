@@ -1,0 +1,137 @@
+package com.test.junit;
+
+import java.util.List;
+import java.util.Map;
+
+import com.test.TestBase;
+import com.test.model.Home;
+import com.test.model.Person;
+import com.trg.dao.GeneralDAO;
+import com.trg.search.Search;
+
+public class TrickyIssueTest extends TestBase {
+	private GeneralDAO generalDAO;
+
+	public void setGeneralDAO(GeneralDAO generalDAO) {
+		this.generalDAO = generalDAO;
+	}
+
+	/**
+	 * The alias error occurs when using fetch mode FETCH_MAP. It occurs when
+	 * there is a fetch that has a key with no "." in it and is the same as a
+	 * property that is used in a filter.
+	 */
+	public void testAliasError() {
+		initDB();
+
+		List<Map<String, Object>> resultMap;
+
+		Search s = new Search(Person.class);
+		s.addFilterEqual("firstName", "Joe");
+		s.addFilterEqual("age", 10);
+		s.addSort("lastName");
+		s.setFetchMode(Search.FETCH_MAP);
+
+		s.addFetch("firstName");
+
+		resultMap = generalDAO.search(s);
+		assertEquals(2, resultMap.size());
+		assertEquals("Joe", resultMap.get(0).get("firstName"));
+		assertEquals("Joe", resultMap.get(1).get("firstName"));
+
+		s.addFetch("lastName");
+
+		resultMap = generalDAO.search(s);
+		assertEquals(2, resultMap.size());
+		assertEquals("Joe", resultMap.get(0).get("firstName"));
+		assertEquals("Alpha", resultMap.get(0).get("lastName"));
+		assertEquals("Joe", resultMap.get(1).get("firstName"));
+		assertEquals("Beta", resultMap.get(1).get("lastName"));
+
+		s.clearFetch();
+		s.addFetch("firstName", "firstName");
+		s.addFetch("age"); // this uses age for the property and key
+		s.addFetch("lastName", "Last Name");
+		s.addFetch("mother.lastName");
+
+		resultMap = generalDAO.search(s);
+		assertEquals(2, resultMap.size());
+		assertEquals("Joe", resultMap.get(0).get("firstName"));
+		assertEquals(10, resultMap.get(0).get("age"));
+		assertEquals("Alpha", resultMap.get(0).get("Last Name"));
+		assertEquals("Alpha", resultMap.get(0).get("mother.lastName"));
+		assertEquals("Joe", resultMap.get(1).get("firstName"));
+		assertEquals(10, resultMap.get(1).get("age"));
+		assertEquals("Beta", resultMap.get(1).get("Last Name"));
+		assertEquals("Beta", resultMap.get(1).get("mother.lastName"));
+	}
+
+	/**
+	 * The building of joins to eagerly fetch collections can mess with result
+	 * counts. The latest version should be able to deal with this issue.
+	 */
+	public void testEagerFetchingPagingError() {
+		initDB();
+
+		Search s = new Search(Home.class);
+
+		assertEquals(3, generalDAO.search(s).size());
+
+		s.setMaxResults(3);
+		assertEquals(3, generalDAO.search(s).size());
+
+		s.setMaxResults(2);
+		assertEquals(2, generalDAO.search(s).size());
+
+		s.setMaxResults(1);
+		assertEquals(1, generalDAO.search(s).size());
+
+		s.setMaxResults(2);
+		s.setPage(1);
+		assertEquals(1, generalDAO.search(s).size());
+	}
+
+	/**
+	 * If a property value is supposed to be of type Long but an Integer is
+	 * passed in, an error would be thrown. This was a major issue when passing
+	 * values in from Adobe Flex where we had no way to control whether a number
+	 * is passed as an Integer or Long. The latest version should be able to
+	 * deal with this issue.
+	 */
+	public void testNumberClassCastError() {
+		initDB();
+		
+		Search s = new Search(Person.class);
+		
+		s.addFilterGreaterThan("id", new Integer(0)); //id should be Long
+		assertListEqual(new Person[] { sallyA, joeA, joeB, margretB, mamaB, papaA, mamaA, papaB, grandpaA, grandmaA }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterEqual("age", new Long(40L));
+		assertListEqual(new Person[] { mamaA }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterEqual("age", new Double(10.0));
+		assertListEqual(new Person[] { joeA, joeB }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterEqual("mother.age", new Double(40.0));
+		assertListEqual(new Person[] { joeA, sallyA }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterEqual("mother.home.address", mamaA.getHome().getAddress());
+		assertListEqual(new Person[] { joeA, sallyA }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterEqual("mother.home.address.id", new Float(mamaA.getHome().getAddress().getId().floatValue()));
+		assertListEqual(new Person[] { joeA, sallyA }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterIn("id", new Object[] { new Integer(joeA.getId().intValue()), new Integer(joeB.getId().intValue()) });
+		assertListEqual(new Person[] { joeA, joeB }, generalDAO.search(s));
+		
+		s.clear();
+		s.addFilterIn("id", (Object[]) new Integer[] { new Integer(joeA.getId().intValue()), new Integer(joeB.getId().intValue()) });
+		assertListEqual(new Person[] { joeA, joeB }, generalDAO.search(s));
+	}
+}
