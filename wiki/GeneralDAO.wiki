@@ -11,7 +11,7 @@ http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/dao/Gen
 
 Spring configuration:
 
-The classes are annotated with @Resource so that Spring fills in the `sessionFactory` property automatically:
+The classes are annotated with @Resource so that Spring fills in the `sessionFactory` property automatically. Therefore only one line is needed in the spring config XML:
 {{{
 <bean id="generalDAO" class="com.trg.dao.hibernate.GeneralDAOImpl"/>
 }}}
