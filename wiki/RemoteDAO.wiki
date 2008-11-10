@@ -15,7 +15,7 @@ http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/remote/
 
 Spring configuration:
 {{{
-<!-- NOTE: Spring automatically fills in GenericDAO -->
+<!-- NOTE: Spring automatically fills in the GenericDAO dependency -->
 <bean id="remoteDAO" class="com.trg.remote.RemoteDAO"/>
 }}}
 
