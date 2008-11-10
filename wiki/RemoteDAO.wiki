@@ -15,13 +15,8 @@ http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/remote/
 
 Spring configuration:
 {{{
-<!-- without AUTO-WIRE -->
-<bean id="remoteDAO" class="com.trg.remote.RemoteDAO">
-	<property name="generalDAO" ref="generalDAO"/>
-</bean>
-
-<!-- with AUTO-WIRE -->
-<bean  id="remoteDAO" class="com.trg.remote.RemoteDAO"/>
+<!-- NOTE: Spring automatically fills in GenericDAO -->
+<bean id="remoteDAO" class="com.trg.remote.RemoteDAO"/>
 }}}
 
 Using a specific implementation for `Project` domain objects...
