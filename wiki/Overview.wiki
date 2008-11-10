@@ -19,7 +19,3 @@ The framework's features can be divided into four categories
   * [GenericDAO]
   * [RemoteDAO]
   * [Search]
-
-This site includes a couple of additional pieces that work with the core framework.
-  * EclipsePlugin (not yet posted)
-  * FlexClientSideInterface (not yet posted)
