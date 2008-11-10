@@ -42,13 +42,8 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements Pro
 }}}
 
 Spring configuration:
-{{{
-<bean id="projectDAO" class="my.package.ProjectDAOImpl">
-    <property name="sessionFactory" ref="sessionFactory"/>
-</bean>
-}}}
 
-We use Spring auto-wire by type. So we simply use the following line and Spring fills in `sessionFactory` automatically:
+The classes are annotated with @Resource so that Spring fills in the `sessionFactory` property automatically. Therefore only one line is needed in the spring config XML:
 {{{
 <bean id="projectDAO" class="my.package.ProjectDAOImpl"/>
 }}}
