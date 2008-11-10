@@ -7,8 +7,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.trg.dao.GeneralDAO;
 import com.trg.dao.Util;
 import com.trg.search.Search;
