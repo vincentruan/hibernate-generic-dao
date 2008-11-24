@@ -1,4 +1,4 @@
-#Example of how to get this package working in a project with Maven
+#summary Example of how to get this package working in a project with Maven
 
 = Introduction =
 
