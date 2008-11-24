@@ -1,0 +1,10 @@
+#Example of how to get this package working in a project with Maven
+
+= Introduction =
+
+Add your content here.
+
+
+= Details =
+
+http://blog.hibernate.org/9384.lace
