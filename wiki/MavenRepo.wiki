@@ -15,3 +15,5 @@
 	<version>0.3.1</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
+
+This project uses Hibernate Core 3.3. For information on how to set up maven dependencies look at the {{{test}}} scope dependencies in this project's POM and/or check out this blog entry http://blog.hibernate.org/9384.lace.
