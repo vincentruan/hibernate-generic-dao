@@ -16,4 +16,4 @@
 </dependency>
 }}}
 
-This project uses Hibernate Core 3.3. For information on how to set up these Maven dependencies, look at the {{{test}}} scope dependencies in this project's POM and/or check out this blog entry http://blog.hibernate.org/9384.lace.
+This project uses Hibernate Core 3.3. For information on how to set up these Maven dependencies, look at the {{{test}}} scope dependencies in this project's POM and check out this blog entry http://blog.hibernate.org/9384.lace.
