@@ -1,8 +1,10 @@
 #summary List of changes made for each release
 #labels Featured
 
-==0.3.3==
+==0.3.3 (in progress)==
   * Cleaned up pom.xml (Issue #14):
     * Removed unneeded dependencies and repositories
     * Moved most dependencies to {{{test}}} scope
   * Upgraded to Hibernate 3.3.1GA
+  * {{{deleteById()}}} no longer throws an error if no matching object is found in the database. (Issue #15))
+  * {{{deleteById()}}} and {{{deleteEntity()}}} now return boolean: true if found and deleted, false if not found.
