@@ -1,11 +1,10 @@
 package com.test.junit;
 
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
-import org.hibernate.proxy.pojo.cglib.CGLIBLazyInitializer;
+import org.hibernate.proxy.HibernateProxy;
 
 import com.test.TestBase;
 import com.test.dao.PersonDAO;
@@ -49,8 +48,7 @@ public class FetchTest extends TestBase {
 	}
 	
 	private boolean isEntityFetched(Object entity) throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		Method getHibernateLazyInitializer = entity.getClass().getMethod("getHibernateLazyInitializer");
-		return !((CGLIBLazyInitializer) getHibernateLazyInitializer.invoke(entity)).isUninitialized();
+		return !((HibernateProxy) entity).getHibernateLazyInitializer().isUninitialized();
 	}
 	
 	public void testFetchOther() {
