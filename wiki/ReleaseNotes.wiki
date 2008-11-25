@@ -1,4 +1,5 @@
 #summary List of changes made for each release
+#labels Featured
 
 ==0.3.3==
   * Cleaned up pom.xml (Issue #14):
