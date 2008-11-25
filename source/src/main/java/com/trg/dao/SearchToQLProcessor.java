@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.trg.search.Fetch;
 import com.trg.search.Filter;
@@ -43,7 +43,7 @@ import com.trg.search.Sort;
  */
 public abstract class SearchToQLProcessor {
 
-	private static Log log = LogFactory.getLog(SearchToQLProcessor.class);
+	private static Logger logger = LoggerFactory.getLogger(SearchToQLProcessor.class);
 	
 	protected static int QLTYPE_HQL = 0;
 	protected static int QLTYPE_EQL = 1;
@@ -92,7 +92,7 @@ public abstract class SearchToQLProcessor {
 		sb.append(orderBy);
 
 		String query = sb.toString();
-		if (log.isDebugEnabled()) log.debug("generateQL:\n  " + query);
+		if (logger.isDebugEnabled()) logger.debug("generateQL:\n  " + query);
 		return query;
 	}
 
@@ -120,7 +120,7 @@ public abstract class SearchToQLProcessor {
 		sb.append(where);
 
 		String query = sb.toString();
-		if (log.isDebugEnabled()) log.debug("generateRowCountQL:\n  " + query);
+		if (logger.isDebugEnabled()) logger.debug("generateRowCountQL:\n  " + query);
 		return query;
 	}
 
