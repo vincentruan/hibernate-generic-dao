@@ -35,7 +35,7 @@ import com.trg.search.SearchResult;
 public class HibernateDAOHQLImpl {
 
 	private static HibernateSearchToQLProcessor searchToQLProcessor = new HibernateSearchToQLProcessor();
-	
+
 	private SessionFactory sessionFactory;
 
 	public SessionFactory getSessionFactory() {
@@ -46,7 +46,7 @@ public class HibernateDAOHQLImpl {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
+
 	protected Session getSession() {
 		return sessionFactory.getCurrentSession();
 	}
@@ -73,27 +73,39 @@ public class HibernateDAOHQLImpl {
 	/**
 	 * Delete the object of the specified class with the specified id from the
 	 * database.
+	 * 
+	 * @return <code>true</code> if the object is found in the database and
+	 *         deleted, <code>false</code> if the item is not found.
 	 */
-	protected void _deleteById(Serializable id, Class klass) {
-		if (id == null)
-			return;
-		getSession().delete(getSession().get(klass, id));
+	protected boolean _deleteById(Serializable id, Class klass) {
+		if (id != null) {
+			Object object = getSession().get(klass, id);
+			if (object != null) {
+				getSession().delete(object);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * Delete the specified object from the database.
+	 * 
+	 * @return <code>true</code> if the object is found in the database and
+	 *         deleted, <code>false</code> if the item is not found.
 	 */
-	protected void _deleteEntity(Object object) {
-		if (object == null)
-			return;
-		// getSession().delete(object);
-
-		Serializable id = _getId(object);
-		if (id != null) {
-			object = getSession().get(object.getClass(), id);
-			if (object != null)
-				getSession().delete(object);
+	protected boolean _deleteEntity(Object object) {
+		if (object != null) {
+			Serializable id = _getId(object);
+			if (id != null) {
+				object = getSession().get(object.getClass(), id);
+				if (object != null) {
+					getSession().delete(object);
+					return true;
+				}
+			}
 		}
+		return false;
 	}
 
 	/**
@@ -237,7 +249,6 @@ public class HibernateDAOHQLImpl {
 
 	// ---- SEARCH HELPERS ---- //
 
-	@SuppressWarnings("unchecked")
 	private void addParams(Query query, List<Object> params) {
 		int i = 1;
 		for (Object o : params) {
@@ -292,7 +303,6 @@ public class HibernateDAOHQLImpl {
 	private static final ResultTransformer ARRAY_RESULT_TRANSFORMER = new ResultTransformer() {
 		private static final long serialVersionUID = 1L;
 
-		@SuppressWarnings("unchecked")
 		public List transformList(List collection) {
 			return collection;
 		}
@@ -311,7 +321,6 @@ public class HibernateDAOHQLImpl {
 			this.keys = keys;
 		}
 
-		@SuppressWarnings("unchecked")
 		public List transformList(List collection) {
 			return collection;
 		}

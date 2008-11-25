@@ -26,19 +26,25 @@ public interface GeneralDAO {
 	/**
 	 * If the id of the object is null or zero, create, otherwise update.
 	 * 
-	 * @return true if create; false if update.
+	 * @return <code>true</code> if create; <code>false</code> if update.
 	 */
 	public boolean createOrUpdate(Object object);
 
 	/**
 	 * Delete the object with the specified id and class from the database.
+	 * 
+	 * @return <code>true</code> if the object is found in the database and
+	 *         deleted, <code>false</code> if the item is not found.
 	 */
-	public void deleteById(Serializable id, Class<?> klass);
+	public boolean deleteById(Serializable id, Class<?> klass);
 
 	/**
 	 * Delete the specified object from the database.
+	 * 
+	 * @return <code>true</code> if the object is found in the database and
+	 *         deleted, <code>false</code> if the item is not found.
 	 */
-	public void deleteEntity(Object object);
+	public boolean deleteEntity(Object object);
 
 	/**
 	 * Get the object with the specified id and class from the database.

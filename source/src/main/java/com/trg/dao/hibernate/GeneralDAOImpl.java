@@ -33,12 +33,12 @@ public class GeneralDAOImpl extends HibernateDAOHQLImpl implements GeneralDAO {
 		}
 	}
 
-	public void deleteById(Serializable id, Class<?> klass) {
-		_deleteById(id, klass);
+	public boolean deleteById(Serializable id, Class<?> klass) {
+		return _deleteById(id, klass);
 	}
 
-	public void deleteEntity(Object object) {
-		_deleteEntity(object);
+	public boolean deleteEntity(Object object) {
+		return _deleteEntity(object);
 	}
 
 	public <T> T fetch(Serializable id, Class<T> klass) {
