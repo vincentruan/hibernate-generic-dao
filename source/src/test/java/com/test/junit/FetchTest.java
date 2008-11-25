@@ -51,6 +51,7 @@ public class FetchTest extends TestBase {
 		return !((HibernateProxy) entity).getHibernateLazyInitializer().isUninitialized();
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testFetchOther() {
 		initDB();
 		
@@ -162,6 +163,7 @@ public class FetchTest extends TestBase {
 		assertEquals("Margret", resultMap.get(1).get("home.type"));
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testGenericSearch() {
 		initDB();
 		
@@ -273,6 +275,7 @@ public class FetchTest extends TestBase {
 		assertEquals("Margret", resultMap.get(1).get("home.type"));		
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testColumnOperators() {
 		initDB();
 		

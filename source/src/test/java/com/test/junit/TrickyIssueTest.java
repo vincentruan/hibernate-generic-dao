@@ -21,6 +21,7 @@ public class TrickyIssueTest extends TestBase {
 	 * there is a fetch that has a key with no "." in it and is the same as a
 	 * property that is used in a filter.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testAliasError() {
 		initDB();
 
@@ -98,6 +99,7 @@ public class TrickyIssueTest extends TestBase {
 	 * is passed as an Integer or Long. The latest version should be able to
 	 * deal with this issue.
 	 */
+	@SuppressWarnings("unchecked")
 	public void testNumberClassCastError() {
 		initDB();
 		
