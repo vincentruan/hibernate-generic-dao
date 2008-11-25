@@ -48,15 +48,15 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		}
 	}
 
-	public void deleteById(ID id) {
-		_deleteById(id, persistentClass);
+	public boolean deleteById(ID id) {
+		return _deleteById(id, persistentClass);
 	}
 
-	public void deleteEntity(T object) {
+	public boolean deleteEntity(T object) {
 		if (!persistentClass.isInstance(object))
 			throw new IllegalArgumentException(
 					"Object class does not match dao type.");
-		_deleteEntity(object);
+		return _deleteEntity(object);
 	}
 
 	public T fetch(ID id) {

@@ -32,19 +32,25 @@ public interface GenericDAO<T, ID extends Serializable> {
 	/**
 	 * If the id of the object is null or zero, create, otherwise update.
 	 * 
-	 * @return true if create; false if update.
+	 * @return <code>true</code> if create; <code>false</code> if update.
 	 */
 	public boolean createOrUpdate(T object);
 
 	/**
 	 * Delete the object of this type with the specified id from the database.
+	 * 
+	 * @return <code>true</code> if the object is found in the database and
+	 *         deleted, <code>false</code> if the item is not found.
 	 */
-	public void deleteById(ID id);
+	public boolean deleteById(ID id);
 
 	/**
 	 * Delete the specified object from the database.
+	 * 
+	 * @return <code>true</code> if the object is found in the database and
+	 *         deleted, <code>false</code> if the item is not found.
 	 */
-	public void deleteEntity(T object);
+	public boolean deleteEntity(T object);
 
 	/**
 	 * Get the object of this type with the specified id from the database.

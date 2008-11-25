@@ -7,6 +7,8 @@ import com.test.dao.AddressDAO;
 import com.test.dao.HomeDAO;
 import com.test.dao.PersonDAO;
 import com.test.model.Person;
+import com.trg.search.Fetch;
+import com.trg.search.Search;
 
 public class BasicDAOTest extends TestBase {
 
@@ -68,8 +70,8 @@ public class BasicDAOTest extends TestBase {
 		List<Person> list = personDAO.fetchAll();
 		int sizeBefore = list.size();
 
-		personDAO.deleteById(joeA.getId());
-		personDAO.deleteEntity(sallyA);
+		assertTrue("Should return true when successfully deleting", personDAO.deleteById(joeA.getId()) );
+		assertTrue("Should return true when successfully deleting",  personDAO.deleteEntity(sallyA) );
 
 		list = personDAO.fetchAll();
 		assertEquals(sizeBefore - 2, list.size());
@@ -95,6 +97,20 @@ public class BasicDAOTest extends TestBase {
 		}
 		assertTrue("Joe and Sally should now be back in the DB", joeFound
 				&& sallyFound);
+		
+		// Test deleting by non-existent ID.
+		Search s = new Search();
+		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addFetch("id", Fetch.OP_MAX);
+		Long unusedId = ((Long) personDAO.searchUnique(s)).longValue() + 1;
+		
+		// deleteById should not throw an error
+		assertFalse(personDAO.deleteById( unusedId ));
+		
+		Person fake = new Person();
+		assertFalse("return false when no ID", personDAO.deleteEntity(fake));
+		fake.setId(unusedId);
+		assertFalse("return false when ID not found", personDAO.deleteEntity(fake));
 	}
 
 }
