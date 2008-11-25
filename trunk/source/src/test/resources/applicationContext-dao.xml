@@ -14,7 +14,7 @@
 	
 	<bean id="directDAO" class="com.test.dao.DirectDAO"/>
 	
-	<bean id="generalDAO" class="com.trg.dao.hibernate.GeneralDAOImpl"/>
+	<bean id="generalDAO" class="com.test.dao.MyGeneralDAOImpl"/>
 	
 	<bean id="remoteDAO" class="com.trg.remote.RemoteDAO">
 		<property name="specificDAOs">

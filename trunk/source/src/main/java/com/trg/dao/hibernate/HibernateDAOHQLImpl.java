@@ -18,7 +18,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
-import org.springframework.stereotype.Repository;
 
 import com.trg.search.Fetch;
 import com.trg.search.Search;
@@ -33,7 +32,6 @@ import com.trg.search.SearchResult;
  * 
  */
 @SuppressWarnings("unchecked")
-@Repository
 public class HibernateDAOHQLImpl {
 
 	private static HibernateSearchToQLProcessor searchToQLProcessor = new HibernateSearchToQLProcessor();
