@@ -9,7 +9,6 @@ Below are several options for what methods to include in the DAOs. The order in 
 
 == (1) Current (as of 0.3.3) ==
 
-
 {{{
 void create(Object object)
 }}}
@@ -22,16 +21,17 @@ boolean createOrUpdate(Object object)
 If the id of the object is null or zero, create, otherwise update.
 Return true if create; false if update.
 
-{{{boolean deleteById(Serializable id, Class<?> klass)
+{{{
+boolean deleteById(Serializable id, Class<?> klass)
 }}}
 Delete the object with the specified id and class from the database.
-Return <code>true</code> if the object is found in the database and deleted, <code>false</code> if the item is not found.
+Return true if the object is found in the database and deleted, false if the item is not found.
 
 {{{
 boolean deleteEntity(Object object)
 }}}
 elete the specified object from the database.
-Return <code>true</code> if the object is found in the database and deleted, <code>false</code> if the item is not found.
+Return true if the object is found in the database and deleted, false if the item is not found.
 
 {{{
 <T> T fetch(Serializable id, Class<T> klass)
@@ -57,13 +57,13 @@ Search object.
 int searchLength(Search search)
 }}}
 Returns the total number of results that would be returned using the
-given <code>Search</code> if there were no paging or maxResult limits.
+given Search if there were no paging or maxResult limits.
 
 {{{SearchResult searchAndLength(Search search)
 }}}
-Returns a <code>SearchResult</code> object that includes the list of
-results like <code>search()</code> and the total length like
-<code>searchLength</code>.
+Returns a SearchResult object that includes the list of
+results like search() and the total length like
+searchLength.
 
 {{{Object searchUnique(Search search) throws NonUniqueResultException
 }}}
