@@ -89,6 +89,36 @@ void refresh(Object object)
 Refresh the content of the given entity from the current database state.
 
 == (2) Based on Hibernate Tools ==
+{{{
+void save(Object instance)
+}}}
+Uses {{{org.hibernate.Session.saveOrUpdate()}}}
+
+{{{
+void delete(Object instance)
+}}}
+Remove a persistent instance from the datastore. Uses {{{org.hibernate.Session.delete()}}}.
+
+{{{
+Object findById(Long id)
+}}}
+Return the persistent instance of the given entity class with the given identifier, or null if there is no such persistent instance. Uses {{{org.hibernate.Session.get()}}}
+
+{{{
+Object merge(Object instance)
+}}}
+Uses {{{org.hibernate.Session.merge()}}}
+
+{{{
+void attachClean(Object instance)
+}}}
+Uses {{{org.hibernate.Session.lock()}}}, {{{LockMode.NONE}}}
+
+{{{
+void attachDirty(Object instance)
+}}}
+Same as save().
+
 
 == (3) Based on JPA EntityManager ==
 
@@ -131,3 +161,5 @@ Refresh the state of the instance from the database, overwriting changes made to
 void remove(Object entity)
 }}}
 Remove the entity instance.
+
+== (4) Based on Hibernate Session API ==
