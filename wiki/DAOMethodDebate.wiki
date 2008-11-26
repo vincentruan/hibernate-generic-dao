@@ -93,5 +93,41 @@ Refresh the content of the given entity from the current database state.
 == (3) Based on JPA EntityManager ==
 
 {{{
-
+boolean contains(Object entity) 
 }}}
+Check if the instance belongs to the current persistence context.
+
+{{{
+<T> T find(Class<T> entityClass, Object primaryKey) 
+}}}
+Find by primary key.
+
+{{{
+void flush() 
+}}}
+Synchronize the persistence context to the underlying database.
+
+{{{
+void lock(Object entity, LockModeType lockMode) 
+}}}
+Set the lock mode for an entity object contained in the persistence context.
+
+{{{
+<T> T merge(T entity) 
+}}}
+Merge the state of the given entity into the current persistence context.
+
+{{{
+void persist(Object entity) 
+}}}
+Make an entity instance managed and persistent.
+
+{{{
+void refresh(Object entity)
+}}}
+Refresh the state of the instance from the database, overwriting changes made to the entity, if any.
+
+{{{
+void remove(Object entity)
+}}}
+Remove the entity instance.
