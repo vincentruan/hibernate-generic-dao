@@ -19,7 +19,7 @@ Add the specified object as a new entry in the database.
 void update(Object object)
 }}}
 Update the corresponding object in the database with the properties of
-the specified object. The corresponding object is determined by id.
+the specified object. The corresponding object is determined by id. If there is a persistent instance with the same identifier, an exception is thrown.
 
 {{{
 boolean createOrUpdate(Object object)
