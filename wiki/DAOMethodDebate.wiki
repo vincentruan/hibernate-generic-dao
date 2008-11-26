@@ -73,7 +73,8 @@ Object searchUnique(Search search) throws NonUniqueResultException
 }}}
 Search for a single result using the given parameters.
 
-{{{boolean isConnected(Object object)
+{{{
+boolean isConnected(Object object)
 }}}
 Returns true if the object is connected to the current Hibernate session.
 
