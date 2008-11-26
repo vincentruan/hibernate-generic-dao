@@ -16,15 +16,12 @@ Add the specified object as a new entry in the database.
 
 {{{boolean createOrUpdate(Object object)}}}
 If the id of the object is null or zero, create, otherwise update.
-return <code>true</code> if create; <code>false</code> if update.
+return true if create; false if update.
 
-	/**
-	 * Delete the object with the specified id and class from the database.
-	 * 
-	 * @return <code>true</code> if the object is found in the database and
-	 *         deleted, <code>false</code> if the item is not found.
-	 */
-	{{{boolean deleteById(Serializable id, Class<?> klass)}}}
+{{{boolean deleteById(Serializable id, Class<?> klass)}}}
+Delete the object with the specified id and class from the database.
+return <code>true</code> if the object is found in the database and deleted, <code>false</code> if the item is not found.
+	
 
 	/**
 	 * Delete the specified object from the database.
