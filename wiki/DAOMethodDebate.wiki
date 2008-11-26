@@ -91,3 +91,7 @@ Refresh the content of the given entity from the current database state.
 == (2) Based on Hibernate Tools ==
 
 == (3) Based on JPA EntityManager ==
+
+{{{
+
+}}}
