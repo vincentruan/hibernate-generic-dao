@@ -38,7 +38,8 @@ Return true if the object is found in the database and deleted, false if the ite
 }}}
 Get the object with the specified id and class from the database.
 
-{{{<T> List<T> fetchAll(Class<T> klass)
+{{{
+<T> List<T> fetchAll(Class<T> klass)
 }}}
 Get a list of all the objects of the specified type.
 
@@ -59,13 +60,15 @@ int searchLength(Search search)
 Returns the total number of results that would be returned using the
 given Search if there were no paging or maxResult limits.
 
-{{{SearchResult searchAndLength(Search search)
+{{{
+SearchResult searchAndLength(Search search)
 }}}
 Returns a SearchResult object that includes the list of
 results like search() and the total length like
 searchLength.
 
-{{{Object searchUnique(Search search) throws NonUniqueResultException
+{{{
+Object searchUnique(Search search) throws NonUniqueResultException
 }}}
 Search for a single result using the given parameters.
 
