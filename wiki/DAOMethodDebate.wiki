@@ -249,3 +249,4 @@ void setReadOnly(Object entity, boolean readOnly)
 Set an unmodified persistent object to read only mode, or a read only object to modifiable mode.
 
 = Notes =
+One of the considerations is that if we provide two or more methods that do something similar (ex. merge and update), both methods will need to be overridden when the user wants to alter the functionality. This could lead to code duplication and possible inconsistencies.
