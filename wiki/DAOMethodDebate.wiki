@@ -2,7 +2,7 @@
 
 = Introduction =
 
-Below are several options for what methods to include in the DAOs. The order in which they are listed here is not meant to be significant.
+We are considering revising what methods we include in the DAOs. Below are several ideas of methods to use. The order in which they are listed here is not meant to be significant.
 
 *_Dear World: Please comment if you have any wisdom on this (or even just an opinion)._*
 
