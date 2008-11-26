@@ -16,6 +16,12 @@ Add the specified object as a new entry in the database.
 
 
 {{{
+void update(Object object)
+}}}
+Update the corresponding object in the database with the properties of
+the specified object. The corresponding object is determined by id.
+
+{{{
 boolean createOrUpdate(Object object)
 }}}
 If the id of the object is null or zero, create, otherwise update.
@@ -42,12 +48,6 @@ Get the object with the specified id and class from the database.
 <T> List<T> fetchAll(Class<T> klass)
 }}}
 Get a list of all the objects of the specified type.
-
-{{{
-void update(Object object)
-}}}
-Update the corresponding object in the database with the properties of
-the specified object. The corresponding object is determined by id.
 
 {{{
 List search(Search search)
