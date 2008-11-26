@@ -2,10 +2,12 @@
 
 = Introduction =
 
-We are considering revising what methods we include in the DAOs. Below are several ideas of methods to use. The order in which they are listed here is not meant to be significant.
+We are considering revising what methods we include in the DAOs. Below are several ideas of methods to use.
 
 *_Dear World: Please comment if you have any wisdom on this (or even just an opinion)._*
 
+= Options =
+The order in which they are listed here is not meant to be significant.
 
 == (1) Current (as of 0.3.3) ==
 
@@ -245,3 +247,5 @@ Update the persistent instance with the identifier of the given detached instanc
 void setReadOnly(Object entity, boolean readOnly) 
 }}}
 Set an unmodified persistent object to read only mode, or a read only object to modifiable mode.
+
+= Notes =
