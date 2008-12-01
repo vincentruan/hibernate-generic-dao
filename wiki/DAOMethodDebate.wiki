@@ -6,9 +6,16 @@ We are considering revising what methods we include in the DAOs. Below are sever
 
 *_Dear World: Please comment if you have any wisdom on this (or even just an opinion)._*
 
+See DAOMethodDebateReference for approaches used by other frameworks.
+
 = Options =
-== (1) ==
+== (1) Option 1 ==
 === GeneralDAO interface ===
+The basic idea is to stay close to the JPA EntityManager mothods since that is a wide standard and we intend to make an implementation for JPA (in addition to the original Hibernate implementation). On top of that, some methods were added for searching and others for convenience.
+
+Also, many methods have variable length argument lists for convenience. This could be a small inconvenience for developers wishing to override these methods.
+
+Using both merge and persist means developers will need to override both (if they need to override the functionality). We may be able to simplify this by having both call some sort of common method(s) that are called before and after save.
 {{{
 void persist(Object...)
 Object merge(Object...)
@@ -18,19 +25,22 @@ boolean removeById(Serializable, Object...)
 List<T> findAll(Class<T>)
 List search(Search)
 SearchResult searchAndCount(Search)
-long count()
+long count(Class<?>)
 long count(Search)
 Object searchUnique(Search)
 boolean isAttached(Object)
 void flush()
-void refresh(Object)
+void refresh(Object...)
 }}}
 
 === RemoteDAO interface ===
+The approach here is different than with GeneralDAO because we're not dealing with objects in the same way; however, we want to keep the naming fairly consistent.
+
+We must refrain from using just "get" or "delete" as method names, because these are keywords in ActionScript (Flex/Flash)
 {{{
-Object fetch(String, Serializable)
-List fetchAll(String)
-Object save(Object) //create or update based on whether id already exist
+Object find(String, Serializable)
+List findAll(String)
+Object save(Object) //create or update based on whether id already exist in datastore
 void removeById(String, Serializable)
 void removeEntity(Object)
 void removeByIds(Object[])
