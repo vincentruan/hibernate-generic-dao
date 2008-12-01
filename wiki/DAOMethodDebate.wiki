@@ -39,10 +39,10 @@ NOTE: We must refrain from using just "get" or "delete" as method names, because
 Object find(String className, Serializable id)
 List findAll(String className)
 Object save(Object entity) //create or update based on whether id already exist in datastore
+void remove(Object entity)
 void removeById(String className, Serializable id)
-void removeEntity(Object entity)
-void removeByIds(String className, Serializable[] ids)
-void removeEntities(Object[] entities)
+void removeMulti(Object[] entities)
+void removeMultiById(String className, Serializable[] ids)
 List search(RemoteSearch search)
 long count(RemoteSearch search)
 SearchResult searchAndCount(RemoteSearch search)
