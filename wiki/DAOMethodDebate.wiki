@@ -34,7 +34,7 @@ void refresh(Object...)
 === RemoteDAO interface ===
 The approach here is different than with GeneralDAO because we're not dealing with objects in the same way; however, we want to keep the naming fairly consistent.
 
-We must refrain from using just "get" or "delete" as method names, because these are keywords in ActionScript (Flex/Flash)
+NOTE: We must refrain from using just "get" or "delete" as method names, because these are keywords in ActionScript (Flex/Flash)
 {{{
 Object find(String, Serializable)
 List findAll(String)
