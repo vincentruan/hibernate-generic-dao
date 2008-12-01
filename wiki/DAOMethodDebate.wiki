@@ -2,11 +2,9 @@
 
 = Introduction =
 
-We are considering revising what methods we include in the DAOs. Below are several ideas of methods to use.
+We are considering revising what methods we include in the DAOs. Below are several ideas of methods to use. See [DAOMethodDebateReferences] for approaches used by other frameworks.
 
 *_Dear World: Please comment if you have any wisdom on this (or even just an opinion)._*
-
-See [DAOMethodDebateReferences] for approaches used by other frameworks.
 
 = Options =
 == (1) Option 1 ==
