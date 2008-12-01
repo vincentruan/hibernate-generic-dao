@@ -7,6 +7,67 @@ We are considering revising what methods we include in the DAOs. Below are sever
 *_Dear World: Please comment if you have any wisdom on this (or even just an opinion)._*
 
 = Options =
+== (1) Current (as of 0.3.3) ==
+
+{{{
+void create(Object object)
+void update(Object object)
+boolean createOrUpdate(Object object)
+boolean deleteById(Serializable id, Class<?> klass)
+boolean deleteEntity(Object object)
+<T> T fetch(Serializable id, Class<T> klass)
+<T> List<T> fetchAll(Class<T> klass)
+List search(Search search)
+int searchLength(Search search)
+SearchResult searchAndLength(Search search)
+Object searchUnique(Search search) throws NonUniqueResultException
+boolean isConnected(Object object)
+void flush()
+void refresh(Object object)
+}}}
+
+== (2) Based on Hibernate Tools ==
+{{{
+void save(Object instance)
+void delete(Object instance)
+Object findById(Long id)
+Object merge(Object instance)
+void attachClean(Object instance)
+void attachDirty(Object instance)
+}}}
+
+== (3) Based on JPA EntityManager ==
+{{{
+boolean contains(Object entity) 
+<T> T find(Class<T> entityClass, Object primaryKey) 
+void flush() 
+void lock(Object entity, LockModeType lockMode) 
+<T> T merge(T entity) 
+void persist(Object entity) 
+void refresh(Object entity)
+void remove(Object entity)
+}}}
+
+== (4) Based on Hibernate Session API ==
+{{{
+boolean contains(Object object) 
+void delete(Object object) 
+void evict(Object object) 
+void flush()
+Object get(Class clazz, Serializable id)
+Object load(Class theClass, Serializable id) 
+Object merge(Object object) 
+void persist(Object object)
+void lock(Object object, LockMode lockMode) 
+void refresh(Object object)
+void replicate(Object object, ReplicationMode replicationMode)
+Serializable save(Object object) 
+void saveOrUpdate(Object object) 
+void update(Object object) 
+void setReadOnly(Object entity, boolean readOnly) 
+}}}
+
+= Descriptions =
 The order in which they are listed here is not meant to be significant.
 
 == (1) Current (as of 0.3.3) ==
