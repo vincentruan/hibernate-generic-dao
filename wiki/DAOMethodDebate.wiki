@@ -15,20 +15,20 @@ Also, many methods have variable length argument lists for convenience. This cou
 
 Using both merge and persist means developers will need to override both (if they need to override the functionality). We may be able to simplify this by having both call some sort of common method(s) that are called before and after save.
 {{{
-void persist(Object...)
-Object merge(Object...)
-T find(Class<T>, Serializable)
-boolean remove(Object...)
-boolean removeById(Serializable, Object...)
-List<T> findAll(Class<T>)
-List search(Search)
-SearchResult searchAndCount(Search)
-long count(Class<?>)
-long count(Search)
-Object searchUnique(Search)
-boolean isAttached(Object)
+void persist(Object... entities)
+Object merge(Object... entities)
+T find(Class<T> klass, Serializable id)
+boolean remove(Object... entities)
+boolean removeById(Serializable klass, Object... ids)
+List<T> findAll(Class<T> klass)
+List search(Search search)
+SearchResult searchAndCount(Search search)
+long count(Class<?> klass)
+long count(Search search)
+Object searchUnique(Search search)
+boolean isAttached(Object entity)
 void flush()
-void refresh(Object...)
+void refresh(Object... entities)
 }}}
 
 === RemoteDAO interface ===
@@ -36,17 +36,17 @@ The approach here is different than with GeneralDAO because we're not dealing wi
 
 NOTE: We must refrain from using just "get" or "delete" as method names, because these are keywords in ActionScript (Flex/Flash)
 {{{
-Object find(String, Serializable)
-List findAll(String)
-Object save(Object) //create or update based on whether id already exist in datastore
-void removeById(String, Serializable)
-void removeEntity(Object)
-void removeByIds(Object[])
-void removeEntities(String, Long[])
-List search(RemoteSearch)
-long count(RemoteSearch)
-SearchResult searchAndCount(RemoteSearch)
-Object searchUnique(RemoteSearch)
+Object find(String className, Serializable id)
+List findAll(String className)
+Object save(Object entity) //create or update based on whether id already exist in datastore
+void removeById(String className, Serializable id)
+void removeEntity(Object entity)
+void removeByIds(String className, Serializable[] ids)
+void removeEntities(Object[] entities)
+List search(RemoteSearch search)
+long count(RemoteSearch search)
+SearchResult searchAndCount(RemoteSearch search)
+Object searchUnique(RemoteSearch search)
 }}}
 
 = Notes =
