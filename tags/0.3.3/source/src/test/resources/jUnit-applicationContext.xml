@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-2.5.xsd"> 
+	<!-- 
+		| This is configuration for test-specific beans, such as mock objects, etc. Uki. 
+	-->
+	<import resource="applicationContext.xml" />
+
+	<bean id="customEditorConfigurer"
+		class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+		<property name="customEditors">
+			<map>
+				<entry key="java.util.Date">
+					<bean
+						class="org.springframework.beans.propertyeditors.CustomDateEditor">
+						<constructor-arg index="0">
+							<bean class="java.text.SimpleDateFormat">
+								<constructor-arg value="dd/MM/yyyy" />
+							</bean>
+						</constructor-arg>
+						<constructor-arg index="1" value="false" />
+					</bean>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+
+	<bean id="joeA" class="com.test.model.Person">
+		<property name="firstName" value="Joe" />
+		<property name="lastName" value="Alpha" />
+		<property name="father" ref="papaA" />
+		<property name="mother" ref="mamaA" />
+		<property name="age" value="10" />
+		<property name="home" ref="homeA" />
+	</bean>
+	<bean id="sallyA" class="com.test.model.Person">
+		<property name="firstName" value="Sally" />
+		<property name="lastName" value="Alpha" />
+		<property name="father" ref="papaA" />
+		<property name="mother" ref="mamaA" />
+		<property name="age" value="9" />
+		<property name="home" ref="homeA" />
+	</bean>
+	<bean id="papaA" class="com.test.model.Person">
+		<property name="firstName" value="Papa" />
+		<property name="lastName" value="Alpha" />
+		<property name="father" ref="grandpaA" />
+		<property name="mother" ref="grandmaA" />
+		<property name="age" value="39" />
+		<property name="home" ref="homeA" />
+	</bean>
+	<bean id="mamaA" class="com.test.model.Person">
+		<property name="firstName" value="Mama" />
+		<property name="lastName" value="Alpha" />
+		<property name="age" value="40" />
+		<property name="home" ref="homeA" />
+	</bean>
+
+	<bean id="joeB" class="com.test.model.Person">
+		<property name="firstName" value="Joe" />
+		<property name="lastName" value="Beta" />
+		<property name="father" ref="papaB" />
+		<property name="mother" ref="mamaB" />
+		<property name="age" value="10" />
+		<property name="home" ref="homeB" />
+	</bean>
+	<bean id="margretB" class="com.test.model.Person">
+		<property name="firstName" value="Margret" />
+		<property name="lastName" value="Beta" />
+		<property name="father" ref="papaB" />
+		<property name="mother" ref="mamaB" />
+		<property name="age" value="14" />
+		<property name="home" ref="homeB" />
+	</bean>
+	<bean id="papaB" class="com.test.model.Person">
+		<property name="firstName" value="Papa" />
+		<property name="lastName" value="Beta" />
+		<property name="age" value="39" />
+		<property name="home" ref="homeB" />
+	</bean>
+	<bean id="mamaB" class="com.test.model.Person">
+		<property name="firstName" value="Mama" />
+		<property name="lastName" value="Beta" />
+		<property name="father" ref="grandpaA" />
+		<property name="mother" ref="grandmaA" />
+		<property name="age" value="38" />
+		<property name="home" ref="homeB" />
+	</bean>
+
+	<bean id="grandpaA" class="com.test.model.Person">
+		<property name="firstName" value="Grandpa" />
+		<property name="lastName" value="Alpha" />
+		<property name="age" value="65" />
+		<property name="home" ref="homeC" />
+	</bean>
+	<bean id="grandmaA" class="com.test.model.Person">
+		<property name="firstName" value="Grandma" />
+		<property name="lastName" value="Alpha" />
+		<property name="age" value="65" />
+		<property name="home" ref="homeC" />
+	</bean>
+	
+	<bean id="homeA" class="com.test.model.Home">
+		<property name="type" value="house"/>
+		<property name="address">
+			<bean id="addressA" class="com.test.model.Address">
+				<property name="street" value="940 N Fairfield"/>
+				<property name="city" value="Chicago"/>
+				<property name="state" value="IL"/>
+				<property name="zip" value="60610"/>
+			</bean>
+		</property>
+	</bean>
+	<bean id="homeB" class="com.test.model.Home">
+		<property name="type" value="apartment"/>
+		<property name="address">
+			<bean id="addressB" class="com.test.model.Address">
+				<property name="street" value="734 N Fairfield, Apt 3"/>
+				<property name="city" value="Chicago"/>
+				<property name="state" value="IL"/>
+				<property name="zip" value="60610"/>
+			</bean>
+		</property>
+	</bean>
+	<bean id="homeC" class="com.test.model.Home">
+		<property name="type" value="house"/>
+		<property name="address">
+			<bean id="addressC" class="com.test.model.Address">
+				<property name="street" value="3290 W Fulton"/>
+				<property name="city" value="Chicago"/>
+				<property name="state" value="IL"/>
+				<property name="zip" value="60610"/>
+			</bean>
+		</property>
+	</bean>
+	
+</beans>
+
