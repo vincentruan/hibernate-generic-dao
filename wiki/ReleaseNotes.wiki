@@ -1,10 +1,21 @@
 #summary List of changes made for each release
 #labels Featured
 
-==0.3.3 (in progress)==
+==0.3.3==
   * Cleaned up pom.xml (Issue #14):
     * Removed unneeded dependencies and repositories
     * Moved most dependencies to {{{test}}} scope
   * Upgraded to Hibernate 3.3.1GA
   * {{{deleteById()}}} no longer throws an error if no matching object is found in the database. (Issue #15))
   * {{{deleteById()}}} and {{{deleteEntity()}}} now return boolean: true if found and deleted, false if not found.
+
+==0.3.4 (in progress)==
+  * Use Hibernate MetaData for Util.getExpectedClass()
+  * Change DAO methods
+  * Change RemoteDAO methods
+  * Use RemoteDAO adapters for specific technologies
+
+==Future==
+  * Add implementation for JPA
+  * Ensure compatibility with multiple entity names per Java class
+  * Security roles
