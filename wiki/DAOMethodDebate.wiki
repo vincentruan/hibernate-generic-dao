@@ -51,4 +51,5 @@ Object searchUnique(RemoteSearch search)
 
 = Notes =
   * One of the considerations is that if we provide two or more methods that do something similar (ex. merge and update), both methods will need to be overridden when the user wants to alter the functionality. This could lead to code duplication and possible inconsistencies.
-  * In hibernate `persist()` and `save()` have the following distinction: `persist()` doesn't guarantee that the identifier value will be assigned to the persistent instance immediately, the assignment might happen at flush time. `save()` does guarantee to return an identifier.
+  * In Hibernate `persist()` and `save()` have the following distinction: `persist()` doesn't guarantee that the identifier value will be assigned to the persistent instance immediately, the assignment might happen at flush time. `save()` does guarantee to return an identifier.
+  * In Hibernate the difference between `update()` and `merge()` is significant. `update()` will make the given object persistent and throw and error if another object with the same ID is already persistent in the `Session`. `merge()` doesn't care if another object is already persistent, but it also doesn't make the given object persistent; it just copies over the values to the datastore.
