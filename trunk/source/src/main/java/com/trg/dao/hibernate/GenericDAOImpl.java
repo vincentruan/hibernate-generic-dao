@@ -25,7 +25,7 @@ import com.trg.search.SearchResult;
  */
 @SuppressWarnings("unchecked")
 public class GenericDAOImpl<T, ID extends Serializable> extends
-		HibernateDAOHQLImpl implements GenericDAO<T, ID> {
+		BaseDAOImpl implements GenericDAO<T, ID> {
 
 	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass()
 			.getGenericSuperclass()).getActualTypeArguments()[0];
@@ -38,7 +38,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public boolean createOrUpdate(T object) {
-		Serializable id = _getId(object);
+		Serializable id = getMetaDataUtil().getId(object);
 		if (id == null || (new Long(0)).equals(id)) {
 			create(object);
 			return true;

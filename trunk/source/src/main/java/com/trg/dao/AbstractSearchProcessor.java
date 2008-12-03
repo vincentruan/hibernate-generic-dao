@@ -41,19 +41,22 @@ import com.trg.search.Sort;
  * The that implementation could be used for EQL query language as well with no
  * or minor modifications.
  */
-public abstract class SearchToQLProcessor {
+public abstract class AbstractSearchProcessor {
 
-	private static Logger logger = LoggerFactory.getLogger(SearchToQLProcessor.class);
+	private static Logger logger = LoggerFactory.getLogger(AbstractSearchProcessor.class);
 	
 	protected static int QLTYPE_HQL = 0;
 	protected static int QLTYPE_EQL = 1;
 
 	protected int qlType;
+	
+	protected MetaDataUtil metaDataUtil;
 
 	protected String rootAlias = "_it";
 
-	protected SearchToQLProcessor(int qlType) {
+	protected AbstractSearchProcessor(int qlType, MetaDataUtil metaDataUtil) {
 		this.qlType = qlType;
+		this.metaDataUtil = metaDataUtil;
 	}
 
 	/**
@@ -357,7 +360,7 @@ public abstract class SearchToQLProcessor {
 		if (filter.operator == Filter.OP_IN
 				|| filter.operator == Filter.OP_NOT_IN) {
 			// with IN & NOT IN, check each element in the collection.
-			Class<?> expectedClass = Util.getExpectedClass(search
+			Class<?> expectedClass = metaDataUtil.getExpectedClass(search
 					.getSearchClass(), filter.property);
 
 			Object[] val2;
@@ -379,7 +382,7 @@ public abstract class SearchToQLProcessor {
 		} else if (filter.operator != Filter.OP_AND
 				&& filter.operator != Filter.OP_OR
 				&& filter.operator != Filter.OP_NOT) {
-			value = Util.convertIfNeeded(value, Util.getExpectedClass(search
+			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(search
 					.getSearchClass(), filter.property));
 		}
 
