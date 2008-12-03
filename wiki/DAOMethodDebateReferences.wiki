@@ -76,21 +76,21 @@ http://melloware.com/products/jukes/apidocs/com/melloware/jukes/db/HibernateDao.
 http://www.hibernate.org/328.html
 
 {{{
-T findById(ID id, boolean lock)
+T findById(ID id, boolean lock) //load()
 List<T> findAll()
 List<T> findByExample(T exampleInstance)
-T makePersistent(T entity)
-void makeTransient(T entity)
+T makePersistent(T entity) //saveOrUpdate()
+void makeTransient(T entity) //delete()
 }}}
 
 == (G) Don't repeat the DAO! article ==
 http://www.ibm.com/developerworks/java/library/j-genericdao.html
 
 {{{
-PK create(T newInstance);
-T read(PK id);
-void update(T transientObject);
-void delete(T persistentObject);
+PK create(T newInstance); //save()
+T read(PK id); //get()
+void update(T transientObject); //update()
+void delete(T persistentObject); //delete()
 }}}
 
 = Descriptions =
