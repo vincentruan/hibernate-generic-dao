@@ -93,6 +93,17 @@ void update(T transientObject); //update()
 void delete(T persistentObject); //delete()
 }}}
 
+== (H) Core J2EE Patterns - Data Access Object article ==
+http://java.sun.com/blueprints/corej2eepatterns/Patterns/DataAccessObject.html
+
+{{{
+insert()
+delete()
+find()
+update()
+select() //search
+}}}
+
 = Descriptions =
 == (A) Current (as of 0.3.3) ==
 
