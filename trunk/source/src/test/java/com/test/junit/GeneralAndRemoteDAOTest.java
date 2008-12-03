@@ -5,7 +5,9 @@ import java.util.Map;
 
 import com.test.TestBase;
 import com.test.dao.PersonDAO;
+import com.test.dao.PersonService;
 import com.test.model.Person;
+import com.trg.dao.DAODispatcher;
 import com.trg.dao.GeneralDAO;
 import com.trg.remote.RemoteDAO;
 import com.trg.remote.RemoteSearch;
@@ -14,7 +16,9 @@ import com.trg.search.Search;
 public class GeneralAndRemoteDAOTest extends TestBase {
 	private GeneralDAO generalDAO;
 	private RemoteDAO remoteDAO;
+	private DAODispatcher dispatcher;
 	private PersonDAO personDAO;
+	private PersonService personService;
 
 	public void setGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
@@ -23,9 +27,17 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 	public void setRemoteDAO(RemoteDAO remoteDAO) {
 		this.remoteDAO = remoteDAO;
 	}
+	
+	public void setDAODispatcher(DAODispatcher dispatcher) {
+		this.dispatcher = dispatcher;
+	}
 
 	public void setPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
+	}
+	
+	public void setPersonService(PersonService personService) {
+		this.personService = personService;
 	}
 
 	/**
@@ -155,8 +167,16 @@ public class GeneralAndRemoteDAOTest extends TestBase {
 	public void testRemoteDAOSpecific() throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Person.class.getName(), personDAO);
-		remoteDAO.setSpecificDAOs(map);
+		dispatcher.setSpecificDAOs(map);
 		
-		testGeneralDAO();
+		testRemoteDAOGeneral();
+	}
+	
+	public void testRemoteDAOSpecificNoInterface() throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(Person.class.getName(), personService);
+		dispatcher.setSpecificDAOs(map);
+		
+		testRemoteDAOGeneral();		
 	}
 }
