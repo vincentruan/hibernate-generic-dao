@@ -26,15 +26,17 @@ public class PersonService {
 		return dao.createOrUpdate(object);
 	}
 
-	public boolean deleteById(Long id) {
-		return dao.deleteById(id);
+	public boolean deleteById(Long... id) {
+		return dao.deleteById(id[0]);
 	}
 
+	//Test calling method with used varargs
 	public boolean deleteEntity(Person object) {
 		return dao.deleteEntity(object);
 	}
 
-	public Person fetch(Long id) {
+	//Test calling method with unused varargs
+	public Person fetch(Long id, String... foo) {
 		return dao.fetch(id);
 	}
 

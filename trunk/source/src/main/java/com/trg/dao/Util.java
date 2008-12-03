@@ -1,18 +1,21 @@
 package com.trg.dao;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
- * Utilities for TRG Generic DAO 
+ * Utilities for TRG Generic DAO
+ * 
  * @author dwolverton
  */
 public class Util {
 	/**
 	 * <p>
 	 * Return an instance of the given class type that has the given value. For
-	 * example, if type is <code>Long</code> and <code>Integer</code> type
-	 * with the value 13 is passed in, a new instance of <code>Long</code>
-	 * will be returned with the value 13.
+	 * example, if type is <code>Long</code> and <code>Integer</code> type with
+	 * the value 13 is passed in, a new instance of <code>Long</code> will be
+	 * returned with the value 13.
 	 * 
 	 * <p>
 	 * If the value is already of the correct type, it is simply returned.
@@ -56,5 +59,60 @@ public class Util {
 
 		throw new ClassCastException("Unable to convert value of type "
 				+ value.getClass().getName() + " to type " + type.getName());
+	}
+
+	/**
+	 * This is a helper method to call a method on an Object with the given
+	 * parameters. It is used for dispatching to specific DAOs that do not
+	 * implement the GenericDAO interface.
+	 * 
+	 * @param specificDAO
+	 * @param methodName
+	 * @param params
+	 * @return
+	 * @throws InvocationTargetException 
+	 * @throws IllegalAccessException 
+	 * @throws IllegalArgumentException 
+	 * @throws  
+	 * @throws DAODispatcherException
+	 */
+	public static Object callMethod(Object object, String methodName,
+			Object... args) throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException  {
+		for (Method method : object.getClass().getMethods()) {
+			if (method.getName().equals(methodName)) {
+				Class<?>[] paramTypes = method.getParameterTypes();
+				if (paramTypes.length == args.length) {
+					if (method.isVarArgs()) {
+						int i = args.length - 1;
+						Object lastParam = Array.newInstance(
+								args[i].getClass(), 1);
+						Array.set(lastParam, 0, args[i]);
+						args[i] = lastParam;
+					}
+				} else if (method.isVarArgs()
+						&& paramTypes.length == args.length + 1) {
+					Object[] temp = args;
+					args = new Object[temp.length + 1];
+					for (int i = 0; i < temp.length; i++) {
+						args[i] = temp[i];
+					}
+					args[args.length - 1] = Array.newInstance(
+							paramTypes[paramTypes.length - 1]
+									.getComponentType(), 0);
+				} else {
+					continue;
+				}
+
+				for (int i = 0; i < paramTypes.length; i++) {
+					if (!paramTypes[i].isInstance(args[i]))
+						continue;
+				}
+
+				return method.invoke(object, args);
+			}
+		}
+
+		throw new NoSuchMethodException("Method: "
+				+ methodName + " not found on Class: " + object.getClass());
 	}
 }
