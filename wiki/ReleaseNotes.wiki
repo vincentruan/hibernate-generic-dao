@@ -11,11 +11,15 @@
 
 ==0.3.4 (in progress)==
   * Use Hibernate MetaData for Util.getExpectedClass()
-  * Change DAO methods
-  * Change RemoteDAO methods
+  * Refactor RemoteDAO into a separate Remote adapter and DAO dispatcher
+
+  * Make RemoteDAO, GeneralDAO and GenericDAO implementations thinner and more replacable. This way developers can customize their own DAO and Remote methods for the particular project and technology.
+
+  * Change default DAO methods
+  * Change default RemoteDAO methods
   * Use RemoteDAO adapters for specific technologies
 
 ==Future==
   * Add implementation for JPA
-  * Ensure compatibility with multiple entity names per Java class
+  * Consider compatibility with multiple entity names per Java class
   * Security roles
