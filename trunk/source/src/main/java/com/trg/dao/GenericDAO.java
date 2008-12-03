@@ -25,7 +25,7 @@ import com.trg.search.SearchResult;
 public interface GenericDAO<T, ID extends Serializable> {
 
 	/**
-	 * Add the specified object as a new entry in the database.
+	 * Add the specified object as a new entry in the datastore.
 	 */
 	public void create(T object);
 
@@ -37,23 +37,23 @@ public interface GenericDAO<T, ID extends Serializable> {
 	public boolean createOrUpdate(T object);
 
 	/**
-	 * Delete the object of this type with the specified id from the database.
+	 * Remove the object of this type with the specified id from the datastore.
 	 * 
-	 * @return <code>true</code> if the object is found in the database and
-	 *         deleted, <code>false</code> if the item is not found.
+	 * @return <code>true</code> if the object is found in the datastore and
+	 *         removed, <code>false</code> if the item is not found.
 	 */
 	public boolean deleteById(ID id);
 
 	/**
-	 * Delete the specified object from the database.
+	 * Remove the specified object from the datastore.
 	 * 
-	 * @return <code>true</code> if the object is found in the database and
-	 *         deleted, <code>false</code> if the item is not found.
+	 * @return <code>true</code> if the object is found in the datastore and
+	 *         removed, <code>false</code> if the item is not found.
 	 */
 	public boolean deleteEntity(T object);
 
 	/**
-	 * Get the object of this type with the specified id from the database.
+	 * Get the object of this type with the specified id from the datastore.
 	 */
 	public T fetch(ID id);
 
@@ -63,7 +63,7 @@ public interface GenericDAO<T, ID extends Serializable> {
 	public List<T> fetchAll();
 
 	/**
-	 * Update the corresponding object in the database with the properties of
+	 * Update the corresponding object in the datastore with the properties of
 	 * the specified object. The corresponding object is determined by id.
 	 */
 	public void update(T object);
@@ -106,12 +106,12 @@ public interface GenericDAO<T, ID extends Serializable> {
 	public boolean isConnected(Object object);
 
 	/**
-	 * Flushes changes in the Hibernate cache to the database.
+	 * Flushes changes in the Hibernate cache to the datastore.
 	 */
 	public void flush();
 
 	/**
-	 * Refresh the content of the given entity from the current database state.
+	 * Refresh the content of the given entity from the current datastore state.
 	 */
 	public void refresh(Object object);
 }
