@@ -72,6 +72,27 @@ void setReadOnly(Object entity, boolean readOnly)
 
 http://melloware.com/products/jukes/apidocs/com/melloware/jukes/db/HibernateDao.html
 
+== (F) Hibernate Generic Data Access Objects ==
+http://www.hibernate.org/328.html
+
+{{{
+T findById(ID id, boolean lock)
+List<T> findAll()
+List<T> findByExample(T exampleInstance)
+T makePersistent(T entity)
+void makeTransient(T entity)
+}}}
+
+== (G) Don't repeat the DAO! article ==
+http://www.ibm.com/developerworks/java/library/j-genericdao.html
+
+{{{
+PK create(T newInstance);
+T read(PK id);
+void update(T transientObject);
+void delete(T persistentObject);
+}}}
+
 = Descriptions =
 == (A) Current (as of 0.3.3) ==
 
