@@ -16,14 +16,14 @@ import com.trg.search.SearchResult;
  * @author dwolverton
  */
 @SuppressWarnings("unchecked")
-public class GeneralDAOImpl extends HibernateDAOHQLImpl implements GeneralDAO {
+public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 
 	public void create(Object object) {
 		_create(object);
 	}
 
 	public boolean createOrUpdate(Object object) {
-		Serializable id = _getId(object);
+		Serializable id = getMetaDataUtil().getId(object);
 		if (id == null || (new Long(0)).equals(id)) {
 			create(object);
 			return true;
