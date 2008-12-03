@@ -19,7 +19,7 @@ import com.trg.search.SearchResult;
 public interface GeneralDAO {
 
 	/**
-	 * Add the specified object as a new entry in the database.
+	 * Add the specified object as a new entry in the datastore.
 	 */
 	public void create(Object object);
 
@@ -31,23 +31,23 @@ public interface GeneralDAO {
 	public boolean createOrUpdate(Object object);
 
 	/**
-	 * Delete the object with the specified id and class from the database.
+	 * Remove the object with the specified id and class from the datastore.
 	 * 
-	 * @return <code>true</code> if the object is found in the database and
-	 *         deleted, <code>false</code> if the item is not found.
+	 * @return <code>true</code> if the object is found in the datastore and
+	 *         removed, <code>false</code> if the item is not found.
 	 */
 	public boolean deleteById(Serializable id, Class<?> klass);
 
 	/**
-	 * Delete the specified object from the database.
+	 * Remove the specified object from the datastore.
 	 * 
-	 * @return <code>true</code> if the object is found in the database and
-	 *         deleted, <code>false</code> if the item is not found.
+	 * @return <code>true</code> if the object is found in the datastore and
+	 *         removed, <code>false</code> if the item is not found.
 	 */
 	public boolean deleteEntity(Object object);
 
 	/**
-	 * Get the object with the specified id and class from the database.
+	 * Get the object with the specified id and class from the datastore.
 	 */
 	public <T> T fetch(Serializable id, Class<T> klass);
 
@@ -57,7 +57,7 @@ public interface GeneralDAO {
 	public <T> List<T> fetchAll(Class<T> klass);
 
 	/**
-	 * Update the corresponding object in the database with the properties of
+	 * Update the corresponding object in the datastore with the properties of
 	 * the specified object. The corresponding object is determined by id.
 	 */
 	public void update(Object object);
@@ -92,12 +92,12 @@ public interface GeneralDAO {
 	public void flush();
 
 	/**
-	 * Flushes changes in the Hibernate cache to the database.
+	 * Flushes changes in the Hibernate cache to the datastore.
 	 */
 	public boolean isConnected(Object object);
 
 	/**
-	 * Refresh the content of the given entity from the current database state.
+	 * Refresh the content of the given entity from the current datastore state.
 	 */
 	public void refresh(Object object);
 }
