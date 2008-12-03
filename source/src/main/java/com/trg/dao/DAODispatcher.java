@@ -2,7 +2,6 @@ package com.trg.dao;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +49,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				((GenericDAO) specificDAO).create(object);
 			} else {
-				callMethod(specificDAO, "create", 0, Object.class, object);
+				callMethod(specificDAO, "create", object);
 			}
 		} else {
 			generalDAO.create(object);
@@ -63,8 +62,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return ((GenericDAO) specificDAO).createOrUpdate(object);
 			} else {
-				return (Boolean) callMethod(specificDAO, "createOrUpdate", 0,
-						Object.class, object);
+				return (Boolean) callMethod(specificDAO, "createOrUpdate", object);
 			}
 		} else {
 			return generalDAO.createOrUpdate(object);
@@ -77,8 +75,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return ((GenericDAO) specificDAO).deleteById(id);
 			} else {
-				return (Boolean) callMethod(specificDAO, "deleteById", 0,
-						Serializable.class, id);
+				return (Boolean) callMethod(specificDAO, "deleteById", id);
 			}
 		} else {
 			return generalDAO.deleteById(id, klass);
@@ -91,8 +88,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return ((GenericDAO) specificDAO).deleteEntity(object);
 			} else {
-				return (Boolean) callMethod(specificDAO, "deleteEntity", 0,
-						Object.class, object);
+				return (Boolean) callMethod(specificDAO, "deleteEntity", object);
 			}
 		} else {
 			return generalDAO.deleteEntity(object);
@@ -105,8 +101,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return (T) ((GenericDAO) specificDAO).fetch(id);
 			} else {
-				return (T) callMethod(specificDAO, "fetch", 0,
-						Serializable.class, id);
+				return (T) callMethod(specificDAO, "fetch", id);
 			}
 		} else {
 			return generalDAO.fetch(id, klass);
@@ -140,8 +135,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				((GenericDAO) specificDAO).flush();
 			} else {
-				callMethod(specificDAO, "flush", 0,
-						Object.class);
+				callMethod(specificDAO, "flush");
 			}
 		} else {
 			generalDAO.flush();
@@ -154,8 +148,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return ((GenericDAO) specificDAO).isConnected(object);
 			} else {
-				return (Boolean) callMethod(specificDAO, "isConnected", 0,
-						Object.class, object);
+				return (Boolean) callMethod(specificDAO, "isConnected", object);
 			}
 		} else {
 			return generalDAO.isConnected(object);
@@ -168,7 +161,7 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				((GenericDAO) specificDAO).refresh(object);
 			} else {
-				callMethod(specificDAO, "refresh", 0, Object.class, object);
+				callMethod(specificDAO, "refresh", object);
 			}
 		} else {
 			generalDAO.refresh(object);
@@ -234,62 +227,24 @@ public class DAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				((GenericDAO) specificDAO).update(object);
 			} else {
-				callMethod(specificDAO, "update", 0, Object.class, object);
+				callMethod(specificDAO, "update", object);
 			}
 		} else {
 			generalDAO.update(object);
 		}
 	}
-
-	/**
-	 * This is a helper method to call a method on an Object with the given
-	 * parameters. It is used for dispatching to DAOs that do not implement the
-	 * GenericDAO interface.
-	 * 
-	 * @param specificDAO
-	 * @param methodName
-	 * @param flipIndex
-	 * @param flipClass
-	 * @param params
-	 * @return
-	 * @throws DAODispatcherException
-	 */
-	protected Object callMethod(Object specificDAO, String methodName,
-			int flipIndex, Class<?> flipClass, Object... params)
-			throws DAODispatcherException {
-		Class<?>[] paramClasses = new Class<?>[params.length];
-		for (int i = 0; i < params.length; i++) {
-			paramClasses[i] = params[i].getClass();
-		}
-
+	
+	protected Object callMethod(Object specificDAO, String methodName, Object... args) {
 		try {
-			Method method = null;
-			try {
-				method = specificDAO.getClass().getMethod(methodName,
-						paramClasses);
-			} catch (NoSuchMethodException ex) {
-				if (flipIndex >= 0)
-					paramClasses[flipIndex] = flipClass;
-				method = specificDAO.getClass().getMethod(methodName,
-						paramClasses);
-			}
-
-			return method.invoke(specificDAO, params);
-		} catch (SecurityException e) {
+			return Util.callMethod(specificDAO, methodName, args);
+		} catch (IllegalArgumentException e) {
 			throw new DAODispatcherException(e);
 		} catch (NoSuchMethodException e) {
-			throw new DAODispatcherException(e);
-		} catch (IllegalArgumentException e) {
 			throw new DAODispatcherException(e);
 		} catch (IllegalAccessException e) {
 			throw new DAODispatcherException(e);
 		} catch (InvocationTargetException e) {
 			throw new DAODispatcherException(e);
 		}
-	}
-
-	protected Object callMethod(Object specificDAO, String methodName,
-			Object... params) throws DAODispatcherException {
-		return callMethod(specificDAO, methodName, -1, null, params);
 	}
 }
