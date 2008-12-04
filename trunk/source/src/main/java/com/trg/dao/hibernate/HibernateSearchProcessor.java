@@ -15,9 +15,9 @@ import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 
 import com.trg.dao.AbstractSearchProcessor;
-import com.trg.search.Fetch;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
+import com.trg.dao.search.Fetch;
+import com.trg.dao.search.Search;
+import com.trg.dao.search.SearchResult;
 
 /**
  * Implementation of SearchToQLProcessor that generates HQL
@@ -32,13 +32,10 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		HibernateSearchProcessor instance = map.get(sessionFactory);
 		if (instance == null) {
 			instance = new HibernateSearchProcessor(HibernateMetaDataUtil.getInstanceForSessionFactory(sessionFactory));
-			instance.sessionFactory = sessionFactory;
 			map.put(sessionFactory, instance);
 		}
 		return instance;
 	}
-
-	private SessionFactory sessionFactory;
 
 	private HibernateSearchProcessor(HibernateMetaDataUtil mdu) {
 		super(QLTYPE_HQL, mdu);
@@ -52,6 +49,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 	 * 
 	 * @see Search
 	 */
+	@SuppressWarnings("unchecked")
 	public List search(Session session, Search search) {
 		if (search == null)
 			return null;
@@ -91,6 +89,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 	 * 
 	 * @see Search
 	 */
+	@SuppressWarnings("unchecked")
 	public SearchResult searchAndCount(Session session, Search search) {
 		if (search == null)
 			return null;
@@ -131,6 +130,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 	
 	// ---- SEARCH HELPERS ---- //
 
+	@SuppressWarnings("unchecked")
 	private void addParams(Query query, List<Object> params) {
 		int i = 1;
 		for (Object o : params) {
@@ -182,6 +182,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static final ResultTransformer ARRAY_RESULT_TRANSFORMER = new ResultTransformer() {
 		private static final long serialVersionUID = 1L;
 
@@ -194,6 +195,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		}
 	};
 
+	@SuppressWarnings("unchecked")
 	private static class MapResultTransformer implements ResultTransformer {
 		private static final long serialVersionUID = 1L;
 
