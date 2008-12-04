@@ -1,7 +1,7 @@
 #summary List of changes made for each release
 #labels Featured
 
-==0.3.3==
+==0.3.3 (current release)==
   * Cleaned up pom.xml (Issue #14):
     * Removed unneeded dependencies and repositories
     * Moved most dependencies to {{{test}}} scope
@@ -12,13 +12,15 @@
 ==0.3.4 (in progress)==
   * Use Hibernate MetaData for Util.getExpectedClass()
   * Refactor RemoteDAO into a separate Remote adapter and DAO dispatcher
-
   * Make RemoteDAO, GeneralDAO and GenericDAO implementations thinner and more replacable. This way developers can customize their own DAO and Remote methods for the particular project and technology.
-
-  * Change default DAO methods
-  * Change default RemoteDAO methods
+  * Separate RemoteDAO into separate remote adapter and DAO dispatcher
   * Use RemoteDAO adapters for specific technologies
+
+==0.3.5==
+  * Create new default DAO with different methods
+  * Create new default Flex remote DAO with different methods
   * Test Search w/ polymorphism
+  * Improve Util.callMethod to be more robust
 
 ==Future==
   * Add implementation for JPA
