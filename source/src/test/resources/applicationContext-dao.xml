@@ -15,11 +15,11 @@
 	
 	<bean id="generalDAO" class="com.test.dao.MyGeneralDAOImpl"/>
 	
-	<bean id="remoteDAO" class="com.trg.remote.RemoteDAO">
+	<bean id="flexDAOAdapter" class="com.trg.dao.dao.original.FlexDAOAdapter">
 		<property name="DAO" ref="DAODispatcher"/>
 	</bean>
 	
-	<bean id="DAODispatcher" class="com.trg.dao.DAODispatcher">
+	<bean id="DAODispatcher" class="com.trg.dao.dao.original.DAODispatcher">
 		<property name="specificDAOs">
 			<map>
 				<entry key="com.test.model.Home" value-ref="homeDAO"/>
@@ -27,6 +27,7 @@
 		</property>
 	</bean>
 	
-	<!-- Service for testing dispatcher -->
-	<bean id="personService" class="com.test.dao.PersonService"/>
+	<!-- Misc -->
+	<bean id="personService" class="com.test.misc.PersonService"/>
+	<bean id="hibernateBaseDAOTester" class="com.test.misc.HibernateBaseDAOTester"/>
 </beans>

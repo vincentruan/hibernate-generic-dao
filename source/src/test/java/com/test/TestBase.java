@@ -10,6 +10,8 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
+import com.test.model.Address;
+import com.test.model.Home;
 import com.test.model.Person;
 import com.trg.test.TestCaseSpringAutoWire;
 
@@ -72,30 +74,49 @@ public class TestBase extends TestCaseSpringAutoWire {
 		this.grandmaA = grandmaA;
 	}
 	
-	
 	protected void initDB() {
 		Session session = sessionFactory.getCurrentSession();
-		session.save(papaA.getHome().getAddress());
-		session.save(papaA.getHome());
-		session.save(papaB.getHome().getAddress());
-		session.save(papaB.getHome());
-		session.save(grandpaA.getHome().getAddress());
-		session.save(grandpaA.getHome());
+		merge(session, papaA.getHome().getAddress());
+		merge(session, papaA.getHome());
+		merge(session, papaB.getHome().getAddress());
+		merge(session, papaB.getHome());
+		merge(session, grandpaA.getHome().getAddress());
+		merge(session, grandpaA.getHome());
 		
-		session.save(setup(grandpaA));
-		session.save(setup(grandmaA));
-		session.save(setup(papaA));
-		session.save(setup(mamaA));
-		session.save(setup(papaB));
-		session.save(setup(mamaB));
-		session.save(setup(joeA));
-		session.save(setup(sallyA));
-		session.save(setup(joeB));
-		session.save(setup(margretB));
+		merge(session, setup(grandpaA));
+		merge(session, setup(grandmaA));
+		merge(session, setup(papaA));
+		merge(session, setup(mamaA));
+		merge(session, setup(papaB));
+		merge(session, setup(mamaB));
+		merge(session, setup(joeA));
+		merge(session, setup(sallyA));
+		merge(session, setup(joeB));
+		merge(session, setup(margretB));
 
 		// detatch all our Java copies of these from hibernate.
 		session.flush();
 		session.clear();
+	}
+	
+	protected void clearIds() {
+		for (Person p : new Person[] {grandpaA, grandmaA, papaA, papaB, mamaA, mamaB, joeA, joeB, sallyA, margretB}) {
+			p.setId(null);
+			p.getHome().setId(null);
+			p.getHome().getAddress().setId(null);
+		}
+	}
+	
+	private void merge(Session session, Person p) {
+		p.setId( ((Person) session.merge(p)).getId() );
+	}
+	
+	private void merge(Session session, Home h) {
+		h.setId( ((Home) session.merge(h)).getId() );
+	}
+	
+	private void merge(Session session, Address a) {
+		a.setId( ((Address) session.merge(a)).getId() );
 	}
 	
 	protected void clearHibernate() {
@@ -114,6 +135,23 @@ public class TestBase extends TestCaseSpringAutoWire {
 		cpy.setAge(p.getAge());
 		cpy.setDob(p.getDob());
 		cpy.setWeight(p.getWeight());
+		return cpy;
+	}
+	
+	protected Home copy(Home h) {
+		Home cpy = new Home();
+		cpy.setId(h.getId());
+		cpy.setType(h.getType());
+		return cpy;
+	}
+	
+	protected Address copy(Address a) {
+		Address cpy = new Address();
+		cpy.setId(a.getId());
+		cpy.setStreet(a.getStreet());
+		cpy.setCity(a.getCity());
+		cpy.setState(a.getState());
+		cpy.setZip(a.getZip());
 		return cpy;
 	}
 

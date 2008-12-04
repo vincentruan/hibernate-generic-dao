@@ -11,10 +11,10 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trg.search.Fetch;
-import com.trg.search.Filter;
-import com.trg.search.Search;
-import com.trg.search.Sort;
+import com.trg.dao.search.Fetch;
+import com.trg.dao.search.Filter;
+import com.trg.dao.search.Search;
+import com.trg.dao.search.Sort;
 
 /**
  * This class provides two methods for generating query language to fulfill a
@@ -22,8 +22,8 @@ import com.trg.search.Sort;
  * <ol>
  * <li><code>generateQL()</code> - is used for getting the actual search
  * results.</li>
- * <li><code>generateRowCountQL()</code> - is used for getting just the
- * number of results.</li>
+ * <li><code>generateRowCountQL()</code> - is used for getting just the number
+ * of results.</li>
  * </ol>
  * Both methods return a query language sting and a list of values for filling
  * named parameters. For example the following query and parameter list might be
@@ -37,19 +37,21 @@ import com.trg.search.Sort;
  * </pre>
  * 
  * This is an abstract class. A subclass must be used to implement individual
- * query languages. Currently only HQL query language is supported (<code>com.trg.dao.hibernate.HibernateSearchToQLProcessor</code>).
- * The that implementation could be used for EQL query language as well with no
- * or minor modifications.
+ * query languages. Currently only HQL query language is supported (
+ * <code>com.trg.dao.hibernate.HibernateSearchToQLProcessor</code>). The that
+ * implementation could be used for EQL query language as well with no or minor
+ * modifications.
  */
 public abstract class AbstractSearchProcessor {
 
-	private static Logger logger = LoggerFactory.getLogger(AbstractSearchProcessor.class);
-	
+	private static Logger logger = LoggerFactory
+			.getLogger(AbstractSearchProcessor.class);
+
 	protected static int QLTYPE_HQL = 0;
 	protected static int QLTYPE_EQL = 1;
 
 	protected int qlType;
-	
+
 	protected MetaDataUtil metaDataUtil;
 
 	protected String rootAlias = "_it";
@@ -61,9 +63,9 @@ public abstract class AbstractSearchProcessor {
 
 	/**
 	 * This is the string used to represent the root entity of the search within
-	 * the query. The default value is <code>"_it"</code>. It may be
-	 * necessary to use a different alias if there are entities in the data
-	 * model with the name or property "_it".
+	 * the query. The default value is <code>"_it"</code>. It may be necessary
+	 * to use a different alias if there are entities in the data model with the
+	 * name or property "_it".
 	 */
 	public void setRootAlias(String alias) {
 		this.rootAlias = alias;
@@ -95,7 +97,8 @@ public abstract class AbstractSearchProcessor {
 		sb.append(orderBy);
 
 		String query = sb.toString();
-		if (logger.isDebugEnabled()) logger.debug("generateQL:\n  " + query);
+		if (logger.isDebugEnabled())
+			logger.debug("generateQL:\n  " + query);
 		return query;
 	}
 
@@ -115,16 +118,35 @@ public abstract class AbstractSearchProcessor {
 		String from = generateFromClause(search, aliases);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("select count(distinct ");
-		sb.append(rootAlias);
-		sb.append(".id) ");
+		sb.append("select count(distinct ").append(rootAlias).append(".id) ");
 		sb.append(from);
 		sb.append(" ");
 		sb.append(where);
 
 		String query = sb.toString();
-		if (logger.isDebugEnabled()) logger.debug("generateRowCountQL:\n  " + query);
+		if (logger.isDebugEnabled())
+			logger.debug("generateRowCountQL:\n  " + query);
 		return query;
+	}
+
+	/**
+	 * Make sure a <code>Search</code> has the specified search class. If no
+	 * class was previously assigned, assign the given class. If the search
+	 * already has a different search class than the specified class, an error
+	 * is thrown.
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public boolean forceSearchClass(Search search, Class<?> searchClass)
+			throws IllegalArgumentException {
+		if (search.getSearchClass() == null) {
+			search.setSearchClass(searchClass);
+			return true;
+		} else if (!searchClass.equals(search.getSearchClass())) {
+			throw new IllegalArgumentException(
+					"Search class does not match expected type: " + searchClass.getName());
+		}
+		return false;
 	}
 
 	/**
@@ -382,8 +404,8 @@ public abstract class AbstractSearchProcessor {
 		} else if (filter.operator != Filter.OP_AND
 				&& filter.operator != Filter.OP_OR
 				&& filter.operator != Filter.OP_NOT) {
-			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(search
-					.getSearchClass(), filter.property));
+			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(
+					search.getSearchClass(), filter.property));
 		}
 
 		switch (filter.operator) {
