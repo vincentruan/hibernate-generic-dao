@@ -18,6 +18,7 @@
   * Change default DAO methods
   * Change default RemoteDAO methods
   * Use RemoteDAO adapters for specific technologies
+  * Test Search w/ polymorphism
 
 ==Future==
   * Add implementation for JPA
