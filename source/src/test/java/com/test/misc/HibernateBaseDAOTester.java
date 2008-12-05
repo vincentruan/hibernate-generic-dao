@@ -93,4 +93,24 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 	public void update(Object... transientEntities) {
 		super._update(transientEntities);
 	}
+
+	public int count(Search search, Class<?> forceClass) {
+		return super._count(search, forceClass);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List search(Search search, Class<?> forceClass) {
+		return super._search(search, forceClass);
+	}
+
+	@SuppressWarnings("unchecked")
+	public SearchResult searchAndCount(Search search, Class<?> forceClass) {
+		return super._searchAndCount(search, forceClass);
+	}
+
+	public Object searchUnique(Search search, Class<?> forceClass) {
+		return super._searchUnique(search, forceClass);
+	}
+	
+	
 }
