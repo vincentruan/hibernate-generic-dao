@@ -38,6 +38,7 @@
 				<configuration>
 					<excludes>
 						<exclude>**/TestBase.java</exclude>
+						<exclude>**/com/test/*.java</exclude>
 					</excludes>
 				</configuration>
 			</plugin>
