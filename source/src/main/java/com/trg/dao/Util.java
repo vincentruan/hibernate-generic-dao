@@ -65,16 +65,6 @@ public class Util {
 	 * This is a helper method to call a method on an Object with the given
 	 * parameters. It is used for dispatching to specific DAOs that do not
 	 * implement the GenericDAO interface.
-	 * 
-	 * @param specificDAO
-	 * @param methodName
-	 * @param params
-	 * @return
-	 * @throws InvocationTargetException 
-	 * @throws IllegalAccessException 
-	 * @throws IllegalArgumentException 
-	 * @throws  
-	 * @throws DAODispatcherException
 	 */
 	public static Object callMethod(Object object, String methodName,
 			Object... args) throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException  {

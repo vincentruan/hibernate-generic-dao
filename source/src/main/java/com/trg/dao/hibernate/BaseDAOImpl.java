@@ -287,9 +287,6 @@ public class BaseDAOImpl {
 
 	/**
 	 * Returns the number of instances of this class in the datastore.
-	 * 
-	 * @param klass
-	 * @return
 	 */
 	protected int _count(Class<?> klass) {
 		List counts = getSession().createQuery(
