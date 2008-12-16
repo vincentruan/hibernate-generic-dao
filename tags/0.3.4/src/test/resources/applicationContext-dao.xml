@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-2.5.xsd"> 
+
+	<!-- DAOs -->
+	<bean id="personDAO" class="com.test.dao.PersonDAOImpl"/>
+	<bean id="homeDAO" class="com.test.dao.HomeDAOImpl"/>
+	<bean id="addressDAO" class="com.test.dao.AddressDAOImpl"/>
+	
+	
+	<bean id="generalDAO" class="com.test.dao.MyGeneralDAOImpl"/>
+	
+	<bean id="flexDAOAdapter" class="com.trg.dao.dao.original.FlexDAOAdapter">
+		<property name="DAO" ref="DAODispatcher"/>
+	</bean>
+	
+	<bean id="DAODispatcher" class="com.trg.dao.dao.original.DAODispatcher">
+		<property name="specificDAOs">
+			<map>
+				<entry key="com.test.model.Home" value-ref="homeDAO"/>
+			</map>
+		</property>
+	</bean>
+	
+	<!-- Misc -->
+	<bean id="personService" class="com.test.misc.PersonService"/>
+	<bean id="hibernateBaseDAOTester" class="com.test.misc.HibernateBaseDAOTester"/>
+</beans>
