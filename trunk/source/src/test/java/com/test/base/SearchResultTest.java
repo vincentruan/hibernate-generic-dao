@@ -1,4 +1,4 @@
-package com.test;
+package com.test.base;
 
 import com.test.misc.SearchTestInterface;
 import com.test.model.Person;

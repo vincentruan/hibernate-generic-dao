@@ -1,4 +1,4 @@
-package com.test;
+package com.test.base;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import com.test.TestBase;
+import com.test.base.TestBase;
 import com.test.misc.SearchTestInterface;
 import com.test.model.Person;
 import com.trg.dao.search.Fetch;
@@ -185,7 +185,7 @@ public class FetchTest extends TestBase {
 		
 		s.clearFetch();
 		s.addFetch("age", Fetch.OP_AVG);
-		assertEquals(25.0, target.searchUnique(s));
+		assertEquals(25, Math.round((Double) target.searchUnique(s)));
 		
 		
 		//38, 38, 65

@@ -1,4 +1,4 @@
-package com.test;
+package com.test.base;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -12,7 +12,9 @@ import org.hibernate.SessionFactory;
 
 import com.test.model.Address;
 import com.test.model.Home;
+import com.test.model.LimbedPet;
 import com.test.model.Person;
+import com.test.model.Pet;
 import com.trg.test.TestCaseSpringAutoWire;
 
 public class TestBase extends TestCaseSpringAutoWire {
@@ -29,7 +31,10 @@ public class TestBase extends TestCaseSpringAutoWire {
 			mamaB, // 38
 			grandpaA, // 65
 			grandmaA; // 65
-
+	
+	protected Pet fishWiggles;
+	protected LimbedPet catPrissy, catNorman, spiderJimmy;
+	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
@@ -74,6 +79,22 @@ public class TestBase extends TestCaseSpringAutoWire {
 		this.grandmaA = grandmaA;
 	}
 	
+	public void setFishWiggles(Pet fishWiggles) {
+		this.fishWiggles = fishWiggles;
+	}
+
+	public void setCatPrissy(LimbedPet catPrissy) {
+		this.catPrissy = catPrissy;
+	}
+
+	public void setCatNorman(LimbedPet catNorman) {
+		this.catNorman = catNorman;
+	}
+
+	public void setSpiderJimmy(LimbedPet spiderJimmy) {
+		this.spiderJimmy = spiderJimmy;
+	}
+
 	protected void initDB() {
 		Session session = sessionFactory.getCurrentSession();
 		merge(session, papaA.getHome().getAddress());
@@ -93,6 +114,11 @@ public class TestBase extends TestCaseSpringAutoWire {
 		merge(session, setup(sallyA));
 		merge(session, setup(joeB));
 		merge(session, setup(margretB));
+		
+		merge(session, spiderJimmy);
+		merge(session, fishWiggles);
+		merge(session, catPrissy);
+		merge(session, catNorman);
 
 		// detatch all our Java copies of these from hibernate.
 		session.flush();
@@ -117,6 +143,10 @@ public class TestBase extends TestCaseSpringAutoWire {
 	
 	private void merge(Session session, Address a) {
 		a.setId( ((Address) session.merge(a)).getId() );
+	}
+	
+	private void merge(Session session, Pet p) {
+		p.setId( ((Pet) session.merge(p)).getId() );
 	}
 	
 	protected void clearHibernate() {
