@@ -17,11 +17,12 @@
   * Use RemoteDAO adapters for specific technologies
 
 ==0.3.5==
+  * Address problems with Components (@Embedded) as per Issue 19
+
+  * Test Search w/ collection attributes (possibly add collection operators)
+  * Test Search w/ polymorphism
   * Create new default DAO with different methods
   * Create new default Flex remote DAO with different methods
-  * Test Search w/ polymorphism
-  * Test Search w/ collection attributes (possibly add collection operators)
-  * Address possible problems with Components (@Embedded) as per Issue 19
   * Improve Util.callMethod to be more robust
 
 ==Future==
