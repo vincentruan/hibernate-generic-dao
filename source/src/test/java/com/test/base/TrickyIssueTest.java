@@ -1,4 +1,4 @@
-package com.test;
+package com.test.base;
 
 import java.util.List;
 import java.util.Map;
