@@ -1,6 +1,6 @@
 package com.test.junit.original;
 
-import com.test.TestBase;
+import com.test.base.TestBase;
 import com.test.dao.PersonDAO;
 import com.test.model.Home;
 import com.test.model.Person;

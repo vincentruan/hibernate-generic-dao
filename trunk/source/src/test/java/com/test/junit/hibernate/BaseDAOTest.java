@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.hibernate.HibernateException;
 
-import com.test.TestBase;
+import com.test.base.TestBase;
 import com.test.misc.HibernateBaseDAOTester;
 import com.test.model.Home;
 import com.test.model.Person;
