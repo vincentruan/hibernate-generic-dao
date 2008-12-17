@@ -3,7 +3,7 @@ package com.test.junit.original;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.test.TestBase;
+import com.test.base.TestBase;
 import com.test.dao.PersonDAO;
 import com.test.misc.PersonService;
 import com.test.model.Person;

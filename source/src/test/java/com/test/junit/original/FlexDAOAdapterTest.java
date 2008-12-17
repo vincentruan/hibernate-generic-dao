@@ -2,7 +2,7 @@ package com.test.junit.original;
 
 import java.util.HashMap;
 
-import com.test.TestBase;
+import com.test.base.TestBase;
 import com.test.model.Person;
 import com.trg.dao.dao.original.DAODispatcher;
 import com.trg.dao.dao.original.FlexDAOAdapter;
