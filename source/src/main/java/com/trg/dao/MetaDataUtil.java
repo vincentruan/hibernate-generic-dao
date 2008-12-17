@@ -11,9 +11,15 @@ public interface MetaDataUtil {
 	 *             if the class does not have the given bean property.
 	 */
 	public Class<?> getExpectedClass(Class<?> rootClass, String propertyPath);
-	
+
 	/**
 	 * Get the value of the ID property of an entity.
 	 */
-	public Serializable getId (Object object);
+	public Serializable getId(Object object);
+
+	/**
+	 * Return true if the property at the given property path is an entity. It
+	 * could also, for example be a component or a value type.
+	 */
+	public boolean isEntity(Class<?> rootClass, String propertyPath);
 }

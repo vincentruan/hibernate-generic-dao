@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.test.model.Pet;
 import com.trg.dao.search.Fetch;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.Search;
@@ -55,6 +58,8 @@ public abstract class AbstractSearchProcessor {
 	protected MetaDataUtil metaDataUtil;
 
 	protected String rootAlias = "_it";
+	
+	protected static final String ROOT_PATH = "";
 
 	protected AbstractSearchProcessor(int qlType, MetaDataUtil metaDataUtil) {
 		this.qlType = qlType;
@@ -80,7 +85,8 @@ public abstract class AbstractSearchProcessor {
 	public String generateQL(Search search, List<Object> paramList) {
 		securityCheck(search);
 
-		Map<String, String> aliases = new HashMap<String, String>();
+		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
+		aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
 
 		String select = generateSelectClause(search, aliases);
 		String where = generateWhereClause(search, paramList, aliases);
@@ -112,7 +118,8 @@ public abstract class AbstractSearchProcessor {
 	public String generateRowCountQL(Search search, List<Object> paramList) {
 		securityCheck(search);
 
-		Map<String, String> aliases = new HashMap<String, String>();
+		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
+		aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
 
 		String where = generateWhereClause(search, paramList, aliases);
 		String from = generateFromClause(search, aliases);
@@ -154,7 +161,7 @@ public abstract class AbstractSearchProcessor {
 	 * the given search (if <code>fetchMode != FETCH_ENTITY</code>)
 	 */
 	protected String generateSelectClause(Search search,
-			Map<String, String> aliases) {
+			Map<String, AliasNode> aliases) {
 		Iterator<Fetch> fetchItr = search.fetchIterator();
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
 			while (fetchItr.hasNext()) {
@@ -182,7 +189,7 @@ public abstract class AbstractSearchProcessor {
 				if (fetch.property == null || "".equals(fetch.property)) {
 					prop = "*";
 				} else {
-					prop = getPath(aliases, fetch.property);
+					prop = getPath(search.getSearchClass(), aliases, fetch.property);
 				}
 
 				switch (fetch.operator) {
@@ -240,22 +247,13 @@ public abstract class AbstractSearchProcessor {
 	 * <code>fetchMode == FETCH_ENTITY</code>.
 	 */
 	protected String generateFromClause(Search search,
-			Map<String, String> aliases) {
-		Map<String, Object> fetchPaths = new HashMap<String, Object>();
+			Map<String, AliasNode> aliases) {
 
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
-			// Mark all the paths that should be fetched eagerly by adding them
-			// to fetchPaths
 			Iterator<Fetch> fetchItr = search.fetchIterator();
 			while (fetchItr.hasNext()) {
 				Fetch fetch = fetchItr.next();
-				getAlias(aliases, fetch.property);
-				fetchPaths.put(fetch.property, null);
-				int pos = fetch.property.lastIndexOf('.');
-				while (pos > -1) {
-					fetchPaths.put(fetch.property.substring(0, pos), null);
-					pos = fetch.property.lastIndexOf('.', pos - 1);
-				}
+				getAlias(search.getSearchClass(), aliases, fetch.property, true);
 			}
 		}
 
@@ -263,49 +261,24 @@ public abstract class AbstractSearchProcessor {
 		sb.append(search.getSearchClass().getName());
 		sb.append(" ");
 		sb.append(rootAlias);
-
-		Map<String, String> usedAliases = new HashMap<String, String>();
-		int aliasCount = aliases.size();
-
-		for (Map.Entry<String, String> entry : aliases.entrySet()) {
-			String wholePath = entry.getKey();
-			String alias = rootAlias;
-			int lastPos = -1;
-			int pos = wholePath.indexOf('.');
-			while (pos != -1) {
-				String currentPath = wholePath.substring(0, pos);
-				if (!usedAliases.containsKey(currentPath)) {
-					String prop = wholePath.substring(lastPos + 1, pos);
-					sb.append(" left join ");
-					if (fetchPaths.containsKey(currentPath))
-						sb.append("fetch ");
-					sb.append(alias);
-					sb.append(".");
-					sb.append(prop);
-					sb.append(" as ");
-					if (aliases.containsKey(currentPath)) {
-						alias = aliases.get(currentPath);
-					} else {
-						alias = "a" + Integer.toString(++aliasCount) + "_"
-								+ prop;
-					}
-					sb.append(alias);
-				}
-				lastPos = pos;
-				pos = wholePath.indexOf('.', pos + 1);
-			}
-
-			if (!usedAliases.containsKey(wholePath)) {
-				String prop = wholePath.substring(lastPos + 1);
+		
+		//traverse alias graph breadth-first
+		Queue<AliasNode> queue = new LinkedList<AliasNode>();
+		queue.offer(aliases.get(ROOT_PATH));
+		while (!queue.isEmpty()) {
+			AliasNode node = queue.poll();
+			if (node.parent != null) {
 				sb.append(" left join ");
-				if (fetchPaths.containsKey(wholePath))
+				if (node.fetch)
 					sb.append("fetch ");
-				sb.append(alias);
+				sb.append(node.parent.alias);
 				sb.append(".");
-				sb.append(prop);
+				sb.append(node.property);
 				sb.append(" as ");
-				alias = entry.getValue();
-				sb.append(alias);
+				sb.append(node.alias);
+			}
+			for (AliasNode child : node.children.values()) {
+				queue.offer(child);
 			}
 		}
 
@@ -317,7 +290,7 @@ public abstract class AbstractSearchProcessor {
 	 * search.
 	 */
 	protected String generateOrderByClause(Search search,
-			Map<String, String> aliases) {
+			Map<String, AliasNode> aliases) {
 		Iterator<Sort> sortItr = search.sortIterator();
 		StringBuilder sb = null;
 		boolean first = true;
@@ -329,7 +302,7 @@ public abstract class AbstractSearchProcessor {
 			} else {
 				sb.append(", ");
 			}
-			sb.append(getPath(aliases, sort.property));
+			sb.append(getPath(search.getSearchClass(), aliases, sort.property));
 			sb.append(sort.desc ? " desc" : " asc");
 		}
 		if (first) {
@@ -343,7 +316,7 @@ public abstract class AbstractSearchProcessor {
 	 * options from search.
 	 */
 	protected String generateWhereClause(Search search, List<Object> params,
-			Map<String, String> aliases) {
+			Map<String, AliasNode> aliases) {
 		List<Filter> filters = new ArrayList<Filter>();
 		Iterator<Filter> filterItr = search.filterIterator();
 		while (filterItr.hasNext()) {
@@ -375,7 +348,7 @@ public abstract class AbstractSearchProcessor {
 	 */
 	@SuppressWarnings("unchecked")
 	protected String filterToString(Search search, Filter filter,
-			List<Object> params, Map<String, String> aliases) {
+			List<Object> params, Map<String, AliasNode> aliases) {
 		Object value = filter.value;
 
 		// convert numbers to the expected type if needed (ex: Integer to Long)
@@ -410,39 +383,39 @@ public abstract class AbstractSearchProcessor {
 
 		switch (filter.operator) {
 		case Filter.OP_IN:
-			return getPath(aliases, filter.property) + " in (:p"
+			return getPath(search.getSearchClass(), aliases, filter.property) + " in (:p"
 					+ param(params, value) + ")";
 		case Filter.OP_NOT_IN:
-			return getPath(aliases, filter.property) + " not in (:p"
+			return getPath(search.getSearchClass(), aliases, filter.property) + " not in (:p"
 					+ param(params, value) + ")";
 		case Filter.OP_EQUAL:
 			if (value == null) {
-				return getPath(aliases, filter.property) + " is null";
+				return getPath(search.getSearchClass(), aliases, filter.property) + " is null";
 			} else {
-				return getPath(aliases, filter.property) + " = :p"
+				return getPath(search.getSearchClass(), aliases, filter.property) + " = :p"
 						+ param(params, value);
 			}
 		case Filter.OP_NOT_EQUAL:
 			if (value == null) {
-				return getPath(aliases, filter.property) + " is not null";
+				return getPath(search.getSearchClass(), aliases, filter.property) + " is not null";
 			} else {
-				return getPath(aliases, filter.property) + " != :p"
+				return getPath(search.getSearchClass(), aliases, filter.property) + " != :p"
 						+ param(params, value);
 			}
 		case Filter.OP_GREATER_THAN:
-			return getPath(aliases, filter.property) + " > :p"
+			return getPath(search.getSearchClass(), aliases, filter.property) + " > :p"
 					+ param(params, value);
 		case Filter.OP_LESS_THAN:
-			return getPath(aliases, filter.property) + " < :p"
+			return getPath(search.getSearchClass(), aliases, filter.property) + " < :p"
 					+ param(params, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return getPath(aliases, filter.property) + " >= :p"
+			return getPath(search.getSearchClass(), aliases, filter.property) + " >= :p"
 					+ param(params, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return getPath(aliases, filter.property) + " <= :p"
+			return getPath(search.getSearchClass(), aliases, filter.property) + " <= :p"
 					+ param(params, value);
 		case Filter.OP_LIKE:
-			return getPath(aliases, filter.property) + " like :p"
+			return getPath(search.getSearchClass(), aliases, filter.property) + " like :p"
 					+ param(params, value);
 		case Filter.OP_AND:
 		case Filter.OP_OR:
@@ -494,13 +467,13 @@ public abstract class AbstractSearchProcessor {
 	 * the reference to that property that uses the appropriate alias (ex.
 	 * a4_manager.salary).
 	 */
-	protected String getPath(Map<String, String> aliases, String property) {
+	protected String getPath(Class<?> rootClass, Map<String, AliasNode> aliases, String property) {
 		int pos = property.lastIndexOf('.');
 		if (pos == -1) {
 			return rootAlias + "." + property;
 		} else {
 			String aliasPath = property.substring(0, pos);
-			return getAlias(aliases, aliasPath) + "."
+			return getAlias(rootClass, aliases, aliasPath, false).alias + "."
 					+ property.substring(pos + 1);
 		}
 	}
@@ -510,15 +483,59 @@ public abstract class AbstractSearchProcessor {
 	 * to reference that entity (ex. a4_manager). If there is no alias for the
 	 * given path, one will be created.
 	 */
-	protected String getAlias(Map<String, String> aliases, String path) {
+	protected AliasNode getAlias(Class<?> rootClass, Map<String, AliasNode> aliases, String path, boolean setFetch) {
 		if (aliases.containsKey(path)) {
-			return aliases.get(path);
+			AliasNode node = aliases.get(path);
+			if (setFetch) {
+				while (node.parent != null) {
+					node.fetch = true;
+					node = node.parent;
+				}
+			}
+			
+			return node;
 		} else {
+			AliasNode node;
 			int pos = path.lastIndexOf('.');
-			String alias = "a" + Integer.toString(aliases.size() + 1) + "_"
-					+ path.substring(pos + 1);
-			aliases.put(path, alias);
-			return alias;
+			String property = path.substring(pos + 1);
+			String subpath = (pos == -1) ? ROOT_PATH : path.substring(0, pos);
+			
+			if (metaDataUtil.isEntity(rootClass, path)) {
+				String alias = "a" + Integer.toString(aliases.size() + 1) + "_" + property;
+			
+				node = new AliasNode(property, alias);
+				
+				//set up path recursively
+				getAlias(rootClass, aliases, subpath, setFetch).addChild(property, node);
+				
+			} else {
+				String alias = getAlias(rootClass, aliases, subpath, setFetch).alias + "." + property;
+				
+				node = new AliasNode(null, alias);
+			}
+			
+			node.fetch = setFetch;
+			aliases.put(path, node);
+			
+			return node;
+		}		
+	}
+	
+	protected static final class AliasNode {
+		String property;
+		String alias;
+		boolean fetch;
+		AliasNode parent;
+		Map<String, AliasNode> children = new HashMap<String, AliasNode>();
+		
+		AliasNode(String property, String alias) {
+			this.property = property;
+			this.alias = alias;
+		}
+		
+		void addChild(String prop, AliasNode node) {
+			children.put(prop, node);
+			node.parent = this;
 		}
 	}
 
