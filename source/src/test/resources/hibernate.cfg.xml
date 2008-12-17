@@ -5,6 +5,8 @@
 	<mapping class="com.test.model.Address"/>
 	<mapping class="com.test.model.Home"/>
 	<mapping class="com.test.model.Person"/>
+	<mapping class="com.test.model.Pet"/>
+	<mapping class="com.test.model.LimbedPet"/>
 	
 </session-factory>
 
