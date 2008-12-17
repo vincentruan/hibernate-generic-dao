@@ -140,5 +140,93 @@
 		</property>
 	</bean>
 	
+	
+	<bean id="fishWiggles" class="com.test.model.Pet">
+		<property name="ident">
+			<bean class="com.test.model.Ident">
+				<property name="idNumber" value="1111"/>
+				<property name="name">
+					<bean class="com.test.model.Name">
+						<property name="first" value="Mr"/>
+						<property name="last" value="Wiggles"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="species" value="fish"/>
+		<property name="favoritePlaymate" ref="spiderJimmy"/>
+	</bean>
+	<bean id="catPrissy" class="com.test.model.LimbedPet">
+		<property name="ident">
+			<bean class="com.test.model.Ident">
+				<property name="idNumber" value="2222"/>
+				<property name="name">
+					<bean class="com.test.model.Name">
+						<property name="first" value="Miss"/>
+						<property name="last" value="Prissy"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="species" value="cat"/>
+		<property name="limbs">
+			<list>
+				<value>left front leg</value>
+				<value>right front leg</value>
+				<value>left hind leg</value>
+				<value>right hind leg</value>
+			</list>
+		</property>
+		<property name="favoritePlaymate" ref="fishWiggles"/>
+	</bean>
+	<bean id="catNorman" class="com.test.model.LimbedPet">
+		<property name="ident">
+			<bean class="com.test.model.Ident">
+				<property name="idNumber" value="3333"/>
+				<property name="name">
+					<bean class="com.test.model.Name">
+						<property name="first" value="Norman"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="species" value="cat"/>
+		<property name="limbs">
+			<list>
+				<value>left front leg</value>
+				<value>right front leg</value>
+				<value>left hind leg</value>
+				<value>right hind leg</value>
+			</list>
+		</property>
+		<property name="favoritePlaymate" ref="spiderJimmy"/>
+	</bean>
+	<bean id="spiderJimmy" class="com.test.model.LimbedPet">
+		<property name="ident">
+			<bean class="com.test.model.Ident">
+				<property name="idNumber" value="4444"/>
+				<property name="name">
+					<bean class="com.test.model.Name">
+						<property name="first" value="Jimmy"/>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="species" value="spider"/>
+		<property name="limbs">
+			<list>
+				<value>left front leg</value>
+				<value>right front leg</value>
+				<value>left frontish leg</value>
+				<value>right frontish leg</value>
+				<value>left hindish leg</value>
+				<value>right hindish leg</value>
+				<value>left hind leg</value>
+				<value>right hind leg</value>
+			</list>
+		</property>
+		<property name="favoritePlaymate" ref="spiderJimmy"/>
+	</bean>
+	
 </beans>
 
