@@ -263,6 +263,13 @@ public class Search implements Serializable {
 	public void addFilterLike(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_LIKE));
 	}
+	
+	/**
+	 * Add a filter that uses the ILIKE operator.
+	 */
+	public void addFilterILike(String property, Object value) {
+		addFilter(new Filter(property, value, Filter.OP_ILIKE));
+	}
 
 	/**
 	 * Add a filter that uses the != operator.
