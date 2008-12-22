@@ -39,7 +39,7 @@ public class Filter implements Serializable {
 	/**
 	 * The type of comparison to do between the property and the value. The
 	 * options are limited to the integer constants on this class:
-	 * <code>OP_EQAUL, OP_LESS_THAN, OP_GREATER_THAN, LESS_OR_EQUAL, OP_GREATER_OR_EQUAL, OP_IN, OP_LIKE, OP_NOT_EQUAL, OP_NOT_IN, OP_AND, OP_OR, OP_NOT</code>.
+	 * <code>OP_EQAUL, OP_LESS_THAN, OP_GREATER_THAN, LESS_OR_EQUAL, OP_GREATER_OR_EQUAL, OP_IN, OP_LIKE, OP_ILIKE, OP_NOT_EQUAL, OP_NOT_IN, OP_AND, OP_OR, OP_NOT</code>.
 	 */
 	public int operator;
 
@@ -72,7 +72,7 @@ public class Filter implements Serializable {
 
 	public static final int OP_EQUAL = 0, OP_LESS_THAN = 1,
 			OP_GREATER_THAN = 2, OP_LESS_OR_EQUAL = 3, OP_GREATER_OR_EQUAL = 4,
-			OP_IN = 5, OP_LIKE = 6, OP_NOT_EQUAL = 7, OP_NOT_IN = 8;
+			OP_IN = 5, OP_LIKE = 6, OP_ILIKE = 7, OP_NOT_EQUAL = 8, OP_NOT_IN = 9;
 	public static final int OP_AND = 100, OP_OR = 101, OP_NOT = 102;
 
 	/**
@@ -155,6 +155,13 @@ public class Filter implements Serializable {
 	 */
 	public static Filter like(String property, Object value) {
 		return new Filter(property, value, OP_LIKE);
+	}
+	
+	/**
+	 * Create a new Filter using the ILIKE operator.
+	 */
+	public static Filter ilike(String property, Object value) {
+		return new Filter(property, value, OP_ILIKE);
 	}
 
 	/**

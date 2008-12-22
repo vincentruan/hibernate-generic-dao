@@ -13,7 +13,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.test.model.Pet;
 import com.trg.dao.search.Fetch;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.Search;
@@ -417,6 +416,9 @@ public abstract class AbstractSearchProcessor {
 		case Filter.OP_LIKE:
 			return getPath(search.getSearchClass(), aliases, filter.property) + " like :p"
 					+ param(params, value);
+		case Filter.OP_ILIKE:
+			return "lower(" + getPath(search.getSearchClass(), aliases, filter.property) + ") like :p"
+			+ param(params, value.toString().toLowerCase());
 		case Filter.OP_AND:
 		case Filter.OP_OR:
 			if (!(value instanceof List)) {
