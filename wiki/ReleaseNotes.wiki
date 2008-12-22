@@ -18,14 +18,14 @@
 
 ==0.3.5==
   * Address problems with Components (@Embedded) as per Issue 19
-
-  * Test Search w/ collection attributes (possibly add collection operators)
   * Test Search w/ polymorphism
-  * Create new default DAO with different methods
-  * Create new default Flex remote DAO with different methods
   * Improve Util.callMethod to be more robust
 
+  * Create new default DAO with different methods
+  * Create new default Flex remote DAO with different methods
+
 ==Future==
+  * Add collection operators
   * Add implementation for JPA
   * Consider compatibility with multiple entity names per Java class
   * Security roles
