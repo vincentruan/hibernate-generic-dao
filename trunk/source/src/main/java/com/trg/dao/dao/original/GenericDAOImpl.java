@@ -14,8 +14,8 @@ import com.trg.dao.search.Search;
 import com.trg.dao.search.SearchResult;
 
 /**
- * Implementation of <code>GeneralDAO</code> using SpringHibernateSupport and
- * HQL for searches.
+ * Implementation of <code>GenericDAO</code> using Hibernate.
+ * The SessionFactory property is annotated for automatic resource injection.
  * 
  * @author dwolverton
  * 
@@ -108,7 +108,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public boolean isConnected(Object object) {
-		return _isAttached(object);
+		return _sessionContains(object);
 	}
 
 	public void flush() {

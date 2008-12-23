@@ -13,8 +13,8 @@ import com.trg.dao.search.Search;
 import com.trg.dao.search.SearchResult;
 
 /**
- * Implementation of <code>GeneralDAO</code> using SpringHibernateSupport and
- * HQL for searches.
+ * Implementation of <code>GeneralDAO</code> using Hibernate.
+ * The SessionFactory property is annotated for automatic resource injection.
  * 
  * @author dwolverton
  */
@@ -79,7 +79,7 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 	}
 
 	public boolean isConnected(Object object) {
-		return _isAttached(object);
+		return _sessionContains(object);
 	}
 
 	public Object searchUnique(Search search) throws NonUniqueResultException {

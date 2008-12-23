@@ -6,7 +6,7 @@ import java.util.List;
 import com.trg.dao.search.SearchResult;
 
 /**
- * Example of what a general remote DAO might look like.
+ * General Remote DAO for Adobe Flex.
  * 
  * @author dwolverton
  */

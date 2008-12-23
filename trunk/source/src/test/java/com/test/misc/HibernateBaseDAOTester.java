@@ -49,7 +49,7 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 	}
 
 	public boolean isAttached(Object o) {
-		return super._isAttached(o);
+		return super._sessionContains(o);
 	}
 
 	public <T> T load(Class<T> klass, Serializable id) {

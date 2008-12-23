@@ -87,12 +87,12 @@ public interface GeneralDAO {
 	public Object searchUnique(Search search) throws NonUniqueResultException;
 
 	/**
-	 * Returns true if the object is connected to the current Hibernate session.
+	 * Flushes changes in the Hibernate session to the datastore.
 	 */
 	public void flush();
 
 	/**
-	 * Flushes changes in the Hibernate cache to the datastore.
+	 * Returns true if the object is connected to the current Hibernate session.
 	 */
 	public boolean isConnected(Object object);
 
