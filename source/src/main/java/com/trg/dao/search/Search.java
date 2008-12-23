@@ -18,7 +18,7 @@ import java.util.List;
  * included in the result. Filters are "ANDed" together by default, but
  * disjunction (OR) can be used instead by setting
  * <code>setDisjunction(true)</code>. Filters are set using
- * <code>addFilter()</code>. See also the <code>Filter</code> class.
+ * <code>addFilter()</code> . See also the <code>Filter</code> class.
  * <li>Sorts - Any number of sorts may be specified. Each sort consists of a
  * property and a flag for ascending or descending. The first sort added is the
  * primary sort, the second, secondary and so on. Sorts are set using
@@ -38,8 +38,8 @@ import java.util.List;
  * <li>For other values of <code>fetchMode</code>, instead of returning the
  * actual objects, a collection of specified properties can be returned for each
  * row in the result set. These properties can be returned in maps, lists or
- * arrays. Fetches are specified using <code>addFetch()</code>. The fetch
- * mode must also be set using <code>setFetchMode()</code>.<br/><br/>
+ * arrays. Fetches are specified using <code>addFetch()</code>. The fetch mode
+ * must also be set using <code>setFetchMode()</code>.<br/><br/>
  * 
  * Additionally, fetches can be specified using column operators: COUNT, COUNT
  * DISTINCT, SUM, AVG, MAX, MIN. Note that fetches with column operators can not
@@ -70,8 +70,8 @@ public class Search implements Serializable {
 
 	/**
 	 * Value for fetch mode. This is the default value. <code>FETCH_ARRAY</code>
-	 * returns each object as an Object array (<code>Object[]</code>) with
-	 * the entries corresponding to the fetches added to the search. Here's an
+	 * returns each object as an Object array (<code>Object[]</code>) with the
+	 * entries corresponding to the fetches added to the search. Here's an
 	 * example:
 	 * 
 	 * <pre>
@@ -90,8 +90,8 @@ public class Search implements Serializable {
 
 	/**
 	 * Value for fetch mode. This is the default value. <code>FETCH_LIST</code>
-	 * returns each object as a list of Objects (<code>List&lt;Object&gt;</Code>).
-	 * Here's an example:
+	 * returns each object as a list of Objects (<code>List&lt;Object&gt;</Code>
+	 * ). Here's an example:
 	 * 
 	 * <pre>
 	 * Search s = new Search(Person.class);
@@ -128,9 +128,9 @@ public class Search implements Serializable {
 
 	/**
 	 * Value for fetch mode. This is the default value.
-	 * <code>FETCH_SINGLE</code> - Exactly one fetch property must be
-	 * specified to use this fetch mode. The result list contains just the value
-	 * of that property for each element. Here's an example:
+	 * <code>FETCH_SINGLE</code> - Exactly one fetch property must be specified
+	 * to use this fetch mode. The result list contains just the value of that
+	 * property for each element. Here's an example:
 	 * 
 	 * <pre>
 	 * Search s = new Search(Person.class);
@@ -180,38 +180,44 @@ public class Search implements Serializable {
 	}
 
 	// Filters
-	public void addFilter(Filter filter) {
+	public Search addFilter(Filter filter) {
 		if (filter.property == null)
-			return; // null properties do nothing, don't bother to add them.
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		filters.add(filter);
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the == operator.
 	 */
-	public void addFilterEqual(String property, Object value) {
+	public Search addFilterEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_EQUAL));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the >= operator.
 	 */
-	public void addFilterGreaterOrEqual(String property, Object value) {
+	public Search addFilterGreaterOrEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_GREATER_OR_EQUAL));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the > operator.
 	 */
-	public void addFilterGreaterThan(String property, Object value) {
+	public Search addFilterGreaterThan(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_GREATER_THAN));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the IN operator.
 	 */
-	public void addFilterIn(String property, Collection<?> value) {
+	public Search addFilterIn(String property, Collection<?> value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
+		return this;
 	}
 
 	/**
@@ -221,15 +227,17 @@ public class Search implements Serializable {
 	 * This takes a variable number of parameters. Any number of values can be
 	 * specified.
 	 */
-	public void addFilterIn(String property, Object... value) {
+	public Search addFilterIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_IN));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the NOT IN operator.
 	 */
-	public void addFilterNotIn(String property, Collection<?> value) {
+	public Search addFilterNotIn(String property, Collection<?> value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
+		return this;
 	}
 
 	/**
@@ -239,43 +247,49 @@ public class Search implements Serializable {
 	 * This takes a variable number of parameters. Any number of values can be
 	 * specified.
 	 */
-	public void addFilterNotIn(String property, Object... value) {
+	public Search addFilterNotIn(String property, Object... value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_IN));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the <= operator.
 	 */
-	public void addFilterLessOrEqual(String property, Object value) {
+	public Search addFilterLessOrEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_LESS_OR_EQUAL));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the < operator.
 	 */
-	public void addFilterLessThan(String property, Object value) {
+	public Search addFilterLessThan(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_LESS_THAN));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the LIKE operator.
 	 */
-	public void addFilterLike(String property, Object value) {
+	public Search addFilterLike(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_LIKE));
+		return this;
 	}
-	
+
 	/**
 	 * Add a filter that uses the ILIKE operator.
 	 */
-	public void addFilterILike(String property, Object value) {
+	public Search addFilterILike(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_ILIKE));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the != operator.
 	 */
-	public void addFilterNotEqual(String property, Object value) {
+	public Search addFilterNotEqual(String property, Object value) {
 		addFilter(new Filter(property, value, Filter.OP_NOT_EQUAL));
+		return this;
 	}
 
 	/**
@@ -285,8 +299,9 @@ public class Search implements Serializable {
 	 * This takes a variable number of parameters. Any number of
 	 * <code>Filter</code>s can be specified.
 	 */
-	public void addFilterAnd(Filter... filters) {
+	public Search addFilterAnd(Filter... filters) {
 		addFilter(Filter.and(filters));
+		return this;
 	}
 
 	/**
@@ -296,15 +311,17 @@ public class Search implements Serializable {
 	 * This takes a variable number of parameters. Any number of
 	 * <code>Filter</code>s can be specified.
 	 */
-	public void addFilterOr(Filter... filters) {
+	public Search addFilterOr(Filter... filters) {
 		addFilter(Filter.or(filters));
+		return this;
 	}
 
 	/**
 	 * Add a filter that uses the NOT operator.
 	 */
-	public void addFilterNot(Filter filter) {
+	public Search addFilterNot(Filter filter) {
 		addFilter(Filter.not(filter));
+		return this;
 	}
 
 	public void removeFilter(Filter filter) {
@@ -345,29 +362,35 @@ public class Search implements Serializable {
 	}
 
 	// Sorts
-	public void addSort(Sort sort) {
+	public Search addSort(Sort sort) {
 		if (sort.property == null)
-			return; // null properties do nothing, don't bother to add them.
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		sorts.add(sort);
+		return this;
 	}
 
 	/**
 	 * Add ascending sort by property
 	 */
-	public void addSort(String property) {
+	public Search addSort(String property) {
 		if (property == null)
-			return; // null properties do nothing, don't bother to add them.
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		sorts.add(new Sort(property));
+		return this;
 	}
 
 	/**
-	 * Add sort by property. Ascending if <code>desc == false</code>,
-	 * descending if <code>desc == true</code>.
+	 * Add sort by property. Ascending if <code>desc == false</code>, descending
+	 * if <code>desc == true</code>.
 	 */
-	public void addSort(String property, boolean desc) {
+	public Search addSort(String property, boolean desc) {
 		if (property == null)
-			return; // null properties do nothing, don't bother to add them.
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		sorts.add(new Sort(property, desc));
+		return this;
 	}
 
 	public void removeSort(Sort sort) {
@@ -393,52 +416,59 @@ public class Search implements Serializable {
 	}
 
 	// Fetch
-	public void addFetch(Fetch fetch) {
+	public Search addFetch(Fetch fetch) {
 		fetches.add(fetch);
+		return this;
 	}
 
 	/**
 	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
-	 * <code>property</code> will also be used as the key for this value in
-	 * the map.
+	 * <code>property</code> will also be used as the key for this value in the
+	 * map.
 	 */
-	public void addFetch(String property) {
+	public Search addFetch(String property) {
 		if (property == null || "".equals(property))
-			return; // null properties do nothing, don't bother to add them.
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		fetches.add(new Fetch(property));
+		return this;
 	}
 
 	/**
 	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
 	 * <code>key</code> will be used as the key for this value in the map.
 	 */
-	public void addFetch(String property, String key) {
-		if (property == null || "".equals(property) || key == null
-				|| "".equals(key))
-			return; // null properties do nothing, don't bother to add them.
+	public Search addFetch(String property, String key) {
+		if (property == null || "".equals(property) || key == null || "".equals(key))
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		fetches.add(new Fetch(property, key));
+		return this;
 	}
 
 	/**
 	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
-	 * <code>property</code> will also be used as the key for this value in
-	 * the map.
+	 * <code>property</code> will also be used as the key for this value in the
+	 * map.
 	 */
-	public void addFetch(String property, int operator) {
+	public Search addFetch(String property, int operator) {
 		if (property == null || "".equals(property))
-			return; // null properties do nothing, don't bother to add them.
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		fetches.add(new Fetch(property, operator));
+		return this;
 	}
 
 	/**
 	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
 	 * <code>key</code> will be used as the key for this value in the map.
 	 */
-	public void addFetch(String property, int operator, String key) {
-		if (property == null || "".equals(property) || key == null
-				|| "".equals(key))
-			return; // null properties do nothing, don't bother to add them.
+	public Search addFetch(String property, int operator, String key) {
+		if (property == null || "".equals(property) || key == null || "".equals(key))
+			return this; // null properties do nothing, don't bother to add
+		// them.
 		fetches.add(new Fetch(property, operator, key));
+		return this;
 	}
 
 	public void removeFetch(Fetch fetch) {
@@ -486,11 +516,11 @@ public class Search implements Serializable {
 	 * @see #FETCH_MAP
 	 * @see #FETCH_SINGLE
 	 */
-	public void setFetchMode(int fetchMode) {
+	public Search setFetchMode(int fetchMode) {
 		if (fetchMode < 0 || fetchMode > 4)
-			throw new IllegalArgumentException("Fetch Mode ( " + fetchMode
-					+ " ) is not a valid option.");
+			throw new IllegalArgumentException("Fetch Mode ( " + fetchMode + " ) is not a valid option.");
 		this.fetchMode = fetchMode;
+		return this;
 	}
 
 	public void clear() {
@@ -510,8 +540,9 @@ public class Search implements Serializable {
 	/**
 	 * Zero based index of first result record to return.
 	 */
-	public void setFirstResult(int firstResult) {
+	public Search setFirstResult(int firstResult) {
 		this.firstResult = firstResult;
+		return this;
 	}
 
 	public int getPage() {
@@ -520,12 +551,13 @@ public class Search implements Serializable {
 
 	/**
 	 * Zero based index of the page of records to return. The size of a page is
-	 * determined by <code>maxResults</code>. If page is specified first
-	 * result is ignored and the first result returned is calculated by
+	 * determined by <code>maxResults</code>. If page is specified first result
+	 * is ignored and the first result returned is calculated by
 	 * <code>page * maxResults</code>.
 	 */
-	public void setPage(int page) {
+	public Search setPage(int page) {
 		this.page = page;
+		return this;
 	}
 
 	public int getMaxResults() {
@@ -536,8 +568,9 @@ public class Search implements Serializable {
 	 * The maximum number of records to return. Also used as page size when
 	 * calculating the first record to return based on <code>page</code>.
 	 */
-	public void setMaxResults(int maxResults) {
+	public Search setMaxResults(int maxResults) {
 		this.maxResults = maxResults;
+		return this;
 	}
 
 	/**
@@ -546,8 +579,7 @@ public class Search implements Serializable {
 	 *         <code>firstResult</code> if page is not specified.
 	 */
 	public int calcFirstResult() {
-		return (firstResult > 0) ? firstResult
-				: (page > 0 && maxResults > 0) ? page * maxResults : 0;
+		return (firstResult > 0) ? firstResult : (page > 0 && maxResults > 0) ? page * maxResults : 0;
 	}
 
 	public void clearPaging() {
@@ -585,15 +617,12 @@ public class Search implements Serializable {
 			return false;
 		Search s = (Search) obj;
 
-		if (searchClass == null ? s.searchClass != null : !searchClass
-				.equals(s.searchClass))
+		if (searchClass == null ? s.searchClass != null : !searchClass.equals(s.searchClass))
 			return false;
-		if (disjunction != s.disjunction || fetchMode != s.fetchMode
-				|| firstResult != s.firstResult || page != s.page
+		if (disjunction != s.disjunction || fetchMode != s.fetchMode || firstResult != s.firstResult || page != s.page
 				|| maxResults != s.maxResults)
 			return false;
-		if (!filters.equals(s.filters) || !sorts.equals(s.sorts)
-				|| !fetches.equals(s.fetches))
+		if (!filters.equals(s.filters) || !sorts.equals(s.sorts) || !fetches.equals(s.fetches))
 			return false;
 
 		return true;
