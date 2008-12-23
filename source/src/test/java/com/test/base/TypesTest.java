@@ -43,15 +43,8 @@ public class TypesTest extends TestBase {
 	//some, all, exists, any, in.
 	//
 	//.size
-	public void testIndexedCollection() {
-		initDB();
-		
-		Search s = new Search(LimbedPet.class);
-		s.addFilterEqual("limbs", "left front leg");
-		List<Pet> result = target.search(s);
-		assertEquals(3, result.size());
-		
-		s.addFilterEqual("limbs", "left frontish leg");
+	//public void testIndexedCollection() {
+		//initDB();
 		
 		//size() / .size
 		
@@ -64,7 +57,7 @@ public class TypesTest extends TestBase {
 		//all - true if condition is true for all elements in the colleciton
 		
 		//
-	}
+	//}
 	
 	public void testPlymorphism() {
 		initDB();

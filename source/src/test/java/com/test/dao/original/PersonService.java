@@ -1,4 +1,4 @@
-package com.test.misc;
+package com.test.dao.original;
 
 import java.util.List;
 
@@ -6,7 +6,6 @@ import javax.annotation.Resource;
 
 import org.hibernate.NonUniqueResultException;
 
-import com.test.dao.PersonDAO;
 import com.test.model.Person;
 import com.trg.dao.search.Search;
 import com.trg.dao.search.SearchResult;

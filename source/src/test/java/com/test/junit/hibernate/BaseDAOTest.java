@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.hibernate.HibernateException;
+import org.hibernate.ObjectNotFoundException;
 
 import com.test.base.TestBase;
 import com.test.misc.HibernateBaseDAOTester;
 import com.test.model.Home;
 import com.test.model.Person;
+import com.test.model.Pet;
 import com.trg.dao.search.Fetch;
 import com.trg.dao.search.Search;
 
@@ -50,7 +52,7 @@ public class BaseDAOTest extends TestBase {
 		
 		grandpaA.setFirstName("Grandpa");
 	}
-
+	
 	public void testUpdate() {
 		initDB();
 		Person fred = copy(papaA);
@@ -253,4 +255,167 @@ public class BaseDAOTest extends TestBase {
 		}
 	}
 
+	public void testSaveMulti() {
+		Serializable id = null;
+		
+		target.save(grandpaA.getHome().getAddress(), grandpaA.getHome(), grandpaA);
+		
+		List<Person> list = target.all(Person.class);
+		assertEquals(1, list.size());
+		assertEquals(grandpaA, list.get(0));
+		
+		assertEquals(grandpaA, target.get(Person.class, grandpaA.getId()));
+		
+		target.save(papaA.getHome().getAddress(), papaA.getHome(), grandmaA, papaA, mamaA, joeA);
+		
+		grandpaA.setFirstName("Dean");
+		try {
+			assertEquals("Dean", target.get(Person.class, joeA.getId()).getFather()
+					.getFather().getFirstName());
+		} finally {
+			grandpaA.setFirstName("Grandpa");
+		}
+	}
+	
+	public void testSaveOrUpdate() {
+		initDB();
+		
+		String[] orig = new String[] { grandpaA.getFirstName(), grandmaA.getFirstName() };
+		
+		try {
+			grandpaA.setFirstName("GGG1");
+			grandmaA.setFirstName("GGG2");
+			
+			target.saveOrUpdate(grandpaA.getHome().getAddress(), grandpaA.getHome(), grandpaA);
+			
+			target.saveOrUpdate(grandmaA);
+			
+			assertFalse(target.saveOrUpdateIsNew(papaA));
+			
+			Person bob = new Person();
+			bob.setFirstName("Bob");
+			bob.setLastName("Loblaw");
+			
+			assertTrue(target.saveOrUpdateIsNew(bob));
+			
+			Person[] people = new Person[2];
+			people[0] = new Person();
+			people[0].setFirstName("First");
+			people[0].setLastName("Person");
+			people[1] = new Person();
+			people[1].setFirstName("Second");
+			people[1].setLastName("Person");
+			
+			target.saveOrUpdate((Object[]) people);
+			
+			Search s = new Search(Person.class);
+			s.addFilterIn("firstName", "GGG1", "GGG2", "Bob", "First", "Second");
+			assertListEqual(new Person[] { grandpaA, grandmaA, bob, people[0], people[1] }, target.search(s));
+			
+			grandpaA.setFirstName("GGG3");
+			grandmaA.setFirstName("GGG4");
+			bob.setFirstName("Bobby");
+			people[0].setFirstName("Firstly");
+			people[1].setFirstName("Secondly");
+			
+			s.clear();
+			s.addFilterIn("firstName", "GGG3", "GGG4", "Bobby", "Firstly", "Secondly");
+			assertListEqual(new Person[] { grandpaA, grandmaA, bob, people[0], people[1] }, target.search(s));
+		
+		} finally {
+			grandpaA.setFirstName(orig[0]);
+			grandmaA.setFirstName(orig[1]);
+		}
+	}
+	
+	public void testGetLoadMulti() {
+		initDB();
+		
+		Search s = new Search(Person.class);
+		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addFetch("id", Fetch.OP_MAX);
+		long maxId = (Long) target.searchUnique(s);
+		
+		Person[] people = target.get(Person.class, papaA.getId(), maxId + 1, papaB.getId());
+		assertEquals(3, people.length);
+		assertEquals(papaA.getId(), people[0].getId());
+		assertEquals(papaA.getAge(), people[0].getAge());
+		assertNull(people[1]);
+		assertEquals(papaB.getId(), people[2].getId());
+		assertEquals(papaB.getAge(), people[2].getAge());
+		
+		
+		people = target.load(Person.class, mamaA.getId(), maxId + 1, mamaB.getId());
+		assertEquals(3, people.length);
+		assertEquals(mamaA.getId(), people[0].getId());
+		assertEquals(mamaA.getAge(), people[0].getAge());
+		assertEquals(mamaB.getId(), people[2].getId());
+		assertEquals(mamaB.getAge(), people[2].getAge());
+		
+		try {
+			people[1].getAge();
+			fail("Entity does not exist, should throw error.");
+		} catch (ObjectNotFoundException ex) {
+			ex.printStackTrace();
+		}
+		
+	}
+
+	public void testDeleteMulti() {
+		initDB();
+		
+		Search s = new Search(Person.class);
+		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addFetch("id", Fetch.OP_MAX);
+		long maxId = (Long) target.searchUnique(s);
+		
+		target.update(papaA);
+		target.update(papaB);
+		target.update(mamaA);
+		target.update(mamaB);
+		
+		
+		//delete unattached
+		assertFalse(target.isAttached(joeA));
+		assertFalse(target.isAttached(joeB));
+		assertFalse(target.isAttached(sallyA));
+		assertFalse(target.isAttached(margretB));
+		
+		target.deleteById(Person.class, joeA.getId(), null, joeB.getId(), maxId + 1);
+		
+		assertNull(target.get(Person.class, joeA.getId()));
+		assertFalse(target.isAttached(joeA));
+		assertNull(target.get(Person.class, joeB.getId()));
+		assertFalse(target.isAttached(joeB));
+		
+		target.deleteEntities(sallyA, null, margretB, spiderJimmy);
+		
+		assertNull(target.get(Person.class, sallyA.getId()));
+		assertFalse(target.isAttached(sallyA));
+		assertNull(target.get(Person.class, margretB.getId()));
+		assertFalse(target.isAttached(margretB));
+		assertNull(target.get(Pet.class, spiderJimmy.getId()));
+		assertFalse(target.isAttached(spiderJimmy));
+		
+		//delete attached
+		assertTrue(target.isAttached(papaA));
+		assertTrue(target.isAttached(papaB));
+		assertTrue(target.isAttached(mamaA));
+		assertTrue(target.isAttached(mamaB));
+		
+		target.deleteById(Person.class, papaA.getId(), null, papaB.getId(), maxId + 1);
+		
+		assertNull(target.get(Person.class, papaA.getId()));
+		assertFalse(target.isAttached(papaA));
+		assertNull(target.get(Person.class, papaB.getId()));
+		assertFalse(target.isAttached(papaB));
+		
+		target.deleteEntities(mamaA, mamaB);
+		
+		assertNull(target.get(Person.class, mamaA.getId()));
+		assertFalse(target.isAttached(mamaA));
+		assertNull(target.get(Person.class, mamaB.getId()));
+		assertFalse(target.isAttached(mamaB));
+		
+	}
 }
