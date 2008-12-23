@@ -112,5 +112,36 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 		return super._searchUnique(search, forceClass);
 	}
 	
+
+	public void deleteById(Class<?> type, Serializable... ids) {
+		super._deleteById(type, ids);
+	}
+
+	public void deleteEntities(Object... entities) {
+		super._deleteEntities(entities);
+	}
+
+	public <T> T[] get(Class<T> type, Serializable... ids) {
+		return super._get(type, ids);
+	}
+
+	public <T> T[] load(Class<T> type, Serializable... ids) {
+		return super._load(type, ids);
+	}
+
+	public void save(Object... entities) {
+		super._save(entities);
+	}
+	public void saveOrUpdate(Object... entities) {
+		super._saveOrUpdate(entities);
+	}
+
+	public void saveOrUpdate(Object entity) {
+		super._saveOrUpdate(entity);
+	}
+
+	public boolean saveOrUpdateIsNew(Object entity) {
+		return super._saveOrUpdateIsNew(entity);
+	}
 	
 }

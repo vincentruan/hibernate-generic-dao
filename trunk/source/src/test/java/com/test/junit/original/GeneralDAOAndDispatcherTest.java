@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.test.base.TestBase;
-import com.test.dao.PersonDAO;
-import com.test.misc.PersonService;
+import com.test.dao.original.PersonDAO;
+import com.test.dao.original.PersonService;
 import com.test.model.Person;
 import com.trg.dao.dao.original.DAODispatcher;
 import com.trg.dao.dao.original.GeneralDAO;

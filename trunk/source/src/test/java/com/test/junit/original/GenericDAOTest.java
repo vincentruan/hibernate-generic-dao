@@ -1,7 +1,7 @@
 package com.test.junit.original;
 
 import com.test.base.TestBase;
-import com.test.dao.PersonDAO;
+import com.test.dao.original.PersonDAO;
 import com.test.model.Home;
 import com.test.model.Person;
 import com.trg.dao.search.Search;

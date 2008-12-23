@@ -1,4 +1,4 @@
-package com.test.dao;
+package com.test.dao.original;
 
 import com.test.model.Address;
 import com.trg.dao.dao.original.GenericDAO;

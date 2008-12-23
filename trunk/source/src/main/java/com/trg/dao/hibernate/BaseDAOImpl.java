@@ -69,7 +69,7 @@ public class BaseDAOImpl {
 	 * 
 	 * <p>
 	 * Also it seems this method only works with generated ids. If an entity is passed in that already has an id
-	 * assigned, an exception is thrown.
+	 * assigned, an exception is thrown. TODO varify...
 	 * 
 	 * <p>
 	 * This is different from <code>persist()</code> in that it does guarantee that the object will be assigned an
@@ -79,8 +79,19 @@ public class BaseDAOImpl {
 	 * 
 	 * @return The id of the newly saved entity.
 	 */
-	protected Serializable _save(Object object) {
-		return getSession().save(object);
+	protected Serializable _save(Object entity) {
+		return getSession().save(entity);
+	}
+	
+	/**
+	 * Persist the given transient instances and add them to the datastore, first assigning a generated identifier. (Or
+	 * using the current value of the identifier property if the assigned generator is used.) This operation cascades to
+	 * associated instances if the association is mapped with cascade="save-update".
+	 */
+	protected void _save(Object... entities) {
+		for (Object entity : entities) {
+			_save(entity);
+		}
 	}
 
 	/**
@@ -120,7 +131,7 @@ public class BaseDAOImpl {
 	 * 
 	 * @return <code>true</code> if create; <code>false</code> if update.
 	 */
-	protected boolean _saveOrUpdateIsSaved(Object entity) {
+	protected boolean _saveOrUpdateIsNew(Object entity) {
 		Serializable id = getMetaDataUtil().getId(entity);
 		if (id == null || (new Long(0)).equals(id)) {
 			_save(entity);
@@ -201,7 +212,8 @@ public class BaseDAOImpl {
 	 */
 	protected void _deleteEntities(Object... entities) {
 		for (Object entity : entities) {
-			getSession().delete(entity);
+			if (entity != null)
+				getSession().delete(entity);
 		}
 	}
 
