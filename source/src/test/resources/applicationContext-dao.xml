@@ -8,12 +8,12 @@
 		http://www.springframework.org/schema/context/spring-context-2.5.xsd"> 
 
 	<!-- DAOs -->
-	<bean id="personDAO" class="com.test.dao.PersonDAOImpl"/>
-	<bean id="homeDAO" class="com.test.dao.HomeDAOImpl"/>
-	<bean id="addressDAO" class="com.test.dao.AddressDAOImpl"/>
+	<bean id="personDAO" class="com.test.dao.original.PersonDAOImpl"/>
+	<bean id="homeDAO" class="com.test.dao.original.HomeDAOImpl"/>
+	<bean id="addressDAO" class="com.test.dao.original.AddressDAOImpl"/>
 	
 	
-	<bean id="generalDAO" class="com.test.dao.MyGeneralDAOImpl"/>
+	<bean id="generalDAO" class="com.test.dao.original.MyGeneralDAOImpl"/>
 	
 	<bean id="flexDAOAdapter" class="com.trg.dao.dao.original.FlexDAOAdapter">
 		<property name="DAO" ref="DAODispatcher"/>
@@ -28,6 +28,6 @@
 	</bean>
 	
 	<!-- Misc -->
-	<bean id="personService" class="com.test.misc.PersonService"/>
+	<bean id="personService" class="com.test.dao.original.PersonService"/>
 	<bean id="hibernateBaseDAOTester" class="com.test.misc.HibernateBaseDAOTester"/>
 </beans>
