@@ -94,7 +94,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public boolean save(T entity) {
-		return _saveOrUpdateIsSaved(entity);
+		return _saveOrUpdateIsNew(entity);
 	}
 
 	public void save(T... entities) {
