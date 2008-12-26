@@ -630,13 +630,34 @@ public class Search implements Serializable {
 
 	@Override
 	public int hashCode() {
-		// TODO Auto-generated method stub
-		return super.hashCode();
+		int hash = 1;
+		hash = hash * 31 + (searchClass == null ? 0 : searchClass.hashCode());
+		hash = hash * 31 + (fetches == null ? 0 : fetches.hashCode());
+		hash = hash * 31 + (filters == null ? 0 : filters.hashCode());
+		hash = hash * 31 + (sorts == null ? 0 : sorts.hashCode());
+		hash = hash * 31 + (disjunction ? 1 : 0);
+		hash = hash * 31 + (new Integer(fetchMode).hashCode());
+		hash = hash * 31 + (new Integer(firstResult).hashCode());
+		hash = hash * 31 + (new Integer(maxResults).hashCode());
+		hash = hash * 31 + (new Integer(page).hashCode());
+		
+		return hash;		
 	}
 
 	@Override
 	public String toString() {
-		// TODO Auto-generated method stub
+		// TODO Implement better toString()
+
+		// Search(Person)[first: 0, page: 0, max: 0] {
+		// fetchMode: 8,
+		// disjunction: false,
+		// fetches: { "", (MAX, "")}
+		// filters: {
+		// (i < 10) or (ix > 11)
+		// }
+		// sorts: { "pop" ASC, "ping" DESC }
+		// }
+		
 		return super.toString();
 	}
 

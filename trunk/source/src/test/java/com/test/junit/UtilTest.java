@@ -365,7 +365,6 @@ public class UtilTest extends TestCaseSpringAutoWire {
 
 	private static class MyList extends ArrayList implements IMyList {
 		public int compareTo(Object o) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 	}
