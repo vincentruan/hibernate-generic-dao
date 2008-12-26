@@ -4,11 +4,8 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 /**
  * Utilities for TRG Generic DAO
@@ -18,8 +15,9 @@ import java.util.Queue;
 public class Util {
 	/**
 	 * <p>
-	 * Return an instance of the given class type that has the given value. For example, if type is <code>Long</code>
-	 * and <code>Integer</code> type with the value 13 is passed in, a new instance of <code>Long</code> will be
+	 * Return an instance of the given class type that has the given value. For
+	 * example, if type is <code>Long</code> and <code>Integer</code> type with
+	 * the value 13 is passed in, a new instance of <code>Long</code> will be
 	 * returned with the value 13.
 	 * 
 	 * <p>
@@ -65,8 +63,9 @@ public class Util {
 	}
 
 	/**
-	 * This is a helper method to call a method on an Object with the given parameters. It is used for dispatching to
-	 * specific DAOs that do not implement the GenericDAO interface.
+	 * This is a helper method to call a method on an Object with the given
+	 * parameters. It is used for dispatching to specific DAOs that do not
+	 * implement the GenericDAO interface.
 	 */
 	public static Object XcallMethod(Object object, String methodName, Object... args) throws NoSuchMethodException,
 			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
@@ -126,7 +125,9 @@ public class Util {
 		if (method.isVarArgs()) {
 			// put variable arguments into array as last parameter
 			Object[] allargs = new Object[method.getParameterTypes().length];
-			Object[] vargs = (Object[]) Array.newInstance(method.getParameterTypes()[method.getParameterTypes().length - 1].getComponentType(), args.length - method.getParameterTypes().length + 1);
+			Object[] vargs = (Object[]) Array.newInstance(
+					method.getParameterTypes()[method.getParameterTypes().length - 1].getComponentType(), args.length
+							- method.getParameterTypes().length + 1);
 
 			for (int i = 0; i < method.getParameterTypes().length - 1; i++) {
 				allargs[i] = args[i];
@@ -162,7 +163,8 @@ public class Util {
 							}
 						}
 						if (methodParamTypes.length == paramTypes.length + 1) {
-							// no param is specified for the optional vararg spot
+							// no param is specified for the optional vararg
+							// spot
 						} else if (methodParamTypes.length == paramTypes.length
 								&& methodParamTypes[paramTypes.length - 1]
 										.isAssignableFrom(paramTypes[paramTypes.length - 1])) {
@@ -195,15 +197,24 @@ public class Util {
 			// There are several possible methods. Choose the most specific.
 
 			// Throw away any var-args options.
-			// Non var-args methods always beat var-args methods and we're going to say that if we have two var-args
+			// Non var-args methods always beat var-args methods and we're going
+			// to say that if we have two var-args
 			// methods, we cannot choose between the two.
 			Iterator<Method> itr = candidates.iterator();
 			while (itr.hasNext()) {
-				if (itr.next().isVarArgs())
-					itr.remove();
+				Method m = itr.next();
+				if (m.isVarArgs()) {
+					// the exception is if an array is actually specified as the
+					// last parameter
+					if (m.getParameterTypes().length != paramTypes.length
+							|| !m.getParameterTypes()[paramTypes.length - 1]
+									.isAssignableFrom(paramTypes[paramTypes.length - 1]))
+						itr.remove();
+				}
 			}
 
-			// If there are no candidates left, that means we had only var-args methods, which we can't choose
+			// If there are no candidates left, that means we had only var-args
+			// methods, which we can't choose
 			// between.
 			if (candidates.size() == 0)
 				return null;
@@ -228,7 +239,8 @@ public class Util {
 						} else if (distA < distB) {
 							aScore++;
 						} else if (distA == 1000) { // both are interfaces
-							// if one interface extends the other, that interface is lower in the hierarchy (more
+							// if one interface extends the other, that
+							// interface is lower in the hierarchy (more
 							// specific) and wins
 							if (!aTypes[i].equals(bTypes[i])) {
 								if (aTypes[i].isAssignableFrom(bTypes[i]))
@@ -259,13 +271,24 @@ public class Util {
 	/**
 	 * Greater dist is worse:
 	 * <ol>
-	 *  <li>superClass = Object loses to all
-	 *  <li>If klass is not an interface, superClass is interface loses to all other
-	 * classes
-	 *  <li>Closest inheritance wins
+	 * <li>superClass = Object loses to all <li>If klass is not an interface,
+	 * superClass is interface loses to all other classes <li>Closest
+	 * inheritance wins
 	 * </ol>
 	 */
 	private static int getDist(Class<?> superClass, Class<?> klass) {
+		if (klass.isArray()) {
+			if (superClass.isArray()) {
+				superClass = superClass.getComponentType();
+				klass = klass.getComponentType();
+			} else {
+				// superClass must be Object. An array fitting into an Object
+				// must be more general than an array fitting into an Object[]
+				// array.
+				return 3000;
+			}
+		}
+
 		if (superClass.equals(klass))
 			return 0;
 		if (superClass.equals(Object.class))
