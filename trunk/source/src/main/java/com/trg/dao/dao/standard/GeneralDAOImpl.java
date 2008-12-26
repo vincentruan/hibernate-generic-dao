@@ -61,8 +61,8 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 		return _sessionContains(entity);
 	}
 
-	public void refresh(Object entity) {
-		_refresh(entity);
+	public void refresh(Object... entities) {
+		_refresh(entities);
 	}
 
 	public boolean remove(Object entity) {
