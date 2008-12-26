@@ -14,15 +14,15 @@ public class FlexDAOAdapterTest extends TestBase {
 	private FlexDAOAdapter flexDAOAdapter;
 	private DAODispatcher dispatcher;
 
-	public void setGeneralDAO(GeneralDAO generalDAO) {
+	public void setOrigGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
 	}
 
-	public void setFlexDAOAdapter(FlexDAOAdapter flexDAOAdapter) {
+	public void setOrigFlexDAOAdapter(FlexDAOAdapter flexDAOAdapter) {
 		this.flexDAOAdapter = flexDAOAdapter;
 	}
 
-	public void setDAODispatcher(DAODispatcher dispatcher) {
+	public void setOrigDAODispatcher(DAODispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 

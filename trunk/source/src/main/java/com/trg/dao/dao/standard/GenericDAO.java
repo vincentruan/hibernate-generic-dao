@@ -26,12 +26,12 @@ public interface GenericDAO<T, ID> {
 	 * <p>
 	 * If none is found, return null.
 	 */
-	public T find(Serializable id);
+	public T find(ID id);
 
 	/**
 	 * Get all entities of the specified type from the datastore that have one of these ids.
 	 */
-	public T[] find(Serializable... ids);
+	public T[] find(ID... ids);
 
 	/**
 	 * <p>
@@ -45,7 +45,7 @@ public interface GenericDAO<T, ID> {
 	 * @throws a
 	 *             HibernateException if no matching entity is found
 	 */
-	public T getReference(Serializable id);
+	public T getReference(ID id);
 
 	/**
 	 * <p>
@@ -59,7 +59,7 @@ public interface GenericDAO<T, ID> {
 	 * @throws a
 	 *             HibernateException if any of the matching entities are not found.
 	 */
-	public T[] getReferences(Serializable... ids);
+	public T[] getReferences(ID... ids);
 
 	/**
 	 * <p>
@@ -106,12 +106,12 @@ public interface GenericDAO<T, ID> {
 	 * @return <code>true</code> if the entity is found in the datastore and removed, <code>false</code> if it is not
 	 *         found.
 	 */
-	public boolean removeById(Serializable id);
+	public boolean removeById(ID id);
 
 	/**
 	 * Remove all the entities of the given type from the datastore that have one of these ids.
 	 */
-	public void removeByIds(Serializable... ids);
+	public void removeByIds(ID... ids);
 
 	/**
 	 * Get a list of all the objects of the specified type.

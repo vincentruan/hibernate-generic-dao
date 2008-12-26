@@ -355,9 +355,7 @@ public class BaseDAOTest extends TestBase {
 		try {
 			people[1].getAge();
 			fail("Entity does not exist, should throw error.");
-		} catch (ObjectNotFoundException ex) {
-			ex.printStackTrace();
-		}
+		} catch (ObjectNotFoundException ex) { }
 		
 	}
 

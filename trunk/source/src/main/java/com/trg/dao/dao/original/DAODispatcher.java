@@ -13,6 +13,17 @@ import com.trg.dao.search.SearchResult;
 @SuppressWarnings("unchecked")
 public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 
+	protected GeneralDAO generalDAO;
+	
+	/**
+	 * GeneralDAO has default implementations for the standard DAO methods.
+	 * Which model class it uses is specified when calling the particular
+	 * method.
+	 */
+	public void setGeneralDAO(GeneralDAO generalDAO) {
+		this.generalDAO = generalDAO;
+	}
+	
 	public void create(Object object) {
 		Object specificDAO = getSpecificDAO(object.getClass().getName());
 		if (specificDAO != null) {

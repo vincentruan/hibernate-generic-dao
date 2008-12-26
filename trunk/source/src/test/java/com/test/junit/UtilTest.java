@@ -3,9 +3,7 @@ package com.test.junit;
 import java.lang.reflect.InvocationTargetException;
 import java.util.AbstractList;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.RandomAccess;
 
 import com.trg.dao.Util;
 import com.trg.test.TestCaseSpringAutoWire;
@@ -184,6 +182,29 @@ public class UtilTest extends TestCaseSpringAutoWire {
 		//we're not doing this case. It's too complicated. we'll always fail if multiple var-args match and only var-args
 		//assertEquals(result, callMethod(x, "d", MyList.class, MyList.class, MyList.class));
 
+		
+		// -- Test with arrays as var-arg
+		result = x.a(new Object[0]); //22
+		assertEquals(result, callMethod(x, "a", Object[].class));
+		
+		result = x.a(new String[0]); //22
+		assertEquals(result, callMethod(x, "a", String[].class));
+
+		result = x.a(list, new Object[0]); //23
+		assertEquals(result, callMethod(x, "a", List.class, Object[].class));
+
+		result = x.a(list, new String[0]); //23
+		assertEquals(result, callMethod(x, "a", List.class, String[].class));
+		
+		result = x.a(list, new List[0]); //24
+		assertEquals(result, callMethod(x, "a", List.class, List[].class));
+
+		result = x.a(list, new MyList[0]); //24
+		assertEquals(result, callMethod(x, "a", List.class, MyList[].class));
+		
+		result = x.a(list, new IMyList[0]); //24
+		assertEquals(result, callMethod(x, "a", List.class, IMyList[].class));
+		
 	}
 
 	public static class X {
