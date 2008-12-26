@@ -482,7 +482,8 @@ public class BaseDAOImpl {
 	/**
 	 * Refresh the content of the given entity from the current datastore state.
 	 */
-	protected void _refresh(Object o) {
-		getSession().refresh(o);
+	protected void _refresh(Object... entities) {
+		for (Object entity : entities)
+		getSession().refresh(entity);
 	}
 }

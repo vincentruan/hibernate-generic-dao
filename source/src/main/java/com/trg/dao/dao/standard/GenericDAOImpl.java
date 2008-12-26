@@ -73,8 +73,8 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return _sessionContains(entity);
 	}
 
-	public void refresh(T entity) {
-		_refresh(entity);
+	public void refresh(T... entities) {
+		_refresh(entities);
 	}
 
 	public boolean remove(T entity) {
