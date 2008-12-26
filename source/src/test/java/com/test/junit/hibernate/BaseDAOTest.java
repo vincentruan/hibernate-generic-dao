@@ -14,6 +14,7 @@ import com.test.model.Pet;
 import com.trg.dao.search.Fetch;
 import com.trg.dao.search.Search;
 
+//TODO test exists
 public class BaseDAOTest extends TestBase {
 
 	private HibernateBaseDAOTester target;
@@ -277,6 +278,8 @@ public class BaseDAOTest extends TestBase {
 		}
 	}
 	
+	//TODO test saveOrUpdate with has id but not exist
+	//TODO test saveOrUpdate(several)
 	public void testSaveOrUpdate() {
 		initDB();
 		
@@ -386,14 +389,14 @@ public class BaseDAOTest extends TestBase {
 		assertNull(target.get(Person.class, joeB.getId()));
 		assertFalse(target.isAttached(joeB));
 		
-		target.deleteEntities(sallyA, null, margretB, spiderJimmy);
+		target.deleteEntities(sallyA, null, margretB, catNorman);
 		
 		assertNull(target.get(Person.class, sallyA.getId()));
 		assertFalse(target.isAttached(sallyA));
 		assertNull(target.get(Person.class, margretB.getId()));
 		assertFalse(target.isAttached(margretB));
-		assertNull(target.get(Pet.class, spiderJimmy.getId()));
-		assertFalse(target.isAttached(spiderJimmy));
+		assertNull(target.get(Pet.class, catNorman.getId()));
+		assertFalse(target.isAttached(catNorman));
 		
 		//delete attached
 		assertTrue(target.isAttached(papaA));

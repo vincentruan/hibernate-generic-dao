@@ -235,26 +235,30 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		}
 	}
 
-	public void save(Object... entities) {
+	public boolean[] save(Object... entities) {
+		if (entities == null)
+			return null;
 		Class<?> type = getUniformArrayType(entities);
-		if (type == null) return;
+		if (type == null)
+			return new boolean[entities.length];
 		if (type.equals(Object.class)) {
 			//There are several different types of entities
-			for (Object entity : entities) {
-				save(entity);
+			boolean[] isNew = new boolean[entities.length];
+			for (int i = 0; i < entities.length; i++) {
+				isNew[i] = save(entities[i]);
 			}
-			return;
+			return isNew;
 		}
 		
 		Object specificDAO = getSpecificDAO(type.getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
-				((GenericDAO) specificDAO).save(entities);
+				return ((GenericDAO) specificDAO).save(entities);
 			} else {
-				callMethod(specificDAO, "save", entities);
+				return (boolean[]) callMethod(specificDAO, "save", entities);
 			}
 		} else {
-			generalDAO.save(entities);
+			return generalDAO.save(entities);
 		}
 	}
 

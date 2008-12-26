@@ -137,11 +137,11 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 	}
 
 	public void saveOrUpdate(Object entity) {
-		super._saveOrUpdate(entity);
+		super._hibernateSaveOrUpdate(entity);
 	}
 
 	public boolean saveOrUpdateIsNew(Object entity) {
-		return super._saveOrUpdateIsNew(entity);
+		return super._saveOrUpdate(entity);
 	}
 	
 }

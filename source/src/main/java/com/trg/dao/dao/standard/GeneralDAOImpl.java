@@ -82,11 +82,11 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 	}
 
 	public boolean save(Object entity) {
-		return _saveOrUpdateIsNew(entity);
+		return _saveOrUpdate(entity);
 	}
 
-	public void save(Object... entities) {
-		_saveOrUpdate(entities);
+	public boolean[] save(Object... entities) {
+		return _saveOrUpdate(entities);
 	}
 
 	public List search(Search search) {

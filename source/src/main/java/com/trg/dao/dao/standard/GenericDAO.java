@@ -97,7 +97,7 @@ public interface GenericDAO<T, ID> {
 	 * will have no effect. If an entity to update has the same id as another
 	 * instance already attached to the session, an error will be thrown.
 	 */
-	public void save(T... entities);
+	public boolean[] save(T... entities);
 
 	/**
 	 * Remove the specified entity from the datastore.
