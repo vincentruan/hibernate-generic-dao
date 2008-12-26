@@ -13,7 +13,7 @@ import com.trg.dao.search.SearchResult;
 public class PersonService {
 	PersonDAO dao;
 	
-	@Resource
+	@Resource(name="origPersonDAO")
 	public void setPersonDAO(PersonDAO dao) {
 		this.dao = dao;
 	}

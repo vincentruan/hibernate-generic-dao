@@ -10,7 +10,7 @@ public class GenericDAOTest extends TestBase {
 
 	private PersonDAO personDAO;
 
-	public void setPersonDAO(PersonDAO personDAO) {
+	public void setOrigPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
 

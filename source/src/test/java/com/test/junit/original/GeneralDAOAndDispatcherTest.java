@@ -17,19 +17,19 @@ public class GeneralDAOAndDispatcherTest extends TestBase {
 	private PersonDAO personDAO;
 	private PersonService personService;
 
-	public void setGeneralDAO(GeneralDAO generalDAO) {
+	public void setOrigGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
 	}
 
-	public void setDAODispatcher(DAODispatcher dispatcher) {
+	public void setOrigDAODispatcher(DAODispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
-	public void setPersonDAO(PersonDAO personDAO) {
+	public void setOrigPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
 
-	public void setPersonService(PersonService personService) {
+	public void setOrigPersonService(PersonService personService) {
 		this.personService = personService;
 	}
 

@@ -3,16 +3,9 @@ package com.trg.dao;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
-import javax.annotation.Resource;
-
-import com.trg.dao.dao.original.GeneralDAO;
-
 public class BaseDAODispatcher {
 
 	protected Map<String, Object> specificDAOs;
-
-	@Resource
-	protected GeneralDAO generalDAO;
 
 	/**
 	 * In practice some DAOs could be put into this map using Spring. If a DAO
@@ -22,15 +15,6 @@ public class BaseDAODispatcher {
 	 */
 	public void setSpecificDAOs(Map<String, Object> specificDAOs) {
 		this.specificDAOs = specificDAOs;
-	}
-
-	/**
-	 * GeneralDAO has default implementations for the standard DAO methods.
-	 * Which model class it uses is specified when calling the particular
-	 * method.
-	 */
-	public void setGeneralDAO(GeneralDAO generalDAO) {
-		this.generalDAO = generalDAO;
 	}
 
 	protected Object getSpecificDAO(String className) {
@@ -49,5 +33,67 @@ public class BaseDAODispatcher {
 		} catch (InvocationTargetException e) {
 			throw new DAODispatcherException(e);
 		}
+	}
+
+	protected Object callMethod(Object specificDAO, String methodName, Class<?>[] paramTypes, Object... args) {
+		try {
+			return Util.callMethod(specificDAO, methodName, paramTypes, args);
+		} catch (IllegalArgumentException e) {
+			throw new DAODispatcherException(e);
+		} catch (NoSuchMethodException e) {
+			throw new DAODispatcherException(e);
+		} catch (IllegalAccessException e) {
+			throw new DAODispatcherException(e);
+		} catch (InvocationTargetException e) {
+			throw new DAODispatcherException(e);
+		}
+	}
+
+	protected static Class<?> getTypeFromArray(Object[] array) {
+		if (array == null)
+			return null;
+
+		if (!array.getClass().getComponentType().equals(Object.class)) {
+			// if the type of the array is more specific than Object, use that
+			return array.getClass().getComponentType();
+		} else {
+			// otherwise, select the most general element class
+			Class<?> klass = null;
+			for (Object o : array) {
+				if (o != null) {
+					if (klass == null || o.getClass().isAssignableFrom(klass)) {
+						klass = o.getClass();
+					}
+				}
+			}
+			return klass;
+		}
+	}
+
+	/**
+	 * <ul>
+	 * <li>If array is null, empty or has no non-null elements, return null
+	 * <li>If array contains all elements of the same type, return that type
+	 * <li>If array contains several different element types, return
+	 * Object.class
+	 * </ul>
+	 */
+	protected static Class<?> getUniformArrayType(Object[] array) {
+		if (array == null)
+			return null;
+
+		Class<?> klass = null;
+		for (Object o : array) {
+			if (o != null) {
+				if (klass == null) {
+					klass = o.getClass();
+				} else {
+					if (!klass.equals(o.getClass()))
+						return Object.class;
+				}
+			}
+		}
+		
+		return klass;
 	}
 }

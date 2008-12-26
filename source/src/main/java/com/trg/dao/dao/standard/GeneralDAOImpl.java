@@ -100,13 +100,13 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 		if (search == null)
 			throw new NullPointerException("Search cannot be null");
 		
-		return searchAndCount(search);
+		return _searchAndCount(search);
 	}
 
 	public Object searchUnique(Search search) {
 		if (search == null)
 			throw new NullPointerException("Search cannot be null");
 		
-		return searchUnique(search);
+		return _searchUnique(search);
 	}
 }
