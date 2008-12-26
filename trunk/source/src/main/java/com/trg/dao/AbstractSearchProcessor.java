@@ -90,7 +90,7 @@ public abstract class AbstractSearchProcessor {
 		String select = generateSelectClause(search, aliases);
 		String where = generateWhereClause(search, paramList, aliases);
 		String orderBy = generateOrderByClause(search, aliases);
-		String from = generateFromClause(search, aliases);
+		String from = generateFromClause(search, aliases, true);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(select);
@@ -121,7 +121,7 @@ public abstract class AbstractSearchProcessor {
 		aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
 
 		String where = generateWhereClause(search, paramList, aliases);
-		String from = generateFromClause(search, aliases);
+		String from = generateFromClause(search, aliases, false);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select count(distinct ").append(rootAlias).append(".id) ");
@@ -246,7 +246,7 @@ public abstract class AbstractSearchProcessor {
 	 * <code>fetchMode == FETCH_ENTITY</code>.
 	 */
 	protected String generateFromClause(Search search,
-			Map<String, AliasNode> aliases) {
+			Map<String, AliasNode> aliases, boolean doEagerFetching) {
 
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
 			Iterator<Fetch> fetchItr = search.fetchIterator();
@@ -268,7 +268,7 @@ public abstract class AbstractSearchProcessor {
 			AliasNode node = queue.poll();
 			if (node.parent != null) {
 				sb.append(" left join ");
-				if (node.fetch)
+				if (doEagerFetching && node.fetch)
 					sb.append("fetch ");
 				sb.append(node.parent.alias);
 				sb.append(".");
