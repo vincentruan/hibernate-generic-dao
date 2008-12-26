@@ -17,15 +17,22 @@
   * Use RemoteDAO adapters for specific technologies
 
 ==0.3.5==
-  * Address problems with Components (@Embedded) as per Issue 19
-  * Test Search w/ polymorphism
-  * Improve Util.callMethod to be more robust
+  * Addressed problems with Components (@Embedded) as per Issue 19
+  * Tested Search w/ polymorphism
+  * Improved Util.callMethod to be more robust
+  * Created new default DAO with different methods (see blog)
+  * Added ILIKE operator (Issue 21)
 
-  * Create new default DAO with different methods
   * Create new default Flex remote DAO with different methods
 
+==0.3.6==
+  * Add collection operators (see blog)
+  * Add option to ignore case on sorts (Issue 24)
+  * Consider Issue 20 (select & eager), Issue 22 (null values in filters), Issue 23 (query helper methods)
+  * Consider how we deal with hibernate special properties .id and .class in Searches.
+
 ==Future==
-  * Add collection operators
+
   * Add implementation for JPA
   * Consider compatibility with multiple entity names per Java class
   * Security roles
