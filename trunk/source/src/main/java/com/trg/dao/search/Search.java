@@ -181,9 +181,6 @@ public class Search implements Serializable {
 
 	// Filters
 	public Search addFilter(Filter filter) {
-		if (filter.property == null)
-			return this; // null properties do nothing, don't bother to add
-		// them.
 		filters.add(filter);
 		return this;
 	}
@@ -363,9 +360,6 @@ public class Search implements Serializable {
 
 	// Sorts
 	public Search addSort(Sort sort) {
-		if (sort.property == null)
-			return this; // null properties do nothing, don't bother to add
-		// them.
 		sorts.add(sort);
 		return this;
 	}
@@ -640,25 +634,50 @@ public class Search implements Serializable {
 		hash = hash * 31 + (new Integer(firstResult).hashCode());
 		hash = hash * 31 + (new Integer(maxResults).hashCode());
 		hash = hash * 31 + (new Integer(page).hashCode());
-		
-		return hash;		
+
+		return hash;
 	}
 
 	@Override
 	public String toString() {
-		// TODO Implement better toString()
-
-		// Search(Person)[first: 0, page: 0, max: 0] {
-		// fetchMode: 8,
-		// disjunction: false,
-		// fetches: { "", (MAX, "")}
-		// filters: {
-		// (i < 10) or (ix > 11)
-		// }
-		// sorts: { "pop" ASC, "ping" DESC }
-		// }
+		StringBuilder sb = new StringBuilder("Search(");
+		sb.append(searchClass);
+		sb.append(")[first: ").append(firstResult);
+		sb.append(", page: ").append(page);
+		sb.append(", max: ").append(maxResults);
+		sb.append("] {\n fetchMode: ");
 		
-		return super.toString();
+		switch (fetchMode) {
+		case FETCH_ARRAY: sb.append("ARRAY"); break;
+		case FETCH_ENTITY: sb.append("ENTITY"); break;
+		case FETCH_LIST: sb.append("LIST"); break;
+		case FETCH_MAP: sb.append("MAP"); break;
+		case FETCH_SINGLE: sb.append("SINGLE"); break;
+		default:  sb.append("**INVALID FETCH MODE: (" + fetchMode + ")**"); break;
+		}
+
+		sb.append(",\n disjunction: ").append(disjunction);
+		sb.append(",\n fetches: { ");
+		appendList(sb, fetches, ", ");
+		sb.append(" },\n filters: {\n  ");
+		appendList(sb, filters, ",\n  ");
+		sb.append("\n },\n sorts: { ");
+		appendList(sb, sorts, ", ");
+		sb.append(" }\n}");
+
+		return sb.toString();
+	}
+
+	private void appendList(StringBuilder sb, List<?> list, String separator) {
+		boolean first = true;
+		for (Object o : list) {
+			if (first) {
+				first = false;
+			} else {
+				sb.append(separator);
+			}
+			sb.append(o);
+		}
 	}
 
 }
