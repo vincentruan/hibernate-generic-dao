@@ -601,8 +601,8 @@ public class BaseDAOImpl {
 		if (id == null)
 			return false;
 
-		Query query = getSession().createQuery("select id from " + type.getName() + " where id = ?");
-		query.setParameter(0, id);
+		Query query = getSession().createQuery("select id from " + type.getName() + " where id = :id");
+		query.setParameter("id", id);
 		return query.list().size() == 1;
 	}
 
@@ -612,7 +612,7 @@ public class BaseDAOImpl {
 
 		boolean[] ret = new boolean[ids.length];
 
-		Query query = getSession().createQuery("select id from " + type.getName() + " where id in(:ids)");
+		Query query = getSession().createQuery("select id from " + type.getName() + " where id in (:ids)");
 		query.setParameterList("ids", ids);
 		for (Serializable id : (List<Serializable>) query.list()) {
 			for (int i = 0; i < ids.length; i++) {

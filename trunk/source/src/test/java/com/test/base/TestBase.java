@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -12,9 +13,13 @@ import org.hibernate.SessionFactory;
 
 import com.test.model.Address;
 import com.test.model.Home;
+import com.test.model.Ingredient;
 import com.test.model.LimbedPet;
 import com.test.model.Person;
 import com.test.model.Pet;
+import com.test.model.Recipe;
+import com.test.model.RecipeIngredient;
+import com.test.model.Store;
 import com.trg.test.TestCaseSpringAutoWire;
 
 public class TestBase extends TestCaseSpringAutoWire {
@@ -34,6 +39,9 @@ public class TestBase extends TestCaseSpringAutoWire {
 	
 	protected Pet fishWiggles;
 	protected LimbedPet catPrissy, catNorman, spiderJimmy;
+	
+	protected List<Store> stores;
+	protected List<Recipe> recipes;
 	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -94,6 +102,14 @@ public class TestBase extends TestCaseSpringAutoWire {
 	public void setSpiderJimmy(LimbedPet spiderJimmy) {
 		this.spiderJimmy = spiderJimmy;
 	}
+	
+	public void setStores(List<Store> stores) {
+		this.stores = stores;
+	}
+
+	public void setRecipes(List<Recipe> recipes) {
+		this.recipes = recipes;
+	}
 
 	protected void initDB() {
 		Session session = sessionFactory.getCurrentSession();
@@ -120,6 +136,26 @@ public class TestBase extends TestCaseSpringAutoWire {
 		merge(session, catPrissy);
 		merge(session, catNorman);
 
+		for (Ingredient i : stores.get(1).getIngredientsCarried()) {
+			merge(session, i);
+		}
+		
+		for (Store s : stores) {
+			merge(session, s);
+		}
+		
+		for (Recipe r : recipes) {
+			Set<RecipeIngredient> ris = r.getIngredients();
+			r.setIngredients(null);
+			merge(session, r);
+			
+			for (RecipeIngredient ri : ris) {
+				merge(session, ri);
+			}
+			
+			r.setIngredients(ris);
+		}
+		
 		// detatch all our Java copies of these from hibernate.
 		session.flush();
 		session.clear();
@@ -147,6 +183,22 @@ public class TestBase extends TestCaseSpringAutoWire {
 	
 	private void merge(Session session, Pet p) {
 		p.setId( ((Pet) session.merge(p)).getId() );
+	}
+	
+	private void merge(Session session, Recipe r) {
+		r.setId( ((Recipe) session.merge(r)).getId() );
+	}
+	
+	private void merge(Session session, Ingredient i) {
+		i.setId( ((Ingredient) session.merge(i)).getId() );
+	}
+	
+	private void merge(Session session, Store s) {
+		s.setId( ((Store) session.merge(s)).getId() );
+	}
+	
+	private void merge(Session session, RecipeIngredient ri) {
+		ri.setId( ((RecipeIngredient) session.merge(ri)).getId() );
 	}
 	
 	protected void clearHibernate() {

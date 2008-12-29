@@ -136,12 +136,24 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 		super._saveOrUpdate(entities);
 	}
 
-	public void saveOrUpdate(Object entity) {
+	public void hibernateSaveOrUpdate(Object entity) {
 		super._hibernateSaveOrUpdate(entity);
 	}
 
-	public boolean saveOrUpdateIsNew(Object entity) {
+	public boolean saveOrUpdate(Object entity) {
 		return super._saveOrUpdate(entity);
+	}
+
+	public boolean[] exists(Class<?> type, Serializable... ids) {
+		return super._exists(type, ids);
+	}
+
+	public boolean exists(Class<?> type, Serializable id) {
+		return super._exists(type, id);
+	}
+
+	public boolean exists(Object entity) {
+		return super._exists(entity);
 	}
 	
 }

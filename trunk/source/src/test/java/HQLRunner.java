@@ -2,6 +2,10 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
@@ -89,14 +93,21 @@ public class HQLRunner extends JFrame {
 		Statement statement = null;
 		try {
 			statement = session.connection().createStatement();
-			statement.executeUpdate("insert into address (id,city,state,street,zip) values (1,'Chicago','IL','940 N Fairfield','60610'),(2,'Chicago','IL','734 N Fairfield, Apt 3','60610'),(3,'Chicago','IL','3290 W Fulton','60610')");
-			statement.executeUpdate("insert into home (id,type,address_id) values (1,'house',1),(2,'apartment',2),(3,'house',3)");
-			statement.executeUpdate("insert into person (id,age,dob,first_name,last_name,weight,father_id,home_id,mother_id) values (1,65,'1943-12-17 15:13:59','Grandpa','Alpha',100.65,NULL,3,NULL),(2,65,'1943-12-17 15:13:59','Grandma','Alpha',100.65,NULL,3,NULL),(3,39,'1969-12-17 15:13:59','Papa','Alpha',100.39,1,1,2),(4,40,'1968-12-17 15:13:59','Mama','Alpha',100.4,NULL,1,NULL),(5,39,'1969-12-17 15:13:59','Papa','Beta',100.39,NULL,2,NULL),(6,38,'1970-12-17 15:13:59','Mama','Beta',100.38,1,2,2),(7,10,'1998-12-17 15:13:59','Joe','Alpha',100.1,3,1,4),(8,9,'1999-12-17 15:13:59','Sally','Alpha',100.09,3,1,4),(9,10,'1998-12-17 15:13:59','Joe','Beta',100.1,5,2,6),(10,14,'1994-12-17 15:13:59','Margret','Beta',100.14,5,2,6)");
-			statement.executeUpdate("insert into pet (limbed,id,idNumber,first,last,species,hasPaws,favoritePlaymate_id) values (1,1,4444,'Jimmy',NULL,'spider','\0',1),(0,2,1111,'Mr','Wiggles','fish',NULL,1),(1,3,2222,'Miss','Prissy','cat','\0',2),(1,4,3333,'Norman',NULL,'cat','\0',1)");
-			statement.executeUpdate("insert into pet_limbs (Pet_id,element,idx) values (1,'left front leg',0),(1,'right front leg',1),(1,'left frontish leg',2),(1,'right frontish leg',3),(1,'left hindish leg',4),(1,'right hindish leg',5),(1,'left hind leg',6),(1,'right hind leg',7),(3,'left front leg',0),(3,'right front leg',1),(3,'left hind leg',2),(3,'right hind leg',3),(4,'left front leg',0),(4,'right front leg',1),(4,'left hind leg',2),(4,'right hind leg',3)");
+			
+			InputStream is = this.getClass().getResourceAsStream("initDB.sql");
+			
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			
+			String line = br.readLine();
+			while (line != null) {
+				if (line.startsWith("insert"))
+					statement.executeUpdate(line);
+				line = br.readLine();
+			}
 			statement.close();
 		} catch (Throwable e) {
 			tableModel.setError(e);
+			e.printStackTrace();
 		} finally {
 			if (statement != null) {
 				try {
@@ -124,29 +135,34 @@ public class HQLRunner extends JFrame {
 	
 	private class TheTableModel extends AbstractTableModel {
 
-		Object[][] data = new Object[0][0];
+		String[][] data = new String[0][0];
+		
+		private String toString(Object o) {
+			if (o == null) return "null";
+			else return o.toString();
+		}
 		
 		public void setResults(List<?> results) {
 			if (results == null || results.size() == 0) {
-				data = new Object[1][1];
+				data = new String[1][1];
 				data[0][0] = "-- No Results --";
 			} else {
 				Object example = results.get(0);
 				if (example instanceof Object[]) {
-					data = new Object[results.size()][((Object[]) example).length];
+					data = new String[results.size()][((Object[]) example).length];
 					for (int i = 0; i < results.size(); i++) {
 						Object[] row = (Object[]) results.get(i);
 						for (int j = 0; j < row.length; j++) {
-							data[i][j] = row[j];
+							data[i][j] = toString(row[j]);
 						}
 					}
 				} else if (example instanceof Collection) {
-					data = new Object[results.size()][((Collection) example).size()];
+					data = new String[results.size()][((Collection) example).size()];
 					for (int i = 0; i < results.size(); i++) {
 						Collection row = (Collection) results.get(i);
 						int j = 0;
 						for (Object o : row)
-							data[i][j++] = o;
+							data[i][j++] = toString(o);
 					}
 				} else if (example instanceof Map) {
 					Object[] keys = new Object[((Map) example).keySet().size()];
@@ -155,18 +171,18 @@ public class HQLRunner extends JFrame {
 						keys[k++] = key;
 					}
 					
-					data = new Object[results.size()][keys.length];
+					data = new String[results.size()][keys.length];
 					for (int i = 0; i < results.size(); i++) {
 						Map row = (Map) results.get(i);
 						for (int j = 0; j < keys.length; j++) {
-							data[i][j] = row.get(keys[j]);
+							data[i][j] = toString( row.get(keys[j]) );
 						}
 					}
 				} else {
-					data = new Object[results.size()][1];
+					data = new String[results.size()][1];
 					for (int i = 0; i < results.size(); i++) {
 						Object row = results.get(i);
-						data[i][0] = row;
+						data[i][0] = toString(row);
 					}
 				}
 			}
@@ -175,7 +191,7 @@ public class HQLRunner extends JFrame {
 		}
 		
 		public void setError(Throwable e) {
-			data = new Object[1][1];
+			data = new String[1][1];
 			data[0][0] = e.toString();
 			
 			this.fireTableStructureChanged();

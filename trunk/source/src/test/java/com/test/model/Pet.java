@@ -55,4 +55,8 @@ public class Pet {
 	public void setFavoritePlaymate(Pet favoritePlaymate) {
 		this.favoritePlaymate = favoritePlaymate;
 	}
+
+	public String toString() {
+		return "Pet::id:" + id + ",ident:" + ident + ",species:" + species + ",favoritePlaymate:" + favoritePlaymate;
+	}
 }

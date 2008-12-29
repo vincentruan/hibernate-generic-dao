@@ -56,4 +56,9 @@ public class Address {
 	public void setZip(String zip) {
 		this.zip = zip;
 	}
+
+	public String toString() {
+		return "Address::id:" + id + ",street:" + street + ",city:" + city + ",state:" + state + ",zip:" + zip;
+	}
+
 }
