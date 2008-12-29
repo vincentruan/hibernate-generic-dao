@@ -94,4 +94,73 @@ public class Fetch implements Serializable {
 		this.operator = operator;
 		this.key = key;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((key == null) ? 0 : key.hashCode());
+		result = prime * result + operator;
+		result = prime * result + ((property == null) ? 0 : property.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Fetch other = (Fetch) obj;
+		if (key == null) {
+			if (other.key != null)
+				return false;
+		} else if (!key.equals(other.key))
+			return false;
+		if (operator != other.operator)
+			return false;
+		if (property == null) {
+			if (other.property != null)
+				return false;
+		} else if (!property.equals(other.property))
+			return false;
+		return true;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+
+		boolean parens = true;
+		switch (operator) {
+		case OP_AVG: sb.append("AVG("); break;
+		case OP_COUNT: sb.append("COUNT("); break;
+		case OP_COUNT_DISTINCT: sb.append("COUNT_DISTINCT("); break;
+		case OP_MAX: sb.append("MAX("); break;
+		case OP_MIN: sb.append("MIN("); break;
+		case OP_PROPERTY: parens = false; break;
+		case OP_SUM: sb.append("SUM("); break;
+			default:  sb.append("**INVALID OPERATOR: (" + operator + ")** "); parens = false; break;
+		}
+		
+		if (property == null) {
+			sb.append("null");
+		} else {
+			sb.append("`");
+			sb.append(property);
+			sb.append("`");
+		}
+		if (parens)
+			sb.append(")");
+		
+		if (key != null) {
+			sb.append(" as `");
+			sb.append(key);
+			sb.append("`");
+		}
+		
+		return sb.toString();
+	}
 }
