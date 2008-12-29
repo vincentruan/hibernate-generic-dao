@@ -20,10 +20,10 @@ public class Home {
 	private Long id;
 	private String type;
 	@OneToOne
-	@JoinColumn(name="address_id")
+	@JoinColumn(name = "address_id")
 	private Address address;
-	
-	@OneToMany(mappedBy="home", fetch=FetchType.EAGER)
+
+	@OneToMany(mappedBy = "home", fetch = FetchType.EAGER)
 	private List<Person> residents;
 
 	public Long getId() {
@@ -56,5 +56,9 @@ public class Home {
 
 	public void setResidents(List<Person> residents) {
 		this.residents = residents;
+	}
+
+	public String toString() {
+		return "Home::id:" + id + ",type:" + type + ",address:" + address;
 	}
 }

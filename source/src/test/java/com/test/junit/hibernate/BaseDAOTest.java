@@ -9,12 +9,16 @@ import org.hibernate.ObjectNotFoundException;
 import com.test.base.TestBase;
 import com.test.misc.HibernateBaseDAOTester;
 import com.test.model.Home;
+import com.test.model.Ingredient;
 import com.test.model.Person;
 import com.test.model.Pet;
+import com.test.model.Recipe;
+import com.test.model.RecipeIngredient;
+import com.test.model.RecipeIngredientId;
+import com.test.model.Store;
 import com.trg.dao.search.Fetch;
 import com.trg.dao.search.Search;
 
-//TODO test exists
 public class BaseDAOTest extends TestBase {
 
 	private HibernateBaseDAOTester target;
@@ -291,15 +295,15 @@ public class BaseDAOTest extends TestBase {
 			
 			target.saveOrUpdate(grandpaA.getHome().getAddress(), grandpaA.getHome(), grandpaA);
 			
-			target.saveOrUpdate(grandmaA);
+			target.hibernateSaveOrUpdate(grandmaA);
 			
-			assertFalse(target.saveOrUpdateIsNew(papaA));
+			assertFalse(target.saveOrUpdate(papaA));
 			
 			Person bob = new Person();
 			bob.setFirstName("Bob");
 			bob.setLastName("Loblaw");
 			
-			assertTrue(target.saveOrUpdateIsNew(bob));
+			assertTrue(target.saveOrUpdate(bob));
 			
 			Person[] people = new Person[2];
 			people[0] = new Person();
@@ -418,5 +422,74 @@ public class BaseDAOTest extends TestBase {
 		assertNull(target.get(Person.class, mamaB.getId()));
 		assertFalse(target.isAttached(mamaB));
 		
+	}
+	
+	public void testExists() {
+		initDB();
+		
+		Search s = new Search(Store.class);
+		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addFetch("id", Fetch.OP_MAX);
+		long maxStoreId = (Long) target.searchUnique(s);
+		
+		s.setSearchClass(Recipe.class);
+		long maxRecipeId = (Long) target.searchUnique(s);
+		
+		s.setSearchClass(Ingredient.class);
+		long maxIngredientId = (Long) target.searchUnique(s);
+		
+		
+		assertTrue(target.exists(Store.class, maxStoreId));
+		assertFalse(target.exists(Store.class, maxStoreId + 1));
+		
+		Store store = target.get(Store.class, maxStoreId);
+		assertTrue(target.exists(Store.class, maxStoreId));
+		assertTrue(target.exists(store));
+		
+		boolean[] exists = target.exists(Store.class, maxStoreId, maxStoreId + 1);
+		assertTrue(exists[0]);
+		assertFalse(exists[1]);
+		
+		exists = target.exists(Recipe.class, maxRecipeId, maxRecipeId + 1);
+		assertTrue(exists[0]);
+		assertFalse(exists[1]);
+		
+		
+		store = new Store();
+		assertFalse(target.exists(store)); //id = 0
+		
+		store.setId(maxStoreId + 1);
+		assertFalse(target.exists(store));
+		
+		store.setId(maxStoreId);
+		assertTrue(target.exists(store));
+		
+		s.clear();
+		s.setSearchClass(Recipe.class);
+		s.addSort("title");
+		List<Recipe> recipes = target.search(s);
+		//Bread, Fried Chicken, Toffee
+		
+		s.clear();
+		s.setSearchClass(Ingredient.class);
+		s.addSort("name");
+		List<Ingredient> ingredients = target.search(s);
+		//Butter, Chicken, Flour, Salt, Sugar, Yeast
+		 
+		
+		assertTrue(target.exists(RecipeIngredient.class, recipes.get(0).getIngredients().iterator().next().getId()));
+		assertTrue(target.exists(RecipeIngredient.class, new RecipeIngredientId(recipes.get(1), ingredients.get(1))));
+		assertFalse(target.exists(RecipeIngredient.class, new RecipeIngredientId(recipes.get(1), ingredients.get(5))));
+		
+		assertTrue(target.exists(recipes.get(0).getIngredients().iterator().next()));
+		
+		RecipeIngredient ri = new RecipeIngredient();
+		assertFalse(target.exists(ri));
+		
+		ri.setId(new RecipeIngredientId(recipes.get(1), ingredients.get(5)));
+		assertFalse(target.exists(ri));
+		
+		ri.setId(new RecipeIngredientId(recipes.get(1), ingredients.get(1)));
+		assertTrue(target.exists(ri));
 	}
 }
