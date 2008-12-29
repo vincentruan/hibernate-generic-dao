@@ -19,6 +19,7 @@ import com.test.model.Store;
 import com.trg.dao.search.Fetch;
 import com.trg.dao.search.Search;
 
+//TODO add tests for entity with compound id
 public class BaseDAOTest extends TestBase {
 
 	private HibernateBaseDAOTester target;
