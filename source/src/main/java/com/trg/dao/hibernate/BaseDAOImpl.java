@@ -609,8 +609,24 @@ public class BaseDAOImpl {
 
 		boolean[] ret = new boolean[ids.length];
 
-		Query query = getSession().createQuery("select id from " + type.getName() + " where id in (:ids)");
-		query.setParameterList("ids", ids);
+		//we can't use "id in (:ids)" because some databases do not support this for compound ids.
+		StringBuilder sb = new StringBuilder("select id from " + type.getName() + " where");
+		boolean first = true;
+		for (int i = 0; i < ids.length; i++) {
+			if (first) {
+				first = false;
+				sb.append(" id = :id");
+			} else {
+				sb.append(" or id = :id");
+			}
+			sb.append(i);
+		}
+		
+		Query query = getSession().createQuery(sb.toString());
+		for (int i = 0; i < ids.length; i++) {
+			query.setParameter("id" + i, ids[i]);
+		}
+		
 		for (Serializable id : (List<Serializable>) query.list()) {
 			for (int i = 0; i < ids.length; i++) {
 				if (id.equals(ids[i])) {
