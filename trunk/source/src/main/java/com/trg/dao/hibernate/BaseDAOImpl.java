@@ -48,7 +48,6 @@ public class BaseDAOImpl {
 	 * @return
 	 */
 	protected Session getSession() {
-		System.out.println("**************" + sessionFactory.getCurrentSession());
 		return sessionFactory.getCurrentSession();
 	}
 
