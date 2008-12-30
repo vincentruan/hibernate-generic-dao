@@ -9,14 +9,14 @@
   * {{{deleteById()}}} no longer throws an error if no matching object is found in the database. (Issue #15))
   * {{{deleteById()}}} and {{{deleteEntity()}}} now return boolean: true if found and deleted, false if not found.
 
-==0.3.4 (12/16/2008 current release)==
+==0.3.4 (12/16/2008)==
   * Use Hibernate MetaData for Util.getExpectedClass()
   * Refactor RemoteDAO into a separate Remote adapter and DAO dispatcher
   * Make RemoteDAO, GeneralDAO and GenericDAO implementations thinner and more replacable. This way developers can customize their own DAO and Remote methods for the particular project and technology.
   * Separate RemoteDAO into separate remote adapter and DAO dispatcher
   * Use RemoteDAO adapters for specific technologies
 
-==0.3.5==
+==0.3.5 (12/30/2008 current release)==
   * Addressed problems with Components (@Embedded) as per Issue 19.
   * Tested Search w/ polymorphism.
   * Improved Util.callMethod to be more robust.
@@ -24,6 +24,7 @@
   * Created new default Flex remote DAO with different methods.
   * Added ILIKE operator (Issue 21).
   * Changed saveOrUpdate() to work with assigned as well as generated ids.
+  * Added tests for many-to-many relationships and compound ids.
 
 ==0.3.6==
   * Add collection operators (see blog)
