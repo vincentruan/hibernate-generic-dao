@@ -1,4 +1,4 @@
-#summary List of changes made for each release
+#summary List of changes made for each release and planned changes for upcoming releases.
 #labels Featured
 
 ==0.3.3 (11/25/2008)==
@@ -17,13 +17,13 @@
   * Use RemoteDAO adapters for specific technologies
 
 ==0.3.5==
-  * Addressed problems with Components (@Embedded) as per Issue 19
-  * Tested Search w/ polymorphism
-  * Improved Util.callMethod to be more robust
-  * Created new default DAO with different methods (see blog)
-  * Added ILIKE operator (Issue 21)
-
-  * Create new default Flex remote DAO with different methods
+  * Addressed problems with Components (@Embedded) as per Issue 19.
+  * Tested Search w/ polymorphism.
+  * Improved Util.callMethod to be more robust.
+  * Created new default DAO with different methods. (see blog)
+  * Created new default Flex remote DAO with different methods.
+  * Added ILIKE operator (Issue 21).
+  * Changed saveOrUpdate() to work with assigned as well as generated ids.
 
 ==0.3.6==
   * Add collection operators (see blog)
