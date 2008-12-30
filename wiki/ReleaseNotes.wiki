@@ -35,4 +35,4 @@
 
   * Add implementation for JPA
   * Consider compatibility with multiple entity names per Java class
-  * Security roles
+  * Security roles with remote DAOs
