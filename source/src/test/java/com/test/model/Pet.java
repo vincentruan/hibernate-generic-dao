@@ -21,6 +21,17 @@ public class Pet {
 	private String species;
 	private Pet favoritePlaymate;
 
+	public Pet() {}
+	
+	public Pet(String species, String firstName, String lastName, Integer idNumber ) {
+		this.species = species;
+		this.ident = new Ident();
+		this.ident.setIdNumber(idNumber);
+		this.ident.setName(new Name());
+		this.ident.getName().setFirst(firstName);
+		this.ident.getName().setLast(lastName);
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	public Long getId() {

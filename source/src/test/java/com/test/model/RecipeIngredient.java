@@ -11,6 +11,14 @@ public class RecipeIngredient {
 	private float amount;
 	private String measure;
 
+	public RecipeIngredient() {}
+	
+	public RecipeIngredient(Recipe recipe, Ingredient ingredient, float amount, String measure) {
+		this.id = new RecipeIngredientId(recipe, ingredient);
+		this.amount = amount;
+		this.measure = measure;
+	}
+	
 	@EmbeddedId
 	public RecipeIngredientId getId() {
 		return id;

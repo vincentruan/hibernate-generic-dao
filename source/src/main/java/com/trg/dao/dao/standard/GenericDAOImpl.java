@@ -94,11 +94,11 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public boolean save(T entity) {
-		return _saveOrUpdate(entity);
+		return _saveOrUpdateIsNew(entity);
 	}
 
 	public boolean[] save(T... entities) {
-		return _saveOrUpdate(entities);
+		return _saveOrUpdateIsNew(entities);
 	}
 
 	public List<T> search(Search search) {

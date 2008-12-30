@@ -136,7 +136,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 		merge(session, catPrissy);
 		merge(session, catNorman);
 
-		for (Ingredient i : stores.get(1).getIngredientsCarried()) {
+		for (Ingredient i : stores.get(0).getIngredientsCarried()) {
 			merge(session, i);
 		}
 		
@@ -236,7 +236,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 		cpy.setZip(a.getZip());
 		return cpy;
 	}
-
+	
 	protected Person setup(Person p) {
 		Calendar cal = new GregorianCalendar();
 		cal.add(Calendar.YEAR, -p.getAge());

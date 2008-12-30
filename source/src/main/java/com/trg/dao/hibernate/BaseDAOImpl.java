@@ -77,11 +77,6 @@ public class BaseDAOImpl {
 	 * cascade="save-update".
 	 * 
 	 * <p>
-	 * Also it seems this method only works with generated ids. If an entity is
-	 * passed in that already has an id assigned, an exception is thrown. TODO
-	 * varify...
-	 * 
-	 * <p>
 	 * This is different from <code>persist()</code> in that it does guarantee
 	 * that the object will be assigned an identifier immediately. With
 	 * <code>save()</code> a call is made to the datastore immediately if the id
@@ -123,7 +118,7 @@ public class BaseDAOImpl {
 	 * update() the object
 	 * </ul>
 	 */
-	protected void _hibernateSaveOrUpdate(Object entity) {
+	protected void _saveOrUpdate(Object entity) {
 		getSession().saveOrUpdate(entity);
 	}
 	
@@ -135,7 +130,10 @@ public class BaseDAOImpl {
 	 * 
 	 * @return <code>true</code> if _save(); <code>false</code> if _update().
 	 */
-	protected boolean _saveOrUpdate(Object entity) {
+	protected boolean _saveOrUpdateIsNew(Object entity) {
+		if (entity == null)
+			throw new IllegalArgumentException("attempt to saveOrUpdate with null entity");
+		
 		Serializable id = getMetaDataUtil().getId(entity);
 		if (getSession().contains(entity))
 			return false;
@@ -157,14 +155,14 @@ public class BaseDAOImpl {
 	 * @return an boolean array corresponding to to the input list of entities. Each element is <code>true</code> if the
 	 * corresponding entity was <code>_save()</code>d or <code>false</code> if it was <code>_update()</code>d.
 	 */
-	protected boolean[] _saveOrUpdate(Object... entities) {
+	protected boolean[] _saveOrUpdateIsNew(Object... entities) {
 		Boolean[] exists = new Boolean[entities.length];
 
 		// if an entity is contained in the session, it exists; if it has no id,
 		// it does not exist
 		for (int i = 0; i < entities.length; i++) {
 			if (entities[i] == null) {
-				exists[i] = null;
+				throw new IllegalArgumentException("attempt to saveOrUpdate with null entity");
 			}
 			if (getSession().contains(entities[i])) {
 				exists[i] = true;

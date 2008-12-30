@@ -48,7 +48,7 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 		return super._get(klass, id);
 	}
 
-	public boolean isAttached(Object o) {
+	public boolean sessionContains(Object o) {
 		return super._sessionContains(o);
 	}
 
@@ -132,16 +132,16 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 	public void save(Object... entities) {
 		super._save(entities);
 	}
-	public void saveOrUpdate(Object... entities) {
-		super._saveOrUpdate(entities);
+	public boolean[] saveOrUpdateIsNew(Object... entities) {
+		return super._saveOrUpdateIsNew(entities);
 	}
 
-	public void hibernateSaveOrUpdate(Object entity) {
-		super._hibernateSaveOrUpdate(entity);
+	public void saveOrUpdate(Object entity) {
+		super._saveOrUpdate(entity);
 	}
 
-	public boolean saveOrUpdate(Object entity) {
-		return super._saveOrUpdate(entity);
+	public boolean saveOrUpdateIsNew(Object entity) {
+		return super._saveOrUpdateIsNew(entity);
 	}
 
 	public boolean[] exists(Class<?> type, Serializable... ids) {
