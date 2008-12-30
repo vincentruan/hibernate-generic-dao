@@ -44,8 +44,6 @@ public class BaseDAOImpl {
 
 	/**
 	 * Get the current Hibernate session
-	 * 
-	 * @return
 	 */
 	protected Session getSession() {
 		return sessionFactory.getCurrentSession();
