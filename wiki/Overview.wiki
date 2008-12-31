@@ -16,7 +16,7 @@ Javadoc: <br/>
 http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/dao/standard/GeneralDAO.html <br/>
 http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/dao/original/GeneralDAO.html
 
-GenericDAO is a class that can be extended to make individual DAOs. A basic domain-object-specific DAO is created by extending GenericDAO and specifying the domain object type with generic type parameters. The default implementation can be customized by adding and/or overriding methods.
+*GenericDAO* is a class that can be extended to make individual DAOs. A basic domain-object-specific DAO is created by extending GenericDAO and specifying the domain object type with generic type parameters. The default implementation can be customized by adding and/or overriding methods.
 
 [GenericDAOExamples]
 
