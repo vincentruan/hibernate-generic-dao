@@ -15,8 +15,10 @@ GeneralDAO is a class that provides DAO methods that can be used for any type of
 GenericDAO is an abstract class that can be extended to create a DAO that works for a specific entity type. It uses Java generics to provide strongly typed method signatures. Extending this class is extremely simple. This is one DAO instance per entity type.
 
 See:
-`com.trg.dao.dao.standard.GeneralDAO, com.trg.dao.dao.standard.GeneralDAOImpl, com.trg.dao.dao.standard.GenericDAO, com.trg.dao.dao.standard.GenericDAOImpl,
-com.trg.dao.dao.original.GeneralDAO, com.trg.dao.dao.original.GeneralDAOImpl, com.trg.dao.dao.original.GenericDAO, com.trg.dao.dao.original.GenericDAOImpl`
+{{{
+com.trg.dao.dao.standard.GeneralDAO, com.trg.dao.dao.standard.GeneralDAOImpl, com.trg.dao.dao.standard.GenericDAO, com.trg.dao.dao.standard.GenericDAOImpl,
+com.trg.dao.dao.original.GeneralDAO, com.trg.dao.dao.original.GeneralDAOImpl, com.trg.dao.dao.original.GenericDAO, com.trg.dao.dao.original.GenericDAOImpl
+}}}
 
 == Search ==
 The biggest impetus for this framework is actually in the area of searches. It is very common to have lists of business objects in an application, for example a list of Customers or a list of Invoices. To make these lists usable each one needed to be sortable and usually filterable as well. Unfortunately, in order to add a single sortable column or a single filter field, we had to make tedious changes to four different files, add several trivial lines of code to the DAO implementation and then (if we were feeling particularly responsible) add code to the test case. The way we did this, the UI code was also pretty tricky and the DAO implementation slightly error-prone.
