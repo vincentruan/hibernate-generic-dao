@@ -164,7 +164,7 @@ public abstract class AbstractSearchProcessor {
 		Iterator<Fetch> fetchItr = search.fetchIterator();
 		if (search.getFetchMode() == Search.FETCH_ENTITY) {
 			while (fetchItr.hasNext()) {
-				if (fetchItr.next().operator != Fetch.OP_PROPERTY) {
+				if (fetchItr.next().getOperator() != Fetch.OP_PROPERTY) {
 					throw new Error(
 							"A search with fetch mode FETCH_ENTITY cannot have fetches with operators. Change the fetch mode.");
 				}
@@ -185,13 +185,13 @@ public abstract class AbstractSearchProcessor {
 				}
 
 				String prop;
-				if (fetch.property == null || "".equals(fetch.property)) {
+				if (fetch.getProperty() == null || "".equals(fetch.getProperty())) {
 					prop = "*";
 				} else {
-					prop = getPath(search.getSearchClass(), aliases, fetch.property);
+					prop = getPath(search.getSearchClass(), aliases, fetch.getProperty());
 				}
 
-				switch (fetch.operator) {
+				switch (fetch.getOperator()) {
 				case Fetch.OP_AVG:
 					sb.append("avg(");
 					useOperator = true;
@@ -252,7 +252,7 @@ public abstract class AbstractSearchProcessor {
 			Iterator<Fetch> fetchItr = search.fetchIterator();
 			while (fetchItr.hasNext()) {
 				Fetch fetch = fetchItr.next();
-				getAlias(search.getSearchClass(), aliases, fetch.property, true);
+				getAlias(search.getSearchClass(), aliases, fetch.getProperty(), true);
 			}
 		}
 
@@ -301,8 +301,8 @@ public abstract class AbstractSearchProcessor {
 			} else {
 				sb.append(", ");
 			}
-			sb.append(getPath(search.getSearchClass(), aliases, sort.property));
-			sb.append(sort.desc ? " desc" : " asc");
+			sb.append(getPath(search.getSearchClass(), aliases, sort.getProperty()));
+			sb.append(sort.isDesc() ? " desc" : " asc");
 		}
 		if (first) {
 			return "";
@@ -348,14 +348,14 @@ public abstract class AbstractSearchProcessor {
 	@SuppressWarnings("unchecked")
 	protected String filterToString(Search search, Filter filter,
 			List<Object> params, Map<String, AliasNode> aliases) {
-		Object value = filter.value;
+		Object value = filter.getValue();
 
 		// convert numbers to the expected type if needed (ex: Integer to Long)
-		if (filter.operator == Filter.OP_IN
-				|| filter.operator == Filter.OP_NOT_IN) {
+		if (filter.getOperator() == Filter.OP_IN
+				|| filter.getOperator() == Filter.OP_NOT_IN) {
 			// with IN & NOT IN, check each element in the collection.
 			Class<?> expectedClass = metaDataUtil.getExpectedClass(search
-					.getSearchClass(), filter.property);
+					.getSearchClass(), filter.getProperty());
 
 			Object[] val2;
 
@@ -373,51 +373,51 @@ public abstract class AbstractSearchProcessor {
 				}
 			}
 			value = val2;
-		} else if (filter.operator != Filter.OP_AND
-				&& filter.operator != Filter.OP_OR
-				&& filter.operator != Filter.OP_NOT) {
+		} else if (filter.getOperator() != Filter.OP_AND
+				&& filter.getOperator() != Filter.OP_OR
+				&& filter.getOperator() != Filter.OP_NOT) {
 			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(
-					search.getSearchClass(), filter.property));
+					search.getSearchClass(), filter.getProperty()));
 		}
 
-		switch (filter.operator) {
+		switch (filter.getOperator()) {
 		case Filter.OP_IN:
-			return getPath(search.getSearchClass(), aliases, filter.property) + " in (:p"
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " in (:p"
 					+ param(params, value) + ")";
 		case Filter.OP_NOT_IN:
-			return getPath(search.getSearchClass(), aliases, filter.property) + " not in (:p"
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " not in (:p"
 					+ param(params, value) + ")";
 		case Filter.OP_EQUAL:
 			if (value == null) {
-				return getPath(search.getSearchClass(), aliases, filter.property) + " is null";
+				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is null";
 			} else {
-				return getPath(search.getSearchClass(), aliases, filter.property) + " = :p"
+				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " = :p"
 						+ param(params, value);
 			}
 		case Filter.OP_NOT_EQUAL:
 			if (value == null) {
-				return getPath(search.getSearchClass(), aliases, filter.property) + " is not null";
+				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is not null";
 			} else {
-				return getPath(search.getSearchClass(), aliases, filter.property) + " != :p"
+				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " != :p"
 						+ param(params, value);
 			}
 		case Filter.OP_GREATER_THAN:
-			return getPath(search.getSearchClass(), aliases, filter.property) + " > :p"
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " > :p"
 					+ param(params, value);
 		case Filter.OP_LESS_THAN:
-			return getPath(search.getSearchClass(), aliases, filter.property) + " < :p"
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " < :p"
 					+ param(params, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.property) + " >= :p"
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " >= :p"
 					+ param(params, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.property) + " <= :p"
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " <= :p"
 					+ param(params, value);
 		case Filter.OP_LIKE:
-			return getPath(search.getSearchClass(), aliases, filter.property) + " like :p"
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " like :p"
 					+ param(params, value);
 		case Filter.OP_ILIKE:
-			return "lower(" + getPath(search.getSearchClass(), aliases, filter.property) + ") like :p"
+			return "lower(" + getPath(search.getSearchClass(), aliases, filter.getProperty()) + ") like :p"
 			+ param(params, value.toString().toLowerCase());
 		case Filter.OP_AND:
 		case Filter.OP_OR:
@@ -425,7 +425,7 @@ public abstract class AbstractSearchProcessor {
 				return null;
 			}
 
-			String op = filter.operator == Filter.OP_AND ? " and " : " or ";
+			String op = filter.getOperator() == Filter.OP_AND ? " and " : " or ";
 
 			StringBuilder sb = new StringBuilder("(");
 			boolean first = true;
@@ -460,7 +460,7 @@ public abstract class AbstractSearchProcessor {
 			return "not " + filterStr;
 		default:
 			throw new IllegalArgumentException("Filter comparison ( "
-					+ filter.operator + " ) is invalid.");
+					+ filter.getOperator() + " ) is invalid.");
 		}
 	}
 
@@ -560,12 +560,12 @@ public abstract class AbstractSearchProcessor {
 	protected void securityCheck(Search search) {
 		Iterator<Fetch> fetchItr = search.fetchIterator();
 		while (fetchItr.hasNext()) {
-			securityCheckProperty(fetchItr.next().property);
+			securityCheckProperty(fetchItr.next().getProperty());
 		}
 
 		Iterator<Sort> sortItr = search.sortIterator();
 		while (sortItr.hasNext()) {
-			securityCheckProperty(sortItr.next().property);
+			securityCheckProperty(sortItr.next().getProperty());
 		}
 
 		Iterator<Filter> filterItr = search.filterIterator();
@@ -579,18 +579,18 @@ public abstract class AbstractSearchProcessor {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void securityCheckFilter(Filter filter) {
-		if (filter.operator == Filter.OP_AND || filter.operator == Filter.OP_OR) {
-			if (filter.value instanceof List) {
-				for (Filter f : (List<Filter>) filter.value) {
+		if (filter.getOperator() == Filter.OP_AND || filter.getOperator() == Filter.OP_OR) {
+			if (filter.getValue() instanceof List) {
+				for (Filter f : (List<Filter>) filter.getValue()) {
 					securityCheckFilter(f);
 				}
 			}
-		} else if (filter.operator == Filter.OP_NOT) {
-			if (filter.value instanceof Filter) {
-				securityCheckFilter((Filter) filter.value);
+		} else if (filter.getOperator() == Filter.OP_NOT) {
+			if (filter.getValue() instanceof Filter) {
+				securityCheckFilter((Filter) filter.getValue());
 			}
 		} else {
-			securityCheckProperty(filter.property);
+			securityCheckProperty(filter.getProperty());
 		}
 	}
 

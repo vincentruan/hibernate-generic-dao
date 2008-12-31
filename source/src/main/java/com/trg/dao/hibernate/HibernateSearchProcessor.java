@@ -95,18 +95,18 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 			return null;
 
 		SearchResult result = new SearchResult();
-		result.search = search;
-		result.firstResult = search.getFirstResult();
-		result.page = search.getPage();
-		result.maxResults = search.getMaxResults();
+		result.setSearch(search);
+		result.setFirstResult(search.getFirstResult());
+		result.setPage(search.getPage());
+		result.setMaxResults(search.getMaxResults());
 
-		result.results = search(session, search);
+		result.setResults(search(session, search));
 
 		if (search.getMaxResults() > 0) {
-			result.totalLength = count(session, search);
+			result.setTotalCount(count(session, search));
 		} else {
-			result.totalLength = result.results.size()
-					+ search.calcFirstResult();
+			result.setTotalCount(result.getResults().size()
+					+ search.calcFirstResult());
 		}
 
 		return result;
@@ -168,10 +168,10 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 			Iterator<Fetch> fetchItr = search.fetchIterator();
 			while (fetchItr.hasNext()) {
 				Fetch fetch = fetchItr.next();
-				if (fetch.key != null && !fetch.key.equals("")) {
-					keyList.add(fetch.key);
+				if (fetch.getKey() != null && !fetch.getKey().equals("")) {
+					keyList.add(fetch.getKey());
 				} else {
-					keyList.add(fetch.property);
+					keyList.add(fetch.getProperty());
 				}
 			}
 			query.setResultTransformer(new MapResultTransformer(keyList
