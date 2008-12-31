@@ -1,13 +1,4 @@
-#summary GenericDAO is a class that can be extended to make individual DAOs.
-
-= Introduction =
-
-`GenericDAO` is a class that can be extended to make individual DAOs. A basic domain-object-specific DAO is created by extending `GenericDAO` and specifying the domain object type with generic type parameters. The default implementation can be customized by adding and/or overriding methods.
-
-`GenericDAO` implements all the same methods as `GeneralDAO`. Here's the Javadoc:
-http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/dao/GenericDAO.html
-
-= Details =
+#summary Examples of using GenericDAO
 
 Here is all the code it usually takes to create a DAO interface and implementation for a `Project` domain object; all the content is inherited from the superclass:
 {{{
@@ -27,23 +18,23 @@ public interface ProjectDAO extends GenericDAO<Project, Long> {
 }
 
 public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements ProjectDAO {
+	//basic added method
 	public Project fetchByName(String name) {
 		Criteria crit getSession().createCriteria(Project.class);
 		crit.add(Restrictions.eq("name", name));
-		return crit.uniqueResult();
+		return (Project) crit.uniqueResult();
 	}
 
+	//basic added method using search
+	public Project fetchByStatus(String status) {
+		return search(new Search().addFilterEquals("status", status));
+	}
+
+	//overriding a method
 	@Override
 	public void create(Project project) {
 		project.setStatus("NEW");
 		super.create(project);
 	}
 }
-}}}
-
-Spring configuration:
-
-The classes are annotated with @Resource so that Spring fills in the `sessionFactory` property automatically. Therefore only one line is needed in the spring config XML:
-{{{
-<bean id="projectDAO" class="my.package.ProjectDAOImpl"/>
 }}}
