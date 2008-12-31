@@ -10,9 +10,19 @@ The purpose of this framework is to save the time, tedium and possible inconsist
 == General and Generic DAOs ==
 The foundation of this framework are the General and Generic DAOs.
 
-GeneralDAO is a class that provides DAO methods that can be used for any type of entity object. This is one DAO instance per database.
+The *GeneralDAO* is a single DAO class that can be used to access all classes of domain objects. GeneralDAO has methods that require the developer to specify which type of domain object to use. An application only needs a single instance of the GeneralDAO class to access all domain objects.
 
-GenericDAO is an abstract class that can be extended to create a DAO that works for a specific entity type. It uses Java generics to provide strongly typed method signatures. Extending this class is extremely simple. This is one DAO instance per entity type.
+Javadoc:
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/dao/standard/GeneralDAO.html
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/dao/original/GeneralDAO.html
+
+GenericDAO is a class that can be extended to make individual DAOs. A basic domain-object-specific DAO is created by extending GenericDAO and specifying the domain object type with generic type parameters. The default implementation can be customized by adding and/or overriding methods.
+
+Javadoc:
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/dao/standard/GenericDAO.html
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/dao/original/GenericDAO.html
+
+NOTE: All of these implementations annotate the `setSessionFactory()` method with `@Resource` which is useful with EJB3 or Spring.
 
 See:
 `com.trg.dao.dao.standard.GeneralDAO, com.trg.dao.dao.standard.GeneralDAOImpl, com.trg.dao.dao.standard.GenericDAO, com.trg.dao.dao.standard.GenericDAOImpl, com.trg.dao.dao.original.GeneralDAO, com.trg.dao.dao.original.GeneralDAOImpl, com.trg.dao.dao.original.GenericDAO, com.trg.dao.dao.original.GenericDAOImpl`
