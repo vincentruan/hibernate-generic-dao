@@ -27,8 +27,8 @@
   * Added tests for many-to-many relationships and compound ids.
   * Refactored Search objects to be more bean-like
 
-===Known Issues===
-  * Javadocs for Search beans are out of date.
+  * Known Issues
+    * Javadocs for Search beans are out of date.
 
 ==0.4.1==
   * Add collection operators (see blog)
