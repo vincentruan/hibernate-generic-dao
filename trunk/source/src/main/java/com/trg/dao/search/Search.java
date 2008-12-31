@@ -333,7 +333,7 @@ public class Search implements Serializable {
 			return;
 		Iterator<Filter> itr = filters.iterator();
 		while (itr.hasNext()) {
-			if (property.equals(itr.next().property))
+			if (property.equals(itr.next().getProperty()))
 				itr.remove();
 		}
 	}
@@ -396,7 +396,7 @@ public class Search implements Serializable {
 			return;
 		Iterator<Sort> itr = sorts.iterator();
 		while (itr.hasNext()) {
-			if (property.equals(itr.next().property))
+			if (property.equals(itr.next().getProperty()))
 				itr.remove();
 		}
 	}
@@ -472,7 +472,7 @@ public class Search implements Serializable {
 	public void removeFetch(String property) {
 		Iterator<Fetch> itr = fetches.iterator();
 		while (itr.hasNext()) {
-			if (itr.next().property.equals(property))
+			if (itr.next().getProperty().equals(property))
 				itr.remove();
 		}
 	}
@@ -481,7 +481,7 @@ public class Search implements Serializable {
 		Iterator<Fetch> itr = fetches.iterator();
 		while (itr.hasNext()) {
 			Fetch fetch = itr.next();
-			if (fetch.property.equals(property) && fetch.key.equals(key))
+			if (fetch.getProperty().equals(property) && fetch.getKey().equals(key))
 				itr.remove();
 		}
 	}

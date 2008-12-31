@@ -14,20 +14,20 @@ public class Fetch implements Serializable {
 	/**
 	 * The entity to fetch eagerly or the property to include in the result.
 	 */
-	public String property;
+	protected String property;
 
 	/**
 	 * The key to use for the property when using fetch mode
 	 * <code>FETCH_MAP</code>.
 	 */
-	public String key;
+	protected String key;
 
 	/**
 	 * The operator to apply to the column: for example
 	 * <code>OP_COUNT, OP_SUM, OP_MAX</code>. The default is
 	 * <code>OP_PROPERTY</code>.
 	 */
-	public int operator = 0;
+	protected int operator = 0;
 
 	/**
 	 * Possible value for <code>operator</code>. This is the default value
@@ -93,6 +93,30 @@ public class Fetch implements Serializable {
 		this.property = property;
 		this.operator = operator;
 		this.key = key;
+	}
+	
+	public String getProperty() {
+		return property;
+	}
+
+	public void setProperty(String property) {
+		this.property = property;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
+	}
+
+	public int getOperator() {
+		return operator;
+	}
+
+	public void setOperator(int operator) {
+		this.operator = operator;
 	}
 
 	@Override
