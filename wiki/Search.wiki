@@ -15,7 +15,7 @@ The framework features a powerful and flexible search functionality. This is use
   * Specifying column operators such as COUNT, SUM, AVG, MAX, etc.
 
 Javadoc:
-http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/search/Search.html
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/search/Search.html
 
 = Details =
 Usage examples:
