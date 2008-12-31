@@ -35,7 +35,7 @@ The biggest impetus for this framework is actually in the area of searches. It i
 The idea with this framework is to provide a Search object that consistently takes care of all the DAO implementation work for us and provides a uniform interface that we can take advantage of when writing reusable front-end components.
 
 See:
-`com.trg.dao.search.*`
+[Search], `com.trg.dao.search.*`
 
 == Remote DAO ==
 The framework allows for creation of general DAO interfaces for local and remote clients. This makes for much less coding of the interface between the view layer and back-end. We used this functionality with Flex. It meant we didn't have to write an ActionScript delegate for every single DAO method for every single type of DTO. For most cases, we only needed the basic methods provided by the single general remote DAO service. This saved us a lot of time and eliminated a huge area of possible errors.
