@@ -7,7 +7,6 @@ The GeneralDAO is a single DAO class that can be used to access all classes of d
 = Details =
 
 Here is the Javadoc that describes all the methods available with the GeneralDAO:
-http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/com/trg/dao/GeneralDAO.html
 http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/dao/standard/GeneralDAO.html
 
 Spring configuration:
