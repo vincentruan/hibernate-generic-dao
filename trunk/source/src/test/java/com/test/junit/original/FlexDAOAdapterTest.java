@@ -67,7 +67,7 @@ public class FlexDAOAdapterTest extends TestBase {
 
 		assertEquals(2, flexDAOAdapter.searchLength(s));
 		assertListEqual(new Person[] { bob, fred }, flexDAOAdapter
-				.searchAndLength(s).results);
+				.searchAndLength(s).getResults());
 
 		s.addFilterEqual("id", bob.getId());
 		assertEquals(bob, flexDAOAdapter.searchUnique(s));

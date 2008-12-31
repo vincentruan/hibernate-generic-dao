@@ -70,8 +70,8 @@ public class FlexSearch extends Search implements Serializable {
 		if (fetches != null) {
 			for (int i =  0; i < fetches.length; i++) {
 				Fetch f = fetches[i];
-				if (f != null && f.property != null && f.property.length() > 0) {
-					if (f.key == null) f.key = f.property;
+				if (f != null && f.getProperty() != null && f.getProperty().length() > 0) {
+					if (f.getKey() == null) f.setKey(f.getProperty());
 					this.fetches.add(f);
 				}
 			}
