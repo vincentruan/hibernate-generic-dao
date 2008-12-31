@@ -16,7 +16,7 @@
   * Separate RemoteDAO into separate remote adapter and DAO dispatcher
   * Use RemoteDAO adapters for specific technologies
 
-==0.3.5 (12/30/2008 current release)==
+==0.4.0 (12/31/2008 current release)==
   * Addressed problems with Components (@Embedded) as per Issue 19.
   * Tested Search w/ polymorphism.
   * Improved Util.callMethod to be more robust.
@@ -25,12 +25,15 @@
   * Added ILIKE operator (Issue 21).
   * Changed saveOrUpdate() to work with assigned as well as generated ids.
   * Added tests for many-to-many relationships and compound ids.
+  * Refactored Search objects to be more bean-like
 
-==0.3.6==
+==0.4.1==
   * Add collection operators (see blog)
   * Add option to ignore case on sorts (Issue 24)
   * Consider Issue 20 (select & eager), Issue 22 (null values in filters), Issue 23 (query helper methods)
   * Consider how we deal with hibernate special properties .id and .class in Searches.
+  * Possibly add ability to compare two properties in a filter.
+  * Improve Search bean interfaces and provide utilities for merging and changing searches.
 
 ==Future==
 
