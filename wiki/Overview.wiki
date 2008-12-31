@@ -3,9 +3,21 @@
 
 = Introduction =
 
-The purpose of this framework is to save the time, tedium and possible inconsistency of hand coding DAO layer objects. To this end, the framework provides a generic implementation of DAO layer objects for an application using Spring and Hibernate. The generic implementation can be extended and overwritten on a method-by-method basis for each domain object individually or across the entire layer. This means that it is always possible to write code for an exceptional case, entirely bypassing the framework, yet for the usual case no code needs to be written at all.
+The purpose of this framework is to save the time, tedium and possible inconsistency of hand coding DAO layer objects. This includes all of the basic CRUD methods as well as various "find" or "search" methods.
 
-The framework also builds on top of these generic DAOs with an interface that is easily exposed as a web service or remote object. (_At The Revere Group ([http://www.reveregroup.com/services/enterprise-platforms/open-source.aspx Open Systems] division), we are using this for Adobe Flex and GWT R.I.A.s._) This becomes extremely powerful because of the extensive search options available in the framework.
+= Features =
+
+== Search ==
+The biggest impetus for this project is actually in the area of searches. It is very common to have lists of business objects in an application, for example a list of Customers or a list of Invoices. To make these lists usable each one needed to be sortable and usually filterable as well. Unfortunately, in order to add a single sortable column or a single filter field, we had to make tedious changes to four different files, add several trivial lines of code to the DAO implementation and then (if we were feeling particularly responsible) add code to the test case. The way we did this, the UI code was also pretty tricky and the DAO implementation slightly error-prone.
+
+The idea with this framework is to provide a Search object that consistently takes care of all the DAO implementation work for us and provides a uniform interface that we can take advantage of when writing reusable front-end components.
+
+== Remote DAO ==
+The framework allows for creation of general DAO interfaces for local and remote clients. This makes for much less coding of the interface between the view layer and back-end. We used this functionality with Flex. It meant we didn't have to write an ActionScript delegate for every single DAO method for every single type of DTO. For most cases, we only needed the basic methods provided by the single general remote DAO service. This saved us a lot of time and eliminated a huge area of possible errors.
+
+We were also able to write Flex components that integrated automatically with the Search objects, and updated themselves when users sorted by columns and selected filters. This greatly reduced the amount and complexity of view-layer code we needed to write.
+
+== Customizable Generic DAOs ==
 
 Javadoc:
 http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html
