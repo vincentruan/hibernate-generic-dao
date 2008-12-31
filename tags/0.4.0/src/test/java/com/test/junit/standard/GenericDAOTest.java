@@ -1,0 +1,129 @@
+package com.test.junit.standard;
+
+import org.hibernate.ObjectNotFoundException;
+
+import com.test.base.TestBase;
+import com.test.dao.standard.PersonDAO;
+import com.test.model.Home;
+import com.test.model.Person;
+import com.trg.dao.DAODispatcherException;
+import com.trg.dao.search.Search;
+
+public class GenericDAOTest extends TestBase {
+
+	private PersonDAO dao;
+
+	public void setPersonDAO(PersonDAO dao) {
+		this.dao = dao;
+	}
+
+	/**
+	 * Just quickly check that all the methods basically work. The underlying
+	 * implementation is more thoroughly tested in the
+	 * <code>com.test.junit.hibernate</code> package
+	 */
+	public void testDAO() {
+		Person fred = setup(new Person("Fred", "Smith", 35));
+		Person bob = setup(new Person("Bob", "Jones", 58));
+		Person cyndi = setup(new Person("Cyndi", "Loo", 58));
+		Person marty = setup(new Person("Marty", "McFly", 58));
+
+		
+		assertTrue(dao.save(fred));
+		assertTrue(dao.save(bob));
+		fred.setFather(bob);
+
+		assertEquals(bob, dao.find(bob.getId()));
+		assertEquals(fred, dao.find(fred.getId()));
+
+		//count
+		assertEquals(2, dao.count(new Search()));
+		assertEquals(2, dao.count(new Search(Person.class)));
+		
+		//searchAndCount
+		assertListEqual(new Person[] { bob, fred }, dao
+				.searchAndCount(new Search()).getResults());
+		assertListEqual(new Person[] { bob, fred }, dao
+				.searchAndCount(new Search(Person.class)).getResults());
+
+		//searchUnique
+		Search s = new Search();
+		s.addFilterEqual("id", bob.getId());
+		assertEquals(bob, dao.searchUnique(s));
+		s = new Search(Person.class);
+		s.addFilterEqual("id", bob.getId());
+		assertEquals(bob, dao.searchUnique(s));
+		
+		//searchGeneric
+		s = new Search();
+		s.addFilterEqual("id", bob.getId());
+		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addFetch("firstName");
+		assertEquals(bob.getFirstName(), dao.searchGeneric(s).get(0));
+		s.setSearchClass(Person.class);
+		assertEquals(bob.getFirstName(), dao.searchGeneric(s).get(0));
+
+		//searchUniqueGeneric
+		assertEquals(bob.getFirstName(), dao.searchUniqueGeneric(s));
+		s.setSearchClass(null);
+		assertEquals(bob.getFirstName(), dao.searchUniqueGeneric(s));
+		
+		assertTrue(dao.remove(bob));
+		assertEquals(null, dao.find(bob.getId()));
+
+		assertTrue(dao.removeById(fred.getId()));
+		assertEquals(null, dao.find(fred.getId()));
+
+		assertEquals(0, dao.count(new Search(Person.class)));
+
+		bob.setId(null);
+		fred.setId(null);
+
+		assertTrue(dao.save(bob));
+		assertTrue(dao.save(fred));
+		
+		dao.save(cyndi, marty);
+		for (Person p : dao.find(cyndi.getId(), bob.getId(), fred.getId())) {
+			assertNotNull(p);
+		}
+		
+		dao.removeByIds(cyndi.getId(), marty.getId());
+		dao.remove(cyndi, fred);
+		for (Person p : dao.find(cyndi.getId(), marty.getId(), fred.getId())) {
+			assertNull(p);
+		}
+		
+		clearHibernate();
+		
+		Person bob2 = copy(bob);
+		bob2.setFirstName("Bobby");
+		assertFalse(dao.save(bob2));
+
+		dao.flush();
+		
+		assertEquals("Bobby", dao.find(bob.getId()).getFirstName());
+		
+		
+		dao.refresh(bob2);
+		assertTrue(dao.isAttached(bob2));
+		assertFalse(dao.isAttached(bob));
+		
+		Person a = dao.getReference(bob2.getId());
+		Person b = dao.getReference(bob2.getId() + 10);
+		
+		Person[] pp = dao.getReferences(bob2.getId(), bob2.getId() + 10);
+		
+		assertEquals("Bobby", a.getFirstName());
+		assertEquals("Bobby", pp[0].getFirstName());
+		
+		try {
+			b.getFirstName();
+			fail("Entity does not exist, should throw error.");
+		} catch (ObjectNotFoundException ex) { }
+		try {
+			pp[1].getFirstName();
+			fail("Entity does not exist, should throw error.");
+		} catch (ObjectNotFoundException ex) { }
+	}
+
+}
