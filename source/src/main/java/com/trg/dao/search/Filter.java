@@ -26,7 +26,7 @@ public class Filter implements Serializable {
 	 * The name of the property to filter on. It may be nested. Examples:
 	 * <code>"name", "dateOfBirth", "employee.age", "employee.spouse.job.title"</code>
 	 */
-	public String property;
+	protected String property;
 
 	/**
 	 * The value to compare the property with. Should be of a compatible type
@@ -34,7 +34,7 @@ public class Filter implements Serializable {
 	 * and "not equal" comparisons. Examples:
 	 * <code>"Fred", new Date(), 45</code>
 	 */
-	public Object value;
+	protected Object value;
 
 	/**
 	 * The type of comparison to do between the property and the value. The
@@ -44,7 +44,7 @@ public class Filter implements Serializable {
 	 * <code>OP_EQAUL, OP_LESS_THAN, OP_GREATER_THAN, LESS_OR_EQUAL, OP_GREATER_OR_EQUAL, OP_IN, OP_LIKE, OP_ILIKE, OP_NOT_EQUAL, OP_NOT_IN, OP_AND, OP_OR, OP_NOT</code>
 	 * .
 	 */
-	public int operator;
+	protected int operator;
 
 	public Filter() {
 
@@ -224,6 +224,30 @@ public class Filter implements Serializable {
 			return;
 		}
 		((List) value).remove(filter);
+	}
+
+	public String getProperty() {
+		return property;
+	}
+
+	public void setProperty(String property) {
+		this.property = property;
+	}
+
+	public Object getValue() {
+		return value;
+	}
+
+	public void setValue(Object value) {
+		this.value = value;
+	}
+
+	public int getOperator() {
+		return operator;
+	}
+
+	public void setOperator(int operator) {
+		this.operator = operator;
 	}
 
 	@Override

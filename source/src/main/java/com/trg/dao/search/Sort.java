@@ -3,31 +3,47 @@ package com.trg.dao.search;
 import java.io.Serializable;
 
 public class Sort implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
-	
-	public String property;
-	public boolean desc;
+
+	protected String property;
+	protected boolean desc;
 
 	public Sort() {
-		
+
 	}
-	
+
 	public Sort(String property, boolean desc) {
 		this.property = property;
 		this.desc = desc;
 	}
-	
+
 	public Sort(String property) {
 		this.property = property;
 	}
-	
+
 	public static Sort asc(String property) {
 		return new Sort(property);
 	}
-	
+
 	public static Sort desc(String property) {
 		return new Sort(property, true);
+	}
+
+	public String getProperty() {
+		return property;
+	}
+
+	public void setProperty(String property) {
+		this.property = property;
+	}
+
+	public boolean isDesc() {
+		return desc;
+	}
+
+	public void setDesc(boolean desc) {
+		this.desc = desc;
 	}
 
 	@Override
@@ -57,7 +73,7 @@ public class Sort implements Serializable {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
