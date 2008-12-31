@@ -1,0 +1,40 @@
+#summary Examples of using GenericDAO
+
+Here is all the code it usually takes to create a DAO interface and implementation for a `Project` domain object; all the content is inherited from the superclass:
+{{{
+public interface ProjectDAO extends GenericDAO<Project, Long> {
+
+}
+
+public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements ProjectDAO {
+
+}
+}}}
+
+This could be customized by adding and/or overriding methods if needed:
+{{{
+public interface ProjectDAO extends GenericDAO<Project, Long> {
+	public Project fetchByName(String name);
+}
+
+public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements ProjectDAO {
+	//basic added method
+	public Project fetchByName(String name) {
+		Criteria crit getSession().createCriteria(Project.class);
+		crit.add(Restrictions.eq("name", name));
+		return (Project) crit.uniqueResult();
+	}
+
+	//basic added method using search
+	public Project fetchByStatus(String status) {
+		return search(new Search().addFilterEquals("status", status));
+	}
+
+	//overriding a method
+	@Override
+	public void create(Project project) {
+		project.setStatus("NEW");
+		super.create(project);
+	}
+}
+}}}
