@@ -321,16 +321,18 @@ public abstract class AbstractSearchProcessor {
 		while (filterItr.hasNext()) {
 			filters.add(filterItr.next());
 		}
+		String content = null;
 		if (filters.size() == 0) {
 			return "";
 		} else if (filters.size() == 1) {
-			return "where "
-					+ filterToString(search, filters.get(0), params, aliases);
+			content = filterToString(search, filters.get(0), params, aliases);
 		} else {
 			Filter junction = new Filter(null, filters,
 					search.isDisjunction() ? Filter.OP_OR : Filter.OP_AND);
-			return "where " + filterToString(search, junction, params, aliases);
+			content = filterToString(search, junction, params, aliases);
 		}
+		
+		return (content == null) ? "" : "where " + content;
 	}
 
 	/**
@@ -349,7 +351,24 @@ public abstract class AbstractSearchProcessor {
 	protected String filterToString(Search search, Filter filter,
 			List<Object> params, Map<String, AliasNode> aliases) {
 		Object value = filter.getValue();
+		
+		//If the operator needs a value and no value is specified, ignore this filter.
+		//Only NULL and NOT_NULL do not need a value. 
+		if (value == null && filter.getOperator() != Filter.OP_NULL && filter.getOperator() != Filter.OP_NOT_NULL) {
+			return null;
+		}
 
+		// for IN and NOT IN, if value is empty list, return false, and true respectively
+		if (filter.getOperator() == Filter.OP_IN
+				|| filter.getOperator() == Filter.OP_NOT_IN) {
+			if (value instanceof Collection && ((Collection) value).size() == 0) {
+				return filter.getOperator() == Filter.OP_IN ? "1 = 2" : "1 = 1";
+			}
+			if (value instanceof Object[] && ((Object[]) value).length == 0) {
+				return filter.getOperator() == Filter.OP_IN ? "1 = 2" : "1 = 1";
+			}
+		}
+		
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (filter.getOperator() == Filter.OP_IN
 				|| filter.getOperator() == Filter.OP_NOT_IN) {
@@ -375,12 +394,18 @@ public abstract class AbstractSearchProcessor {
 			value = val2;
 		} else if (filter.getOperator() != Filter.OP_AND
 				&& filter.getOperator() != Filter.OP_OR
-				&& filter.getOperator() != Filter.OP_NOT) {
+				&& filter.getOperator() != Filter.OP_NOT
+				&& filter.getOperator() != Filter.OP_NULL
+				&& filter.getOperator() != Filter.OP_NOT_NULL) {
 			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(
 					search.getSearchClass(), filter.getProperty()));
 		}
 
 		switch (filter.getOperator()) {
+		case Filter.OP_NULL:
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is null";
+		case Filter.OP_NOT_NULL:
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is not null";
 		case Filter.OP_IN:
 			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " in (:p"
 					+ param(params, value) + ")";
@@ -388,19 +413,11 @@ public abstract class AbstractSearchProcessor {
 			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " not in (:p"
 					+ param(params, value) + ")";
 		case Filter.OP_EQUAL:
-			if (value == null) {
-				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is null";
-			} else {
-				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " = :p"
-						+ param(params, value);
-			}
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " = :p"
+					+ param(params, value);
 		case Filter.OP_NOT_EQUAL:
-			if (value == null) {
-				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is not null";
-			} else {
-				return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " != :p"
-						+ param(params, value);
-			}
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " != :p"
+					+ param(params, value);
 		case Filter.OP_GREATER_THAN:
 			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " > :p"
 					+ param(params, value);

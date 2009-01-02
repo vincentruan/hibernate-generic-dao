@@ -62,8 +62,8 @@ public class Filter implements Serializable {
 		this.operator = OP_EQUAL;
 	}
 
-	public static final int OP_EQUAL = 0, OP_LESS_THAN = 1, OP_GREATER_THAN = 2, OP_LESS_OR_EQUAL = 3,
-			OP_GREATER_OR_EQUAL = 4, OP_IN = 5, OP_LIKE = 6, OP_ILIKE = 7, OP_NOT_EQUAL = 8, OP_NOT_IN = 9;
+	public static final int OP_EQUAL = 0, OP_NOT_EQUAL = 1, OP_LESS_THAN = 2, OP_GREATER_THAN = 3, OP_LESS_OR_EQUAL = 4,
+			OP_GREATER_OR_EQUAL = 5, OP_IN = 6, OP_NOT_IN = 7, OP_LIKE = 8, OP_ILIKE = 9, OP_NULL = 10, OP_NOT_NULL = 11;
 	public static final int OP_AND = 100, OP_OR = 101, OP_NOT = 102;
 
 	/**
@@ -164,6 +164,20 @@ public class Filter implements Serializable {
 	 */
 	public static Filter notEqual(String property, Object value) {
 		return new Filter(property, value, OP_NOT_EQUAL);
+	}
+	
+	/**
+	 * Create a new Filter using the IS NULL operator.
+	 */
+	public static Filter isNull(String property) {
+		return new Filter(property, true, OP_NULL);
+	}
+	
+	/**
+	 * Create a new Filter using the IS NOT NULL operator.
+	 */
+	public static Filter isNotNull(String property) {
+		return new Filter(property, true, OP_NOT_NULL);
 	}
 
 	/**
