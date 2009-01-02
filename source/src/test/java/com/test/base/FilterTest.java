@@ -1,5 +1,8 @@
 package com.test.base;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import com.test.misc.SearchTestInterface;
 import com.test.model.Person;
 import com.trg.dao.search.Filter;
@@ -165,6 +168,68 @@ public class FilterTest extends TestBase {
 		s.addFilterOr(Filter.not(Filter.or(Filter.equal("firstName", "Joe"), Filter.equal("lastName", "Alpha"))),
 				Filter.and(Filter.equal("firstName", "Papa"), Filter.equal("lastName", "Alpha")));
 		assertListEqual(new Person[] { margretB, papaB, mamaB, papaA }, target.search(s));
+	}
+	
+	public void testNull() {
+		sessionFactory.getCurrentSession().save(grandpaA.getHome().getAddress());
+		sessionFactory.getCurrentSession().save(grandpaA.getHome());
+		sessionFactory.getCurrentSession().save(grandpaA);
+		sessionFactory.getCurrentSession().save(spiderJimmy);
+		
+		Search s = new Search(Person.class);
+		
+		s.addFilterEqual("firstName", null);
+		s.addFilterGreaterOrEqual("firstName", null);
+		s.addFilterGreaterThan("firstName", null);
+		s.addFilterLessOrEqual("firstName", null);
+		s.addFilterLessThan("firstName", null);
+		s.addFilterLike("firstName", null);
+		s.addFilterILike("firstName", null);
+		s.addFilterIn("firstName", (Object[]) null);
+		s.addFilterIn("firstName", (Collection<?>) null);
+		s.addFilterNotIn("firstName", (Object[]) null);
+		s.addFilterNotIn("firstName", (Collection<?>) null);
+		
+		assertEquals(1, target.count(s));
+		
+		Filter filter;
+		s.addFilter(filter = new Filter("firstName", null, Filter.OP_NOT_NULL));
+		assertEquals(1, target.count(s));
+		
+		filter.setOperator(Filter.OP_NULL);
+		assertEquals(0, target.count(s));
+		
+		//empty in and not in lists
+		s.clear();
+		s.addFilterIn("firstName"); //empty array
+		assertEquals(0, target.count(s));
+		
+		s.clear();
+		s.addFilterIn("firstName", new ArrayList<Object>(0)); //empty collection
+		assertEquals(0, target.count(s));
+		
+		s.clear();
+		s.addFilterNotIn("firstName"); //empty array
+		assertEquals(1, target.count(s));
+		
+		s.clear();
+		s.addFilterNotIn("firstName", new ArrayList<Object>(0)); //empty collection
+		assertEquals(1, target.count(s));
+		
+		
+		
+		//test null/not null operators
+		Person g2 = copy(grandmaA);
+		g2.setFirstName(null);
+		sessionFactory.getCurrentSession().save(g2);
+		
+		s.clear();
+		s.addFilterNotNull("firstName");
+		assertListEqual(new Person[] {grandpaA}, target.search(s));
+		
+		s.clear();
+		s.addFilterNull("firstName");
+		assertListEqual(new Person[] {g2}, target.search(s));
 	}
 
 }

@@ -288,6 +288,22 @@ public class Search implements Serializable {
 		addFilter(new Filter(property, value, Filter.OP_NOT_EQUAL));
 		return this;
 	}
+	
+	/**
+	 * Add a filter that uses the IS NULL operator.
+	 */
+	public Search addFilterNull(String property) {
+		addFilter(new Filter(property, true, Filter.OP_NULL));
+		return this;
+	}
+	
+	/**
+	 * Add a filter that uses the IS NULL operator.
+	 */
+	public Search addFilterNotNull(String property) {
+		addFilter(new Filter(property, true, Filter.OP_NOT_NULL));
+		return this;
+	}
 
 	/**
 	 * Add a filter that uses the AND operator.
