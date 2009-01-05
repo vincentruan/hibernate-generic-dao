@@ -3,7 +3,7 @@ package com.test.junit;
 import junit.framework.TestCase;
 
 import com.test.model.Person;
-import com.trg.dao.search.Fetch;
+import com.trg.dao.search.Field;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.Search;
 import com.trg.dao.search.Sort;
@@ -18,24 +18,24 @@ public class SearchTest extends TestCase {
 		s.setFirstResult(-44);
 		s.setMaxResults(19);
 		s.setPage(0);
-		s.setFetchMode(Search.FETCH_ARRAY);
+		s.setResultMode(Search.RESULT_ARRAY);
 		
-		s.addFetch("home.type");
+		s.addField("home.type");
 		s.addFilterEqual("father.firstName", "ABC");
-		s.addSort("home.address.type");
+		s.addSortAsc("home.address.type");
 		
 		System.out.println(s);
 		
 		s.setSearchClass(Search.class);
 		
-		s.addFetch("home", Fetch.OP_AVG);
-		s.addFetch("sally's home", Fetch.OP_COUNT);
-		s.addFetch("pork", Fetch.OP_COUNT_DISTINCT);
-		s.addFetch("some pig", Fetch.OP_MAX);
-		s.addFetch(new Fetch("", Fetch.OP_MIN));
-		s.addFetch(new Fetch(null, Fetch.OP_SUM));
-		s.addFetch("4th limb", 6000);
-		s.addFetch((Fetch) null);
+		s.addField("home", Field.OP_AVG);
+		s.addField("sally's home", Field.OP_COUNT);
+		s.addField("pork", Field.OP_COUNT_DISTINCT);
+		s.addField("some pig", Field.OP_MAX);
+		s.addField(new Field("", Field.OP_MIN));
+		s.addField(new Field(null, Field.OP_SUM));
+		s.addField("4th limb", 6000);
+		s.addField((Field) null);
 		
 		s.addFilterGreaterThan("gt", "nine");
 		s.addFilterLessThan("lt", 9);

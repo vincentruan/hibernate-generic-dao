@@ -55,11 +55,13 @@ public class FilterTest extends TestBase {
 		s.addFilterLike("firstName", "%pa");
 		assertListEqual(new Person[] { papaA, papaB, grandpaA }, target.search(s));
 
-		//-- LIKE is already case insensitive in some databases (MySQL)
-		// while it is case sensitive in others (HSQLDB, ProsgresSQL) --
-//		s.clear();
-//		s.addFilterLike("firstName", "pA%");
-//		assertEquals("none should match because of case", 0, target.search(s).size());
+		// -- LIKE is already case insensitive in some databases (MySQL)
+		// while it is case sensitive in others (HSQLDB, ProsgresSQL), so we
+		// won't include this part of the test --
+		// s.clear();
+		// s.addFilterLike("firstName", "pA%");
+		// assertEquals("none should match because of case", 0,
+		// target.search(s).size());
 
 		s.clear();
 		s.addFilterILike("firstName", "pA%");
@@ -169,15 +171,15 @@ public class FilterTest extends TestBase {
 				Filter.and(Filter.equal("firstName", "Papa"), Filter.equal("lastName", "Alpha")));
 		assertListEqual(new Person[] { margretB, papaB, mamaB, papaA }, target.search(s));
 	}
-	
+
 	public void testNull() {
 		sessionFactory.getCurrentSession().save(grandpaA.getHome().getAddress());
 		sessionFactory.getCurrentSession().save(grandpaA.getHome());
 		sessionFactory.getCurrentSession().save(grandpaA);
 		sessionFactory.getCurrentSession().save(spiderJimmy);
-		
+
 		Search s = new Search(Person.class);
-		
+
 		s.addFilterEqual("firstName", null);
 		s.addFilterGreaterOrEqual("firstName", null);
 		s.addFilterGreaterThan("firstName", null);
@@ -189,47 +191,47 @@ public class FilterTest extends TestBase {
 		s.addFilterIn("firstName", (Collection<?>) null);
 		s.addFilterNotIn("firstName", (Object[]) null);
 		s.addFilterNotIn("firstName", (Collection<?>) null);
-		
+
 		assertEquals(1, target.count(s));
-		
+
 		Filter filter;
 		s.addFilter(filter = new Filter("firstName", null, Filter.OP_NOT_NULL));
 		assertEquals(1, target.count(s));
-		
+
 		filter.setOperator(Filter.OP_NULL);
 		assertEquals(0, target.count(s));
-		
-		//empty in and not in lists
+
+		// empty in and not in lists
 		s.clear();
-		s.addFilterIn("firstName"); //empty array
+		s.addFilterIn("firstName"); // empty array
 		assertEquals(0, target.count(s));
-		
+
 		s.clear();
-		s.addFilterIn("firstName", new ArrayList<Object>(0)); //empty collection
+		s.addFilterIn("firstName", new ArrayList<Object>(0)); // empty
+																// collection
 		assertEquals(0, target.count(s));
-		
+
 		s.clear();
-		s.addFilterNotIn("firstName"); //empty array
+		s.addFilterNotIn("firstName"); // empty array
 		assertEquals(1, target.count(s));
-		
+
 		s.clear();
-		s.addFilterNotIn("firstName", new ArrayList<Object>(0)); //empty collection
+		s.addFilterNotIn("firstName", new ArrayList<Object>(0)); // empty
+																	// collection
 		assertEquals(1, target.count(s));
-		
-		
-		
-		//test null/not null operators
+
+		// test null/not null operators
 		Person g2 = copy(grandmaA);
 		g2.setFirstName(null);
 		sessionFactory.getCurrentSession().save(g2);
-		
+
 		s.clear();
 		s.addFilterNotNull("firstName");
-		assertListEqual(new Person[] {grandpaA}, target.search(s));
-		
+		assertListEqual(new Person[] { grandpaA }, target.search(s));
+
 		s.clear();
 		s.addFilterNull("firstName");
-		assertListEqual(new Person[] {g2}, target.search(s));
+		assertListEqual(new Person[] { g2 }, target.search(s));
 	}
 
 }

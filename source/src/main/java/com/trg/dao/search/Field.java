@@ -3,22 +3,22 @@ package com.trg.dao.search;
 import java.io.Serializable;
 
 /**
- * Used to specify selection in <code>Search</code>.
+ * Used to specify field selection in <code>Search</code>.
  * 
  * @see Search
  */
-public class Fetch implements Serializable {
+public class Field implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * The entity to fetch eagerly or the property to include in the result.
+	 * The property to include in the result.
 	 */
 	protected String property;
 
 	/**
-	 * The key to use for the property when using fetch mode
-	 * <code>FETCH_MAP</code>.
+	 * The key to use for the property when using result mode
+	 * <code>RESULT_MAP</code>.
 	 */
 	protected String key;
 
@@ -72,24 +72,24 @@ public class Fetch implements Serializable {
 	 */
 	public static final int OP_AVG = 6;
 
-	public Fetch() {
+	public Field() {
 	}
 
-	public Fetch(String property) {
+	public Field(String property) {
 		this.property = property;
 	}
 
-	public Fetch(String property, String key) {
+	public Field(String property, String key) {
 		this.property = property;
 		this.key = key;
 	}
 
-	public Fetch(String property, int operator) {
+	public Field(String property, int operator) {
 		this.property = property;
 		this.operator = operator;
 	}
 
-	public Fetch(String property, int operator, String key) {
+	public Field(String property, int operator, String key) {
 		this.property = property;
 		this.operator = operator;
 		this.key = key;
@@ -137,7 +137,7 @@ public class Fetch implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Fetch other = (Fetch) obj;
+		Field other = (Field) obj;
 		if (key == null) {
 			if (other.key != null)
 				return false;

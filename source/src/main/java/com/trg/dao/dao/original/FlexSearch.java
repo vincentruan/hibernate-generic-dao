@@ -2,7 +2,7 @@ package com.trg.dao.dao.original;
 
 import java.io.Serializable;
 
-import com.trg.dao.search.Fetch;
+import com.trg.dao.search.Field;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.Search;
 import com.trg.dao.search.Sort;
@@ -61,18 +61,18 @@ public class FlexSearch extends Search implements Serializable {
 		}
 	}
 
-	public Fetch[] getFetches() {
-		return fetches.toArray(new Fetch[0]);
+	public Field[] getFields() {
+		return fields.toArray(new Field[0]);
 	}
 
-	public void setFetches(Fetch[] fetches) {
-		this.fetches.clear();
-		if (fetches != null) {
-			for (int i =  0; i < fetches.length; i++) {
-				Fetch f = fetches[i];
+	public void setFields(Field[] fields) {
+		this.fields.clear();
+		if (fields != null) {
+			for (int i =  0; i < fields.length; i++) {
+				Field f = fields[i];
 				if (f != null && f.getProperty() != null && f.getProperty().length() > 0) {
 					if (f.getKey() == null) f.setKey(f.getProperty());
-					this.fetches.add(f);
+					this.fields.add(f);
 				}
 			}
 		}

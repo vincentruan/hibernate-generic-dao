@@ -27,29 +27,26 @@ import java.util.List;
  * <code>setMaxResults()</code>. (This can also be thought of as results per
  * page.) The first result can be specified using either
  * <code>setFirstResult()</code> or <code>setPage()</code>.
- * <li>Fetch -
- * <ul>
- * <li>When <code>fetchMode == FETCH_ENTITY</code>, this determines which
- * attached objects to pull along with the base search object. With hibernate
- * this eagerly loads the specified properties. Otherwise they might be loaded
- * lazily. This is useful for performance and results that will be disconnected
- * from hibernate and copied to a remote client. Fetches are set using
- * <code>addFetch()</code>.
- * <li>For other values of <code>fetchMode</code>, instead of returning the
- * actual objects, a collection of specified properties can be returned for each
- * row in the result set. These properties can be returned in maps, lists or
- * arrays. Fetches are specified using <code>addFetch()</code>. The fetch mode
- * must also be set using <code>setFetchMode()</code>.<br/><br/>
+ * <li>Fields - By default the entity specified in search class is returned as
+ * the result for each row. However, by specifying fields, any combination of
+ * individual properties can be returned for each row in the result set. These
+ * properties can be returned as maps, lists or arrays depending on
+ * <code>resultMode</code>. Fields are specified using <code>addField()</code>.
+ * The result mode may also be set using <code>setResultMode()</code>.<br/><br/>
  * 
- * Additionally, fetches can be specified using column operators: COUNT, COUNT
- * DISTINCT, SUM, AVG, MAX, MIN. Note that fetches with column operators can not
- * be mixed with fetches that do not use column operators and can also not be
- * used with <code>fetchMode == FETCH_ENTITY</code>.
+ * Additionally, fields can be specified using column operators: COUNT, COUNT
+ * DISTINCT, SUM, AVG, MAX, MIN. Note that fields with column operators can not
+ * be mixed with fields that do not use column operators.
  * </ul>
- * </ul>
+ * <li>Fetch - This determines which attached objects to pull along with the
+ * base search object. With hibernate this eagerly loads the specified
+ * properties. Otherwise they might be loaded lazily. This is useful for
+ * performance and results that will be disconnected from hibernate and copied
+ * to a remote client. Fetches are set using <code>addFetch()</code>. </ul>
  * 
  * @see Filter
- * @see Fetch
+ * @see Field
+ * @see Sort
  * 
  * @author dwolverton
  * 
@@ -60,90 +57,93 @@ public class Search implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Value for fetch mode. This is the default value.
-	 * <code>FETCH_ENTITY</code> returns the actual objects of the specified
-	 * <code>searchClass</code>
+	 * Value for result mode. This is the default value. With
+	 * <code>RESULT_AUTO</code> the result mode is automatically determined
+	 * according to the following rules:
+	 * <ul>
+	 * <li>If any field is specified with a key, use <code>RESULT_MAP</code>.
+	 * <li>Otherwise, if zero or one fields are specified, use <code>
+	 * RESULT_SINGLE</code>. <li>Otherwise, use <code>RESULT_ARRAY</code>.
+	 * </ul>
 	 * 
-	 * @see #setFetchMode(int)
+	 * @see #setResultMode(int)
 	 */
-	public static final int FETCH_ENTITY = 0;
+	public static final int RESULT_AUTO = 0;
 
 	/**
-	 * Value for fetch mode. This is the default value. <code>FETCH_ARRAY</code>
-	 * returns each object as an Object array (<code>Object[]</code>) with the
-	 * entries corresponding to the fetches added to the search. Here's an
-	 * example:
+	 * Value for result mode. <code>RESULT_ARRAY</code> returns each result as
+	 * an Object array (<code>Object[]</code>) with the entries corresponding to
+	 * the fields added to the search. Here's an example:
 	 * 
 	 * <pre>
 	 * Search s = new Search(Person.class);
-	 * s.setFetchMode(Search.FETCH_ARRAY);
-	 * s.addFetch(&quot;firstName&quot;);
-	 * s.addFetch(&quot;lastName&quot;);
+	 * s.setResultMode(Search.RESULT_ARRAY);
+	 * s.addField(&quot;firstName&quot;);
+	 * s.addField(&quot;lastName&quot;);
 	 * for (Object[] array : dao.search(s)) {
 	 * 	System.out.println(array[0] + &quot; &quot; + array[1]);
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setFetchMode(int)
+	 * @see #setResultMode(int)
 	 */
-	public static final int FETCH_ARRAY = 1;
+	public static final int RESULT_ARRAY = 1;
 
 	/**
-	 * Value for fetch mode. This is the default value. <code>FETCH_LIST</code>
-	 * returns each object as a list of Objects (<code>List&lt;Object&gt;</Code>
-	 * ). Here's an example:
+	 * Value for result mode. <code>RESULT_LIST</code> returns each result as a
+	 * list of Objects (<code>List&lt;Object&gt;</Code> ). Here's an example:
 	 * 
 	 * <pre>
 	 * Search s = new Search(Person.class);
-	 * s.setFetchMode(Search.FETCH_LIST);
-	 * s.addFetch(&quot;firstName&quot;);
-	 * s.addFetch(&quot;lastName&quot;);
+	 * s.setResultMode(Search.RESULT_LIST);
+	 * s.addField(&quot;firstName&quot;);
+	 * s.addField(&quot;lastName&quot;);
 	 * for (List&lt;Object&gt; list : dao.search(s)) {
 	 * 	System.out.println(list.get(0) + &quot; &quot; + list.get(1));
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setFetchMode(int)
+	 * @see #setResultMode(int)
 	 */
-	public static final int FETCH_LIST = 2;
+	public static final int RESULT_LIST = 2;
 
 	/**
-	 * Value for fetch mode. This is the default value. <code>FETCH_MAP</code>
-	 * returns each object as a map with properties' names or aliases for keys
-	 * to the corresponding values. Here's an example:
+	 * Value for result mode. <code>RESULT_MAP</code> returns each row as a
+	 * map with properties' names or keys for keys to the corresponding
+	 * values. Here's an example:
 	 * 
 	 * <pre>
 	 * Search s = new Search(Person.class);
-	 * s.setFetchMode(Search.FETCH_MAP;
-	 * s.addFetch(&quot;firstName&quot;);
-	 * s.addFetch(&quot;lastName&quot;, &quot;ln&quot;);
+	 * s.setResultMode(Search.RESULT_MAP;
+	 * s.addField(&quot;firstName&quot;);
+	 * s.addField(&quot;lastName&quot;, &quot;ln&quot;);
 	 * for (Map&lt;String, Object&gt; map : dao.search(s)) {
 	 * 	System.out.println(map.get(&quot;firstName&quot;) + &quot; &quot; + map.get(&quot;ln&quot;));
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setFetchMode(int)
+	 * @see #setResultMode(int)
 	 */
-	public static final int FETCH_MAP = 3;
+	public static final int RESULT_MAP = 3;
 
 	/**
-	 * Value for fetch mode. This is the default value.
-	 * <code>FETCH_SINGLE</code> - Exactly one fetch property must be specified
-	 * to use this fetch mode. The result list contains just the value of that
+	 * Value for result mode.
+	 * <code>RESULT_SINGLE</code> - Exactly one field or no fields must be specified
+	 * to use this result mode. The result list contains just the value of that
 	 * property for each element. Here's an example:
 	 * 
 	 * <pre>
 	 * Search s = new Search(Person.class);
-	 * s.setFetchMode(Search.FETCH_SINGLE);
-	 * s.addFetch(&quot;firstName&quot;);
-	 * for (String name : dao.search(s)) {
+	 * s.setResultMode(Search.RESULT_SINGLE);
+	 * s.addField(&quot;firstName&quot;);
+	 * for (Object name : dao.search(s)) {
 	 * 	System.out.println(name);
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setFetchMode(int)
+	 * @see #setResultMode(int)
 	 */
-	public static final int FETCH_SINGLE = 4;
+	public static final int RESULT_SINGLE = 4;
 
 	protected int firstResult = -1; // -1 stands for unspecified
 
@@ -159,9 +159,11 @@ public class Search implements Serializable {
 
 	protected List<Sort> sorts = new ArrayList<Sort>();
 
-	protected List<Fetch> fetches = new ArrayList<Fetch>();
+	protected List<Field> fields = new ArrayList<Field>();
+	
+	protected List<String> fetches = new ArrayList<String>();
 
-	protected int fetchMode = FETCH_ENTITY;
+	protected int resultMode = RESULT_AUTO;
 
 	public Search() {
 
@@ -288,7 +290,7 @@ public class Search implements Serializable {
 		addFilter(new Filter(property, value, Filter.OP_NOT_EQUAL));
 		return this;
 	}
-	
+
 	/**
 	 * Add a filter that uses the IS NULL operator.
 	 */
@@ -296,7 +298,7 @@ public class Search implements Serializable {
 		addFilter(new Filter(property, true, Filter.OP_NULL));
 		return this;
 	}
-	
+
 	/**
 	 * Add a filter that uses the IS NULL operator.
 	 */
@@ -309,8 +311,8 @@ public class Search implements Serializable {
 	 * Add a filter that uses the AND operator.
 	 * 
 	 * <p>
-	 * This takes a variable number of parameters. Any number of
-	 * <code>Filter</code>s can be specified.
+	 * This takes a variable number of parameters. Any number of <code>Filter
+	 * </code>s can be specified.
 	 */
 	public Search addFilterAnd(Filter... filters) {
 		addFilter(Filter.and(filters));
@@ -321,8 +323,8 @@ public class Search implements Serializable {
 	 * Add a filter that uses the OR operator.
 	 * 
 	 * <p>
-	 * This takes a variable number of parameters. Any number of
-	 * <code>Filter</code>s can be specified.
+	 * This takes a variable number of parameters. Any number of <code>Filter
+	 * </code>s can be specified.
 	 */
 	public Search addFilterOr(Filter... filters) {
 		addFilter(Filter.or(filters));
@@ -383,12 +385,29 @@ public class Search implements Serializable {
 	/**
 	 * Add ascending sort by property
 	 */
-	public Search addSort(String property) {
-		if (property == null)
-			return this; // null properties do nothing, don't bother to add
-		// them.
-		sorts.add(new Sort(property));
-		return this;
+	public Search addSortAsc(String property) {
+		return addSort(property, false, false);
+	}
+
+	/**
+	 * Add ascending sort by property
+	 */
+	public Search addSortAsc(String property, boolean ignoreCase) {
+		return addSort(property, false, ignoreCase);
+	}
+
+	/**
+	 * Add descending sort by property
+	 */
+	public Search addSortDesc(String property) {
+		return addSort(property, true, false);
+	}
+
+	/**
+	 * Add descending sort by property
+	 */
+	public Search addSortDesc(String property, boolean ignoreCase) {
+		return addSort(property, true, ignoreCase);
 	}
 
 	/**
@@ -396,10 +415,18 @@ public class Search implements Serializable {
 	 * if <code>desc == true</code>.
 	 */
 	public Search addSort(String property, boolean desc) {
+		return addSort(property, desc, false);
+	}
+
+	/**
+	 * Add sort by property. Ascending if <code>desc == false</code>, descending
+	 * if <code>desc == true</code>.
+	 */
+	public Search addSort(String property, boolean desc, boolean ignoreCase) {
 		if (property == null)
 			return this; // null properties do nothing, don't bother to add
 		// them.
-		sorts.add(new Sort(property, desc));
+		sorts.add(new Sort(property, desc, ignoreCase));
 		return this;
 	}
 
@@ -425,120 +452,140 @@ public class Search implements Serializable {
 		return sorts.iterator();
 	}
 
-	// Fetch
-	public Search addFetch(Fetch fetch) {
-		fetches.add(fetch);
+	// Fields
+	public Search addField(Field field) {
+		fields.add(field);
 		return this;
 	}
 
 	/**
-	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
+	 * If this field is used with <code>resultMode == RESULT_MAP</code>, the
 	 * <code>property</code> will also be used as the key for this value in the
 	 * map.
 	 */
-	public Search addFetch(String property) {
+	public Search addField(String property) {
 		if (property == null || "".equals(property))
 			return this; // null properties do nothing, don't bother to add
 		// them.
-		fetches.add(new Fetch(property));
+		fields.add(new Field(property));
 		return this;
 	}
 
 	/**
-	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
+	 * If this field is used with <code>resultMode == RESULT_MAP</code>, the
 	 * <code>key</code> will be used as the key for this value in the map.
 	 */
-	public Search addFetch(String property, String key) {
+	public Search addField(String property, String key) {
 		if (property == null || "".equals(property) || key == null || "".equals(key))
 			return this; // null properties do nothing, don't bother to add
 		// them.
-		fetches.add(new Fetch(property, key));
+		fields.add(new Field(property, key));
 		return this;
 	}
 
 	/**
-	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
+	 * If this field is used with <code>resultMode == RESULT_MAP</code>, the
 	 * <code>property</code> will also be used as the key for this value in the
 	 * map.
 	 */
-	public Search addFetch(String property, int operator) {
+	public Search addField(String property, int operator) {
 		if (property == null || "".equals(property))
 			return this; // null properties do nothing, don't bother to add
 		// them.
-		fetches.add(new Fetch(property, operator));
+		fields.add(new Field(property, operator));
 		return this;
 	}
 
 	/**
-	 * If this fetch is used with <code>fetchMode == FETCH_MAP</code>, the
+	 * If this field is used with <code>resultMode == RESULT_MAP</code>, the
 	 * <code>key</code> will be used as the key for this value in the map.
 	 */
-	public Search addFetch(String property, int operator, String key) {
+	public Search addField(String property, int operator, String key) {
 		if (property == null || "".equals(property) || key == null || "".equals(key))
 			return this; // null properties do nothing, don't bother to add
 		// them.
-		fetches.add(new Fetch(property, operator, key));
+		fields.add(new Field(property, operator, key));
 		return this;
 	}
 
-	public void removeFetch(Fetch fetch) {
-		fetches.remove(fetch);
+	public void removeField(Field field) {
+		fields.remove(field);
 	}
 
-	public void removeFetch(String property) {
-		Iterator<Fetch> itr = fetches.iterator();
+	public void removeField(String property) {
+		Iterator<Field> itr = fields.iterator();
 		while (itr.hasNext()) {
 			if (itr.next().getProperty().equals(property))
 				itr.remove();
 		}
 	}
 
-	public void removeFetch(String property, String key) {
-		Iterator<Fetch> itr = fetches.iterator();
+	public void removeField(String property, String key) {
+		Iterator<Field> itr = fields.iterator();
 		while (itr.hasNext()) {
-			Fetch fetch = itr.next();
-			if (fetch.getProperty().equals(property) && fetch.getKey().equals(key))
+			Field field = itr.next();
+			if (field.getProperty().equals(property) && field.getKey().equals(key))
 				itr.remove();
 		}
 	}
 
-	public void clearFetch() {
-		fetches.clear();
+	public void clearFields() {
+		fields.clear();
 	}
 
-	public Iterator<Fetch> fetchIterator() {
-		return fetches.iterator();
+	public Iterator<Field> fieldIterator() {
+		return fields.iterator();
 	}
 
-	public int getFetchMode() {
-		return fetchMode;
+	public int getResultMode() {
+		return resultMode;
 	}
 
 	/**
-	 * Select modes tell the search what form to use for the results. Options
-	 * include <code>FETCH_ENTITY</code>, <code>FETCH_ARRAY</code>,
-	 * <code>FETCH_LIST</code>, <code>FETCH_MAP</code> and
-	 * <code>FETCH_SINGLE</code>.
+	 * Result modes tell the search what form to use for the results. Options
+	 * include <code>RESULT_AUTO</code>, <code>RESULT_ARRAY</code>, <code>
+	 * RESULT_LIST</code>, <code>RESULT_MAP</code> and <code>RESULT_SINGLE
+	 * </code>.
 	 * 
-	 * @see #FETCH_ENTITY
-	 * @see #FETCH_ARRAY
-	 * @see #FETCH_LIST
-	 * @see #FETCH_MAP
-	 * @see #FETCH_SINGLE
+	 * @see #RESULT_AUTO
+	 * @see #RESULT_ARRAY
+	 * @see #RESULT_LIST
+	 * @see #RESULT_MAP
+	 * @see #RESULT_SINGLE
 	 */
-	public Search setFetchMode(int fetchMode) {
-		if (fetchMode < 0 || fetchMode > 4)
-			throw new IllegalArgumentException("Fetch Mode ( " + fetchMode + " ) is not a valid option.");
-		this.fetchMode = fetchMode;
+	public Search setResultMode(int resultMode) {
+		if (resultMode < 0 || resultMode > 4)
+			throw new IllegalArgumentException("Result Mode ( " + resultMode + " ) is not a valid option.");
+		this.resultMode = resultMode;
 		return this;
 	}
+	
+	//Fetches
+	public Search addFetch(String property) {
+		fetches.add(property);
+		return this;
+	}
+	
+	public void removeFetch(String property) {
+		fetches.remove(property);
+	}
+	
+	public void clearFetches() {
+		fetches.clear();
+	}
+	
+	public Iterator<String> fetchIterator() {
+		return fetches.iterator();
+	}
+	
 
 	public void clear() {
 		clearFilters();
 		clearSorts();
-		clearFetch();
+		clearFields();
 		clearPaging();
-		fetchMode = FETCH_ENTITY;
+		clearFetches();
+		resultMode = RESULT_AUTO;
 		disjunction = false;
 	}
 
@@ -562,8 +609,8 @@ public class Search implements Serializable {
 	/**
 	 * Zero based index of the page of records to return. The size of a page is
 	 * determined by <code>maxResults</code>. If page is specified first result
-	 * is ignored and the first result returned is calculated by
-	 * <code>page * maxResults</code>.
+	 * is ignored and the first result returned is calculated by <code>page *
+	 * maxResults</code>.
 	 */
 	public Search setPage(int page) {
 		this.page = page;
@@ -585,8 +632,8 @@ public class Search implements Serializable {
 
 	/**
 	 * @return Zero based index of the first record to return. Calculation is
-	 *         based on <code>page * maxResults</code> or
-	 *         <code>firstResult</code> if page is not specified.
+	 *         based on <code>page * maxResults</code> or <code>firstResult
+	 *         </code> if page is not specified.
 	 */
 	public int calcFirstResult() {
 		return (firstResult > 0) ? firstResult : (page > 0 && maxResults > 0) ? page * maxResults : 0;
@@ -607,12 +654,12 @@ public class Search implements Serializable {
 		Search dest = new Search();
 		dest.searchClass = searchClass;
 		dest.disjunction = disjunction;
-		dest.fetchMode = fetchMode;
+		dest.resultMode = resultMode;
 		dest.firstResult = firstResult;
 		dest.page = page;
 		dest.maxResults = maxResults;
-		for (Fetch fetch : fetches)
-			dest.addFetch(fetch);
+		for (Field field : fields)
+			dest.addField(field);
 		for (Filter filter : filters)
 			dest.addFilter(filter);
 		for (Sort sort : sorts)
@@ -629,10 +676,10 @@ public class Search implements Serializable {
 
 		if (searchClass == null ? s.searchClass != null : !searchClass.equals(s.searchClass))
 			return false;
-		if (disjunction != s.disjunction || fetchMode != s.fetchMode || firstResult != s.firstResult || page != s.page
-				|| maxResults != s.maxResults)
+		if (disjunction != s.disjunction || resultMode != s.resultMode || firstResult != s.firstResult
+				|| page != s.page || maxResults != s.maxResults)
 			return false;
-		if (!filters.equals(s.filters) || !sorts.equals(s.sorts) || !fetches.equals(s.fetches))
+		if (!filters.equals(s.filters) || !sorts.equals(s.sorts) || !fields.equals(s.fields))
 			return false;
 
 		return true;
@@ -642,11 +689,11 @@ public class Search implements Serializable {
 	public int hashCode() {
 		int hash = 1;
 		hash = hash * 31 + (searchClass == null ? 0 : searchClass.hashCode());
-		hash = hash * 31 + (fetches == null ? 0 : fetches.hashCode());
+		hash = hash * 31 + (fields == null ? 0 : fields.hashCode());
 		hash = hash * 31 + (filters == null ? 0 : filters.hashCode());
 		hash = hash * 31 + (sorts == null ? 0 : sorts.hashCode());
 		hash = hash * 31 + (disjunction ? 1 : 0);
-		hash = hash * 31 + (new Integer(fetchMode).hashCode());
+		hash = hash * 31 + (new Integer(resultMode).hashCode());
 		hash = hash * 31 + (new Integer(firstResult).hashCode());
 		hash = hash * 31 + (new Integer(maxResults).hashCode());
 		hash = hash * 31 + (new Integer(page).hashCode());
@@ -661,20 +708,32 @@ public class Search implements Serializable {
 		sb.append(")[first: ").append(firstResult);
 		sb.append(", page: ").append(page);
 		sb.append(", max: ").append(maxResults);
-		sb.append("] {\n fetchMode: ");
-		
-		switch (fetchMode) {
-		case FETCH_ARRAY: sb.append("ARRAY"); break;
-		case FETCH_ENTITY: sb.append("ENTITY"); break;
-		case FETCH_LIST: sb.append("LIST"); break;
-		case FETCH_MAP: sb.append("MAP"); break;
-		case FETCH_SINGLE: sb.append("SINGLE"); break;
-		default:  sb.append("**INVALID FETCH MODE: (" + fetchMode + ")**"); break;
+		sb.append("] {\n resultMode: ");
+
+		switch (resultMode) {
+		case RESULT_AUTO:
+			sb.append("AUTO");
+			break;
+		case RESULT_ARRAY:
+			sb.append("ARRAY");
+			break;
+		case RESULT_LIST:
+			sb.append("LIST");
+			break;
+		case RESULT_MAP:
+			sb.append("MAP");
+			break;
+		case RESULT_SINGLE:
+			sb.append("SINGLE");
+			break;
+		default:
+			sb.append("**INVALID RESULT MODE: (" + resultMode + ")**");
+			break;
 		}
 
 		sb.append(",\n disjunction: ").append(disjunction);
-		sb.append(",\n fetches: { ");
-		appendList(sb, fetches, ", ");
+		sb.append(",\n fields: { ");
+		appendList(sb, fields, ", ");
 		sb.append(" },\n filters: {\n  ");
 		appendList(sb, filters, ",\n  ");
 		sb.append("\n },\n sorts: { ");

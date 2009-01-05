@@ -12,21 +12,21 @@ public class SecurityTest extends TestBase {
 		Search s = new Search(Person.class);
 		
 		try {
-			s.addFetch("address foo"); //spaces are not allowed
+			s.addField("address foo"); //spaces are not allowed
 			target.search(s);
 			fail("An exception should have been thrown.");
 		} catch (IllegalArgumentException ex) {}
 		
 		try {
-			s.setFetchMode(Search.FETCH_ARRAY);
-			s.addFetch("firstName + lastName");
+			s.setResultMode(Search.RESULT_ARRAY);
+			s.addField("firstName + lastName");
 			target.search(s);
 			fail("An exception should have been thrown.");
 		} catch (IllegalArgumentException ex) {}
 		
 		try {
 			s.clear();
-			s.addSort("Mr. Friday");
+			s.addSortAsc("Mr. Friday");
 			target.search(s);
 			fail("An exception should have been thrown.");
 		} catch (IllegalArgumentException ex) {}
