@@ -22,4 +22,10 @@ public interface MetaDataUtil {
 	 * could also, for example be a component or a value type.
 	 */
 	public boolean isEntity(Class<?> rootClass, String propertyPath);
+
+	/**
+	 * Return true if the property at the given property path is persisted as a
+	 * string (char or varchar) type in the database.
+	 */
+	public boolean isSQLStringType(Class<?> rootClass, String propertyPath);
 }

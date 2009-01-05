@@ -12,8 +12,8 @@ public class TrickyIssueTest extends TestBase {
 	protected SearchTestInterface target;
 
 	/**
-	 * The alias error occurs when using fetch mode FETCH_MAP. It occurs when
-	 * there is a fetch that has a key with no "." in it and is the same as a
+	 * The alias error occurs when using result mode FETCH_MAP. It occurs when
+	 * there is a field that has a key with no "." in it and is the same as a
 	 * property that is used in a filter.
 	 */
 	@SuppressWarnings("unchecked")
@@ -25,17 +25,17 @@ public class TrickyIssueTest extends TestBase {
 		Search s = new Search(Person.class);
 		s.addFilterEqual("firstName", "Joe");
 		s.addFilterEqual("age", 10);
-		s.addSort("lastName");
-		s.setFetchMode(Search.FETCH_MAP);
+		s.addSortAsc("lastName");
+		s.setResultMode(Search.RESULT_MAP);
 
-		s.addFetch("firstName");
+		s.addField("firstName");
 
 		resultMap = target.search(s);
 		assertEquals(2, resultMap.size());
 		assertEquals("Joe", resultMap.get(0).get("firstName"));
 		assertEquals("Joe", resultMap.get(1).get("firstName"));
 
-		s.addFetch("lastName");
+		s.addField("lastName");
 
 		resultMap = target.search(s);
 		assertEquals(2, resultMap.size());
@@ -44,11 +44,11 @@ public class TrickyIssueTest extends TestBase {
 		assertEquals("Joe", resultMap.get(1).get("firstName"));
 		assertEquals("Beta", resultMap.get(1).get("lastName"));
 
-		s.clearFetch();
-		s.addFetch("firstName", "firstName");
-		s.addFetch("age"); // this uses age for the property and key
-		s.addFetch("lastName", "Last Name");
-		s.addFetch("mother.lastName");
+		s.clearFields();
+		s.addField("firstName", "firstName");
+		s.addField("age"); // this uses age for the property and key
+		s.addField("lastName", "Last Name");
+		s.addField("mother.lastName");
 
 		resultMap = target.search(s);
 		assertEquals(2, resultMap.size());

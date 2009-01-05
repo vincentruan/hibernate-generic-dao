@@ -15,7 +15,7 @@ import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 
 import com.trg.dao.AbstractSearchProcessor;
-import com.trg.dao.search.Fetch;
+import com.trg.dao.search.Field;
 import com.trg.dao.search.Search;
 import com.trg.dao.search.SearchResult;
 
@@ -59,7 +59,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
 		addPaging(query, search);
-		addFetchMode(query, search);
+		addResultMode(query, search);
 
 		return query.list();
 	}
@@ -123,7 +123,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		String hql = generateQL(search, paramList);
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
-		addFetchMode(query, search);
+		addResultMode(query, search);
 
 		return query.uniqueResult();
 	}	
@@ -155,29 +155,49 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		}
 	}
 
-	private void addFetchMode(Query query, Search search) {
-		switch (search.getFetchMode()) {
-		case Search.FETCH_ARRAY:
+	private void addResultMode(Query query, Search search) {
+		int resultMode = search.getResultMode();
+		if (resultMode == Search.RESULT_AUTO) {
+			int count = 0;
+			Iterator<Field> fieldItr = search.fieldIterator();
+			while (fieldItr.hasNext()) {
+				Field field = fieldItr.next();
+				if (field.getKey() != null && !field.getKey().equals("")) {
+					resultMode = Search.RESULT_MAP;
+					break;
+				}
+				count++;
+			}
+			if (resultMode == Search.RESULT_AUTO) {
+				if (count > 1)
+					resultMode = Search.RESULT_ARRAY;
+				else
+					resultMode = Search.RESULT_SINGLE;
+			}
+		}
+		
+		switch (resultMode) {
+		case Search.RESULT_ARRAY:
 			query.setResultTransformer(ARRAY_RESULT_TRANSFORMER);
 			break;
-		case Search.FETCH_LIST:
+		case Search.RESULT_LIST:
 			query.setResultTransformer(Transformers.TO_LIST);
 			break;
-		case Search.FETCH_MAP:
+		case Search.RESULT_MAP:
 			List<String> keyList = new ArrayList<String>();
-			Iterator<Fetch> fetchItr = search.fetchIterator();
-			while (fetchItr.hasNext()) {
-				Fetch fetch = fetchItr.next();
-				if (fetch.getKey() != null && !fetch.getKey().equals("")) {
-					keyList.add(fetch.getKey());
+			Iterator<Field> fieldItr = search.fieldIterator();
+			while (fieldItr.hasNext()) {
+				Field field = fieldItr.next();
+				if (field.getKey() != null && !field.getKey().equals("")) {
+					keyList.add(field.getKey());
 				} else {
-					keyList.add(fetch.getProperty());
+					keyList.add(field.getProperty());
 				}
 			}
 			query.setResultTransformer(new MapResultTransformer(keyList
 					.toArray(new String[0])));
 			break;
-		default: // Search.FETCH_ENTITY / Search.FETCH_SINGLE
+		default: // Search.RESULT_SINGLE
 			break;
 		}
 	}

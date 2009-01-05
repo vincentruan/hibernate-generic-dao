@@ -16,7 +16,7 @@ import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
 import com.test.model.RecipeIngredientId;
 import com.test.model.Store;
-import com.trg.dao.search.Fetch;
+import com.trg.dao.search.Field;
 import com.trg.dao.search.Search;
 
 public class BaseDAOTest extends TestBase {
@@ -70,8 +70,8 @@ public class BaseDAOTest extends TestBase {
 
 		fred.setLastName("Santos");
 		Search s = new Search(Person.class);
-		s.addFetch("father.lastName");
-		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addField("father.lastName");
+		s.setResultMode(Search.RESULT_SINGLE);
 		s.addFilterEqual("id", joeA.getId());
 
 		assertEquals("The change should be made.", "Santos", target.searchUnique(s));
@@ -124,8 +124,8 @@ public class BaseDAOTest extends TestBase {
 		assertTrue(target.sessionContains(attachedFred));
 
 		Search s = new Search(Person.class);
-		s.addFetch("father.lastName");
-		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addField("father.lastName");
+		s.setResultMode(Search.RESULT_SINGLE);
 		s.addFilterEqual("id", joeA.getId());
 
 		fred.setLastName("Santos");
@@ -167,8 +167,8 @@ public class BaseDAOTest extends TestBase {
 
 		// Test deleting by non-existent ID.
 		Search s = new Search(Person.class);
-		s.setFetchMode(Search.FETCH_SINGLE);
-		s.addFetch("id", Fetch.OP_MAX);
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("id", Field.OP_MAX);
 		Long unusedId = ((Long) target.searchUnique(s)).longValue() + 1;
 
 		// deleteById should not throw an error
@@ -320,8 +320,8 @@ public class BaseDAOTest extends TestBase {
 
 			// save with non-null id
 			s.clear();
-			s.setFetchMode(Search.FETCH_SINGLE);
-			s.addFetch("id", Fetch.OP_MAX);
+			s.setResultMode(Search.RESULT_SINGLE);
+			s.addField("id", Field.OP_MAX);
 			long maxPersonId = (Long) target.searchUnique(s);
 
 			Person sam = new Person("Sam", "Wodsworth");
@@ -348,8 +348,8 @@ public class BaseDAOTest extends TestBase {
 			assertEquals(2, target.search(s).size());
 
 			// save some update some, also multiple types
-			long maxPetId = (Long) target.searchUnique(new Search(Pet.class).setFetchMode(Search.FETCH_SINGLE)
-					.addFetch("id", Fetch.OP_MAX));
+			long maxPetId = (Long) target.searchUnique(new Search(Pet.class).setResultMode(Search.RESULT_SINGLE)
+					.addField("id", Field.OP_MAX));
 
 			people[1] = new Person("Miley", "Gordon");
 			people[1].setId(++maxPersonId);
@@ -386,8 +386,8 @@ public class BaseDAOTest extends TestBase {
 		initDB();
 
 		Search s = new Search(Person.class);
-		s.setFetchMode(Search.FETCH_SINGLE);
-		s.addFetch("id", Fetch.OP_MAX);
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("id", Field.OP_MAX);
 		long maxId = (Long) target.searchUnique(s);
 
 		Person[] people = target.get(Person.class, papaA.getId(), maxId + 1, papaB.getId());
@@ -417,8 +417,8 @@ public class BaseDAOTest extends TestBase {
 		initDB();
 
 		Search s = new Search(Person.class);
-		s.setFetchMode(Search.FETCH_SINGLE);
-		s.addFetch("id", Fetch.OP_MAX);
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("id", Field.OP_MAX);
 		long maxId = (Long) target.searchUnique(s);
 
 		target.update(papaA);
@@ -474,8 +474,8 @@ public class BaseDAOTest extends TestBase {
 		initDB();
 
 		Search s = new Search(Store.class);
-		s.setFetchMode(Search.FETCH_SINGLE);
-		s.addFetch("id", Fetch.OP_MAX);
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("id", Field.OP_MAX);
 		long maxStoreId = (Long) target.searchUnique(s);
 
 		s.setSearchClass(Recipe.class);
@@ -510,7 +510,7 @@ public class BaseDAOTest extends TestBase {
 
 		s.clear();
 		s.setSearchClass(Ingredient.class);
-		s.addSort("name");
+		s.addSortAsc("name");
 		List<Ingredient> ingredients = target.search(s);
 		// Butter, Chicken, Flour, Salt, Sugar, Yeast
 
@@ -537,15 +537,15 @@ public class BaseDAOTest extends TestBase {
 		initDB();
 		
 		Search s = new Search(Recipe.class);
-		s.setFetchMode(Search.FETCH_SINGLE);
-		s.addFetch("id", Fetch.OP_MAX);
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("id", Field.OP_MAX);
 		long maxRecipeId = (Long) target.searchUnique(s);
 
 		s.setSearchClass(Ingredient.class);
 		long maxIngredientId = (Long) target.searchUnique(s);
 
 		s.clear();
-		s.addSort("name");
+		s.addSortAsc("name");
 		List<Ingredient> ingredients = target.search(s);
 		// Butter, Chicken, Flour, Salt, Sugar, Yeast
 
@@ -581,9 +581,9 @@ public class BaseDAOTest extends TestBase {
 		//search
 		s.clear();
 		s.setSearchClass(RecipeIngredient.class);
-		s.setFetchMode(Search.FETCH_SINGLE);
-		s.addFetch("id");
-		s.addSort("id");
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("id");
+		s.addSortAsc("id");
 		s.addFilterEqual("id", ri.getId());
 		
 		assertEquals(ri.getId(), target.searchUnique(s));

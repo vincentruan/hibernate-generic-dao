@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trg.dao.search.Fetch;
+import com.trg.dao.search.Field;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.Search;
 import com.trg.dao.search.Sort;
@@ -46,8 +46,7 @@ import com.trg.dao.search.Sort;
  */
 public abstract class AbstractSearchProcessor {
 
-	private static Logger logger = LoggerFactory
-			.getLogger(AbstractSearchProcessor.class);
+	private static Logger logger = LoggerFactory.getLogger(AbstractSearchProcessor.class);
 
 	protected static int QLTYPE_HQL = 0;
 	protected static int QLTYPE_EQL = 1;
@@ -57,7 +56,7 @@ public abstract class AbstractSearchProcessor {
 	protected MetaDataUtil metaDataUtil;
 
 	protected String rootAlias = "_it";
-	
+
 	protected static final String ROOT_PATH = "";
 
 	protected AbstractSearchProcessor(int qlType, MetaDataUtil metaDataUtil) {
@@ -143,98 +142,85 @@ public abstract class AbstractSearchProcessor {
 	 * 
 	 * @throws IllegalArgumentException
 	 */
-	public boolean forceSearchClass(Search search, Class<?> searchClass)
-			throws IllegalArgumentException {
+	public boolean forceSearchClass(Search search, Class<?> searchClass) throws IllegalArgumentException {
 		if (search.getSearchClass() == null) {
 			search.setSearchClass(searchClass);
 			return true;
 		} else if (!searchClass.equals(search.getSearchClass())) {
-			throw new IllegalArgumentException(
-					"Search class does not match expected type: " + searchClass.getName());
+			throw new IllegalArgumentException("Search class does not match expected type: " + searchClass.getName());
 		}
 		return false;
 	}
 
 	/**
-	 * Internal method for generating the select clause based on the fetches of
-	 * the given search (if <code>fetchMode != FETCH_ENTITY</code>)
+	 * Internal method for generating the select clause based on the fields of
+	 * the given search.
 	 */
-	protected String generateSelectClause(Search search,
-			Map<String, AliasNode> aliases) {
-		Iterator<Fetch> fetchItr = search.fetchIterator();
-		if (search.getFetchMode() == Search.FETCH_ENTITY) {
-			while (fetchItr.hasNext()) {
-				if (fetchItr.next().getOperator() != Fetch.OP_PROPERTY) {
-					throw new Error(
-							"A search with fetch mode FETCH_ENTITY cannot have fetches with operators. Change the fetch mode.");
-				}
-			}
-			return "select " + rootAlias;
-		} else {
-			StringBuilder sb = null;
-			boolean useOperator = false, notUseOperator = false;
+	protected String generateSelectClause(Search search, Map<String, AliasNode> aliases) {
+		Iterator<Field> fieldItr = search.fieldIterator();
 
-			boolean first = true;
-			while (fetchItr.hasNext()) {
-				Fetch fetch = fetchItr.next();
-				if (first) {
-					sb = new StringBuilder("select ");
-					first = false;
-				} else {
-					sb.append(", ");
-				}
+		StringBuilder sb = null;
+		boolean useOperator = false, notUseOperator = false;
 
-				String prop;
-				if (fetch.getProperty() == null || "".equals(fetch.getProperty())) {
-					prop = "*";
-				} else {
-					prop = getPath(search.getSearchClass(), aliases, fetch.getProperty());
-				}
-
-				switch (fetch.getOperator()) {
-				case Fetch.OP_AVG:
-					sb.append("avg(");
-					useOperator = true;
-					break;
-				case Fetch.OP_COUNT:
-					sb.append("count(");
-					useOperator = true;
-					break;
-				case Fetch.OP_COUNT_DISTINCT:
-					sb.append("count(distinct ");
-					useOperator = true;
-					break;
-				case Fetch.OP_MAX:
-					sb.append("max(");
-					useOperator = true;
-					break;
-				case Fetch.OP_MIN:
-					sb.append("min(");
-					useOperator = true;
-					break;
-				case Fetch.OP_SUM:
-					sb.append("sum(");
-					useOperator = true;
-					break;
-				default:
-					notUseOperator = true;
-					break;
-				}
-				sb.append(prop);
-				if (useOperator) {
-					sb.append(")");
-				}
-			}
+		boolean first = true;
+		while (fieldItr.hasNext()) {
+			Field field = fieldItr.next();
 			if (first) {
-				throw new Error(
-						"Search has no fetch entries, yet fetch mode is not FETCH_ENTITY. This is not valid.");
+				sb = new StringBuilder("select ");
+				first = false;
+			} else {
+				sb.append(", ");
 			}
-			if (useOperator && notUseOperator) {
-				throw new Error(
-						"A search can not have a mix of fetches with operators and fetches without operators.");
+
+			String prop;
+			if (field.getProperty() == null || "".equals(field.getProperty())) {
+				prop = "*";
+			} else {
+				prop = getPath(search.getSearchClass(), aliases, field.getProperty());
 			}
-			return sb.toString();
+
+			switch (field.getOperator()) {
+			case Field.OP_AVG:
+				sb.append("avg(");
+				useOperator = true;
+				break;
+			case Field.OP_COUNT:
+				sb.append("count(");
+				useOperator = true;
+				break;
+			case Field.OP_COUNT_DISTINCT:
+				sb.append("count(distinct ");
+				useOperator = true;
+				break;
+			case Field.OP_MAX:
+				sb.append("max(");
+				useOperator = true;
+				break;
+			case Field.OP_MIN:
+				sb.append("min(");
+				useOperator = true;
+				break;
+			case Field.OP_SUM:
+				sb.append("sum(");
+				useOperator = true;
+				break;
+			default:
+				notUseOperator = true;
+				break;
+			}
+			sb.append(prop);
+			if (useOperator) {
+				sb.append(")");
+			}
 		}
+		if (first) {
+			// there are no fields
+			return "select " + rootAlias;
+		}
+		if (useOperator && notUseOperator) {
+			throw new Error("A search can not have a mix of fields with operators and fields without operators.");
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -242,17 +228,43 @@ public abstract class AbstractSearchProcessor {
 	 * after generating other clauses because it relies on the aliases they
 	 * create. This method takes every path that is called for in the other
 	 * clauses and makes it available as an alias using left joins. It also adds
-	 * entities that should be fetched with
-	 * <code>fetchMode == FETCH_ENTITY</code>.
+	 * join fetching for properties specified by <code>fetches</code>
 	 */
-	protected String generateFromClause(Search search,
-			Map<String, AliasNode> aliases, boolean doEagerFetching) {
-
-		if (search.getFetchMode() == Search.FETCH_ENTITY) {
-			Iterator<Fetch> fetchItr = search.fetchIterator();
-			while (fetchItr.hasNext()) {
-				Fetch fetch = fetchItr.next();
-				getAlias(search.getSearchClass(), aliases, fetch.getProperty(), true);
+	protected String generateFromClause(Search search, Map<String, AliasNode> aliases, boolean doEagerFetching) {
+		//apply fetches
+		boolean hasFetches = false, hasFields = false;
+		Iterator<String> fetchItr = search.fetchIterator();
+		while (fetchItr.hasNext()) {
+			String fetch = fetchItr.next();
+			getAlias(search.getSearchClass(), aliases, fetch, true);
+			hasFetches = true;
+		}
+		if (hasFetches) {
+			//don't fetch nodes whose ancestors aren't found in the select clause
+			List<String> fields = new ArrayList<String>();
+			Iterator<Field> fieldItr = search.fieldIterator();
+			while (fieldItr.hasNext()) {
+				Field field = fieldItr.next();
+				if (field.getOperator() == field.OP_PROPERTY) {
+					fields.add(field.getProperty() + ".");
+				}
+				hasFields = true;
+			}
+			if (hasFields) {
+				for (AliasNode node : aliases.values()) {
+					if (node.fetch) {
+						//make sure it has an ancestor in the select clause
+						boolean hasAncestor = false;
+						for (String field : fields) {
+							if (node.getFullPath().startsWith(field)) {
+								hasAncestor = true;
+								break;
+							}
+						}
+						if (!hasAncestor)
+							node.fetch = false;
+					}
+				}
 			}
 		}
 
@@ -260,8 +272,8 @@ public abstract class AbstractSearchProcessor {
 		sb.append(search.getSearchClass().getName());
 		sb.append(" ");
 		sb.append(rootAlias);
-		
-		//traverse alias graph breadth-first
+
+		// traverse alias graph breadth-first
 		Queue<AliasNode> queue = new LinkedList<AliasNode>();
 		queue.offer(aliases.get(ROOT_PATH));
 		while (!queue.isEmpty()) {
@@ -288,8 +300,7 @@ public abstract class AbstractSearchProcessor {
 	 * Internal method for generating order by clause. Uses sort options from
 	 * search.
 	 */
-	protected String generateOrderByClause(Search search,
-			Map<String, AliasNode> aliases) {
+	protected String generateOrderByClause(Search search, Map<String, AliasNode> aliases) {
 		Iterator<Sort> sortItr = search.sortIterator();
 		StringBuilder sb = null;
 		boolean first = true;
@@ -301,7 +312,13 @@ public abstract class AbstractSearchProcessor {
 			} else {
 				sb.append(", ");
 			}
-			sb.append(getPath(search.getSearchClass(), aliases, sort.getProperty()));
+			if (sort.isIgnoreCase() && metaDataUtil.isSQLStringType(search.getSearchClass(), sort.getProperty())) {
+				sb.append("lower(");
+				sb.append(getPath(search.getSearchClass(), aliases, sort.getProperty()));
+				sb.append(")");
+			} else {
+				sb.append(getPath(search.getSearchClass(), aliases, sort.getProperty()));
+			}
 			sb.append(sort.isDesc() ? " desc" : " asc");
 		}
 		if (first) {
@@ -314,8 +331,7 @@ public abstract class AbstractSearchProcessor {
 	 * Internal method for generating where clause for given search. Uses filter
 	 * options from search.
 	 */
-	protected String generateWhereClause(Search search, List<Object> params,
-			Map<String, AliasNode> aliases) {
+	protected String generateWhereClause(Search search, List<Object> params, Map<String, AliasNode> aliases) {
 		List<Filter> filters = new ArrayList<Filter>();
 		Iterator<Filter> filterItr = search.filterIterator();
 		while (filterItr.hasNext()) {
@@ -327,11 +343,10 @@ public abstract class AbstractSearchProcessor {
 		} else if (filters.size() == 1) {
 			content = filterToString(search, filters.get(0), params, aliases);
 		} else {
-			Filter junction = new Filter(null, filters,
-					search.isDisjunction() ? Filter.OP_OR : Filter.OP_AND);
+			Filter junction = new Filter(null, filters, search.isDisjunction() ? Filter.OP_OR : Filter.OP_AND);
 			content = filterToString(search, junction, params, aliases);
 		}
-		
+
 		return (content == null) ? "" : "where " + content;
 	}
 
@@ -348,19 +363,19 @@ public abstract class AbstractSearchProcessor {
 	 * Recursively generate the QL fragment for a given search filter option.
 	 */
 	@SuppressWarnings("unchecked")
-	protected String filterToString(Search search, Filter filter,
-			List<Object> params, Map<String, AliasNode> aliases) {
+	protected String filterToString(Search search, Filter filter, List<Object> params, Map<String, AliasNode> aliases) {
 		Object value = filter.getValue();
-		
-		//If the operator needs a value and no value is specified, ignore this filter.
-		//Only NULL and NOT_NULL do not need a value. 
+
+		// If the operator needs a value and no value is specified, ignore this
+		// filter.
+		// Only NULL and NOT_NULL do not need a value.
 		if (value == null && filter.getOperator() != Filter.OP_NULL && filter.getOperator() != Filter.OP_NOT_NULL) {
 			return null;
 		}
 
-		// for IN and NOT IN, if value is empty list, return false, and true respectively
-		if (filter.getOperator() == Filter.OP_IN
-				|| filter.getOperator() == Filter.OP_NOT_IN) {
+		// for IN and NOT IN, if value is empty list, return false, and true
+		// respectively
+		if (filter.getOperator() == Filter.OP_IN || filter.getOperator() == Filter.OP_NOT_IN) {
 			if (value instanceof Collection && ((Collection) value).size() == 0) {
 				return filter.getOperator() == Filter.OP_IN ? "1 = 2" : "1 = 1";
 			}
@@ -368,13 +383,11 @@ public abstract class AbstractSearchProcessor {
 				return filter.getOperator() == Filter.OP_IN ? "1 = 2" : "1 = 1";
 			}
 		}
-		
+
 		// convert numbers to the expected type if needed (ex: Integer to Long)
-		if (filter.getOperator() == Filter.OP_IN
-				|| filter.getOperator() == Filter.OP_NOT_IN) {
+		if (filter.getOperator() == Filter.OP_IN || filter.getOperator() == Filter.OP_NOT_IN) {
 			// with IN & NOT IN, check each element in the collection.
-			Class<?> expectedClass = metaDataUtil.getExpectedClass(search
-					.getSearchClass(), filter.getProperty());
+			Class<?> expectedClass = metaDataUtil.getExpectedClass(search.getSearchClass(), filter.getProperty());
 
 			Object[] val2;
 
@@ -392,13 +405,11 @@ public abstract class AbstractSearchProcessor {
 				}
 			}
 			value = val2;
-		} else if (filter.getOperator() != Filter.OP_AND
-				&& filter.getOperator() != Filter.OP_OR
-				&& filter.getOperator() != Filter.OP_NOT
-				&& filter.getOperator() != Filter.OP_NULL
+		} else if (filter.getOperator() != Filter.OP_AND && filter.getOperator() != Filter.OP_OR
+				&& filter.getOperator() != Filter.OP_NOT && filter.getOperator() != Filter.OP_NULL
 				&& filter.getOperator() != Filter.OP_NOT_NULL) {
-			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(
-					search.getSearchClass(), filter.getProperty()));
+			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(search.getSearchClass(), filter
+					.getProperty()));
 		}
 
 		switch (filter.getOperator()) {
@@ -407,35 +418,28 @@ public abstract class AbstractSearchProcessor {
 		case Filter.OP_NOT_NULL:
 			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is not null";
 		case Filter.OP_IN:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " in (:p"
-					+ param(params, value) + ")";
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " in (:p" + param(params, value)
+					+ ")";
 		case Filter.OP_NOT_IN:
 			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " not in (:p"
 					+ param(params, value) + ")";
 		case Filter.OP_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " = :p"
-					+ param(params, value);
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " = :p" + param(params, value);
 		case Filter.OP_NOT_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " != :p"
-					+ param(params, value);
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " != :p" + param(params, value);
 		case Filter.OP_GREATER_THAN:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " > :p"
-					+ param(params, value);
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " > :p" + param(params, value);
 		case Filter.OP_LESS_THAN:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " < :p"
-					+ param(params, value);
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " < :p" + param(params, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " >= :p"
-					+ param(params, value);
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " >= :p" + param(params, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " <= :p"
-					+ param(params, value);
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " <= :p" + param(params, value);
 		case Filter.OP_LIKE:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " like :p"
-					+ param(params, value);
+			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " like :p" + param(params, value);
 		case Filter.OP_ILIKE:
-			return "lower(" + getPath(search.getSearchClass(), aliases, filter.getProperty()) + ") like :p"
-			+ param(params, value.toString().toLowerCase());
+			return "lower(" + getPath(search.getSearchClass(), aliases, filter.getProperty()) + ") like lower(:p"
+					+ param(params, value.toString()) + ")";
 		case Filter.OP_AND:
 		case Filter.OP_OR:
 			if (!(value instanceof List)) {
@@ -448,8 +452,7 @@ public abstract class AbstractSearchProcessor {
 			boolean first = true;
 			for (Object o : ((List) value)) {
 				if (o instanceof Filter) {
-					String filterStr = filterToString(search, (Filter) o,
-							params, aliases);
+					String filterStr = filterToString(search, (Filter) o, params, aliases);
 					if (filterStr != null) {
 						if (first) {
 							first = false;
@@ -469,15 +472,13 @@ public abstract class AbstractSearchProcessor {
 			if (!(value instanceof Filter)) {
 				return null;
 			}
-			String filterStr = filterToString(search, (Filter) value, params,
-					aliases);
+			String filterStr = filterToString(search, (Filter) value, params, aliases);
 			if (filterStr == null)
 				return null;
 
 			return "not " + filterStr;
 		default:
-			throw new IllegalArgumentException("Filter comparison ( "
-					+ filter.getOperator() + " ) is invalid.");
+			throw new IllegalArgumentException("Filter comparison ( " + filter.getOperator() + " ) is invalid.");
 		}
 	}
 
@@ -492,8 +493,7 @@ public abstract class AbstractSearchProcessor {
 			return rootAlias + "." + property;
 		} else {
 			String aliasPath = property.substring(0, pos);
-			return getAlias(rootClass, aliases, aliasPath, false).alias + "."
-					+ property.substring(pos + 1);
+			return getAlias(rootClass, aliases, aliasPath, false).alias + "." + property.substring(pos + 1);
 		}
 	}
 
@@ -511,50 +511,59 @@ public abstract class AbstractSearchProcessor {
 					node = node.parent;
 				}
 			}
-			
+
 			return node;
 		} else {
 			AliasNode node;
 			int pos = path.lastIndexOf('.');
 			String property = path.substring(pos + 1);
 			String subpath = (pos == -1) ? ROOT_PATH : path.substring(0, pos);
-			
+
 			if (metaDataUtil.isEntity(rootClass, path)) {
 				String alias = "a" + Integer.toString(aliases.size() + 1) + "_" + property;
-			
+
 				node = new AliasNode(property, alias);
-				
-				//set up path recursively
+
+				// set up path recursively
 				getAlias(rootClass, aliases, subpath, setFetch).addChild(property, node);
-				
+
 			} else {
 				String alias = getAlias(rootClass, aliases, subpath, setFetch).alias + "." + property;
-				
+
 				node = new AliasNode(null, alias);
 			}
-			
+
 			node.fetch = setFetch;
 			aliases.put(path, node);
-			
+
 			return node;
-		}		
+		}
 	}
-	
+
 	protected static final class AliasNode {
 		String property;
 		String alias;
 		boolean fetch;
 		AliasNode parent;
 		Map<String, AliasNode> children = new HashMap<String, AliasNode>();
-		
+
 		AliasNode(String property, String alias) {
 			this.property = property;
 			this.alias = alias;
 		}
-		
+
 		void addChild(String prop, AliasNode node) {
 			children.put(prop, node);
 			node.parent = this;
+		}
+		
+		public String getFullPath() {
+			if (parent == null)
+				return "";
+			else if (parent.parent == null)
+				return property;
+			else
+				return parent.getFullPath() + "." + property;
 		}
 	}
 
@@ -575,9 +584,14 @@ public abstract class AbstractSearchProcessor {
 	 * </ul>
 	 */
 	protected void securityCheck(Search search) {
-		Iterator<Fetch> fetchItr = search.fetchIterator();
+		Iterator<Field> fieldItr = search.fieldIterator();
+		while (fieldItr.hasNext()) {
+			securityCheckProperty(fieldItr.next().getProperty());
+		}
+		
+		Iterator<String> fetchItr = search.fetchIterator();
 		while (fetchItr.hasNext()) {
-			securityCheckProperty(fetchItr.next().getProperty());
+			securityCheckProperty(fetchItr.next());
 		}
 
 		Iterator<Sort> sortItr = search.sortIterator();

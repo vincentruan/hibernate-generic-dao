@@ -7,10 +7,17 @@ public class Sort implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	protected String property;
-	protected boolean desc;
+	protected boolean desc = false;
+	protected boolean ignoreCase = false;
 
 	public Sort() {
 
+	}
+
+	public Sort(String property, boolean desc, boolean ignoreCase) {
+		this.property = property;
+		this.desc = desc;
+		this.ignoreCase = ignoreCase;
 	}
 
 	public Sort(String property, boolean desc) {
@@ -26,8 +33,16 @@ public class Sort implements Serializable {
 		return new Sort(property);
 	}
 
+	public static Sort asc(String property, boolean ignoreCase) {
+		return new Sort(property, ignoreCase);
+	}
+
 	public static Sort desc(String property) {
 		return new Sort(property, true);
+	}
+
+	public static Sort desc(String property, boolean ignoreCase) {
+		return new Sort(property, true, ignoreCase);
 	}
 
 	public String getProperty() {
@@ -46,12 +61,20 @@ public class Sort implements Serializable {
 		this.desc = desc;
 	}
 
+	public boolean isIgnoreCase() {
+		return ignoreCase;
+	}
+
+	public void setIgnoreCase(boolean ignoreCase) {
+		this.ignoreCase = ignoreCase;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + (desc ? 1231 : 1237);
 		result = prime * result + ((property == null) ? 0 : property.hashCode());
+		result = prime * result + (desc ? 1231 : 1237);
 		return result;
 	}
 
@@ -85,6 +108,9 @@ public class Sort implements Serializable {
 			sb.append("`");
 		}
 		sb.append(desc ? " desc" : " asc");
+		if (ignoreCase) {
+			sb.append(" (ignore case)");
+		}
 		return sb.toString();
 	}
 }

@@ -16,21 +16,21 @@ public class TypesTest extends TestBase {
 		Search s = new Search(Pet.class);
 
 		s.addFilterGreaterThan("ident.idNumber", 3333);
-		s.addFetch("ident.name.first");
-		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addField("ident.name.first");
+		s.setResultMode(Search.RESULT_SINGLE);
 		assertEquals(spiderJimmy.getIdent().getName().getFirst(), target.searchUnique(s));
 		
 		s.clear();
 		s.addFilterEqual("ident.name.first", "Miss");
-		s.addFetch("ident.idNumber");
-		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addField("ident.idNumber");
+		s.setResultMode(Search.RESULT_SINGLE);
 		assertEquals(catPrissy.getIdent().getIdNumber(), target.searchUnique(s));
 		
 		s.clear();
 		s.addFilterEqual("favoritePlaymate.ident.name.first", "Jimmy");
 		s.addFilterEqual("species", "cat");
-		s.addFetch("ident.name.first");
-		s.setFetchMode(Search.FETCH_SINGLE);
+		s.addField("ident.name.first");
+		s.setResultMode(Search.RESULT_SINGLE);
 		assertEquals(catNorman.getIdent().getName().getFirst(), target.searchUnique(s));
 		
 		//many-to-many ids

@@ -69,8 +69,8 @@ public class GenericDAOTest extends TestBase {
 		//searchGeneric
 		s = new Search();
 		s.addFilterEqual("id", bob.getId());
-		s.setFetchMode(Search.FETCH_SINGLE);
-		s.addFetch("firstName");
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("firstName");
 		assertEquals(bob.getFirstName(), personDAO.searchGeneric(s).get(0));
 		s.setSearchClass(Person.class);
 		assertEquals(bob.getFirstName(), personDAO.searchGeneric(s).get(0));

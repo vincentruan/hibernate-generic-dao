@@ -8,6 +8,7 @@ import org.hibernate.EntityMode;
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
+import org.hibernate.engine.Mapping;
 import org.hibernate.type.AbstractComponentType;
 import org.hibernate.type.EntityType;
 import org.hibernate.type.Type;
@@ -35,6 +36,16 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 
 	// --- Public Methods ---
 
+	public boolean isSQLStringType(Class<?> rootClass, String propertyPath) {
+		Type type = getPathType(rootClass, propertyPath);
+		if (type == null) {
+			return false;
+		} else {
+			int[] types = type.sqlTypes((Mapping) sessionFactory);
+			return types.length == 1 && (types[0] == java.sql.Types.VARCHAR || types[0] == java.sql.Types.CHAR);
+		}
+	}
+
 	public Class<?> getExpectedClass(Class<?> rootClass, String propertyPath) {
 		Type type = getPathType(rootClass, propertyPath);
 		if (type == null) {
@@ -43,7 +54,7 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 			return type.getReturnedClass();
 		}
 	}
-	
+
 	public boolean isEntity(Class<?> rootClass, String propertyPath) {
 		Type type = getPathType(rootClass, propertyPath);
 		if (type == null) {
@@ -57,14 +68,14 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 			return type.isEntityType();
 		}
 	}
-	
+
 	public Serializable getId(Object object) {
 		if (object == null)
 			throw new NullPointerException("Cannot get ID from null object.");
 
 		return sessionFactory.getClassMetadata(object.getClass()).getIdentifier(object, EntityMode.POJO);
 	}
-	
+
 	private Type getPathType(Class<?> rootClass, String propertyPath) {
 		if (propertyPath == null || "".equals(propertyPath))
 			return null;
@@ -98,7 +109,7 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 		} catch (HibernateException ex) {
 			throw new PropertyNotFoundException("Could not find property '" + propertyPath + "' on class " + rootClass
 					+ ".");
-		}		
+		}
 	}
 
 }
