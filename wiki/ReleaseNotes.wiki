@@ -31,15 +31,14 @@
     * Javadocs for Search beans are out of date.
 
 ==0.4.1==
-  * Add collection operators (see blog)
   * Add option to ignore case on sorts (Issue 24)
   * Consider Issue 20 (select & eager), Issue 22 (null values in filters), Issue 23 (query helper methods)
-  * Consider how we deal with hibernate special properties .id and .class in Searches.
-  * Possibly add ability to compare two properties in a filter.
-  * Improve Search bean interfaces and provide utilities for merging and changing searches.
 
 ==Future==
-
+  * Add collection operators (see blog)
+  * Consider how we deal with hibernate special properties .id and .class in Searches.
+  * Improve Search bean interfaces and provide utilities for merging and changing searches.
+  * Possibly add ability to compare two properties in a filter.
   * Add implementation for JPA
   * Consider compatibility with multiple entity names per Java class
   * Security roles with remote DAOs
