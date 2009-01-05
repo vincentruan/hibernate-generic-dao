@@ -32,9 +32,11 @@
 
 ==0.4.1==
   * Add option to ignore case on sorts (Issue 24)
-  * Consider Issue 20 (select & eager), Issue 22 (null values in filters), Issue 23 (query helper methods)
+  * Ignore Filters with null values (Issue 22)
+  * Consider Issue 20 (select & eager)
 
 ==Future==
+  * Consider Issue 23 (query helper methods)
   * Add collection operators (see blog)
   * Consider how we deal with hibernate special properties .id and .class in Searches.
   * Improve Search bean interfaces and provide utilities for merging and changing searches.
