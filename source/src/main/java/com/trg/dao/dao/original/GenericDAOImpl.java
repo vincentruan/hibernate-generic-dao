@@ -10,7 +10,7 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 /**
@@ -83,20 +83,20 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		_update(object);
 	}
 
-	public List<T> search(Search search) {
+	public List<T> search(ISearch search) {
 		if (search == null)
 			return fetchAll();
 		
-		return _search(search, persistentClass);
+		return _search(persistentClass, search);
 	}
 
-	public int count(Search search) {
+	public int count(ISearch search) {
 		if (search == null)
 			return 0;
-		return _count(search, persistentClass);
+		return _count(persistentClass, search);
 	}
 
-	public SearchResult<T> searchAndCount(Search search) {
+	public SearchResult<T> searchAndCount(ISearch search) {
 		if (search == null) {
 			SearchResult<T> result = new SearchResult<T>();
 			result.setResults(fetchAll());
@@ -104,7 +104,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 			return result;
 		}
 		
-		return _searchAndCount(search, persistentClass);
+		return _searchAndCount(persistentClass, search);
 	}
 
 	public boolean isConnected(Object object) {
@@ -119,18 +119,18 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		_refresh(object);
 	}
 
-	public List searchGeneric(Search search) {
+	public List searchGeneric(ISearch search) {
 		if (search == null)
 			return fetchAll();
 		
-		return _search(search, persistentClass);
+		return _search(persistentClass, search);
 	}
 
-	public Object searchUnique(Search search) throws NonUniqueResultException {
+	public Object searchUnique(ISearch search) throws NonUniqueResultException {
 		if (search == null)
 			return null;
 		
-		return _searchUnique(search, persistentClass);
+		return _searchUnique(persistentClass, search);
 	}
 
 }

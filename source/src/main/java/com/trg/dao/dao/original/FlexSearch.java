@@ -1,10 +1,12 @@
 package com.trg.dao.dao.original;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.trg.dao.search.Field;
 import com.trg.dao.search.Filter;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.Sort;
 
 /**
@@ -15,20 +17,40 @@ import com.trg.dao.search.Sort;
  * @author dwolverton
  * 
  */
-public class FlexSearch extends Search implements Serializable {
+public class FlexSearch implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public void setClassName(String className) throws ClassNotFoundException {
-		searchClass = Class.forName(className);
+	protected int firstResult = -1; // -1 stands for unspecified
+
+	protected int maxResults = -1; // -1 stands for unspecified
+
+	protected int page = -1; // -1 stands for unspecified
+
+	protected String searchClassName;
+
+	protected List<Filter> filters = new ArrayList<Filter>();
+
+	protected boolean disjunction;
+
+	protected List<Sort> sorts = new ArrayList<Sort>();
+
+	protected List<Field> fields = new ArrayList<Field>();
+
+	protected List<String> fetches = new ArrayList<String>();
+	
+	protected int resultMode = ISearch.RESULT_AUTO;
+	
+	public void setSearchClassName(String searchClassName) throws ClassNotFoundException {
+		this.searchClassName = searchClassName;
 	}
 
-	public String getClassName() {
-		if (searchClass == null)
-			return null;
-		return searchClass.getName();
+	public String getSearchClassName() {
+		return searchClassName;
 	}
 
+	
+	
 	public Filter[] getFilters() {
 		return filters.toArray(new Filter[0]);
 	}
@@ -74,6 +96,20 @@ public class FlexSearch extends Search implements Serializable {
 					if (f.getKey() == null) f.setKey(f.getProperty());
 					this.fields.add(f);
 				}
+			}
+		}
+	}
+	
+	public String[] getFetches() {
+		return fetches.toArray(new String[0]);
+	}
+	
+	public void setFetches(String[] fetches) {
+		this.fetches.clear();
+		if (fetches != null) {
+			for (int i =  0; i < fetches.length; i++) {
+				if (fetches[i] != null && !"".equals(fetches[i]))
+					this.fetches.add(fetches[i]);
 			}
 		}
 	}

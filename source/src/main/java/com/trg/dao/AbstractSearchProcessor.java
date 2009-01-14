@@ -15,12 +15,12 @@ import org.slf4j.LoggerFactory;
 
 import com.trg.dao.search.Field;
 import com.trg.dao.search.Filter;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.Sort;
 
 /**
  * This class provides two methods for generating query language to fulfill a
- * <code>Search</code>.
+ * <code>ISearch</code>.
  * <ol>
  * <li><code>generateQL()</code> - is used for getting the actual search
  * results.</li>
@@ -80,16 +80,19 @@ public abstract class AbstractSearchProcessor {
 	 * specified as named parameters ":pX", where X is the index of the
 	 * parameter value in paramList.
 	 */
-	public String generateQL(Search search, List<Object> paramList) {
-		securityCheck(search);
+	public String generateQL(Class<?> entityClass, ISearch search, List<Object> paramList) {
+		if (entityClass == null)
+			throw new NullPointerException("The entity class for a search cannot be null");
+		
+		securityCheck(entityClass, search);
 
 		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
 		aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
 
-		String select = generateSelectClause(search, aliases);
-		String where = generateWhereClause(search, paramList, aliases);
-		String orderBy = generateOrderByClause(search, aliases);
-		String from = generateFromClause(search, aliases, true);
+		String select = generateSelectClause(entityClass, search, aliases);
+		String where = generateWhereClause(entityClass, search, paramList, aliases);
+		String orderBy = generateOrderByClause(entityClass, search, aliases);
+		String from = generateFromClause(entityClass, search, aliases, true);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(select);
@@ -113,14 +116,17 @@ public abstract class AbstractSearchProcessor {
 	 * as named parameters ":pX", where X is the index of the parameter value in
 	 * paramList.
 	 */
-	public String generateRowCountQL(Search search, List<Object> paramList) {
-		securityCheck(search);
+	public String generateRowCountQL(Class<?> entityClass, ISearch search, List<Object> paramList) {
+		if (entityClass == null)
+			throw new NullPointerException("The entity class for a search cannot be null");
+
+		securityCheck(entityClass, search);
 
 		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
 		aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
 
-		String where = generateWhereClause(search, paramList, aliases);
-		String from = generateFromClause(search, aliases, false);
+		String where = generateWhereClause(entityClass, search, paramList, aliases);
+		String from = generateFromClause(entityClass, search, aliases, false);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select count(distinct ").append(rootAlias).append(".id) ");
@@ -135,29 +141,11 @@ public abstract class AbstractSearchProcessor {
 	}
 
 	/**
-	 * Make sure a <code>Search</code> has the specified search class. If no
-	 * class was previously assigned, assign the given class. If the search
-	 * already has a different search class than the specified class, an error
-	 * is thrown.
-	 * 
-	 * @throws IllegalArgumentException
-	 */
-	public boolean forceSearchClass(Search search, Class<?> searchClass) throws IllegalArgumentException {
-		if (search.getSearchClass() == null) {
-			search.setSearchClass(searchClass);
-			return true;
-		} else if (!searchClass.equals(search.getSearchClass())) {
-			throw new IllegalArgumentException("Search class does not match expected type: " + searchClass.getName());
-		}
-		return false;
-	}
-
-	/**
 	 * Internal method for generating the select clause based on the fields of
 	 * the given search.
 	 */
-	protected String generateSelectClause(Search search, Map<String, AliasNode> aliases) {
-		Iterator<Field> fieldItr = search.fieldIterator();
+	protected String generateSelectClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases) {
+		Iterator<Field> fieldItr = search.getFields().iterator();
 
 		StringBuilder sb = null;
 		boolean useOperator = false, notUseOperator = false;
@@ -176,7 +164,7 @@ public abstract class AbstractSearchProcessor {
 			if (field.getProperty() == null || "".equals(field.getProperty())) {
 				prop = "*";
 			} else {
-				prop = getPath(search.getSearchClass(), aliases, field.getProperty());
+				prop = getPath(entityClass, aliases, field.getProperty());
 			}
 
 			switch (field.getOperator()) {
@@ -230,19 +218,19 @@ public abstract class AbstractSearchProcessor {
 	 * clauses and makes it available as an alias using left joins. It also adds
 	 * join fetching for properties specified by <code>fetches</code>
 	 */
-	protected String generateFromClause(Search search, Map<String, AliasNode> aliases, boolean doEagerFetching) {
+	protected String generateFromClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases, boolean doEagerFetching) {
 		//apply fetches
 		boolean hasFetches = false, hasFields = false;
-		Iterator<String> fetchItr = search.fetchIterator();
+		Iterator<String> fetchItr = search.getFetches().iterator();
 		while (fetchItr.hasNext()) {
 			String fetch = fetchItr.next();
-			getAlias(search.getSearchClass(), aliases, fetch, true);
+			getAlias(entityClass, aliases, fetch, true);
 			hasFetches = true;
 		}
 		if (hasFetches) {
 			//don't fetch nodes whose ancestors aren't found in the select clause
 			List<String> fields = new ArrayList<String>();
-			Iterator<Field> fieldItr = search.fieldIterator();
+			Iterator<Field> fieldItr = search.getFields().iterator();
 			while (fieldItr.hasNext()) {
 				Field field = fieldItr.next();
 				if (field.getOperator() == field.OP_PROPERTY) {
@@ -269,7 +257,7 @@ public abstract class AbstractSearchProcessor {
 		}
 
 		StringBuilder sb = new StringBuilder("from ");
-		sb.append(search.getSearchClass().getName());
+		sb.append(entityClass.getName());
 		sb.append(" ");
 		sb.append(rootAlias);
 
@@ -300,8 +288,8 @@ public abstract class AbstractSearchProcessor {
 	 * Internal method for generating order by clause. Uses sort options from
 	 * search.
 	 */
-	protected String generateOrderByClause(Search search, Map<String, AliasNode> aliases) {
-		Iterator<Sort> sortItr = search.sortIterator();
+	protected String generateOrderByClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases) {
+		Iterator<Sort> sortItr = search.getSorts().iterator();
 		StringBuilder sb = null;
 		boolean first = true;
 		while (sortItr.hasNext()) {
@@ -312,12 +300,12 @@ public abstract class AbstractSearchProcessor {
 			} else {
 				sb.append(", ");
 			}
-			if (sort.isIgnoreCase() && metaDataUtil.isSQLStringType(search.getSearchClass(), sort.getProperty())) {
+			if (sort.isIgnoreCase() && metaDataUtil.isSQLStringType(entityClass, sort.getProperty())) {
 				sb.append("lower(");
-				sb.append(getPath(search.getSearchClass(), aliases, sort.getProperty()));
+				sb.append(getPath(entityClass, aliases, sort.getProperty()));
 				sb.append(")");
 			} else {
-				sb.append(getPath(search.getSearchClass(), aliases, sort.getProperty()));
+				sb.append(getPath(entityClass, aliases, sort.getProperty()));
 			}
 			sb.append(sort.isDesc() ? " desc" : " asc");
 		}
@@ -331,9 +319,9 @@ public abstract class AbstractSearchProcessor {
 	 * Internal method for generating where clause for given search. Uses filter
 	 * options from search.
 	 */
-	protected String generateWhereClause(Search search, List<Object> params, Map<String, AliasNode> aliases) {
+	protected String generateWhereClause(Class<?> entityClass, ISearch search, List<Object> params, Map<String, AliasNode> aliases) {
 		List<Filter> filters = new ArrayList<Filter>();
-		Iterator<Filter> filterItr = search.filterIterator();
+		Iterator<Filter> filterItr = search.getFilters().iterator();
 		while (filterItr.hasNext()) {
 			filters.add(filterItr.next());
 		}
@@ -341,10 +329,10 @@ public abstract class AbstractSearchProcessor {
 		if (filters.size() == 0) {
 			return "";
 		} else if (filters.size() == 1) {
-			content = filterToString(search, filters.get(0), params, aliases);
+			content = filterToString(entityClass, filters.get(0), params, aliases);
 		} else {
 			Filter junction = new Filter(null, filters, search.isDisjunction() ? Filter.OP_OR : Filter.OP_AND);
-			content = filterToString(search, junction, params, aliases);
+			content = filterToString(entityClass, junction, params, aliases);
 		}
 
 		return (content == null) ? "" : "where " + content;
@@ -363,7 +351,7 @@ public abstract class AbstractSearchProcessor {
 	 * Recursively generate the QL fragment for a given search filter option.
 	 */
 	@SuppressWarnings("unchecked")
-	protected String filterToString(Search search, Filter filter, List<Object> params, Map<String, AliasNode> aliases) {
+	protected String filterToString(Class<?> entityClass, Filter filter, List<Object> params, Map<String, AliasNode> aliases) {
 		Object value = filter.getValue();
 
 		// If the operator needs a value and no value is specified, ignore this
@@ -387,7 +375,7 @@ public abstract class AbstractSearchProcessor {
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (filter.getOperator() == Filter.OP_IN || filter.getOperator() == Filter.OP_NOT_IN) {
 			// with IN & NOT IN, check each element in the collection.
-			Class<?> expectedClass = metaDataUtil.getExpectedClass(search.getSearchClass(), filter.getProperty());
+			Class<?> expectedClass = metaDataUtil.getExpectedClass(entityClass, filter.getProperty());
 
 			Object[] val2;
 
@@ -408,37 +396,37 @@ public abstract class AbstractSearchProcessor {
 		} else if (filter.getOperator() != Filter.OP_AND && filter.getOperator() != Filter.OP_OR
 				&& filter.getOperator() != Filter.OP_NOT && filter.getOperator() != Filter.OP_NULL
 				&& filter.getOperator() != Filter.OP_NOT_NULL) {
-			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(search.getSearchClass(), filter
+			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(entityClass, filter
 					.getProperty()));
 		}
 
 		switch (filter.getOperator()) {
 		case Filter.OP_NULL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is null";
+			return getPath(entityClass, aliases, filter.getProperty()) + " is null";
 		case Filter.OP_NOT_NULL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " is not null";
+			return getPath(entityClass, aliases, filter.getProperty()) + " is not null";
 		case Filter.OP_IN:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " in (:p" + param(params, value)
+			return getPath(entityClass, aliases, filter.getProperty()) + " in (:p" + param(params, value)
 					+ ")";
 		case Filter.OP_NOT_IN:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " not in (:p"
+			return getPath(entityClass, aliases, filter.getProperty()) + " not in (:p"
 					+ param(params, value) + ")";
 		case Filter.OP_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " = :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " = :p" + param(params, value);
 		case Filter.OP_NOT_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " != :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " != :p" + param(params, value);
 		case Filter.OP_GREATER_THAN:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " > :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " > :p" + param(params, value);
 		case Filter.OP_LESS_THAN:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " < :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " < :p" + param(params, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " >= :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " >= :p" + param(params, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " <= :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " <= :p" + param(params, value);
 		case Filter.OP_LIKE:
-			return getPath(search.getSearchClass(), aliases, filter.getProperty()) + " like :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " like :p" + param(params, value);
 		case Filter.OP_ILIKE:
-			return "lower(" + getPath(search.getSearchClass(), aliases, filter.getProperty()) + ") like lower(:p"
+			return "lower(" + getPath(entityClass, aliases, filter.getProperty()) + ") like lower(:p"
 					+ param(params, value.toString()) + ")";
 		case Filter.OP_AND:
 		case Filter.OP_OR:
@@ -452,7 +440,7 @@ public abstract class AbstractSearchProcessor {
 			boolean first = true;
 			for (Object o : ((List) value)) {
 				if (o instanceof Filter) {
-					String filterStr = filterToString(search, (Filter) o, params, aliases);
+					String filterStr = filterToString(entityClass, (Filter) o, params, aliases);
 					if (filterStr != null) {
 						if (first) {
 							first = false;
@@ -472,7 +460,7 @@ public abstract class AbstractSearchProcessor {
 			if (!(value instanceof Filter)) {
 				return null;
 			}
-			String filterStr = filterToString(search, (Filter) value, params, aliases);
+			String filterStr = filterToString(entityClass, (Filter) value, params, aliases);
 			if (filterStr == null)
 				return null;
 
@@ -583,23 +571,23 @@ public abstract class AbstractSearchProcessor {
 	 * sure it only contains valid Java identifier characters</li>
 	 * </ul>
 	 */
-	protected void securityCheck(Search search) {
-		Iterator<Field> fieldItr = search.fieldIterator();
+	protected void securityCheck(Class<?> entityClass, ISearch search) {
+		Iterator<Field> fieldItr = search.getFields().iterator();
 		while (fieldItr.hasNext()) {
 			securityCheckProperty(fieldItr.next().getProperty());
 		}
 		
-		Iterator<String> fetchItr = search.fetchIterator();
+		Iterator<String> fetchItr = search.getFetches().iterator();
 		while (fetchItr.hasNext()) {
 			securityCheckProperty(fetchItr.next());
 		}
 
-		Iterator<Sort> sortItr = search.sortIterator();
+		Iterator<Sort> sortItr = search.getSorts().iterator();
 		while (sortItr.hasNext()) {
 			securityCheckProperty(sortItr.next().getProperty());
 		}
 
-		Iterator<Filter> filterItr = search.filterIterator();
+		Iterator<Filter> filterItr = search.getFilters().iterator();
 		while (filterItr.hasNext()) {
 			securityCheckFilter(filterItr.next());
 		}

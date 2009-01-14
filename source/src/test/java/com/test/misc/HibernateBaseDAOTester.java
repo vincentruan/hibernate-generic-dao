@@ -9,7 +9,7 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInterface {
@@ -28,7 +28,7 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 		return super._count(klass);
 	}
 
-	public int count(Search search) {
+	public int count(ISearch search) {
 		return super._count(search);
 	}
 
@@ -77,16 +77,16 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 	}
 
 	@SuppressWarnings("unchecked")
-	public List search(Search search) {
+	public List search(ISearch search) {
 		return super._search(search);
 	}
 
 	@SuppressWarnings("unchecked")
-	public SearchResult searchAndCount(Search search) {
+	public SearchResult searchAndCount(ISearch search) {
 		return super._searchAndCount(search);
 	}
 
-	public Object searchUnique(Search search) throws NonUniqueResultException {
+	public Object searchUnique(ISearch search) throws NonUniqueResultException {
 		return super._searchUnique(search);
 	}
 
@@ -94,22 +94,22 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 		super._update(transientEntities);
 	}
 
-	public int count(Search search, Class<?> forceClass) {
-		return super._count(search, forceClass);
+	public int count(Class<?> searchClass, ISearch search) {
+		return super._count(searchClass, search);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List search(Search search, Class<?> forceClass) {
-		return super._search(search, forceClass);
+	public List search(Class<?> searchClass, ISearch search) {
+		return super._search(searchClass, search);
 	}
 
 	@SuppressWarnings("unchecked")
-	public SearchResult searchAndCount(Search search, Class<?> forceClass) {
-		return super._searchAndCount(search, forceClass);
+	public SearchResult searchAndCount(Class<?> searchClass, ISearch search) {
+		return super._searchAndCount(searchClass, search);
 	}
 
-	public Object searchUnique(Search search, Class<?> forceClass) {
-		return super._searchUnique(search, forceClass);
+	public Object searchUnique(Class<?> searchClass, ISearch search) {
+		return super._searchUnique(searchClass, search);
 	}
 	
 

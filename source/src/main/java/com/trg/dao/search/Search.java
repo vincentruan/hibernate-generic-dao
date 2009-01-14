@@ -6,144 +6,10 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * The base search DTO (data transfer object). A Search object is passed into a
- * DAO to define the parameters for a search. There are five types of parameters
- * that can be set.
- * <ul>
- * <li>Class - The Class of the object(s) to search for. This is required. It
- * can be specified in the constructor or using <code>setSearchClass()</code>.
- * <li>Filters - Any number of filters may be specified for the search. Filters
- * specify a property and a condition that it must match for the object to be
- * included in the result. Filters are "ANDed" together by default, but
- * disjunction (OR) can be used instead by setting
- * <code>setDisjunction(true)</code>. Filters are set using
- * <code>addFilter()</code> . See also the <code>Filter</code> class.
- * <li>Sorts - Any number of sorts may be specified. Each sort consists of a
- * property and a flag for ascending or descending. The first sort added is the
- * primary sort, the second, secondary and so on. Sorts are set using
- * <code>addSort()</code>. See also the <code>Sort</code> class.
- * <li>Paging - The maximum number of results may be specified with
- * <code>setMaxResults()</code>. (This can also be thought of as results per
- * page.) The first result can be specified using either
- * <code>setFirstResult()</code> or <code>setPage()</code>.
- * <li>Fields - By default the entity specified in search class is returned as
- * the result for each row. However, by specifying fields, any combination of
- * individual properties can be returned for each row in the result set. These
- * properties can be returned as maps, lists or arrays depending on
- * <code>resultMode</code>. Fields are specified using <code>addField()</code>.
- * The result mode may also be set using <code>setResultMode()</code>.<br/><br/>
- * 
- * Additionally, fields can be specified using column operators: COUNT, COUNT
- * DISTINCT, SUM, AVG, MAX, MIN. Note that fields with column operators can not
- * be mixed with fields that do not use column operators.
- * </ul>
- * <li>Fetch - This determines which attached objects to pull along with the
- * base search object. With hibernate this eagerly loads the specified
- * properties. Otherwise they might be loaded lazily. This is useful for
- * performance and results that will be disconnected from hibernate and copied
- * to a remote client. Fetches are set using <code>addFetch()</code>. </ul>
- * 
- * @see Filter
- * @see Field
- * @see Sort
- * 
- * @author dwolverton
- * 
- */
 @SuppressWarnings("unchecked")
-public class Search implements Serializable {
+public class Search implements ISearch, Serializable {
 
 	private static final long serialVersionUID = 1L;
-
-	/**
-	 * Value for result mode. This is the default value. With
-	 * <code>RESULT_AUTO</code> the result mode is automatically determined
-	 * according to the following rules:
-	 * <ul>
-	 * <li>If any field is specified with a key, use <code>RESULT_MAP</code>.
-	 * <li>Otherwise, if zero or one fields are specified, use <code>
-	 * RESULT_SINGLE</code>. <li>Otherwise, use <code>RESULT_ARRAY</code>.
-	 * </ul>
-	 * 
-	 * @see #setResultMode(int)
-	 */
-	public static final int RESULT_AUTO = 0;
-
-	/**
-	 * Value for result mode. <code>RESULT_ARRAY</code> returns each result as
-	 * an Object array (<code>Object[]</code>) with the entries corresponding to
-	 * the fields added to the search. Here's an example:
-	 * 
-	 * <pre>
-	 * Search s = new Search(Person.class);
-	 * s.setResultMode(Search.RESULT_ARRAY);
-	 * s.addField(&quot;firstName&quot;);
-	 * s.addField(&quot;lastName&quot;);
-	 * for (Object[] array : dao.search(s)) {
-	 * 	System.out.println(array[0] + &quot; &quot; + array[1]);
-	 * }
-	 * </pre>
-	 * 
-	 * @see #setResultMode(int)
-	 */
-	public static final int RESULT_ARRAY = 1;
-
-	/**
-	 * Value for result mode. <code>RESULT_LIST</code> returns each result as a
-	 * list of Objects (<code>List&lt;Object&gt;</Code> ). Here's an example:
-	 * 
-	 * <pre>
-	 * Search s = new Search(Person.class);
-	 * s.setResultMode(Search.RESULT_LIST);
-	 * s.addField(&quot;firstName&quot;);
-	 * s.addField(&quot;lastName&quot;);
-	 * for (List&lt;Object&gt; list : dao.search(s)) {
-	 * 	System.out.println(list.get(0) + &quot; &quot; + list.get(1));
-	 * }
-	 * </pre>
-	 * 
-	 * @see #setResultMode(int)
-	 */
-	public static final int RESULT_LIST = 2;
-
-	/**
-	 * Value for result mode. <code>RESULT_MAP</code> returns each row as a
-	 * map with properties' names or keys for keys to the corresponding
-	 * values. Here's an example:
-	 * 
-	 * <pre>
-	 * Search s = new Search(Person.class);
-	 * s.setResultMode(Search.RESULT_MAP;
-	 * s.addField(&quot;firstName&quot;);
-	 * s.addField(&quot;lastName&quot;, &quot;ln&quot;);
-	 * for (Map&lt;String, Object&gt; map : dao.search(s)) {
-	 * 	System.out.println(map.get(&quot;firstName&quot;) + &quot; &quot; + map.get(&quot;ln&quot;));
-	 * }
-	 * </pre>
-	 * 
-	 * @see #setResultMode(int)
-	 */
-	public static final int RESULT_MAP = 3;
-
-	/**
-	 * Value for result mode.
-	 * <code>RESULT_SINGLE</code> - Exactly one field or no fields must be specified
-	 * to use this result mode. The result list contains just the value of that
-	 * property for each element. Here's an example:
-	 * 
-	 * <pre>
-	 * Search s = new Search(Person.class);
-	 * s.setResultMode(Search.RESULT_SINGLE);
-	 * s.addField(&quot;firstName&quot;);
-	 * for (Object name : dao.search(s)) {
-	 * 	System.out.println(name);
-	 * }
-	 * </pre>
-	 * 
-	 * @see #setResultMode(int)
-	 */
-	public static final int RESULT_SINGLE = 4;
 
 	protected int firstResult = -1; // -1 stands for unspecified
 
@@ -151,7 +17,7 @@ public class Search implements Serializable {
 
 	protected int page = -1; // -1 stands for unspecified
 
-	protected Class searchClass;
+	protected Class<?> searchClass;
 
 	protected List<Filter> filters = new ArrayList<Filter>();
 
@@ -160,7 +26,7 @@ public class Search implements Serializable {
 	protected List<Sort> sorts = new ArrayList<Sort>();
 
 	protected List<Field> fields = new ArrayList<Field>();
-	
+
 	protected List<String> fetches = new ArrayList<String>();
 
 	protected int resultMode = RESULT_AUTO;
@@ -169,12 +35,13 @@ public class Search implements Serializable {
 
 	}
 
-	public Search(Class searchClass) {
+	public Search(Class<?> searchClass) {
 		this.searchClass = searchClass;
 	}
 
-	public void setSearchClass(Class searchClass) {
+	public Search setSearchClass(Class<?> searchClass) {
 		this.searchClass = searchClass;
+		return this;
 	}
 
 	public Class getSearchClass() {
@@ -312,7 +179,8 @@ public class Search implements Serializable {
 	 * 
 	 * <p>
 	 * This takes a variable number of parameters. Any number of <code>Filter
-	 * </code>s can be specified.
+	 * </code>s can be
+	 * specified.
 	 */
 	public Search addFilterAnd(Filter... filters) {
 		addFilter(Filter.and(filters));
@@ -324,7 +192,8 @@ public class Search implements Serializable {
 	 * 
 	 * <p>
 	 * This takes a variable number of parameters. Any number of <code>Filter
-	 * </code>s can be specified.
+	 * </code>s can be
+	 * specified.
 	 */
 	public Search addFilterOr(Filter... filters) {
 		addFilter(Filter.or(filters));
@@ -372,8 +241,9 @@ public class Search implements Serializable {
 	 * Filters added to a search are "ANDed" together if this is false (default)
 	 * and "ORed" if it is set to true.
 	 */
-	public void setDisjunction(boolean disjunction) {
+	public Search setDisjunction(boolean disjunction) {
 		this.disjunction = disjunction;
+		return this;
 	}
 
 	// Sorts
@@ -544,7 +414,8 @@ public class Search implements Serializable {
 	/**
 	 * Result modes tell the search what form to use for the results. Options
 	 * include <code>RESULT_AUTO</code>, <code>RESULT_ARRAY</code>, <code>
-	 * RESULT_LIST</code>, <code>RESULT_MAP</code> and <code>RESULT_SINGLE
+	 * RESULT_LIST</code>
+	 * , <code>RESULT_MAP</code> and <code>RESULT_SINGLE
 	 * </code>.
 	 * 
 	 * @see #RESULT_AUTO
@@ -559,25 +430,24 @@ public class Search implements Serializable {
 		this.resultMode = resultMode;
 		return this;
 	}
-	
-	//Fetches
+
+	// Fetches
 	public Search addFetch(String property) {
 		fetches.add(property);
 		return this;
 	}
-	
+
 	public void removeFetch(String property) {
 		fetches.remove(property);
 	}
-	
+
 	public void clearFetches() {
 		fetches.clear();
 	}
-	
+
 	public Iterator<String> fetchIterator() {
 		return fetches.iterator();
 	}
-	
 
 	public void clear() {
 		clearFilters();
@@ -633,7 +503,8 @@ public class Search implements Serializable {
 	/**
 	 * @return Zero based index of the first record to return. Calculation is
 	 *         based on <code>page * maxResults</code> or <code>firstResult
-	 *         </code> if page is not specified.
+	 *         </code> if
+	 *         page is not specified.
 	 */
 	public int calcFirstResult() {
 		return (firstResult > 0) ? firstResult : (page > 0 && maxResults > 0) ? page * maxResults : 0;
@@ -753,6 +624,42 @@ public class Search implements Serializable {
 			}
 			sb.append(o);
 		}
+	}
+
+	public List<Filter> getFilters() {
+		return filters;
+	}
+
+	public Search setFilters(List<Filter> filters) {
+		this.filters = filters;
+		return this;
+	}
+
+	public List<Sort> getSorts() {
+		return sorts;
+	}
+
+	public Search setSorts(List<Sort> sorts) {
+		this.sorts = sorts;
+		return this;
+	}
+
+	public List<Field> getFields() {
+		return fields;
+	}
+
+	public Search setFields(List<Field> fields) {
+		this.fields = fields;
+		return this;
+	}
+
+	public List<String> getFetches() {
+		return fetches;
+	}
+
+	public Search setFetches(List<String> fetches) {
+		this.fetches = fetches;
+		return this;
 	}
 
 }

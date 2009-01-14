@@ -107,51 +107,27 @@ public class FlexDAOAdapter {
 		}		
 	}
 
-	public List search(FlexSearch search) throws Exception {
+	public List search(FlexSearch flexSearch) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
-		try {
-			search.setSearchClass(Class.forName(search.getClassName()));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw e;
-		}
 		
-		return dao.search(search);
+		return dao.search(new FlexSearchWrapper(flexSearch));
 	}
 
-	public int searchLength(FlexSearch search) throws Exception {
+	public int searchLength(FlexSearch flexSearch) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
-		try {
-			search.setSearchClass(Class.forName(search.getClassName()));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw e;
-		}
 
-		return dao.count(search);
+		return dao.count(new FlexSearchWrapper(flexSearch));
 	}
 
-	public SearchResult searchAndLength(FlexSearch search) throws Exception {
+	public SearchResult searchAndLength(FlexSearch flexSearch) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
-		try {
-			search.setSearchClass(Class.forName(search.getClassName()));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw e;
-		}
 
-		return dao.searchAndCount(search);
+		return dao.searchAndCount(new FlexSearchWrapper(flexSearch));
 	}
 	
-	public Object searchUnique(FlexSearch search) throws Exception {
+	public Object searchUnique(FlexSearch flexSearch) throws Exception {
 		if (mockDelay != 0) Thread.sleep(mockDelay);
-		try {
-			search.setSearchClass(Class.forName(search.getClassName()));
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw e;
-		}
 
-		return dao.searchUnique(search);
+		return dao.searchUnique(new FlexSearchWrapper(flexSearch));
 	}
 }

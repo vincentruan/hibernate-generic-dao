@@ -8,6 +8,7 @@ import com.trg.dao.dao.original.DAODispatcher;
 import com.trg.dao.dao.original.FlexDAOAdapter;
 import com.trg.dao.dao.original.FlexSearch;
 import com.trg.dao.dao.original.GeneralDAO;
+import com.trg.dao.search.Filter;
 
 public class FlexDAOAdapterTest extends TestBase {
 	private GeneralDAO generalDAO;
@@ -59,7 +60,7 @@ public class FlexDAOAdapterTest extends TestBase {
 				.getName()));
 
 		FlexSearch s = new FlexSearch();
-		s.setClassName(Person.class.getName());
+		s.setSearchClassName(Person.class.getName());
 
 		assertListEqual(new Person[] { bob, fred }, flexDAOAdapter
 				.fetchAll(Person.class.getName()));
@@ -69,7 +70,7 @@ public class FlexDAOAdapterTest extends TestBase {
 		assertListEqual(new Person[] { bob, fred }, flexDAOAdapter
 				.searchAndLength(s).getResults());
 
-		s.addFilterEqual("id", bob.getId());
+		s.setFilters(new Filter[] { Filter.equal("id", bob.getId()) });
 		assertEquals(bob, flexDAOAdapter.searchUnique(s));
 
 		flexDAOAdapter.deleteEntity(bob);
