@@ -7,7 +7,7 @@ import org.hibernate.NonUniqueResultException;
 
 import com.trg.dao.BaseDAODispatcher;
 import com.trg.dao.DAODispatcherException;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 @SuppressWarnings("unchecked")
@@ -149,7 +149,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		}
 	}
 
-	public List search(Search search) {
+	public List search(ISearch search) {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
@@ -162,7 +162,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		}
 	}
 
-	public SearchResult searchAndCount(Search search) {
+	public SearchResult searchAndCount(ISearch search) {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
@@ -176,7 +176,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		}
 	}
 
-	public int count(Search search) {
+	public int count(ISearch search) {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
@@ -189,7 +189,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		}
 	}
 
-	public Object searchUnique(Search search) throws NonUniqueResultException {
+	public Object searchUnique(ISearch search) throws NonUniqueResultException {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {

@@ -8,7 +8,7 @@ import javax.annotation.Resource;
 import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 /**
@@ -26,10 +26,7 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 		super.setSessionFactory(sessionFactory);
 	}
 
-	public int count(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
+	public int count(ISearch search) {
 		return _count(search);
 	}
 
@@ -89,24 +86,15 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 		return _saveOrUpdateIsNew(entities);
 	}
 
-	public List search(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
+	public List search(ISearch search) {
 		return _search(search);
 	}
 
-	public SearchResult searchAndCount(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
+	public SearchResult searchAndCount(ISearch search) {
 		return _searchAndCount(search);
 	}
 
-	public Object searchUnique(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
+	public Object searchUnique(ISearch search) {
 		return _searchUnique(search);
 	}
 }

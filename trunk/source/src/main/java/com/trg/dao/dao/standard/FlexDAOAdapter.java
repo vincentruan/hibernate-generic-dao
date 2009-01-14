@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.trg.dao.dao.original.FlexSearch;
+import com.trg.dao.dao.original.FlexSearchWrapper;
 import com.trg.dao.search.SearchResult;
 
 public class FlexDAOAdapter {
@@ -58,23 +59,19 @@ public class FlexDAOAdapter {
 		dao.removeByIds(type, ids);
 	}
 	
-	public List<?> search(FlexSearch search) throws ClassNotFoundException {
-		search.setSearchClass(Class.forName(search.getClassName()));
-		return dao.search(search);
+	public List<?> search(FlexSearch flexSearch) throws ClassNotFoundException {
+		return dao.search(new FlexSearchWrapper(flexSearch));
 	}
 	
-	public int count(FlexSearch search) throws ClassNotFoundException {
-		search.setSearchClass(Class.forName(search.getClassName()));
-		return dao.count(search);
+	public int count(FlexSearch flexSearch) throws ClassNotFoundException {
+		return dao.count(new FlexSearchWrapper(flexSearch));
 	}
 	
-	public SearchResult<?> searchAndCount(FlexSearch search) throws ClassNotFoundException {
-		search.setSearchClass(Class.forName(search.getClassName()));
-		return dao.searchAndCount(search);
+	public SearchResult<?> searchAndCount(FlexSearch flexSearch) throws ClassNotFoundException {
+		return dao.searchAndCount(new FlexSearchWrapper(flexSearch));
 	}
 	
-	public Object searchUnique(FlexSearch search) throws ClassNotFoundException {
-		search.setSearchClass(Class.forName(search.getClassName()));
-		return dao.searchUnique(search);
+	public Object searchUnique(FlexSearch flexSearch) throws ClassNotFoundException {
+		return dao.searchUnique(new FlexSearchWrapper(flexSearch));
 	}
 }

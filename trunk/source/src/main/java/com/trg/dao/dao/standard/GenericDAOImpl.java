@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 /**
@@ -38,11 +38,8 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass()
 			.getGenericSuperclass()).getActualTypeArguments()[0];
 
-	public int count(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
-		return _count(search, persistentClass);
+	public int count(ISearch search) {
+		return _count(persistentClass, search);
 	}
 
 	public T find(Serializable id) {
@@ -101,39 +98,24 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return _saveOrUpdateIsNew(entities);
 	}
 
-	public List<T> search(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
-		return _search(search, persistentClass);
+	public List<T> search(ISearch search) {
+		return _search(persistentClass, search);
 	}
 
-	public SearchResult<T> searchAndCount(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
-		return _searchAndCount(search, persistentClass);
+	public SearchResult<T> searchAndCount(ISearch search) {
+		return _searchAndCount(persistentClass, search);
 	}
 
-	public List searchGeneric(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
-		return _search(search, persistentClass);
+	public List searchGeneric(ISearch search) {
+		return _search(persistentClass, search);
 	}
 
-	public T searchUnique(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
-		return (T) _searchUnique(search, persistentClass);
+	public T searchUnique(ISearch search) {
+		return (T) _searchUnique(persistentClass, search);
 	}
 
-	public Object searchUniqueGeneric(Search search) {
-		if (search == null)
-			throw new NullPointerException("Search cannot be null");
-		
-		return _searchUnique(search, persistentClass);
+	public Object searchUniqueGeneric(ISearch search) {
+		return _searchUnique(persistentClass, search);
 	}
 
 	

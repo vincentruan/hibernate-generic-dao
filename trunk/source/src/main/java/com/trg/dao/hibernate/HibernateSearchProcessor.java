@@ -16,8 +16,9 @@ import org.hibernate.transform.Transformers;
 
 import com.trg.dao.AbstractSearchProcessor;
 import com.trg.dao.search.Field;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
+import com.trg.dao.search.SearchUtil;
 
 /**
  * Implementation of SearchToQLProcessor that generates HQL
@@ -45,17 +46,31 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 	
 	/**
 	 * Search for objects based on the search parameters in the specified
-	 * <code>Search</code> object.
+	 * <code>ISearch</code> object.
 	 * 
-	 * @see Search
+	 * @see ISearch
 	 */
 	@SuppressWarnings("unchecked")
-	public List search(Session session, Search search) {
+	public List search(Session session, ISearch search) {
 		if (search == null)
+			return null;
+		
+		return search(session, search.getSearchClass(), search);
+	}
+	
+	/**
+	 * Search for objects based on the search parameters in the specified
+	 * <code>ISearch</code> object.
+	 * 
+	 * @see ISearch
+	 */
+	@SuppressWarnings("unchecked")
+	public List search(Session session, Class<?> searchClass, ISearch search) {
+		if (searchClass == null || search == null)
 			return null;
 
 		List<Object> paramList = new ArrayList<Object>();
-		String hql = generateQL(search, paramList);
+		String hql = generateQL(searchClass, search, paramList);
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
 		addPaging(query, search);
@@ -66,20 +81,46 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 
 	/**
 	 * Returns the total number of results that would be returned using the
-	 * given <code>Search</code> if there were no paging or maxResult limits.
+	 * given <code>ISearch</code> if there were no paging or maxResult limits.
 	 * 
-	 * @see Search
+	 * @see ISearch
 	 */
-	public int count(Session session, Search search) {
+	public int count(Session session, ISearch search) {
 		if (search == null)
+			return 0;
+		return count(session, search.getSearchClass(), search);
+	}
+	
+	/**
+	 * Returns the total number of results that would be returned using the
+	 * given <code>ISearch</code> if there were no paging or maxResult limits.
+	 * 
+	 * @see ISearch
+	 */
+	public int count(Session session, Class<?> searchClass, ISearch search) {
+		if (searchClass == null || search == null)
 			return 0;
 
 		List<Object> paramList = new ArrayList<Object>();
-		String hql = generateRowCountQL(search, paramList);
+		String hql = generateRowCountQL(searchClass, search, paramList);
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
 
 		return ((Long) query.uniqueResult()).intValue();
+	}
+	
+	/**
+	 * Returns a <code>SearchResult</code> object that includes the list of
+	 * results like <code>search()</code> and the total length like
+	 * <code>searchLength</code>.
+	 * 
+	 * @see ISearch
+	 */
+	@SuppressWarnings("unchecked")
+	public SearchResult searchAndCount(Session session, ISearch search) {
+		if (search == null)
+			return null;
+		return searchAndCount(session, search.getSearchClass(), search);
 	}
 
 	/**
@@ -87,11 +128,11 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 	 * results like <code>search()</code> and the total length like
 	 * <code>searchLength</code>.
 	 * 
-	 * @see Search
+	 * @see ISearch
 	 */
 	@SuppressWarnings("unchecked")
-	public SearchResult searchAndCount(Session session, Search search) {
-		if (search == null)
+	public SearchResult searchAndCount(Session session, Class<?> searchClass, ISearch search) {
+		if (searchClass == null || search == null)
 			return null;
 
 		SearchResult result = new SearchResult();
@@ -100,27 +141,36 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		result.setPage(search.getPage());
 		result.setMaxResults(search.getMaxResults());
 
-		result.setResults(search(session, search));
+		result.setResults(search(session, searchClass, search));
 
 		if (search.getMaxResults() > 0) {
-			result.setTotalCount(count(session, search));
+			result.setTotalCount(count(session, searchClass, search));
 		} else {
 			result.setTotalCount(result.getResults().size()
-					+ search.calcFirstResult());
+					+ SearchUtil.calcFirstResult(search));
 		}
 
 		return result;
 	}
-
+	
 	/**
 	 * Search for a single result using the given parameters.
 	 */
-	public Object searchUnique(Session session, Search search) throws NonUniqueResultException {
+	public Object searchUnique(Session session, ISearch search) throws NonUniqueResultException {
+		if (search == null)
+			return null;
+		return searchUnique(session, search.getSearchClass(), search);
+	}
+	
+	/**
+	 * Search for a single result using the given parameters.
+	 */
+	public Object searchUnique(Session session, Class<?> entityClass, ISearch search) throws NonUniqueResultException {
 		if (search == null)
 			return null;
 
 		List<Object> paramList = new ArrayList<Object>();
-		String hql = generateQL(search, paramList);
+		String hql = generateQL(entityClass, search, paramList);
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
 		addResultMode(query, search);
@@ -146,46 +196,47 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 		}
 	}
 
-	private void addPaging(Query query, Search search) {
-		if (search.calcFirstResult() > 0) {
-			query.setFirstResult(search.calcFirstResult());
+	private void addPaging(Query query, ISearch search) {
+		int firstResult = SearchUtil.calcFirstResult(search);
+		if (firstResult > 0) {
+			query.setFirstResult(firstResult);
 		}
 		if (search.getMaxResults() > 0) {
 			query.setMaxResults(search.getMaxResults());
 		}
 	}
 
-	private void addResultMode(Query query, Search search) {
+	private void addResultMode(Query query, ISearch search) {
 		int resultMode = search.getResultMode();
-		if (resultMode == Search.RESULT_AUTO) {
+		if (resultMode == ISearch.RESULT_AUTO) {
 			int count = 0;
-			Iterator<Field> fieldItr = search.fieldIterator();
+			Iterator<Field> fieldItr = search.getFields().iterator();
 			while (fieldItr.hasNext()) {
 				Field field = fieldItr.next();
 				if (field.getKey() != null && !field.getKey().equals("")) {
-					resultMode = Search.RESULT_MAP;
+					resultMode = ISearch.RESULT_MAP;
 					break;
 				}
 				count++;
 			}
-			if (resultMode == Search.RESULT_AUTO) {
+			if (resultMode == ISearch.RESULT_AUTO) {
 				if (count > 1)
-					resultMode = Search.RESULT_ARRAY;
+					resultMode = ISearch.RESULT_ARRAY;
 				else
-					resultMode = Search.RESULT_SINGLE;
+					resultMode = ISearch.RESULT_SINGLE;
 			}
 		}
 		
 		switch (resultMode) {
-		case Search.RESULT_ARRAY:
+		case ISearch.RESULT_ARRAY:
 			query.setResultTransformer(ARRAY_RESULT_TRANSFORMER);
 			break;
-		case Search.RESULT_LIST:
+		case ISearch.RESULT_LIST:
 			query.setResultTransformer(Transformers.TO_LIST);
 			break;
-		case Search.RESULT_MAP:
+		case ISearch.RESULT_MAP:
 			List<String> keyList = new ArrayList<String>();
-			Iterator<Field> fieldItr = search.fieldIterator();
+			Iterator<Field> fieldItr = search.getFields().iterator();
 			while (fieldItr.hasNext()) {
 				Field field = fieldItr.next();
 				if (field.getKey() != null && !field.getKey().equals("")) {
@@ -197,7 +248,7 @@ public class HibernateSearchProcessor extends AbstractSearchProcessor {
 			query.setResultTransformer(new MapResultTransformer(keyList
 					.toArray(new String[0])));
 			break;
-		default: // Search.RESULT_SINGLE
+		default: // ISearch.RESULT_SINGLE
 			break;
 		}
 	}

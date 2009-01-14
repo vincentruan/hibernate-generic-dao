@@ -2,17 +2,17 @@ package com.test.misc;
 
 import java.util.List;
 
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 public interface SearchTestInterface {
 	@SuppressWarnings("unchecked")
-	public List search(Search search);
+	public List search(ISearch search);
 
-	public int count(Search search);
+	public int count(ISearch search);
 
 	@SuppressWarnings("unchecked")
-	public SearchResult searchAndCount(Search search);
+	public SearchResult searchAndCount(ISearch search);
 
-	public Object searchUnique(Search search);
+	public Object searchUnique(ISearch search);
 }

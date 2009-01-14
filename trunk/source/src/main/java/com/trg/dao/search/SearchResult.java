@@ -10,7 +10,7 @@ public class SearchResult<T> implements Serializable {
 	/**
 	 * The search used when generating this result.
 	 */
-	protected Search search;
+	protected ISearch search;
 	/**
 	 * The results of the search.
 	 */
@@ -35,11 +35,11 @@ public class SearchResult<T> implements Serializable {
 	 */
 	protected int maxResults = -1;
 
-	public Search getSearch() {
+	public ISearch getSearch() {
 		return search;
 	}
 
-	public void setSearch(Search search) {
+	public void setSearch(ISearch search) {
 		this.search = search;
 	}
 

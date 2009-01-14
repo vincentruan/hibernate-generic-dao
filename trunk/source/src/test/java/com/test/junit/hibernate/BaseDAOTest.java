@@ -200,51 +200,51 @@ public class BaseDAOTest extends TestBase {
 		Search sP = new Search(Person.class);
 		Search sH = new Search(Home.class);
 		// search
-		assertListEqual(new Person[] { bob, fred }, target.search(s, Person.class));
-		assertListEqual(new Person[] { bob, fred }, target.search(sP, Person.class));
+		assertListEqual(new Person[] { bob, fred }, target.search(Person.class, s));
+		assertListEqual(new Person[] { bob, fred }, target.search(Person.class, sP));
 		assertEquals(null, s.getSearchClass());
 		assertEquals(Person.class, sP.getSearchClass());
 
 		// count
-		assertEquals(2, target.count(s, Person.class));
-		assertEquals(2, target.count(sP, Person.class));
+		assertEquals(2, target.count(Person.class, s));
+		assertEquals(2, target.count(Person.class, sP));
 		assertEquals(null, s.getSearchClass());
 		assertEquals(Person.class, sP.getSearchClass());
 
 		// searchAndCount
-		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(s, Person.class).getResults());
-		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(sP, Person.class).getResults());
+		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(Person.class, s).getResults());
+		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(Person.class, sP).getResults());
 		assertEquals(null, s.getSearchClass());
 		assertEquals(Person.class, sP.getSearchClass());
 
 		// searchUnique
 		s.addFilterEqual("id", bob.getId());
-		assertEquals(bob, target.searchUnique(s, Person.class));
+		assertEquals(bob, target.searchUnique(Person.class, s));
 		sP.addFilterEqual("id", bob.getId());
-		assertEquals(bob, target.searchUnique(sP, Person.class));
+		assertEquals(bob, target.searchUnique(Person.class, sP));
 		assertEquals(null, s.getSearchClass());
 		assertEquals(Person.class, sP.getSearchClass());
 
 		try {
-			target.search(sH, Person.class);
+			target.search(Person.class, sH);
 			fail("An error should be thrown when a different class is specified in the Search.");
 		} catch (IllegalArgumentException ex) {
 			assertEquals(Home.class, sH.getSearchClass());
 		}
 		try {
-			target.count(sH, Person.class);
+			target.count(Person.class, sH);
 			fail("An error should be thrown when a different class is specified in the Search.");
 		} catch (IllegalArgumentException ex) {
 			assertEquals(Home.class, sH.getSearchClass());
 		}
 		try {
-			target.searchAndCount(sH, Person.class);
+			target.searchAndCount(Person.class, sH);
 			fail("An error should be thrown when a different class is specified in the Search.");
 		} catch (IllegalArgumentException ex) {
 			assertEquals(Home.class, sH.getSearchClass());
 		}
 		try {
-			target.searchUnique(sH, Person.class);
+			target.searchUnique(Person.class, sH);
 			fail("An error should be thrown when a different class is specified in the Search.");
 		} catch (IllegalArgumentException ex) {
 			assertEquals(Home.class, sH.getSearchClass());

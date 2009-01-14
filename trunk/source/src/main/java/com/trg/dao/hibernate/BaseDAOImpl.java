@@ -14,7 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 /**
@@ -100,25 +100,30 @@ public class BaseDAOImpl {
 	}
 
 	/**
-	 * <p>Calls Hibernate's <code>saveOrUpdate()</code>, which behaves as follows:
+	 * <p>
+	 * Calls Hibernate's <code>saveOrUpdate()</code>, which behaves as follows:
 	 * 
-	 * <p>Either <code>save()</code> or <code>update()</code> based on the
+	 * <p>
+	 * Either <code>save()</code> or <code>update()</code> based on the
 	 * following rules
 	 * <ul>
-	 * <li>if the object is already persistent in this session, do nothing <li>
+	 * <li>if the object is already persistent in this session, do nothing
+	 * <li>
 	 * if another object associated with the session has the same identifier,
-	 * throw an exception <li>if the object has no identifier property, save()
-	 * it <li> if the object's identifier has the value assigned to a newly
-	 * instantiated object, save() it <li>if the object is versioned (by a
-	 * &lt;version&gt; or &lt;timestamp&gt;), and the version property value is the same
-	 * value assigned to a newly instantiated object, save() it <li>otherwise
-	 * update() the object
+	 * throw an exception
+	 * <li>if the object has no identifier property, save() it
+	 * <li>if the object's identifier has the value assigned to a newly
+	 * instantiated object, save() it
+	 * <li>if the object is versioned (by a &lt;version&gt; or
+	 * &lt;timestamp&gt;), and the version property value is the same value
+	 * assigned to a newly instantiated object, save() it
+	 * <li>otherwise update() the object
 	 * </ul>
 	 */
 	protected void _saveOrUpdate(Object entity) {
 		getSession().saveOrUpdate(entity);
 	}
-	
+
 	/**
 	 * <p>
 	 * If an entity already exists in the datastore with the same id, call
@@ -130,7 +135,7 @@ public class BaseDAOImpl {
 	protected boolean _saveOrUpdateIsNew(Object entity) {
 		if (entity == null)
 			throw new IllegalArgumentException("attempt to saveOrUpdate with null entity");
-		
+
 		Serializable id = getMetaDataUtil().getId(entity);
 		if (getSession().contains(entity))
 			return false;
@@ -149,8 +154,10 @@ public class BaseDAOImpl {
 	 * depending on whether or not an entity with the same id already exists in
 	 * the datastore.
 	 * 
-	 * @return an boolean array corresponding to to the input list of entities. Each element is <code>true</code> if the
-	 * corresponding entity was <code>_save()</code>d or <code>false</code> if it was <code>_update()</code>d.
+	 * @return an boolean array corresponding to to the input list of entities.
+	 *         Each element is <code>true</code> if the corresponding entity was
+	 *         <code>_save()</code>d or <code>false</code> if it was
+	 *         <code>_update()</code>d.
 	 */
 	protected boolean[] _saveOrUpdateIsNew(Object... entities) {
 		Boolean[] exists = new Boolean[entities.length];
@@ -430,64 +437,66 @@ public class BaseDAOImpl {
 
 	/**
 	 * Search for objects based on the search parameters in the specified
-	 * <code>Search</code> object.
+	 * <code>ISearch</code> object.
 	 * 
-	 * @see Search
+	 * @see ISearch
 	 */
-	protected List _search(Search search) {
+	protected List _search(ISearch search) {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (search.getSearchClass() == null)
+			throw new NullPointerException("Search class is null.");
+
 		return getSearchProcessor().search(getSession(), search);
 	}
 
 	/**
-	 * Same as <code>_search(Search)</code> except that it forces the search to
-	 * use the specified search class when no other search class is assigned to
-	 * the search. If the search does have a different search class assigned, an
-	 * exception is thrown.
+	 * Same as <code>_search(ISearch)</code> except that it uses the specified
+	 * search class instead of getting it from the search object. Also, if the search
+	 * object has a different search class than what is specified, an exception
+	 * is thrown.
 	 */
-	protected List _search(Search search, Class<?> forceClass) {
-		if (forceClass == null)
-			return _search(search);
+	protected List _search(Class<?> searchClass, ISearch search) {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (searchClass == null)
+			throw new NullPointerException("Search class is null.");
+		if (search.getSearchClass() != null && !search.getSearchClass().equals(searchClass))
+			throw new IllegalArgumentException("Search class does not match expected type: " + searchClass.getName());
 
-		boolean classNull = getSearchProcessor().forceSearchClass(search, forceClass);
-		List result = _search(search);
-		if (classNull)
-			search.setSearchClass(null);
-		return result;
+		return getSearchProcessor().search(getSession(), searchClass, search);
 	}
 
 	/**
 	 * Returns the total number of results that would be returned using the
-	 * given <code>Search</code> if there were no paging or maxResult limits.
+	 * given <code>ISearch</code> if there were no paging or maxResult limits.
 	 * 
-	 * @see Search
+	 * @see ISearch
 	 */
-	protected int _count(Search search) {
+	protected int _count(ISearch search) {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (search.getSearchClass() == null)
+			throw new NullPointerException("Search class is null.");
+
 		return getSearchProcessor().count(getSession(), search);
 	}
 
 	/**
-	 * Same as <code>_count(Search)</code> except that it forces the search to
-	 * use the specified search class when no other search class is assigned to
-	 * the search. If the search does have a different search class assigned, an
-	 * exception is thrown.
+	 * Same as <code>_count(ISearch)</code> except that it uses the specified
+	 * search class instead of getting it from the search object. Also, if the search
+	 * object has a different search class than what is specified, an exception
+	 * is thrown.
 	 */
-	protected int _count(Search search, Class<?> forceClass) {
-		if (forceClass == null)
-			return _count(search);
+	protected int _count(Class<?> searchClass, ISearch search) {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (searchClass == null)
+			throw new NullPointerException("Search class is null.");
+		if (search.getSearchClass() != null && !search.getSearchClass().equals(searchClass))
+			throw new IllegalArgumentException("Search class does not match expected type: " + searchClass.getName());
 
-		boolean classNull = getSearchProcessor().forceSearchClass(search, forceClass);
-		int result = _count(search);
-		if (classNull)
-			search.setSearchClass(null);
-		return result;
+		return getSearchProcessor().count(getSession(), searchClass, search);
 	}
 
 	/**
@@ -507,59 +516,61 @@ public class BaseDAOImpl {
 	 * results like <code>search()</code> and the total length like
 	 * <code>searchLength</code>.
 	 * 
-	 * @see Search
+	 * @see ISearch
 	 */
-	protected SearchResult _searchAndCount(Search search) {
+	protected SearchResult _searchAndCount(ISearch search) {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (search.getSearchClass() == null)
+			throw new NullPointerException("Search class is null.");
+
 		return getSearchProcessor().searchAndCount(getSession(), search);
 	}
 
 	/**
-	 * Same as <code>_searchAndCount(Search)</code> except that it forces the
-	 * search to use the specified search class when no other search class is
-	 * assigned to the search. If the search does have a different search class
-	 * assigned, an exception is thrown.
+	 * Same as <code>_searchAndCount(ISearch)</code> except that it uses the specified
+	 * search class instead of getting it from the search object. Also, if the search
+	 * object has a different search class than what is specified, an exception
+	 * is thrown.
 	 */
-	protected SearchResult _searchAndCount(Search search, Class<?> forceClass) {
-		if (forceClass == null)
-			return _searchAndCount(search);
+	protected SearchResult _searchAndCount(Class<?> searchClass, ISearch search) {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (searchClass == null)
+			throw new NullPointerException("Search class is null.");
+		if (search.getSearchClass() != null && !search.getSearchClass().equals(searchClass))
+			throw new IllegalArgumentException("Search class does not match expected type: " + searchClass.getName());
 
-		boolean classNull = getSearchProcessor().forceSearchClass(search, forceClass);
-		SearchResult result = _searchAndCount(search);
-		if (classNull)
-			search.setSearchClass(null);
-		return result;
+		return getSearchProcessor().searchAndCount(getSession(), searchClass, search);
 	}
 
 	/**
 	 * Search for a single result using the given parameters.
 	 */
-	protected Object _searchUnique(Search search) throws NonUniqueResultException {
+	protected Object _searchUnique(ISearch search) throws NonUniqueResultException {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (search.getSearchClass() == null)
+			throw new NullPointerException("Search class is null.");
+
 		return getSearchProcessor().searchUnique(getSession(), search);
 	}
 
 	/**
-	 * Same as <code>_searchUnique(Search)</code> except that it forces the
-	 * search to use the specified search class when no other search class is
-	 * assigned to the search. If the search does have a different search class
-	 * assigned, an exception is thrown.
+	 * Same as <code>_searchUnique(ISearch)</code> except that it uses the specified
+	 * search class instead of getting it from the search object. Also, if the search
+	 * object has a different search class than what is specified, an exception
+	 * is thrown.
 	 */
-	protected Object _searchUnique(Search search, Class<?> forceClass) {
-		if (forceClass == null)
-			return _searchUnique(search);
+	protected Object _searchUnique(Class<?> searchClass, ISearch search) {
 		if (search == null)
-			throw new NullPointerException("search is null");
+			throw new NullPointerException("Search is null.");
+		if (searchClass == null)
+			throw new NullPointerException("Search class is null.");
+		if (search.getSearchClass() != null && !search.getSearchClass().equals(searchClass))
+			throw new IllegalArgumentException("Search class does not match expected type: " + searchClass.getName());
 
-		boolean classNull = getSearchProcessor().forceSearchClass(search, forceClass);
-		Object result = _searchUnique(search);
-		if (classNull)
-			search.setSearchClass(null);
-		return result;
+		return getSearchProcessor().searchUnique(getSession(), searchClass, search);
 	}
 
 	/**
@@ -607,7 +618,8 @@ public class BaseDAOImpl {
 
 		boolean[] ret = new boolean[ids.length];
 
-		//we can't use "id in (:ids)" because some databases do not support this for compound ids.
+		// we can't use "id in (:ids)" because some databases do not support
+		// this for compound ids.
 		StringBuilder sb = new StringBuilder("select id from " + type.getName() + " where");
 		boolean first = true;
 		for (int i = 0; i < ids.length; i++) {
@@ -619,12 +631,12 @@ public class BaseDAOImpl {
 			}
 			sb.append(i);
 		}
-		
+
 		Query query = getSession().createQuery(sb.toString());
 		for (int i = 0; i < ids.length; i++) {
 			query.setParameter("id" + i, ids[i]);
 		}
-		
+
 		for (Serializable id : (List<Serializable>) query.list()) {
 			for (int i = 0; i < ids.length; i++) {
 				if (id.equals(ids[i])) {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.hibernate.NonUniqueResultException;
 
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 /**
@@ -64,27 +64,27 @@ public interface GeneralDAO {
 
 	/**
 	 * Search for objects given the search parameters in the specified
-	 * <code>Search</code> object.
+	 * <code>ISearch</code> object.
 	 */
-	public List search(Search search);
+	public List search(ISearch search);
 
 	/**
 	 * Returns the total number of results that would be returned using the
-	 * given <code>Search</code> if there were no paging or maxResult limits.
+	 * given <code>ISearch</code> if there were no paging or maxResult limits.
 	 */
-	public int count(Search search);
+	public int count(ISearch search);
 
 	/**
 	 * Returns a <code>SearchResult</code> object that includes the list of
 	 * results like <code>search()</code> and the total length like
 	 * <code>searchLength</code>.
 	 */
-	public SearchResult searchAndCount(Search search);
+	public SearchResult searchAndCount(ISearch search);
 
 	/**
-	 * Search for a single result using the given parameters.
+	 * ISearch for a single result using the given parameters.
 	 */
-	public Object searchUnique(Search search) throws NonUniqueResultException;
+	public Object searchUnique(ISearch search) throws NonUniqueResultException;
 
 	/**
 	 * Flushes changes in the Hibernate session to the datastore.

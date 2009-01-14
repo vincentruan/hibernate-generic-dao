@@ -9,7 +9,7 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
-import com.trg.dao.search.Search;
+import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
 /**
@@ -62,15 +62,15 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 		_update(object);
 	}
 
-	public List search(Search search) {
+	public List search(ISearch search) {
 		return _search(search);
 	}
 
-	public int count(Search search) {
+	public int count(ISearch search) {
 		return _count(search);
 	}
 
-	public SearchResult searchAndCount(Search search) {
+	public SearchResult searchAndCount(ISearch search) {
 		return _searchAndCount(search);
 	}
 
@@ -82,7 +82,7 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 		return _sessionContains(object);
 	}
 
-	public Object searchUnique(Search search) throws NonUniqueResultException {
+	public Object searchUnique(ISearch search) throws NonUniqueResultException {
 		return _searchUnique(search);
 	}
 
