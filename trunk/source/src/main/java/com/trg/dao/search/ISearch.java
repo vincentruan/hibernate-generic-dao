@@ -4,45 +4,50 @@ import java.util.List;
 
 /**
  * The base search DTO (data transfer object). A Search object is passed into a
- * DAO to define the parameters for a search. There are five types of parameters
- * that can be set.
+ * DAO or Search Processor to define the parameters for a search. There are six
+ * types of parameters that can be set.
  * <ul>
- * <li>Class - The Class of the object(s) to search for. This is required. It
- * can be specified in the constructor or using <code>setSearchClass()</code>.
+ * <li>SearchClass - The Class of the object(s) to search for.
  * <li>Filters - Any number of filters may be specified for the search. Filters
  * specify a property and a condition that it must match for the object to be
  * included in the result. Filters are "ANDed" together by default, but
  * disjunction (OR) can be used instead by setting
- * <code>setDisjunction(true)</code>. Filters are set using
- * <code>addFilter()</code> . See also the <code>Filter</code> class.
+ * <code>disjunction == true</code>. See also the {@link Filter} class.
  * <li>Sorts - Any number of sorts may be specified. Each sort consists of a
- * property and a flag for ascending or descending. The first sort added is the
- * primary sort, the second, secondary and so on. Sorts are set using
- * <code>addSort()</code>. See also the <code>Sort</code> class.
- * <li>Paging - The maximum number of results may be specified with
- * <code>setMaxResults()</code>. (This can also be thought of as results per
- * page.) The first result can be specified using either
- * <code>setFirstResult()</code> or <code>setPage()</code>.
+ * property, a flag for ascending or descending and a flag for whether or not to
+ * ignore case. The first sort added is the primary sort, the second, secondary
+ * and so on. See also the {@link Sort} class.
  * <li>Fields - By default the entity specified in search class is returned as
  * the result for each row. However, by specifying fields, any combination of
  * individual properties can be returned for each row in the result set. These
- * properties can be returned as maps, lists or arrays depending on
- * <code>resultMode</code>. Fields are specified using <code>addField()</code>.
- * The result mode may also be set using <code>setResultMode()</code>.<br/><br/>
+ * properties can be returned as maps, lists, arrays or a single object
+ * depending on <code>resultMode</code>. See also the {@link Field}
+ * class.<br/><br/>
  * 
- * Additionally, fields can be specified using column operators: COUNT, COUNT
- * DISTINCT, SUM, AVG, MAX, MIN. Note that fields with column operators can not
- * be mixed with fields that do not use column operators.
- * </ul>
+ * Additionally, fields can be specified using column operators:
+ * <code>COUNT, COUNT DISTINCT, SUM, AVG, MAX, MIN</code>. Note that fields with
+ * column operators can not be mixed with fields that do not use column
+ * operators.
  * <li>Fetch - This determines which attached objects to pull along with the
- * base search object. With hibernate this eagerly loads the specified
+ * base search object. With Hibernate this eagerly loads the specified
  * properties. Otherwise they might be loaded lazily. This is useful for
- * performance and results that will be disconnected from hibernate and copied
- * to a remote client. Fetches are set using <code>addFetch()</code>. </ul>
+ * performance and results that will be disconnected from Hibernate and copied
+ * to a remote client.
+ * <li>Paging - The maximum number of results may be specified with
+ * <code>maxResults</code>. (This can also be thought of as results per page.)
+ * The first result can be specified using either <code>firstResult</code> or
+ * <code>page</code>.
+ * </ul>
+ * 
+ * <code>ISearch</code> is intended to be an immutable interface and only
+ * provides getters for each of the properties. The {@link IMutableSearch}
+ * interface extends <code>ISearch</code> by adding setters for all the
+ * properties.
  * 
  * @see Filter
  * @see Field
  * @see Sort
+ * @see IMutableSearch
  * 
  * @author dwolverton
  * 
@@ -55,7 +60,8 @@ public interface ISearch {
 	 * <ul>
 	 * <li>If any field is specified with a key, use <code>RESULT_MAP</code>.
 	 * <li>Otherwise, if zero or one fields are specified, use <code>
-	 * RESULT_SINGLE</code>. <li>Otherwise, use <code>RESULT_ARRAY</code>.
+	 * RESULT_SINGLE</code>.
+	 * <li>Otherwise, use <code>RESULT_ARRAY</code>.
 	 * </ul>
 	 * 
 	 * @see #setResultMode(int)
@@ -137,43 +143,64 @@ public interface ISearch {
 	 */
 	public static final int RESULT_SINGLE = 4;
 
+	/**
+	 * Zero based index of first result record to return.
+	 * 
+	 * <p>
+	 * <code>&lt;= 0</code> for unspecified value.
+	 */
 	public int getFirstResult();
 
-	// public ISearch setFirstResult(int firstResult);
-
+	/**
+	 * The maximum number of records to return. Also used as page size when
+	 * calculating the first record to return based on <code>page</code>.
+	 * 
+	 * <p>
+	 * <code>&lt;= 0</code> for unspecified value.
+	 */
 	public int getMaxResults();
 
-	// public ISearch setMaxResults(int maxResults);
-
+	/**
+	 * Zero based index of the page of records to return. The size of a page is
+	 * determined by <code>maxResults</code>. If both <code>page</code> and
+	 * <code>maxResults</code> are specified (i.e. > 0), the first result
+	 * returned is calculated by <code>page * maxResults</code>.
+	 * 
+	 * <p>
+	 * <code>firstResult</code> has precedence over <code>page</code>. So if
+	 * <code>firstResult</code> is specified (i.e. > 0), <code>page</code> is
+	 * ignored.
+	 * 
+	 * <p>
+	 * <code>&lt;= 0</code> for unspecified value.
+	 */
 	public int getPage();
-
-	// public ISearch setPage(int page);
 
 	public Class<?> getSearchClass();
 
-	// public ISearch setSearchClass(Class<?> searchClass);
-
 	public List<Filter> getFilters();
-
-	// public ISearch setFilters(List<Filter> filters);
 
 	public boolean isDisjunction();
 
-	// public ISearch setDisjunction(boolean disjunction);
-
 	public List<Sort> getSorts();
-
-	// public ISearch setSorts(List<Sort> sorts);
 
 	public List<Field> getFields();
 
-	// public ISearch setFields(List<Field> fields);
-
 	public List<String> getFetches();
 
-	// public ISearch setFetches(List<String> fetches);
-
+	/**
+	 * Result mode tells the search what form to use for the results. Options
+	 * include <code>RESULT_AUTO</code>, <code>RESULT_ARRAY</code>, <code>
+	 * RESULT_LIST</code>
+	 * , <code>RESULT_MAP</code> and <code>RESULT_SINGLE
+	 * </code>.
+	 * 
+	 * @see #RESULT_AUTO
+	 * @see #RESULT_ARRAY
+	 * @see #RESULT_LIST
+	 * @see #RESULT_MAP
+	 * @see #RESULT_SINGLE
+	 */
 	public int getResultMode();
 
-	// public ISearch setResultMode(int resultMode);
 }
