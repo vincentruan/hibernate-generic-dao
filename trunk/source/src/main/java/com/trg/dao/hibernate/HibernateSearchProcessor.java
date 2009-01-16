@@ -14,7 +14,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 
-import com.trg.dao.AbstractSearchProcessor;
+import com.trg.dao.BaseSearchProcessor;
 import com.trg.dao.search.Field;
 import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
@@ -24,7 +24,7 @@ import com.trg.dao.search.SearchUtil;
  * Implementation of SearchToQLProcessor that generates HQL
  * @author dwolverton
  */
-public class HibernateSearchProcessor extends AbstractSearchProcessor {
+public class HibernateSearchProcessor extends BaseSearchProcessor {
 	
 	private static Map<SessionFactory, HibernateSearchProcessor> map = new HashMap<SessionFactory, HibernateSearchProcessor>();
 
