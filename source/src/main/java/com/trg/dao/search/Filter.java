@@ -298,6 +298,7 @@ public class Filter implements Serializable {
 		return true;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public String toString() {
 		switch (operator) {
