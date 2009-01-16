@@ -3,10 +3,16 @@ package com.trg.dao.search;
 import static com.trg.dao.search.ISearch.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Utilities for working with searches {@link ISearch}, {@link IMutableSearch}.
+ * 
+ * @author dwolverton
+ */
 public class SearchUtil {
 	// ---------- Add ----------
 
@@ -384,7 +390,218 @@ public class SearchUtil {
 		if (search.getSorts() != null)
 			search.getSorts().clear();
 	}
-
+	
+	// ---------- Merge ----------
+	/**
+	 * Modify the search by adding the given sorts before the current sorts in the search.
+	 */
+	public static void mergeSortsBefore(IMutableSearch search, List<Sort> sorts) {
+		List<Sort> list = search.getSorts();
+		if (list == null) {
+			list = new ArrayList<Sort>();
+			search.setSorts(list);
+		}
+		
+		if (list.size() > 0) {
+			//remove any sorts from the search that already sort on the same property as one of the new sorts
+			Iterator<Sort> itr = list.iterator();
+			while (itr.hasNext()) {
+				String property = itr.next().getProperty();
+				if (property == null) {
+					itr.remove();
+				} else {
+					for (Sort sort : sorts) {
+						if (property.equals(sort.getProperty())) {
+							itr.remove();
+							break;
+						}
+					}
+				}
+			}
+		}
+		
+		list.addAll(0, sorts);
+	}
+	
+	/**
+	 * Modify the search by adding the given sorts before the current sorts in the search.
+	 */
+	public static void mergeSortsBefore(IMutableSearch search, Sort... sorts) {
+		mergeSortsBefore(search, Arrays.asList(sorts));
+	}
+	
+	/**
+	 * Modify the search by adding the given sorts after the current sorts in the search.
+	 */
+	public static void mergeSortsAfter(IMutableSearch search, List<Sort> sorts) {
+		List<Sort> list = search.getSorts();
+		if (list == null) {
+			list = new ArrayList<Sort>();
+			search.setSorts(list);
+		}
+		
+		int origLen = list.size();
+		
+		if (origLen > 0) {
+			//don't add sorts that are already in the list
+			for (Sort sort : sorts) {
+				if (sort.getProperty() != null) {
+					boolean found = false;
+					for (int i = 0; i < origLen; i++) {
+						if (sort.getProperty().equals(list.get(i).getProperty())) {
+							found = true;
+							break;
+						}
+					}
+					if (!found)
+						list.add(sort);
+				}
+			}
+		} else {
+			list.addAll(sorts);
+		}
+	}
+	
+	/**
+	 * Modify the search by adding the given sorts after the current sorts in the search.
+	 */
+	public static void mergeSortsAfter(IMutableSearch search, Sort... sorts) {
+		mergeSortsAfter(search, Arrays.asList(sorts));
+	}
+	
+	/**
+	 * Modify the search by adding the given fetches to the current fetches in the search.
+	 */
+	public static void mergeFetches(IMutableSearch search, List<String> fetches) {
+		List<String> list = search.getFetches();
+		if (list == null) {
+			list = new ArrayList<String>();
+			search.setFetches(list);
+		}
+		
+		for (String fetch : fetches) {
+			if (!list.contains(fetch)) {
+				list.add(fetch);
+			}
+		}
+	}
+	
+	/**
+	 * Modify the search by adding the given fetches to the current fetches in the search.
+	 */
+	public static void mergeFetches(IMutableSearch search, String... fetches) {
+		mergeFetches(search, Arrays.asList(fetches));
+	}
+	
+	/**
+	 * Modify the search by adding the given filters using AND semantics
+	 */
+	public static void mergeFiltersAnd(IMutableSearch search, List<Filter> filters) {
+		List<Filter> list = search.getFilters();
+		if (list == null) {
+			list = new ArrayList<Filter>();
+			search.setFilters(list);
+		}
+		
+		if (list.size() == 0 || !search.isDisjunction()) {
+			search.setDisjunction(false);
+			list.addAll(filters);
+		} else {
+			search.setFilters(new ArrayList<Filter>());
+			
+			//add the previous filters with an OR
+			Filter orFilter = Filter.or();
+			orFilter.setValue(list);
+			addFilter(search, orFilter);
+			
+			//add the new filters with AND
+			search.setDisjunction(false);
+			search.getFilters().addAll(filters);
+		}
+	}
+	
+	/**
+	 * Modify the search by adding the given filters using AND semantics
+	 */
+	public static void mergeFiltersAnd(IMutableSearch search, Filter... filters) {
+		mergeFiltersAnd(search, Arrays.asList(filters));
+	}
+	
+	/**
+	 * Modify the search by adding the given filters using OR semantics
+	 */
+	public static void mergeFiltersOr(IMutableSearch search, List<Filter> filters) {
+		List<Filter> list = search.getFilters();
+		if (list == null) {
+			list = new ArrayList<Filter>();
+			search.setFilters(list);
+		}
+		
+		if (list.size() == 0 || search.isDisjunction()) {
+			search.setDisjunction(true);
+			list.addAll(filters);
+		} else {
+			search.setFilters(new ArrayList<Filter>());
+			
+			//add the previous filters with an AND
+			Filter orFilter = Filter.and();
+			orFilter.setValue(list);
+			addFilter(search, orFilter);
+			
+			//add the new filters with or
+			search.setDisjunction(true);
+			search.getFilters().addAll(filters);
+		}
+	}
+	
+	/**
+	 * Modify the search by adding the given filters using OR semantics
+	 */
+	public static void mergeFiltersOr(IMutableSearch search, Filter... filters) {
+		mergeFiltersOr(search, Arrays.asList(filters));
+	}
+	
+	/**
+	 * Modify the search by adding the given fields before the current fields in the search.
+	 */
+	public static void mergeFieldsBefore(IMutableSearch search, List<Field> fields) {
+		List<Field> list = search.getFields();
+		if (list == null) {
+			list = new ArrayList<Field>();
+			search.setFields(list);
+		}
+		
+		list.addAll(0, fields);
+	}
+	
+	/**
+	 * Modify the search by adding the given fields before the current fields in the search.
+	 */
+	public static void mergeFieldsBefore(IMutableSearch search, Field... fields) {
+		mergeFieldsBefore(search, Arrays.asList(fields));
+	}
+	
+	/**
+	 * Modify the search by adding the given fields after the current fields in the search.
+	 */
+	public static void mergeFieldsAfter(IMutableSearch search, List<Field> fields) {
+		List<Field> list = search.getFields();
+		if (list == null) {
+			list = new ArrayList<Field>();
+			search.setFields(list);
+		}
+		
+		list.addAll(fields);
+	}
+	
+	/**
+	 * Modify the search by adding the given fields after the current fields in the search.
+	 */
+	public static void mergeFieldsAfter(IMutableSearch search, Field... fields) {
+		mergeFieldsAfter(search, Arrays.asList(fields));
+	}
+	
+	
 	// ---------- Other Methods ----------
 
 	/**
