@@ -44,9 +44,9 @@ import com.trg.dao.search.Sort;
  * implementation could be used for EQL query language as well with no or minor
  * modifications.
  */
-public abstract class AbstractSearchProcessor {
+public abstract class BaseSearchProcessor {
 
-	private static Logger logger = LoggerFactory.getLogger(AbstractSearchProcessor.class);
+	private static Logger logger = LoggerFactory.getLogger(BaseSearchProcessor.class);
 
 	protected static int QLTYPE_HQL = 0;
 	protected static int QLTYPE_EQL = 1;
@@ -59,7 +59,7 @@ public abstract class AbstractSearchProcessor {
 
 	protected static final String ROOT_PATH = "";
 
-	protected AbstractSearchProcessor(int qlType, MetaDataUtil metaDataUtil) {
+	protected BaseSearchProcessor(int qlType, MetaDataUtil metaDataUtil) {
 		this.qlType = qlType;
 		this.metaDataUtil = metaDataUtil;
 	}
