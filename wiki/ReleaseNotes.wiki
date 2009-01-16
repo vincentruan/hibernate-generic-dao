@@ -36,12 +36,12 @@
   * Implement Issue 20 (fields & fetches).
   * Refactor Search bean to use interfaces.
   * Provide a SearchUtil class to aid in working with search interfaces and creating implementations of search interfaces.
+  * Add methods to SearchUtil for merging parts of Searches
 
 ==0.4.2==
   * Add collection operators (see blog)
 
 ==Future==
-  * Add methods to SearchUtil for merging parts of Searches
   * Consider Issue 23 (query helper methods)
   * Consider how we deal with hibernate special properties .id and .class in Searches.
   * Improve Search bean interfaces and provide utilities for merging and changing searches.
