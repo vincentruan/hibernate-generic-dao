@@ -3,7 +3,6 @@ package com.trg.dao;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -145,60 +144,60 @@ public abstract class BaseSearchProcessor {
 	 * the given search.
 	 */
 	protected String generateSelectClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases) {
-		Iterator<Field> fieldItr = search.getFields().iterator();
 
 		StringBuilder sb = null;
 		boolean useOperator = false, notUseOperator = false;
-
 		boolean first = true;
-		while (fieldItr.hasNext()) {
-			Field field = fieldItr.next();
-			if (first) {
-				sb = new StringBuilder("select ");
-				first = false;
-			} else {
-				sb.append(", ");
-			}
 
-			String prop;
-			if (field.getProperty() == null || "".equals(field.getProperty())) {
-				prop = "*";
-			} else {
-				prop = getPath(entityClass, aliases, field.getProperty());
-			}
-
-			switch (field.getOperator()) {
-			case Field.OP_AVG:
-				sb.append("avg(");
-				useOperator = true;
-				break;
-			case Field.OP_COUNT:
-				sb.append("count(");
-				useOperator = true;
-				break;
-			case Field.OP_COUNT_DISTINCT:
-				sb.append("count(distinct ");
-				useOperator = true;
-				break;
-			case Field.OP_MAX:
-				sb.append("max(");
-				useOperator = true;
-				break;
-			case Field.OP_MIN:
-				sb.append("min(");
-				useOperator = true;
-				break;
-			case Field.OP_SUM:
-				sb.append("sum(");
-				useOperator = true;
-				break;
-			default:
-				notUseOperator = true;
-				break;
-			}
-			sb.append(prop);
-			if (useOperator) {
-				sb.append(")");
+		if (search.getFields() != null) {
+			for (Field field : search.getFields()) {
+				if (first) {
+					sb = new StringBuilder("select ");
+					first = false;
+				} else {
+					sb.append(", ");
+				}
+	
+				String prop;
+				if (field.getProperty() == null || "".equals(field.getProperty())) {
+					prop = "*";
+				} else {
+					prop = getPath(entityClass, aliases, field.getProperty());
+				}
+	
+				switch (field.getOperator()) {
+				case Field.OP_AVG:
+					sb.append("avg(");
+					useOperator = true;
+					break;
+				case Field.OP_COUNT:
+					sb.append("count(");
+					useOperator = true;
+					break;
+				case Field.OP_COUNT_DISTINCT:
+					sb.append("count(distinct ");
+					useOperator = true;
+					break;
+				case Field.OP_MAX:
+					sb.append("max(");
+					useOperator = true;
+					break;
+				case Field.OP_MIN:
+					sb.append("min(");
+					useOperator = true;
+					break;
+				case Field.OP_SUM:
+					sb.append("sum(");
+					useOperator = true;
+					break;
+				default:
+					notUseOperator = true;
+					break;
+				}
+				sb.append(prop);
+				if (useOperator) {
+					sb.append(")");
+				}
 			}
 		}
 		if (first) {
@@ -219,38 +218,36 @@ public abstract class BaseSearchProcessor {
 	 * join fetching for properties specified by <code>fetches</code>
 	 */
 	protected String generateFromClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases, boolean doEagerFetching) {
-		//apply fetches
-		boolean hasFetches = false, hasFields = false;
-		Iterator<String> fetchItr = search.getFetches().iterator();
-		while (fetchItr.hasNext()) {
-			String fetch = fetchItr.next();
-			getAlias(entityClass, aliases, fetch, true);
-			hasFetches = true;
-		}
-		if (hasFetches) {
-			//don't fetch nodes whose ancestors aren't found in the select clause
-			List<String> fields = new ArrayList<String>();
-			Iterator<Field> fieldItr = search.getFields().iterator();
-			while (fieldItr.hasNext()) {
-				Field field = fieldItr.next();
-				if (field.getOperator() == field.OP_PROPERTY) {
-					fields.add(field.getProperty() + ".");
-				}
-				hasFields = true;
+		if (search.getFetches() != null) {
+			//apply fetches
+			boolean hasFetches = false, hasFields = false;
+			for (String fetch : search.getFetches()) {
+				getAlias(entityClass, aliases, fetch, true);
+				hasFetches = true;
 			}
-			if (hasFields) {
-				for (AliasNode node : aliases.values()) {
-					if (node.fetch) {
-						//make sure it has an ancestor in the select clause
-						boolean hasAncestor = false;
-						for (String field : fields) {
-							if (node.getFullPath().startsWith(field)) {
-								hasAncestor = true;
-								break;
+			if (hasFetches) {
+				//don't fetch nodes whose ancestors aren't found in the select clause
+				List<String> fields = new ArrayList<String>();
+				for (Field field : search.getFields()) {
+					if (field.getOperator() == Field.OP_PROPERTY) {
+						fields.add(field.getProperty() + ".");
+					}
+					hasFields = true;
+				}
+				if (hasFields) {
+					for (AliasNode node : aliases.values()) {
+						if (node.fetch) {
+							//make sure it has an ancestor in the select clause
+							boolean hasAncestor = false;
+							for (String field : fields) {
+								if (node.getFullPath().startsWith(field)) {
+									hasAncestor = true;
+									break;
+								}
 							}
+							if (!hasAncestor)
+								node.fetch = false;
 						}
-						if (!hasAncestor)
-							node.fetch = false;
 					}
 				}
 			}
@@ -289,11 +286,12 @@ public abstract class BaseSearchProcessor {
 	 * search.
 	 */
 	protected String generateOrderByClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases) {
-		Iterator<Sort> sortItr = search.getSorts().iterator();
+		if (search.getSorts() == null)
+			return "";
+		
 		StringBuilder sb = null;
 		boolean first = true;
-		while (sortItr.hasNext()) {
-			Sort sort = sortItr.next();
+		for (Sort sort : search.getSorts()) {
 			if (first) {
 				sb = new StringBuilder("order by ");
 				first = false;
@@ -320,13 +318,9 @@ public abstract class BaseSearchProcessor {
 	 * options from search.
 	 */
 	protected String generateWhereClause(Class<?> entityClass, ISearch search, List<Object> params, Map<String, AliasNode> aliases) {
-		List<Filter> filters = new ArrayList<Filter>();
-		Iterator<Filter> filterItr = search.getFilters().iterator();
-		while (filterItr.hasNext()) {
-			filters.add(filterItr.next());
-		}
+		List<Filter> filters = search.getFilters();
 		String content = null;
-		if (filters.size() == 0) {
+		if (filters == null || filters.size() == 0) {
 			return "";
 		} else if (filters.size() == 1) {
 			content = filterToString(entityClass, filters.get(0), params, aliases);
@@ -572,24 +566,28 @@ public abstract class BaseSearchProcessor {
 	 * </ul>
 	 */
 	protected void securityCheck(Class<?> entityClass, ISearch search) {
-		Iterator<Field> fieldItr = search.getFields().iterator();
-		while (fieldItr.hasNext()) {
-			securityCheckProperty(fieldItr.next().getProperty());
+		if (search.getFields() != null) {
+			for (Field field : search.getFields()) {
+				securityCheckProperty(field.getProperty());
+			}
 		}
 		
-		Iterator<String> fetchItr = search.getFetches().iterator();
-		while (fetchItr.hasNext()) {
-			securityCheckProperty(fetchItr.next());
+		if (search.getFetches() != null) {
+			for (String fetch : search.getFetches()) {
+				securityCheckProperty(fetch);
+			}
 		}
 
-		Iterator<Sort> sortItr = search.getSorts().iterator();
-		while (sortItr.hasNext()) {
-			securityCheckProperty(sortItr.next().getProperty());
+		if (search.getSorts() != null) {
+			for (Sort sort : search.getSorts()) {
+				securityCheckProperty(sort.getProperty());
+			}
 		}
-
-		Iterator<Filter> filterItr = search.getFilters().iterator();
-		while (filterItr.hasNext()) {
-			securityCheckFilter(filterItr.next());
+		
+		if (search.getFilters() != null) {
+			for (Filter filter : search.getFilters()) {
+				securityCheckFilter(filter);
+			}
 		}
 	}
 
