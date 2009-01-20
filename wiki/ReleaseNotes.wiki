@@ -16,7 +16,7 @@
   * Separate RemoteDAO into separate remote adapter and DAO dispatcher
   * Use RemoteDAO adapters for specific technologies
 
-==0.4.0 (12/31/2008 current release)==
+==0.4.0 (12/31/2008)==
   * Addressed problems with Components (@Embedded) as per Issue 19.
   * Tested Search w/ polymorphism.
   * Improved Util.callMethod to be more robust.
@@ -30,7 +30,7 @@
   * Known Issues
     * Javadocs for Search beans are out of date.
 
-==0.4.1==
+==0.4.1 (01/20/09 current release)==
   * Add option to ignore case on sorts (Issue 24).
   * Ignore Filters with null values (Issue 22).
   * Implement Issue 20 (fields & fetches).
