@@ -64,7 +64,7 @@ public interface ISearch {
 	 * <li>Otherwise, use <code>RESULT_ARRAY</code>.
 	 * </ul>
 	 * 
-	 * @see #setResultMode(int)
+	 * @see #getResultMode()
 	 */
 	public static final int RESULT_AUTO = 0;
 
@@ -83,7 +83,7 @@ public interface ISearch {
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setResultMode(int)
+	 * @see #getResultMode()
 	 */
 	public static final int RESULT_ARRAY = 1;
 
@@ -101,7 +101,7 @@ public interface ISearch {
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setResultMode(int)
+	 * @see #getResultMode()
 	 */
 	public static final int RESULT_LIST = 2;
 
@@ -120,7 +120,7 @@ public interface ISearch {
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setResultMode(int)
+	 * @see #getResultMode()
 	 */
 	public static final int RESULT_MAP = 3;
 
@@ -139,7 +139,7 @@ public interface ISearch {
 	 * }
 	 * </pre>
 	 * 
-	 * @see #setResultMode(int)
+	 * @see #getResultMode()
 	 */
 	public static final int RESULT_SINGLE = 4;
 
