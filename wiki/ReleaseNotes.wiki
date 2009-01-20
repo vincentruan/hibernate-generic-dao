@@ -30,7 +30,7 @@
   * Known Issues
     * Javadocs for Search beans are out of date.
 
-==0.4.1 (01/20/09 current release)==
+==0.4.1 (01/20/2009 current release)==
   * Add option to ignore case on sorts (Issue 24).
   * Ignore Filters with null values (Issue 22).
   * Implement Issue 20 (fields & fetches).
