@@ -570,18 +570,28 @@ public abstract class BaseSearchProcessor {
 	protected void securityCheck(Class<?> entityClass, ISearch search) {
 		if (search.getFields() != null) {
 			for (Field field : search.getFields()) {
-				securityCheckProperty(field.getProperty());
+				if (field != null && field.getProperty() != null && !field.getProperty().equals(""))
+					securityCheckProperty(field.getProperty());
 			}
 		}
 
 		if (search.getFetches() != null) {
 			for (String fetch : search.getFetches()) {
+				if (fetch == null) {
+					throw new IllegalArgumentException("The search contains a null fetch.");
+				}
 				securityCheckProperty(fetch);
 			}
 		}
 
 		if (search.getSorts() != null) {
 			for (Sort sort : search.getSorts()) {
+				if (sort == null) {
+					throw new IllegalArgumentException("The search contains a null Sort.");
+				}
+				if (sort.getProperty() == null) {
+					throw new IllegalArgumentException("There is a Sort in the search that has no property specified: " + sort.toString());
+				}
 				securityCheckProperty(sort.getProperty());
 			}
 		}
@@ -598,7 +608,9 @@ public abstract class BaseSearchProcessor {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void securityCheckFilter(Filter filter) {
-		if (filter.getOperator() == Filter.OP_AND || filter.getOperator() == Filter.OP_OR) {
+		if (filter == null) {
+			throw new IllegalArgumentException("The search contains a null Filter.");
+		} if (filter.getOperator() == Filter.OP_AND || filter.getOperator() == Filter.OP_OR) {
 			if (filter.getValue() instanceof List) {
 				for (Filter f : (List<Filter>) filter.getValue()) {
 					securityCheckFilter(f);
@@ -609,7 +621,9 @@ public abstract class BaseSearchProcessor {
 				securityCheckFilter((Filter) filter.getValue());
 			}
 		} else {
-			securityCheckProperty(filter.getProperty());
+			if (filter.getProperty() != null && !filter.getProperty().equals("")) {
+				securityCheckProperty(filter.getProperty());
+			}
 		}
 	}
 
