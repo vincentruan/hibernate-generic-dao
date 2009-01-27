@@ -89,6 +89,13 @@ public class SearchUtil {
 	}
 
 	/**
+	 * Add a filter that uses the ALL operator.
+	 */
+	public static void addFilterAll(IMutableSearch search, String property, Filter filter) {
+		addFilter(search, Filter.all(property, filter));
+	}
+	
+	/**
 	 * Add a filter that uses the AND operator.
 	 * 
 	 * <p>
@@ -101,38 +108,45 @@ public class SearchUtil {
 	}
 
 	/**
+	 * Add a filter that uses the IS EMPTY operator.
+	 */
+	public static void addFilterEmpty(IMutableSearch search, String property) {
+		addFilter(search, Filter.isEmpty(property));
+	}
+	
+	/**
 	 * Add a filter that uses the == operator.
 	 */
 	public static void addFilterEqual(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_EQUAL));
+		addFilter(search, Filter.equal(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the >= operator.
 	 */
 	public static void addFilterGreaterOrEqual(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_GREATER_OR_EQUAL));
+		addFilter(search, Filter.greaterOrEqual(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the > operator.
 	 */
 	public static void addFilterGreaterThan(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_GREATER_THAN));
+		addFilter(search, Filter.greaterThan(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the ILIKE operator.
 	 */
-	public static void addFilterILike(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_ILIKE));
+	public static void addFilterILike(IMutableSearch search, String property, String value) {
+		addFilter(search, Filter.ilike(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the IN operator.
 	 */
 	public static void addFilterIn(IMutableSearch search, String property, Collection<?> value) {
-		addFilter(search, new Filter(property, value, Filter.OP_IN));
+		addFilter(search, Filter.in(property, value));
 	}
 
 	/**
@@ -143,28 +157,35 @@ public class SearchUtil {
 	 * specified.
 	 */
 	public static void addFilterIn(IMutableSearch search, String property, Object... value) {
-		addFilter(search, new Filter(property, value, Filter.OP_IN));
+		addFilter(search, Filter.in(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the <= operator.
 	 */
 	public static void addFilterLessOrEqual(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_LESS_OR_EQUAL));
+		addFilter(search, Filter.lessOrEqual(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the < operator.
 	 */
 	public static void addFilterLessThan(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_LESS_THAN));
+		addFilter(search, Filter.lessThan(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the LIKE operator.
 	 */
-	public static void addFilterLike(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_LIKE));
+	public static void addFilterLike(IMutableSearch search, String property, String value) {
+		addFilter(search, Filter.like(property, value));
+	}
+
+	/**
+	 * Add a filter that uses the NONE operator.
+	 */
+	public static void addFilterNone(IMutableSearch search, String property, Filter filter) {
+		addFilter(search, Filter.none(property, filter));
 	}
 
 	/**
@@ -178,14 +199,14 @@ public class SearchUtil {
 	 * Add a filter that uses the != operator.
 	 */
 	public static void addFilterNotEqual(IMutableSearch search, String property, Object value) {
-		addFilter(search, new Filter(property, value, Filter.OP_NOT_EQUAL));
+		addFilter(search, Filter.notEqual(property, value));
 	}
 
 	/**
 	 * Add a filter that uses the NOT IN operator.
 	 */
 	public static void addFilterNotIn(IMutableSearch search, String property, Collection<?> value) {
-		addFilter(search, new Filter(property, value, Filter.OP_NOT_IN));
+		addFilter(search, Filter.notIn(property, value));
 	}
 
 	/**
@@ -196,21 +217,28 @@ public class SearchUtil {
 	 * specified.
 	 */
 	public static void addFilterNotIn(IMutableSearch search, String property, Object... value) {
-		addFilter(search, new Filter(property, value, Filter.OP_NOT_IN));
+		addFilter(search, Filter.notIn(property, value));
 	}
 
 	/**
-	 * Add a filter that uses the IS NULL operator.
+	 * Add a filter that uses the IS NOT EMPTY operator.
+	 */
+	public static void addFilterNotEmpty(IMutableSearch search, String property) {
+		addFilter(search, Filter.isNotEmpty(property));
+	}
+	
+	/**
+	 * Add a filter that uses the IS NOT NULL operator.
 	 */
 	public static void addFilterNotNull(IMutableSearch search, String property) {
-		addFilter(search, new Filter(property, true, Filter.OP_NOT_NULL));
+		addFilter(search, Filter.isNotNull(property));
 	}
 
 	/**
 	 * Add a filter that uses the IS NULL operator.
 	 */
 	public static void addFilterNull(IMutableSearch search, String property) {
-		addFilter(search, new Filter(property, true, Filter.OP_NULL));
+		addFilter(search, Filter.isNull(property));
 	}
 
 	/**
@@ -225,6 +253,13 @@ public class SearchUtil {
 		addFilter(search, Filter.or(filters));
 	}
 
+	/**
+	 * Add a filter that uses the SOME operator.
+	 */
+	public static void addFilterSome(IMutableSearch search, String property, Filter filter) {
+		addFilter(search, Filter.some(property, filter));
+	}
+	
 	// Sorts
 	public static void addSort(IMutableSearch search, Sort sort) {
 		if (sort == null)

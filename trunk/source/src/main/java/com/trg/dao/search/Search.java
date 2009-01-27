@@ -141,7 +141,7 @@ public class Search implements IMutableSearch, Serializable {
 	/**
 	 * Add a filter that uses the LIKE operator.
 	 */
-	public Search addFilterLike(String property, Object value) {
+	public Search addFilterLike(String property, String value) {
 		SearchUtil.addFilterLike(this, property, value);
 		return this;
 	}
@@ -149,7 +149,7 @@ public class Search implements IMutableSearch, Serializable {
 	/**
 	 * Add a filter that uses the ILIKE operator.
 	 */
-	public Search addFilterILike(String property, Object value) {
+	public Search addFilterILike(String property, String value) {
 		SearchUtil.addFilterILike(this, property, value);
 		return this;
 	}
@@ -171,13 +171,29 @@ public class Search implements IMutableSearch, Serializable {
 	}
 
 	/**
-	 * Add a filter that uses the IS NULL operator.
+	 * Add a filter that uses the IS NOT NULL operator.
 	 */
 	public Search addFilterNotNull(String property) {
 		SearchUtil.addFilterNotNull(this, property);
 		return this;
 	}
 
+	/**
+	 * Add a filter that uses the IS EMPTY operator.
+	 */
+	public Search addFilterEmpty(String property) {
+		SearchUtil.addFilterEmpty(this, property);
+		return this;
+	}
+	
+	/**
+	 * Add a filter that uses the IS NOT EMPTY operator.
+	 */
+	public Search addFilterNotEmpty(String property) {
+		SearchUtil.addFilterNotEmpty(this, property);
+		return this;
+	}
+	
 	/**
 	 * Add a filter that uses the AND operator.
 	 * 
@@ -212,6 +228,30 @@ public class Search implements IMutableSearch, Serializable {
 		return this;
 	}
 
+	/**
+	 * Add a filter that uses the SOME operator.
+	 */
+	public Search addFilterSome(String property, Filter filter) {
+		SearchUtil.addFilterSome(this, property, filter);
+		return this;
+	}
+	
+	/**
+	 * Add a filter that uses the ALL operator.
+	 */
+	public Search addFilterAll(String property, Filter filter) {
+		SearchUtil.addFilterAll(this, property, filter);
+		return this;
+	}
+	
+	/**
+	 * Add a filter that uses the NONE operator.
+	 */
+	public Search addFilterNone(String property, Filter filter) {
+		SearchUtil.addFilterNone(this, property, filter);
+		return this;
+	}
+	
 	public void removeFilter(Filter filter) {
 		SearchUtil.removeFilter(this, filter);
 	}

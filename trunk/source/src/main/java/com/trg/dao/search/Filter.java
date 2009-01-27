@@ -63,8 +63,10 @@ public class Filter implements Serializable {
 	}
 
 	public static final int OP_EQUAL = 0, OP_NOT_EQUAL = 1, OP_LESS_THAN = 2, OP_GREATER_THAN = 3, OP_LESS_OR_EQUAL = 4,
-			OP_GREATER_OR_EQUAL = 5, OP_IN = 6, OP_NOT_IN = 7, OP_LIKE = 8, OP_ILIKE = 9, OP_NULL = 10, OP_NOT_NULL = 11;
+			OP_GREATER_OR_EQUAL = 5, OP_IN = 6, OP_NOT_IN = 7, OP_LIKE = 8, OP_ILIKE = 9, OP_NULL = 10, OP_NOT_NULL = 11,
+			OP_EMPTY = 12, OP_NOT_EMPTY = 13;
 	public static final int OP_AND = 100, OP_OR = 101, OP_NOT = 102;
+	public static final int OP_SOME = 200, OP_ALL = 201, OP_NONE = 202 /*not SOME*/;
 
 	/**
 	 * Create a new Filter using the == operator.
@@ -179,6 +181,20 @@ public class Filter implements Serializable {
 	public static Filter isNotNull(String property) {
 		return new Filter(property, true, OP_NOT_NULL);
 	}
+	
+	/**
+	 * Create a new Filter using the IS EMPTY operator.
+	 */
+	public static Filter isEmpty(String property) {
+		return new Filter(property, true, OP_EMPTY);
+	}
+	
+	/**
+	 * Create a new Filter using the IS NOT EMPTY operator.
+	 */
+	public static Filter isNotEmpty(String property) {
+		return new Filter(property, true, OP_NOT_EMPTY);
+	}
 
 	/**
 	 * Create a new Filter using the AND operator.
@@ -216,6 +232,29 @@ public class Filter implements Serializable {
 		return new Filter("NOT", filter, OP_NOT);
 	}
 
+	/**
+	 * Create a new Filter using the SOME operator.
+	 */
+	public static Filter some(String property, Filter filter) {
+		return new Filter(property, filter, OP_SOME);
+	}
+
+	/**
+	 * Create a new Filter using the ALL operator.
+	 */
+	public static Filter all(String property, Filter filter) {
+		return new Filter(property, filter, OP_ALL);
+	}
+
+	/**
+	 * Create a new Filter using the NONE operator.
+	 */
+	public static Filter none(String property, Filter filter) {
+		return new Filter(property, filter, OP_NONE);
+	}
+
+	
+	
 	/**
 	 * Used with OP_OR and OP_AND filters. These filters take a collection of
 	 * filters as their value. This method adds a filter to that list.
@@ -354,8 +393,22 @@ public class Filter implements Serializable {
 			if (!(value instanceof Filter)) {
 				return "NOT: **INVALID VALUE - NOT A FILTER: (" + value + ") **";
 			}
-
 			return "not " + value.toString();
+		case Filter.OP_SOME:
+			if (!(value instanceof Filter)) {
+				return "SOME: **INVALID VALUE - NOT A FILTER: (" + value + ") **";
+			}
+			return "some `" + property + "` {" + value.toString() + "}";
+		case Filter.OP_ALL:
+			if (!(value instanceof Filter)) {
+				return "ALL: **INVALID VALUE - NOT A FILTER: (" + value + ") **";
+			}
+			return "all `" + property + "` {" + value.toString() + "}";
+		case Filter.OP_NONE:
+			if (!(value instanceof Filter)) {
+				return "NONE: **INVALID VALUE - NOT A FILTER: (" + value + ") **";
+			}
+			return "none `" + property + "` {" + value.toString() + "}";
 		default:
 			return "**INVALID OPERATOR: (" + operator + ") - VALUE: " + valueString(value) + " **";
 		}
