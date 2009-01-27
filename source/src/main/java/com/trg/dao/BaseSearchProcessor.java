@@ -82,7 +82,7 @@ public abstract class BaseSearchProcessor {
 	public String generateQL(Class<?> entityClass, ISearch search, List<Object> paramList) {
 		if (entityClass == null)
 			throw new NullPointerException("The entity class for a search cannot be null");
-		
+
 		securityCheck(entityClass, search);
 
 		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
@@ -157,14 +157,14 @@ public abstract class BaseSearchProcessor {
 				} else {
 					sb.append(", ");
 				}
-	
+
 				String prop;
 				if (field.getProperty() == null || "".equals(field.getProperty())) {
 					prop = "*";
 				} else {
 					prop = getPath(entityClass, aliases, field.getProperty());
 				}
-	
+
 				switch (field.getOperator()) {
 				case Field.OP_AVG:
 					sb.append("avg(");
@@ -217,16 +217,18 @@ public abstract class BaseSearchProcessor {
 	 * clauses and makes it available as an alias using left joins. It also adds
 	 * join fetching for properties specified by <code>fetches</code>
 	 */
-	protected String generateFromClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases, boolean doEagerFetching) {
+	protected String generateFromClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases,
+			boolean doEagerFetching) {
 		if (search.getFetches() != null) {
-			//apply fetches
+			// apply fetches
 			boolean hasFetches = false, hasFields = false;
 			for (String fetch : search.getFetches()) {
 				getAlias(entityClass, aliases, fetch, true);
 				hasFetches = true;
 			}
 			if (hasFetches) {
-				//don't fetch nodes whose ancestors aren't found in the select clause
+				// don't fetch nodes whose ancestors aren't found in the select
+				// clause
 				List<String> fields = new ArrayList<String>();
 				for (Field field : search.getFields()) {
 					if (field.getOperator() == Field.OP_PROPERTY) {
@@ -237,7 +239,7 @@ public abstract class BaseSearchProcessor {
 				if (hasFields) {
 					for (AliasNode node : aliases.values()) {
 						if (node.fetch) {
-							//make sure it has an ancestor in the select clause
+							// make sure it has an ancestor in the select clause
 							boolean hasAncestor = false;
 							for (String field : fields) {
 								if (node.getFullPath().startsWith(field)) {
@@ -288,7 +290,7 @@ public abstract class BaseSearchProcessor {
 	protected String generateOrderByClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases) {
 		if (search.getSorts() == null)
 			return "";
-		
+
 		StringBuilder sb = null;
 		boolean first = true;
 		for (Sort sort : search.getSorts()) {
@@ -317,7 +319,8 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating where clause for given search. Uses filter
 	 * options from search.
 	 */
-	protected String generateWhereClause(Class<?> entityClass, ISearch search, List<Object> params, Map<String, AliasNode> aliases) {
+	protected String generateWhereClause(Class<?> entityClass, ISearch search, List<Object> params,
+			Map<String, AliasNode> aliases) {
 		List<Filter> filters = search.getFilters();
 		String content = null;
 		if (filters == null || filters.size() == 0) {
@@ -345,29 +348,32 @@ public abstract class BaseSearchProcessor {
 	 * Recursively generate the QL fragment for a given search filter option.
 	 */
 	@SuppressWarnings("unchecked")
-	protected String filterToString(Class<?> entityClass, Filter filter, List<Object> params, Map<String, AliasNode> aliases) {
+	protected String filterToString(Class<?> entityClass, Filter filter, List<Object> params,
+			Map<String, AliasNode> aliases) {
 		Object value = filter.getValue();
+		int operator = filter.getOperator();
 
 		// If the operator needs a value and no value is specified, ignore this
 		// filter.
 		// Only NULL and NOT_NULL do not need a value.
-		if (value == null && filter.getOperator() != Filter.OP_NULL && filter.getOperator() != Filter.OP_NOT_NULL) {
+		if (value == null && operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL
+				&& operator != Filter.OP_EMPTY && operator != Filter.OP_NOT_EMPTY) {
 			return null;
 		}
 
 		// for IN and NOT IN, if value is empty list, return false, and true
 		// respectively
-		if (filter.getOperator() == Filter.OP_IN || filter.getOperator() == Filter.OP_NOT_IN) {
+		if (operator == Filter.OP_IN || operator == Filter.OP_NOT_IN) {
 			if (value instanceof Collection && ((Collection) value).size() == 0) {
-				return filter.getOperator() == Filter.OP_IN ? "1 = 2" : "1 = 1";
+				return operator == Filter.OP_IN ? "1 = 2" : "1 = 1";
 			}
 			if (value instanceof Object[] && ((Object[]) value).length == 0) {
-				return filter.getOperator() == Filter.OP_IN ? "1 = 2" : "1 = 1";
+				return operator == Filter.OP_IN ? "1 = 2" : "1 = 1";
 			}
 		}
 
 		// convert numbers to the expected type if needed (ex: Integer to Long)
-		if (filter.getOperator() == Filter.OP_IN || filter.getOperator() == Filter.OP_NOT_IN) {
+		if (operator == Filter.OP_IN || operator == Filter.OP_NOT_IN) {
 			// with IN & NOT IN, check each element in the collection.
 			Class<?> expectedClass = metaDataUtil.getExpectedClass(entityClass, filter.getProperty());
 
@@ -387,24 +393,20 @@ public abstract class BaseSearchProcessor {
 				}
 			}
 			value = val2;
-		} else if (filter.getOperator() != Filter.OP_AND && filter.getOperator() != Filter.OP_OR
-				&& filter.getOperator() != Filter.OP_NOT && filter.getOperator() != Filter.OP_NULL
-				&& filter.getOperator() != Filter.OP_NOT_NULL) {
-			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(entityClass, filter
-					.getProperty()));
+		} else if (operator != Filter.OP_AND && operator != Filter.OP_OR && operator != Filter.OP_NOT
+				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL) {
+			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(entityClass, filter.getProperty()));
 		}
 
-		switch (filter.getOperator()) {
+		switch (operator) {
 		case Filter.OP_NULL:
 			return getPath(entityClass, aliases, filter.getProperty()) + " is null";
 		case Filter.OP_NOT_NULL:
 			return getPath(entityClass, aliases, filter.getProperty()) + " is not null";
 		case Filter.OP_IN:
-			return getPath(entityClass, aliases, filter.getProperty()) + " in (:p" + param(params, value)
-					+ ")";
+			return getPath(entityClass, aliases, filter.getProperty()) + " in (:p" + param(params, value) + ")";
 		case Filter.OP_NOT_IN:
-			return getPath(entityClass, aliases, filter.getProperty()) + " not in (:p"
-					+ param(params, value) + ")";
+			return getPath(entityClass, aliases, filter.getProperty()) + " not in (:p" + param(params, value) + ")";
 		case Filter.OP_EQUAL:
 			return getPath(entityClass, aliases, filter.getProperty()) + " = :p" + param(params, value);
 		case Filter.OP_NOT_EQUAL:
@@ -418,7 +420,7 @@ public abstract class BaseSearchProcessor {
 		case Filter.OP_LESS_OR_EQUAL:
 			return getPath(entityClass, aliases, filter.getProperty()) + " <= :p" + param(params, value);
 		case Filter.OP_LIKE:
-			return getPath(entityClass, aliases, filter.getProperty()) + " like :p" + param(params, value);
+			return getPath(entityClass, aliases, filter.getProperty()) + " like :p" + param(params, value.toString());
 		case Filter.OP_ILIKE:
 			return "lower(" + getPath(entityClass, aliases, filter.getProperty()) + ") like lower(:p"
 					+ param(params, value.toString()) + ")";
@@ -460,7 +462,7 @@ public abstract class BaseSearchProcessor {
 
 			return "not " + filterStr;
 		default:
-			throw new IllegalArgumentException("Filter comparison ( " + filter.getOperator() + " ) is invalid.");
+			throw new IllegalArgumentException("Filter comparison ( " + operator + " ) is invalid.");
 		}
 	}
 
@@ -538,7 +540,7 @@ public abstract class BaseSearchProcessor {
 			children.put(prop, node);
 			node.parent = this;
 		}
-		
+
 		public String getFullPath() {
 			if (parent == null)
 				return "";
@@ -571,7 +573,7 @@ public abstract class BaseSearchProcessor {
 				securityCheckProperty(field.getProperty());
 			}
 		}
-		
+
 		if (search.getFetches() != null) {
 			for (String fetch : search.getFetches()) {
 				securityCheckProperty(fetch);
@@ -583,7 +585,7 @@ public abstract class BaseSearchProcessor {
 				securityCheckProperty(sort.getProperty());
 			}
 		}
-		
+
 		if (search.getFilters() != null) {
 			for (Filter filter : search.getFilters()) {
 				securityCheckFilter(filter);
