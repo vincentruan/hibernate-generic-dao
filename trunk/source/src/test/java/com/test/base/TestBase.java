@@ -1,5 +1,6 @@
 package com.test.base;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -13,8 +14,10 @@ import org.hibernate.SessionFactory;
 
 import com.test.model.Address;
 import com.test.model.Home;
+import com.test.model.Ident;
 import com.test.model.Ingredient;
 import com.test.model.LimbedPet;
+import com.test.model.Name;
 import com.test.model.Person;
 import com.test.model.Pet;
 import com.test.model.Recipe;
@@ -23,7 +26,7 @@ import com.test.model.Store;
 import com.trg.test.TestCaseSpringAutoWire;
 
 public class TestBase extends TestCaseSpringAutoWire {
-	
+
 	protected SessionFactory sessionFactory;
 
 	protected Person joeA, // 10
@@ -36,17 +39,17 @@ public class TestBase extends TestCaseSpringAutoWire {
 			mamaB, // 38
 			grandpaA, // 65
 			grandmaA; // 65
-	
+
 	protected Pet fishWiggles;
 	protected LimbedPet catPrissy, catNorman, spiderJimmy;
-	
+
 	protected List<Store> stores;
 	protected List<Recipe> recipes;
-	
+
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-	
+
 	public void setJoeA(Person joeA) {
 		this.joeA = joeA;
 	}
@@ -86,7 +89,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 	public void setGrandmaA(Person grandmaA) {
 		this.grandmaA = grandmaA;
 	}
-	
+
 	public void setFishWiggles(Pet fishWiggles) {
 		this.fishWiggles = fishWiggles;
 	}
@@ -102,7 +105,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 	public void setSpiderJimmy(LimbedPet spiderJimmy) {
 		this.spiderJimmy = spiderJimmy;
 	}
-	
+
 	public void setStores(List<Store> stores) {
 		this.stores = stores;
 	}
@@ -111,15 +114,19 @@ public class TestBase extends TestCaseSpringAutoWire {
 		this.recipes = recipes;
 	}
 
+	protected Session getSession() {
+		return sessionFactory.getCurrentSession();
+	}
+
 	protected void initDB() {
-		Session session = sessionFactory.getCurrentSession();
+		Session session = getSession();
 		merge(session, papaA.getHome().getAddress());
 		merge(session, papaA.getHome());
 		merge(session, papaB.getHome().getAddress());
 		merge(session, papaB.getHome());
 		merge(session, grandpaA.getHome().getAddress());
 		merge(session, grandpaA.getHome());
-		
+
 		merge(session, setup(grandpaA));
 		merge(session, setup(grandmaA));
 		merge(session, setup(papaA));
@@ -130,7 +137,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 		merge(session, setup(sallyA));
 		merge(session, setup(joeB));
 		merge(session, setup(margretB));
-		
+
 		merge(session, spiderJimmy);
 		merge(session, fishWiggles);
 		merge(session, catPrissy);
@@ -139,68 +146,68 @@ public class TestBase extends TestCaseSpringAutoWire {
 		for (Ingredient i : stores.get(0).getIngredientsCarried()) {
 			merge(session, i);
 		}
-		
+
 		for (Store s : stores) {
 			merge(session, s);
 		}
-		
+
 		for (Recipe r : recipes) {
 			Set<RecipeIngredient> ris = r.getIngredients();
 			r.setIngredients(null);
 			merge(session, r);
-			
+
 			for (RecipeIngredient ri : ris) {
 				merge(session, ri);
 			}
-			
+
 			r.setIngredients(ris);
 		}
-		
+
 		// detatch all our Java copies of these from hibernate.
 		session.flush();
 		session.clear();
 	}
-	
+
 	protected void clearIds() {
-		for (Person p : new Person[] {grandpaA, grandmaA, papaA, papaB, mamaA, mamaB, joeA, joeB, sallyA, margretB}) {
+		for (Person p : new Person[] { grandpaA, grandmaA, papaA, papaB, mamaA, mamaB, joeA, joeB, sallyA, margretB }) {
 			p.setId(null);
 			p.getHome().setId(null);
 			p.getHome().getAddress().setId(null);
 		}
 	}
-	
+
 	private void merge(Session session, Person p) {
-		p.setId( ((Person) session.merge(p)).getId() );
+		p.setId(((Person) session.merge(p)).getId());
 	}
-	
+
 	private void merge(Session session, Home h) {
-		h.setId( ((Home) session.merge(h)).getId() );
+		h.setId(((Home) session.merge(h)).getId());
 	}
-	
+
 	private void merge(Session session, Address a) {
-		a.setId( ((Address) session.merge(a)).getId() );
+		a.setId(((Address) session.merge(a)).getId());
 	}
-	
+
 	private void merge(Session session, Pet p) {
-		p.setId( ((Pet) session.merge(p)).getId() );
+		p.setId(((Pet) session.merge(p)).getId());
 	}
-	
+
 	private void merge(Session session, Recipe r) {
-		r.setId( ((Recipe) session.merge(r)).getId() );
+		r.setId(((Recipe) session.merge(r)).getId());
 	}
-	
+
 	private void merge(Session session, Ingredient i) {
-		i.setId( ((Ingredient) session.merge(i)).getId() );
+		i.setId(((Ingredient) session.merge(i)).getId());
 	}
-	
+
 	private void merge(Session session, Store s) {
-		s.setId( ((Store) session.merge(s)).getId() );
+		s.setId(((Store) session.merge(s)).getId());
 	}
-	
+
 	private void merge(Session session, RecipeIngredient ri) {
-		ri.setId( ((RecipeIngredient) session.merge(ri)).getId() );
+		ri.setId(((RecipeIngredient) session.merge(ri)).getId());
 	}
-	
+
 	protected void clearHibernate() {
 		Session session = sessionFactory.getCurrentSession();
 		session.flush();
@@ -219,14 +226,14 @@ public class TestBase extends TestCaseSpringAutoWire {
 		cpy.setWeight(p.getWeight());
 		return cpy;
 	}
-	
+
 	protected Home copy(Home h) {
 		Home cpy = new Home();
 		cpy.setId(h.getId());
 		cpy.setType(h.getType());
 		return cpy;
 	}
-	
+
 	protected Address copy(Address a) {
 		Address cpy = new Address();
 		cpy.setId(a.getId());
@@ -236,7 +243,20 @@ public class TestBase extends TestCaseSpringAutoWire {
 		cpy.setZip(a.getZip());
 		return cpy;
 	}
-	
+
+	protected LimbedPet copy(LimbedPet p) {
+		LimbedPet cpy = new LimbedPet();
+		cpy.setId(p.getId());
+		cpy.setIdent(new Ident(p.getIdent().getIdNumber(), new Name(p.getIdent().getName().getFirst(), p.getIdent()
+				.getName().getLast())));
+		cpy.setSpecies(p.getSpecies());
+		cpy.setHasPaws(p.isHasPaws());
+		cpy.setFavoritePlaymate(p.getFavoritePlaymate());
+		cpy.setLimbs(new ArrayList<String>(p.getLimbs().size()));
+		cpy.getLimbs().addAll(p.getLimbs());
+		return cpy;
+	}
+
 	protected Person setup(Person p) {
 		Calendar cal = new GregorianCalendar();
 		cal.add(Calendar.YEAR, -p.getAge());
@@ -245,10 +265,9 @@ public class TestBase extends TestCaseSpringAutoWire {
 
 		return p;
 	}
-	
+
 	protected void assertListEqual(Person[] expected, List<Person> actual) {
-		Assert.assertEquals("The list did not have the expected length",
-				expected.length, actual.size());
+		Assert.assertEquals("The list did not have the expected length", expected.length, actual.size());
 
 		HashMap<Long, Object> unmatched = new HashMap<Long, Object>();
 		for (Person person : expected) {
@@ -261,11 +280,25 @@ public class TestBase extends TestCaseSpringAutoWire {
 		if (unmatched.size() != 0)
 			Assert.fail("The list did not match the expected results.");
 	}
-	
+
+	protected void assertListEqual(List<?> actual, Object... expected) {
+		Assert.assertEquals("The list did not have the expected length", expected.length, actual.size());
+
+		HashMap<Object, Object> unmatched = new HashMap<Object, Object>();
+		for (Object o : expected) {
+			unmatched.put(o, null);
+		}
+		for (Object o : actual) {
+			unmatched.remove(o);
+		}
+
+		if (unmatched.size() != 0)
+			Assert.fail("The list did not match the expected results.");
+	}
+
 	protected void assertListOrderEqual(Person[] expected, List<Person> actual) {
-		Assert.assertEquals("The list did not have the expected length",
-				expected.length, actual.size());
-		
+		Assert.assertEquals("The list did not have the expected length", expected.length, actual.size());
+
 		for (int i = 0; i < expected.length; i++) {
 			if (!expected[i].getId().equals(actual.get(i).getId()))
 				Assert.fail("The list did not match the expected results.");
