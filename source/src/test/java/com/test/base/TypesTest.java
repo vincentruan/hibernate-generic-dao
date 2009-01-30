@@ -3,8 +3,11 @@ package com.test.base;
 import java.util.List;
 
 import com.test.misc.SearchTestInterface;
+import com.test.model.Ingredient;
 import com.test.model.LimbedPet;
 import com.test.model.Pet;
+import com.test.model.Recipe;
+import com.test.model.RecipeIngredient;
 import com.trg.dao.search.Search;
 
 public class TypesTest extends TestBase {
@@ -37,10 +40,42 @@ public class TypesTest extends TestBase {
 		//for example, querying on student.studentTeacher.id.teacher.firstName
 	}
 	
+	public void testIdProperty() {
+		initDB();
+		
+		Recipe toffee = recipes.get(2);
+		Ingredient sugar = (Ingredient) target.searchUnique(new Search(Ingredient.class).addFilterEqual("name", "Sugar"));
+		
+		Search s = new Search(RecipeIngredient.class);
+		
+		s.addField("id.recipe.id");
+		s.addFilterEqual("id.ingredient.id", sugar.getId());
+		assertListEqual(target.search(s), toffee.getId());
+		
+		s.clear();
+		s.addField("id.recipe.title");
+		s.addFilterEqual("id.ingredient.name", "Salt");
+		assertListEqual(target.search(s), "Fried Chicken", "Bread");
+	}
+	
+	public void testClassProperty() {
+		initDB();
+		
+		Search s = new Search(Pet.class);
+		s.addFilterEqual("class", LimbedPet.class);
+		assertListEqual(target.search(s), catNorman, catPrissy, spiderJimmy);
+		
+		s.clear();
+		s.addFilterNotEqual("class", LimbedPet.class);
+		assertListEqual(target.search(s), fishWiggles);
+	}
+	
 	//HQL functions that take collection-valued path expressions: size(),
 	//minelement(), maxelement(), minindex(), maxindex(), along with the
 	//special elements() and indices functions which may be quantified using
 	//some, all, exists, any, in.
+	//
+	//also don't forget ingredients[3] (indexed collection) and preferences['homepage'] (maps)
 	//
 	//.size
 	//public void testIndexedCollection() {
