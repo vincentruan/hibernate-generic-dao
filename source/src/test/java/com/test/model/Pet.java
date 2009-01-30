@@ -68,6 +68,6 @@ public class Pet {
 	}
 
 	public String toString() {
-		return "Pet::id:" + id + ",ident:" + ident + ",species:" + species + ",favoritePlaymate:" + favoritePlaymate;
+		return "Pet::id:" + id + ",ident:" + ident + ",species:" + species + ",favoritePlaymateId:" + favoritePlaymate.getId();
 	}
 }

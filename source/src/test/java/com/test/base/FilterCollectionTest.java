@@ -1,11 +1,18 @@
 package com.test.base;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.test.misc.SearchTestInterface;
 import com.test.model.Home;
 import com.test.model.LimbedPet;
+import com.test.model.Person;
 import com.test.model.Pet;
+import com.test.model.Recipe;
+import com.test.model.RecipeIngredient;
+import com.test.model.Store;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.Search;
 
@@ -87,7 +94,95 @@ public class FilterCollectionTest extends TestBase {
 	}
 	
 	public void testEmpty() {
+		initDB();
 		
+		//with entity
+		Search s = new Search(Person.class);
+		s.addFilterEmpty("father");
+		assertListEqual(target.search(s), grandpaA, grandmaA, mamaB, papaB);
+
+		s.clear();
+		s.addFilterEmpty("father.id");
+		assertListEqual(target.search(s), grandpaA, grandmaA, mamaB, papaB);
+		
+		s.clear();
+		s.addFilterNotEmpty("father");
+		assertListEqual(target.search(s), mamaA, papaA, joeA, joeB, margretB, sallyA);
+		
+		//with int and string value
+		Person pete = copy(papaA);
+		pete.setAge(null);
+		pete.setFirstName(null);
+		pete.setLastName("");
+		sessionFactory.getCurrentSession().update(pete);
+		
+		s.clear();
+		s.addFilterEmpty("age");
+		assertListEqual(target.search(s), pete);
+		
+		s.clear();
+		s.addFilterEmpty("firstName");
+		assertListEqual(target.search(s), pete);
+
+		s.clear();
+		s.addFilterEmpty("lastName");
+		assertListEqual(target.search(s), pete);
+		
+		s.clear();
+		s.addFilterNotEmpty("lastName");
+		assertListEqual(target.search(s), grandmaA, grandpaA, papaB, mamaA, mamaB, joeA, joeB, sallyA, margretB);
+		
+		pete.setAge(0);
+		s.clear();
+		s.addFilterEmpty("age");
+		assertListEqual(target.search(s)); //no matches, 0 is not empty
+		
+		//with value collection
+		s.clear();
+		s.setSearchClass(LimbedPet.class);
+		s.addFilterEmpty("limbs");
+		assertListEqual(target.search(s)); //no results
+		
+		LimbedPet cat = copy(catPrissy);
+		cat.setLimbs(new ArrayList<String>(0));
+		getSession().update(cat);
+		
+		assertListEqual(target.search(s), cat);
+		
+		cat.setLimbs(null);
+		
+		assertListEqual(target.search(s), cat);
+		
+		//with one-to-many
+		
+		Recipe air = new Recipe();
+		air.setTitle("Air");
+		air.setIngredients(new HashSet<RecipeIngredient>());
+		getSession().save(air);
+		
+		s.clear();
+		s.setSearchClass(Recipe.class);
+		s.addFilterEmpty("ingredients");
+		assertListEqual(target.search(s), air);
+		
+		s.clear();
+		s.addFilterNotEmpty("ingredients");
+		assertListEqual(target.search(s), recipes.toArray());
+		
+		//with many-to-many
+		
+		Store emptyStore = new Store();
+		emptyStore.setName("Empty Store");
+		getSession().save(emptyStore);
+		
+		s.clear();
+		s.setSearchClass(Store.class);
+		s.addFilterEmpty("ingredientsCarried");
+		assertListEqual(target.search(s), emptyStore);
+		
+		s.clear();
+		s.addFilterNotEmpty("ingredientsCarried");
+		assertListEqual(target.search(s), stores.toArray());		
 	}
 	
 	public void testSize() {

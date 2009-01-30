@@ -7,6 +7,14 @@ public class Ident {
 	private Integer idNumber;
 	private Name name;
 
+	public Ident() {
+	}
+
+	public Ident(Integer idNumber, Name name) {
+		this.idNumber = idNumber;
+		this.name = name;
+	}
+
 	public Integer getIdNumber() {
 		return idNumber;
 	}
