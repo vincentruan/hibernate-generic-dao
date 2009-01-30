@@ -85,13 +85,12 @@ public abstract class BaseSearchProcessor {
 
 		securityCheck(entityClass, search);
 
-		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
-		aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
+		SearchContext ctx = new SearchContext(entityClass, rootAlias, paramList);
 
-		String select = generateSelectClause(entityClass, search, aliases);
-		String where = generateWhereClause(entityClass, search, paramList, aliases);
-		String orderBy = generateOrderByClause(entityClass, search, aliases);
-		String from = generateFromClause(entityClass, search, aliases, true);
+		String select = generateSelectClause(ctx, search);
+		String where = generateWhereClause(ctx, search);
+		String orderBy = generateOrderByClause(ctx, search);
+		String from = generateFromClause(ctx, search, true);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(select);
@@ -121,11 +120,10 @@ public abstract class BaseSearchProcessor {
 
 		securityCheck(entityClass, search);
 
-		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
-		aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
+		SearchContext ctx = new SearchContext(entityClass, rootAlias, paramList);
 
-		String where = generateWhereClause(entityClass, search, paramList, aliases);
-		String from = generateFromClause(entityClass, search, aliases, false);
+		String where = generateWhereClause(ctx, search);
+		String from = generateFromClause(ctx, search, false);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select count(distinct ").append(rootAlias).append(".id) ");
@@ -143,7 +141,7 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating the select clause based on the fields of
 	 * the given search.
 	 */
-	protected String generateSelectClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases) {
+	protected String generateSelectClause(SearchContext ctx, ISearch search) {
 
 		StringBuilder sb = null;
 		boolean useOperator = false, notUseOperator = false;
@@ -162,7 +160,7 @@ public abstract class BaseSearchProcessor {
 				if (field.getProperty() == null || "".equals(field.getProperty())) {
 					prop = "*";
 				} else {
-					prop = getPath(entityClass, aliases, field.getProperty());
+					prop = getPath(ctx, field.getProperty());
 				}
 
 				switch (field.getOperator()) {
@@ -202,7 +200,7 @@ public abstract class BaseSearchProcessor {
 		}
 		if (first) {
 			// there are no fields
-			return "select " + rootAlias;
+			return "select " + ctx.getRootAlias();
 		}
 		if (useOperator && notUseOperator) {
 			throw new Error("A search can not have a mix of fields with operators and fields without operators.");
@@ -217,13 +215,13 @@ public abstract class BaseSearchProcessor {
 	 * clauses and makes it available as an alias using left joins. It also adds
 	 * join fetching for properties specified by <code>fetches</code>
 	 */
-	protected String generateFromClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases,
+	protected String generateFromClause(SearchContext ctx, ISearch search,
 			boolean doEagerFetching) {
 		if (search.getFetches() != null) {
 			// apply fetches
 			boolean hasFetches = false, hasFields = false;
 			for (String fetch : search.getFetches()) {
-				getAlias(entityClass, aliases, fetch, true);
+				getAlias(ctx, fetch, true);
 				hasFetches = true;
 			}
 			if (hasFetches) {
@@ -237,7 +235,7 @@ public abstract class BaseSearchProcessor {
 					hasFields = true;
 				}
 				if (hasFields) {
-					for (AliasNode node : aliases.values()) {
+					for (AliasNode node : ctx.aliases.values()) {
 						if (node.fetch) {
 							// make sure it has an ancestor in the select clause
 							boolean hasAncestor = false;
@@ -256,13 +254,13 @@ public abstract class BaseSearchProcessor {
 		}
 
 		StringBuilder sb = new StringBuilder("from ");
-		sb.append(entityClass.getName());
+		sb.append(ctx.rootClass.getName());
 		sb.append(" ");
-		sb.append(rootAlias);
+		sb.append(ctx.getRootAlias());
 
 		// traverse alias graph breadth-first
 		Queue<AliasNode> queue = new LinkedList<AliasNode>();
-		queue.offer(aliases.get(ROOT_PATH));
+		queue.offer(ctx.aliases.get(ROOT_PATH));
 		while (!queue.isEmpty()) {
 			AliasNode node = queue.poll();
 			if (node.parent != null) {
@@ -287,7 +285,7 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating order by clause. Uses sort options from
 	 * search.
 	 */
-	protected String generateOrderByClause(Class<?> entityClass, ISearch search, Map<String, AliasNode> aliases) {
+	protected String generateOrderByClause(SearchContext ctx, ISearch search) {
 		if (search.getSorts() == null)
 			return "";
 
@@ -300,12 +298,12 @@ public abstract class BaseSearchProcessor {
 			} else {
 				sb.append(", ");
 			}
-			if (sort.isIgnoreCase() && metaDataUtil.isSQLStringType(entityClass, sort.getProperty())) {
+			if (sort.isIgnoreCase() && metaDataUtil.isSQLStringType(ctx.rootClass, sort.getProperty())) {
 				sb.append("lower(");
-				sb.append(getPath(entityClass, aliases, sort.getProperty()));
+				sb.append(getPath(ctx, sort.getProperty()));
 				sb.append(")");
 			} else {
-				sb.append(getPath(entityClass, aliases, sort.getProperty()));
+				sb.append(getPath(ctx, sort.getProperty()));
 			}
 			sb.append(sort.isDesc() ? " desc" : " asc");
 		}
@@ -319,17 +317,16 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating where clause for given search. Uses filter
 	 * options from search.
 	 */
-	protected String generateWhereClause(Class<?> entityClass, ISearch search, List<Object> params,
-			Map<String, AliasNode> aliases) {
+	protected String generateWhereClause(SearchContext ctx, ISearch search) {
 		List<Filter> filters = search.getFilters();
 		String content = null;
 		if (filters == null || filters.size() == 0) {
 			return "";
 		} else if (filters.size() == 1) {
-			content = filterToString(entityClass, filters.get(0), params, aliases);
+			content = filterToQL(ctx, filters.get(0));
 		} else {
 			Filter junction = new Filter(null, filters, search.isDisjunction() ? Filter.OP_OR : Filter.OP_AND);
-			content = filterToString(entityClass, junction, params, aliases);
+			content = filterToQL(ctx, junction);
 		}
 
 		return (content == null) ? "" : "where " + content;
@@ -339,17 +336,16 @@ public abstract class BaseSearchProcessor {
 	 * Add value to paramList and return the "X" part of the named parameter
 	 * string ":pX".
 	 */
-	protected String param(List<Object> params, Object value) {
-		params.add(value);
-		return Integer.toString(params.size());
+	protected String param(SearchContext ctx, Object value) {
+		ctx.paramList.add(value);
+		return Integer.toString(ctx.paramList.size());
 	}
 
 	/**
 	 * Recursively generate the QL fragment for a given search filter option.
 	 */
 	@SuppressWarnings("unchecked")
-	protected String filterToString(Class<?> entityClass, Filter filter, List<Object> params,
-			Map<String, AliasNode> aliases) {
+	protected String filterToQL(SearchContext ctx, Filter filter) {
 		Object value = filter.getValue();
 		int operator = filter.getOperator();
 
@@ -375,7 +371,7 @@ public abstract class BaseSearchProcessor {
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (operator == Filter.OP_IN || operator == Filter.OP_NOT_IN) {
 			// with IN & NOT IN, check each element in the collection.
-			Class<?> expectedClass = metaDataUtil.getExpectedClass(entityClass, filter.getProperty());
+			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, filter.getProperty());
 
 			Object[] val2;
 
@@ -395,35 +391,35 @@ public abstract class BaseSearchProcessor {
 			value = val2;
 		} else if (operator != Filter.OP_AND && operator != Filter.OP_OR && operator != Filter.OP_NOT
 				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL) {
-			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(entityClass, filter.getProperty()));
+			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(ctx.rootClass, filter.getProperty()));
 		}
 
 		switch (operator) {
 		case Filter.OP_NULL:
-			return getPath(entityClass, aliases, filter.getProperty()) + " is null";
+			return getPath(ctx, filter.getProperty()) + " is null";
 		case Filter.OP_NOT_NULL:
-			return getPath(entityClass, aliases, filter.getProperty()) + " is not null";
+			return getPath(ctx, filter.getProperty()) + " is not null";
 		case Filter.OP_IN:
-			return getPath(entityClass, aliases, filter.getProperty()) + " in (:p" + param(params, value) + ")";
+			return getPath(ctx, filter.getProperty()) + " in (:p" + param(ctx, value) + ")";
 		case Filter.OP_NOT_IN:
-			return getPath(entityClass, aliases, filter.getProperty()) + " not in (:p" + param(params, value) + ")";
+			return getPath(ctx, filter.getProperty()) + " not in (:p" + param(ctx, value) + ")";
 		case Filter.OP_EQUAL:
-			return getPath(entityClass, aliases, filter.getProperty()) + " = :p" + param(params, value);
+			return getPath(ctx, filter.getProperty()) + " = :p" + param(ctx, value);
 		case Filter.OP_NOT_EQUAL:
-			return getPath(entityClass, aliases, filter.getProperty()) + " != :p" + param(params, value);
+			return getPath(ctx, filter.getProperty()) + " != :p" + param(ctx, value);
 		case Filter.OP_GREATER_THAN:
-			return getPath(entityClass, aliases, filter.getProperty()) + " > :p" + param(params, value);
+			return getPath(ctx, filter.getProperty()) + " > :p" + param(ctx, value);
 		case Filter.OP_LESS_THAN:
-			return getPath(entityClass, aliases, filter.getProperty()) + " < :p" + param(params, value);
+			return getPath(ctx, filter.getProperty()) + " < :p" + param(ctx, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return getPath(entityClass, aliases, filter.getProperty()) + " >= :p" + param(params, value);
+			return getPath(ctx, filter.getProperty()) + " >= :p" + param(ctx, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return getPath(entityClass, aliases, filter.getProperty()) + " <= :p" + param(params, value);
+			return getPath(ctx, filter.getProperty()) + " <= :p" + param(ctx, value);
 		case Filter.OP_LIKE:
-			return getPath(entityClass, aliases, filter.getProperty()) + " like :p" + param(params, value.toString());
+			return getPath(ctx, filter.getProperty()) + " like :p" + param(ctx, value.toString());
 		case Filter.OP_ILIKE:
-			return "lower(" + getPath(entityClass, aliases, filter.getProperty()) + ") like lower(:p"
-					+ param(params, value.toString()) + ")";
+			return "lower(" + getPath(ctx, filter.getProperty()) + ") like lower(:p"
+					+ param(ctx, value.toString()) + ")";
 		case Filter.OP_AND:
 		case Filter.OP_OR:
 			if (!(value instanceof List)) {
@@ -436,7 +432,7 @@ public abstract class BaseSearchProcessor {
 			boolean first = true;
 			for (Object o : ((List) value)) {
 				if (o instanceof Filter) {
-					String filterStr = filterToString(entityClass, (Filter) o, params, aliases);
+					String filterStr = filterToQL(ctx, (Filter) o);
 					if (filterStr != null) {
 						if (first) {
 							first = false;
@@ -456,7 +452,7 @@ public abstract class BaseSearchProcessor {
 			if (!(value instanceof Filter)) {
 				return null;
 			}
-			String filterStr = filterToString(entityClass, (Filter) value, params, aliases);
+			String filterStr = filterToQL(ctx, (Filter) value);
 			if (filterStr == null)
 				return null;
 
@@ -471,13 +467,13 @@ public abstract class BaseSearchProcessor {
 	 * the reference to that property that uses the appropriate alias (ex.
 	 * a4_manager.salary).
 	 */
-	protected String getPath(Class<?> rootClass, Map<String, AliasNode> aliases, String property) {
+	protected String getPath(SearchContext ctx, String property) {
 		int pos = property.lastIndexOf('.');
 		if (pos == -1) {
-			return rootAlias + "." + property;
+			return ctx.getRootAlias() + "." + property;
 		} else {
 			String aliasPath = property.substring(0, pos);
-			return getAlias(rootClass, aliases, aliasPath, false).alias + "." + property.substring(pos + 1);
+			return getAlias(ctx, aliasPath, false).alias + "." + property.substring(pos + 1);
 		}
 	}
 
@@ -486,9 +482,9 @@ public abstract class BaseSearchProcessor {
 	 * to reference that entity (ex. a4_manager). If there is no alias for the
 	 * given path, one will be created.
 	 */
-	protected AliasNode getAlias(Class<?> rootClass, Map<String, AliasNode> aliases, String path, boolean setFetch) {
-		if (aliases.containsKey(path)) {
-			AliasNode node = aliases.get(path);
+	protected AliasNode getAlias(SearchContext ctx, String path, boolean setFetch) {
+		if (ctx.aliases.containsKey(path)) {
+			AliasNode node = ctx.aliases.get(path);
 			if (setFetch) {
 				while (node.parent != null) {
 					node.fetch = true;
@@ -503,22 +499,22 @@ public abstract class BaseSearchProcessor {
 			String property = path.substring(pos + 1);
 			String subpath = (pos == -1) ? ROOT_PATH : path.substring(0, pos);
 
-			if (metaDataUtil.isEntity(rootClass, path)) {
-				String alias = "a" + Integer.toString(aliases.size() + 1) + "_" + property;
+			if (metaDataUtil.isEntity(ctx.rootClass, path)) {
+				String alias = "a" + Integer.toString(ctx.aliases.size() + 1) + "_" + property;
 
 				node = new AliasNode(property, alias);
 
 				// set up path recursively
-				getAlias(rootClass, aliases, subpath, setFetch).addChild(property, node);
+				getAlias(ctx, subpath, setFetch).addChild(property, node);
 
 			} else {
-				String alias = getAlias(rootClass, aliases, subpath, setFetch).alias + "." + property;
+				String alias = getAlias(ctx, subpath, setFetch).alias + "." + property;
 
 				node = new AliasNode(null, alias);
 			}
 
 			node.fetch = setFetch;
-			aliases.put(path, node);
+			ctx.aliases.put(path, node);
 
 			return node;
 		}
@@ -548,6 +544,27 @@ public abstract class BaseSearchProcessor {
 				return property;
 			else
 				return parent.getFullPath() + "." + property;
+		}
+	}
+	
+	protected static final class SearchContext {
+		Class<?> rootClass;
+		Map<String, AliasNode> aliases;
+		List<Object> paramList;
+		
+		public SearchContext(Class<?> rootClass, String rootAlias, List<Object> paramList) {
+			this.rootClass = rootClass;
+			this.aliases = new HashMap<String, AliasNode>();
+			setRootAlias(rootAlias);
+			this.paramList = paramList;
+		}
+		
+		public void setRootAlias(String rootAlias) {
+			this.aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
+		}
+		
+		public String getRootAlias() {
+			return this.aliases.get(ROOT_PATH).alias;
 		}
 	}
 
