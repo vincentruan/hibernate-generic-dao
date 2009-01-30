@@ -66,7 +66,7 @@ public class TypesTest extends TestBase {
 		assertListEqual(target.search(s), catNorman, catPrissy, spiderJimmy);
 		
 		s.clear();
-		s.addFilterNotEqual("class", LimbedPet.class);
+		s.addFilterNotEqual("class", LimbedPet.class.getName());
 		assertListEqual(target.search(s), fishWiggles);
 	}
 	

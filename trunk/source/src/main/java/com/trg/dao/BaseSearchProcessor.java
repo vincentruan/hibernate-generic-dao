@@ -333,12 +333,16 @@ public abstract class BaseSearchProcessor {
 	}
 
 	/**
-	 * Add value to paramList and return the "X" part of the named parameter
+	 * Add value to paramList and return the named parameter
 	 * string ":pX".
 	 */
 	protected String param(SearchContext ctx, Object value) {
+		if (value instanceof Class) {
+			return ((Class<?>) value).getName();
+		}
+		
 		ctx.paramList.add(value);
-		return Integer.toString(ctx.paramList.size());
+		return ":p" + Integer.toString(ctx.paramList.size());
 	}
 
 	/**
@@ -346,6 +350,7 @@ public abstract class BaseSearchProcessor {
 	 */
 	@SuppressWarnings("unchecked")
 	protected String filterToQL(SearchContext ctx, Filter filter) {
+		String property = filter.getProperty();
 		Object value = filter.getValue();
 		int operator = filter.getOperator();
 
@@ -371,7 +376,10 @@ public abstract class BaseSearchProcessor {
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (operator == Filter.OP_IN || operator == Filter.OP_NOT_IN) {
 			// with IN & NOT IN, check each element in the collection.
-			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, filter.getProperty());
+			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
+			if ("class".equals(property) || property.endsWith(".class")) {
+				expectedClass = Class.class;
+			}
 
 			Object[] val2;
 
@@ -391,34 +399,38 @@ public abstract class BaseSearchProcessor {
 			value = val2;
 		} else if (operator != Filter.OP_AND && operator != Filter.OP_OR && operator != Filter.OP_NOT
 				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL) {
-			value = Util.convertIfNeeded(value, metaDataUtil.getExpectedClass(ctx.rootClass, filter.getProperty()));
+			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
+			if ("class".equals(property) || property.endsWith(".class")) {
+				expectedClass = Class.class;
+			}
+			value = Util.convertIfNeeded(value, expectedClass);
 		}
 
 		switch (operator) {
 		case Filter.OP_NULL:
-			return getPath(ctx, filter.getProperty()) + " is null";
+			return getPath(ctx, property) + " is null";
 		case Filter.OP_NOT_NULL:
-			return getPath(ctx, filter.getProperty()) + " is not null";
+			return getPath(ctx, property) + " is not null";
 		case Filter.OP_IN:
-			return getPath(ctx, filter.getProperty()) + " in (:p" + param(ctx, value) + ")";
+			return getPath(ctx, property) + " in (" + param(ctx, value) + ")";
 		case Filter.OP_NOT_IN:
-			return getPath(ctx, filter.getProperty()) + " not in (:p" + param(ctx, value) + ")";
+			return getPath(ctx, property) + " not in (" + param(ctx, value) + ")";
 		case Filter.OP_EQUAL:
-			return getPath(ctx, filter.getProperty()) + " = :p" + param(ctx, value);
+			return getPath(ctx, property) + " = " + param(ctx, value);
 		case Filter.OP_NOT_EQUAL:
-			return getPath(ctx, filter.getProperty()) + " != :p" + param(ctx, value);
+			return getPath(ctx, property) + " != " + param(ctx, value);
 		case Filter.OP_GREATER_THAN:
-			return getPath(ctx, filter.getProperty()) + " > :p" + param(ctx, value);
+			return getPath(ctx, property) + " > " + param(ctx, value);
 		case Filter.OP_LESS_THAN:
-			return getPath(ctx, filter.getProperty()) + " < :p" + param(ctx, value);
+			return getPath(ctx, property) + " < " + param(ctx, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return getPath(ctx, filter.getProperty()) + " >= :p" + param(ctx, value);
+			return getPath(ctx, property) + " >= " + param(ctx, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return getPath(ctx, filter.getProperty()) + " <= :p" + param(ctx, value);
+			return getPath(ctx, property) + " <= " + param(ctx, value);
 		case Filter.OP_LIKE:
-			return getPath(ctx, filter.getProperty()) + " like :p" + param(ctx, value.toString());
+			return getPath(ctx, property) + " like " + param(ctx, value.toString());
 		case Filter.OP_ILIKE:
-			return "lower(" + getPath(ctx, filter.getProperty()) + ") like lower(:p"
+			return "lower(" + getPath(ctx, property) + ") like lower("
 					+ param(ctx, value.toString()) + ")";
 		case Filter.OP_AND:
 		case Filter.OP_OR:
