@@ -70,4 +70,35 @@ public class Pet {
 	public String toString() {
 		return "Pet::id:" + id + ",ident:" + ident + ",species:" + species + ",favoritePlaymateId:" + favoritePlaymate.getId();
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((ident == null) ? 0 : ident.hashCode());
+		result = prime * result + ((species == null) ? 0 : species.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Pet other = (Pet) obj;
+		if (ident == null) {
+			if (other.ident != null)
+				return false;
+		} else if (!ident.equals(other.ident))
+			return false;
+		if (species == null) {
+			if (other.species != null)
+				return false;
+		} else if (!species.equals(other.species))
+			return false;
+		return true;
+	}
 }

@@ -56,6 +56,12 @@ public class Util {
 				} catch (NoSuchMethodException e) {
 				}
 			}
+		} else if (Class.class.equals(type)) {
+			try {
+				return Class.forName(value.toString());
+			} catch (ClassNotFoundException e) {
+				throw new ClassCastException("Unable to convert value " + value.toString() + " to type Class");
+			}
 		}
 
 		throw new ClassCastException("Unable to convert value of type " + value.getClass().getName() + " to type "
