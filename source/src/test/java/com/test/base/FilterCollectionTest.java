@@ -185,38 +185,21 @@ public class FilterCollectionTest extends TestBase {
 		assertListEqual(target.search(s), stores.toArray());		
 	}
 	
-	public void testSize() {
+	public void testSizeProperty() {
+		initDB();
 		
+		Search s = new Search(LimbedPet.class);
+		s.addFilterEqual("limbs.size", 8);
+		assertListEqual(target.search(s), spiderJimmy);
+		
+		s.clear();
+		s.addFilterLessThan("limbs.size", 6);
+		assertListEqual(target.search(s), catNorman, catPrissy);
+		
+		s.clear();
+		s.setSearchClass(Person.class);
+		s.addFilterGreaterThan("home.residents.size", 2);
+		assertListEqual(target.search(s), papaA, papaB, mamaA, mamaB, sallyA, margretB, joeA, joeB);
 	}
-	
-	public void testId() {
-		
-	}
-	
-	public void testClass() {
-		
-	}
-	
-	
-	//HQL functions that take collection-valued path expressions: size(),
-	//minelement(), maxelement(), minindex(), maxindex(), along with the
-	//special elements() and indices functions which may be quantified using
-	//some, all, exists, any, in.
-	//
-	//.size
-	//public void testIndexedCollection() {
-		//initDB();
-		
-		//size() / .size
-		
-		//minelement() / maxelement() / minindex() / maxindex()
-		
-		//some / any - these are equivalent, true if condition is true for any element in the collection
-		
-		//exists - true if the collection is not empty
-		
-		//all - true if condition is true for all elements in the colleciton
-		
-		//
-	//}
+
 }
