@@ -41,6 +41,7 @@
 ==0.4.2==
   * Add collection operators (see blog)
   * Allow use of special .id, .class, .size properties
+  * Issue 25, handling nulls in sorts, filters, fields, etc.
 
 ==Future==
   * Consider Issue 23 (query helper methods)
