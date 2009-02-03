@@ -409,9 +409,13 @@ public abstract class BaseSearchProcessor {
 				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL && operator != Filter.OP_EMPTY
 				&& operator != Filter.OP_NOT_EMPTY && operator != Filter.OP_SOME && operator != Filter.OP_ALL
 				&& operator != Filter.OP_NONE) {
-			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
+			Class<?> expectedClass;
 			if ("class".equals(property) || property.endsWith(".class")) {
 				expectedClass = Class.class;
+			} else if ("size".equals(property) || property.endsWith(".size")) {
+				expectedClass = Integer.class;
+			} else {
+				expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
 			}
 			value = Util.convertIfNeeded(value, expectedClass);
 		}

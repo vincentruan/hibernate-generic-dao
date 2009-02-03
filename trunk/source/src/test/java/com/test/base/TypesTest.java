@@ -77,30 +77,6 @@ public class TypesTest extends TestBase {
 		assertListEqual(target.search(s), fishWiggles);
 	}
 	
-	//HQL functions that take collection-valued path expressions: size(),
-	//minelement(), maxelement(), minindex(), maxindex(), along with the
-	//special elements() and indices functions which may be quantified using
-	//some, all, exists, any, in.
-	//
-	//also don't forget ingredients[3] (indexed collection) and preferences['homepage'] (maps)
-	//
-	//.size
-	//public void testIndexedCollection() {
-		//initDB();
-		
-		//size() / .size
-		
-		//minelement() / maxelement() / minindex() / maxindex()
-		
-		//some / any - these are equivalent, true if condition is true for any element in the collection
-		
-		//exists - true if the collection is not empty
-		
-		//all - true if condition is true for all elements in the colleciton
-		
-		//
-	//}
-	
 	public void testPlymorphism() {
 		initDB();
 		
