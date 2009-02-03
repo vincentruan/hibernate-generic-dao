@@ -221,6 +221,14 @@ public abstract class BaseSearchProcessor {
 		return sb.toString();
 	}
 
+	/**
+	 * Internal method for generating the join portion of the from clause. This
+	 * method should be called after generating other clauses because it relies
+	 * on the aliases they create. This method takes every path that is called
+	 * for in the other clauses and makes it available as an alias using left
+	 * joins. It also adds join fetching for properties specified by
+	 * <code>fetches</code> if <code>doEagerFetching</code> is <code>true</code>
+	 */
 	protected String generateJoins(SearchContext ctx, List<String> fetches, List<Field> fields, boolean doEagerFetching) {
 		if (doEagerFetching && fetches != null) {
 			// apply fetches
@@ -356,7 +364,7 @@ public abstract class BaseSearchProcessor {
 
 		// If the operator needs a value and no value is specified, ignore this
 		// filter.
-		// Only NULL and NOT_NULL do not need a value.
+		// Only NULL, NOT_NULL, EMPTY and NOT_EMPTY do not need a value.
 		if (value == null && operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL
 				&& operator != Filter.OP_EMPTY && operator != Filter.OP_NOT_EMPTY) {
 			return null;
@@ -511,6 +519,10 @@ public abstract class BaseSearchProcessor {
 		}
 	}
 
+	/**
+	 * Generate a QL string for a subquery on the given property that uses the
+	 * given filter. This is used by SOME, ALL and NONE filters.
+	 */
 	protected String generateSubquery(SearchContext ctx, String property, Filter filter) {
 		SearchContext ctx2 = new SearchContext();
 		ctx2.rootClass = metaDataUtil.getCollectionElementClass(ctx.rootClass, property);
@@ -541,10 +553,41 @@ public abstract class BaseSearchProcessor {
 	/**
 	 * Return a filter that negates the given filter.
 	 */
-	protected Filter negate(Filter orig) {
-		// This is a trivial implementation it does not take into account the
-		// complication of nulls in the database
-		return Filter.not(orig);
+	protected Filter negate(Filter filter) {
+		return Filter.not(addExplicitNullChecks(filter));
+	}
+
+	/**
+	 * Used by {@link #negate(Filter)}. There's a complication with null values
+	 * in the database so that !(x == 1) is not the opposite of (x == 1). Rather
+	 * !(x == 1 and x != null) is the same as (x == 1). This method applies the
+	 * null check explicitly to all filters included in the given filter tree.
+	 */
+	protected Filter addExplicitNullChecks(Filter filter) {
+		switch (filter.getOperator()) {
+		case Filter.OP_AND:
+		case Filter.OP_OR:
+			Filter result = (filter.getOperator() == Filter.OP_AND ? Filter.and() : Filter.or());
+			if (filter.getValue() instanceof List) {
+				for (Filter f : (List<Filter>) filter.getValue()) {
+					result.add(addExplicitNullChecks(f));
+				}
+			}
+			return result;
+		case Filter.OP_NOT:
+			return Filter.not((filter.getValue() instanceof Filter) ? addExplicitNullChecks((Filter) filter.getValue())
+					: null);
+		case Filter.OP_EMPTY:
+		case Filter.OP_NOT_EMPTY:
+		case Filter.OP_NULL:
+		case Filter.OP_NOT_NULL:
+		case Filter.OP_ALL:
+		case Filter.OP_SOME:
+		case Filter.OP_NONE:
+			return filter;
+		default:
+			return Filter.and(filter, Filter.isNotNull(filter.getProperty()));
+		}
 	}
 
 	/**
