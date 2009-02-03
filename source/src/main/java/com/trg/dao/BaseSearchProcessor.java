@@ -396,7 +396,8 @@ public abstract class BaseSearchProcessor {
 			}
 			value = val2;
 		} else if (operator != Filter.OP_AND && operator != Filter.OP_OR && operator != Filter.OP_NOT
-				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL) {
+				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL && operator != Filter.OP_EMPTY
+				&& operator != Filter.OP_NOT_EMPTY) {
 			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
 			if ("class".equals(property) || property.endsWith(".class")) {
 				expectedClass = Class.class;
@@ -466,6 +467,24 @@ public abstract class BaseSearchProcessor {
 				return null;
 
 			return "not " + filterStr;
+		case Filter.OP_EMPTY:
+			if (metaDataUtil.isSQLStringType(ctx.rootClass, property)) {
+				String pathRef = getPathRef(ctx, property);
+				return "(" + pathRef + " is null or " + pathRef + " = '')";
+			} else if (metaDataUtil.isCollection(ctx.rootClass, property)) {
+				return "not exists elements(" + getPathRef(ctx, property) + ")";
+			} else {
+				return getPathRef(ctx, property) + " is null";
+			}
+		case Filter.OP_NOT_EMPTY:
+			if (metaDataUtil.isSQLStringType(ctx.rootClass, property)) {
+				String pathRef = getPathRef(ctx, property);
+				return "(" + pathRef + " is not null and " + pathRef + " != '')";
+			} else if (metaDataUtil.isCollection(ctx.rootClass, property)) {
+				return "exists elements(" + getPathRef(ctx, property) + ")";
+			} else {
+				return getPathRef(ctx, property) + " is not null";
+			}
 		default:
 			throw new IllegalArgumentException("Filter comparison ( " + operator + " ) is invalid.");
 		}
