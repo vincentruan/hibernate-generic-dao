@@ -9,7 +9,9 @@ import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.Mapping;
+import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.type.AbstractComponentType;
+import org.hibernate.type.CollectionType;
 import org.hibernate.type.EntityType;
 import org.hibernate.type.Type;
 
@@ -55,6 +57,16 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 		}
 	}
 
+	public Class<?> getCollectionElementClass(Class<?> rootClass, String propertyPath) {
+		Type type = getPathType(rootClass, propertyPath);
+		if (type == null || !type.isCollectionType()) {
+			throw new IllegalArgumentException("The property '" + propertyPath + "' on class " + rootClass
+					+ " is not a collection.");
+		} else {
+			return ((CollectionType) type).getElementType((SessionFactoryImplementor) sessionFactory).getReturnedClass();
+		}
+	}
+
 	public boolean isEntity(Class<?> rootClass, String propertyPath) {
 		Type type = getPathType(rootClass, propertyPath);
 		if (type == null) {
@@ -68,7 +80,7 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 			return type.isEntityType();
 		}
 	}
-	
+
 	public boolean isCollection(Class<?> rootClass, String propertyPath) {
 		Type type = getPathType(rootClass, propertyPath);
 		if (type == null) {
