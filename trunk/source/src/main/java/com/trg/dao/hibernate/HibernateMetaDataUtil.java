@@ -68,6 +68,15 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 			return type.isEntityType();
 		}
 	}
+	
+	public boolean isCollection(Class<?> rootClass, String propertyPath) {
+		Type type = getPathType(rootClass, propertyPath);
+		if (type == null) {
+			return false;
+		} else {
+			return type.isCollectionType();
+		}
+	}
 
 	public Serializable getId(Object object) {
 		if (object == null)
