@@ -1,9 +1,12 @@
 package com.test.base;
 
+import java.awt.PageAttributes.OriginType;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -284,16 +287,13 @@ public class TestBase extends TestCaseSpringAutoWire {
 	protected void assertListEqual(List<?> actual, Object... expected) {
 		Assert.assertEquals("The list did not have the expected length", expected.length, actual.size());
 
-		HashMap<Object, Object> unmatched = new HashMap<Object, Object>();
+		List<Object> remaining = new LinkedList<Object>();
+		remaining.addAll(actual);
+		
 		for (Object o : expected) {
-			unmatched.put(o, null);
+			if (!remaining.remove(o))
+				Assert.fail("The list did not match the expected results.");
 		}
-		for (Object o : actual) {
-			unmatched.remove(o);
-		}
-
-		if (unmatched.size() != 0)
-			Assert.fail("The list did not match the expected results.");
 	}
 
 	protected void assertListOrderEqual(Person[] expected, List<Person> actual) {

@@ -160,7 +160,7 @@ public abstract class BaseSearchProcessor {
 				if (field.getProperty() == null || "".equals(field.getProperty())) {
 					prop = "*";
 				} else {
-					prop = getPath(ctx, field.getProperty());
+					prop = getPathRef(ctx, field.getProperty());
 				}
 
 				switch (field.getOperator()) {
@@ -215,8 +215,7 @@ public abstract class BaseSearchProcessor {
 	 * clauses and makes it available as an alias using left joins. It also adds
 	 * join fetching for properties specified by <code>fetches</code>
 	 */
-	protected String generateFromClause(SearchContext ctx, ISearch search,
-			boolean doEagerFetching) {
+	protected String generateFromClause(SearchContext ctx, ISearch search, boolean doEagerFetching) {
 		if (search.getFetches() != null) {
 			// apply fetches
 			boolean hasFetches = false, hasFields = false;
@@ -273,7 +272,7 @@ public abstract class BaseSearchProcessor {
 				sb.append(" as ");
 				sb.append(node.alias);
 			}
-			for (AliasNode child : node.children.values()) {
+			for (AliasNode child : node.children) {
 				queue.offer(child);
 			}
 		}
@@ -300,10 +299,10 @@ public abstract class BaseSearchProcessor {
 			}
 			if (sort.isIgnoreCase() && metaDataUtil.isSQLStringType(ctx.rootClass, sort.getProperty())) {
 				sb.append("lower(");
-				sb.append(getPath(ctx, sort.getProperty()));
+				sb.append(getPathRef(ctx, sort.getProperty()));
 				sb.append(")");
 			} else {
-				sb.append(getPath(ctx, sort.getProperty()));
+				sb.append(getPathRef(ctx, sort.getProperty()));
 			}
 			sb.append(sort.isDesc() ? " desc" : " asc");
 		}
@@ -333,14 +332,13 @@ public abstract class BaseSearchProcessor {
 	}
 
 	/**
-	 * Add value to paramList and return the named parameter
-	 * string ":pX".
+	 * Add value to paramList and return the named parameter string ":pX".
 	 */
 	protected String param(SearchContext ctx, Object value) {
 		if (value instanceof Class) {
 			return ((Class<?>) value).getName();
 		}
-		
+
 		ctx.paramList.add(value);
 		return ":p" + Integer.toString(ctx.paramList.size());
 	}
@@ -408,30 +406,29 @@ public abstract class BaseSearchProcessor {
 
 		switch (operator) {
 		case Filter.OP_NULL:
-			return getPath(ctx, property) + " is null";
+			return getPathRef(ctx, property) + " is null";
 		case Filter.OP_NOT_NULL:
-			return getPath(ctx, property) + " is not null";
+			return getPathRef(ctx, property) + " is not null";
 		case Filter.OP_IN:
-			return getPath(ctx, property) + " in (" + param(ctx, value) + ")";
+			return getPathRef(ctx, property) + " in (" + param(ctx, value) + ")";
 		case Filter.OP_NOT_IN:
-			return getPath(ctx, property) + " not in (" + param(ctx, value) + ")";
+			return getPathRef(ctx, property) + " not in (" + param(ctx, value) + ")";
 		case Filter.OP_EQUAL:
-			return getPath(ctx, property) + " = " + param(ctx, value);
+			return getPathRef(ctx, property) + " = " + param(ctx, value);
 		case Filter.OP_NOT_EQUAL:
-			return getPath(ctx, property) + " != " + param(ctx, value);
+			return getPathRef(ctx, property) + " != " + param(ctx, value);
 		case Filter.OP_GREATER_THAN:
-			return getPath(ctx, property) + " > " + param(ctx, value);
+			return getPathRef(ctx, property) + " > " + param(ctx, value);
 		case Filter.OP_LESS_THAN:
-			return getPath(ctx, property) + " < " + param(ctx, value);
+			return getPathRef(ctx, property) + " < " + param(ctx, value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return getPath(ctx, property) + " >= " + param(ctx, value);
+			return getPathRef(ctx, property) + " >= " + param(ctx, value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return getPath(ctx, property) + " <= " + param(ctx, value);
+			return getPathRef(ctx, property) + " <= " + param(ctx, value);
 		case Filter.OP_LIKE:
-			return getPath(ctx, property) + " like " + param(ctx, value.toString());
+			return getPathRef(ctx, property) + " like " + param(ctx, value.toString());
 		case Filter.OP_ILIKE:
-			return "lower(" + getPath(ctx, property) + ") like lower("
-					+ param(ctx, value.toString()) + ")";
+			return "lower(" + getPathRef(ctx, property) + ") like lower(" + param(ctx, value.toString()) + ")";
 		case Filter.OP_AND:
 		case Filter.OP_OR:
 			if (!(value instanceof List)) {
@@ -475,18 +472,101 @@ public abstract class BaseSearchProcessor {
 	}
 
 	/**
+	 * Return a filter that negates the given filter.
+	 */
+	protected Filter negate(Filter orig) {
+		// This is a trivial implementation it does not take into account the
+		// complication of nulls in the database
+		return Filter.not(orig);
+	}
+
+	/**
 	 * Given a full path to a property (ex. department.manager.salary), return
 	 * the reference to that property that uses the appropriate alias (ex.
 	 * a4_manager.salary).
 	 */
-	protected String getPath(SearchContext ctx, String property) {
-		int pos = property.lastIndexOf('.');
-		if (pos == -1) {
-			return ctx.getRootAlias() + "." + property;
-		} else {
-			String aliasPath = property.substring(0, pos);
-			return getAlias(ctx, aliasPath, false).alias + "." + property.substring(pos + 1);
+	protected String getPathRef(SearchContext ctx, String path) {
+		if (path == null || "".equals(path)) {
+			return ctx.getRootAlias();
 		}
+
+		String[] parts = splitPath(ctx, path);
+
+		return getAlias(ctx, parts[0], false).alias + "." + parts[1];
+	}
+
+	/**
+	 * Split a path into two parts. The first part will need to be aliased. The
+	 * second part will be a property of that alias. For example:
+	 * (department.manager.salary) would return [department.manager, salary].
+	 */
+	protected String[] splitPath(SearchContext ctx, String path) {
+		if (path == null || "".equals(path))
+			return null;
+
+		int pos = path.lastIndexOf('.');
+
+		if (pos == -1) {
+			return new String[] { "", path };
+		} else {
+			String lastSegment = path.substring(pos + 1);
+			String currentPath = path;
+			boolean first = true;
+
+			// Basically gobble up as many segments as possible until we come to
+			// an entity. Entities must become aliases so we can use our left
+			// join feature.
+			// The exception is that if a segment is an id, we want to skip the
+			// entity preceding it because (entity.id) is actually stored in the
+			// same table as the foreign key.
+			while (true) {
+				if (lastSegment.equals("id")) { // TODO: more rubust checking
+					// for whether it's an id property
+					// skip one segment
+					if (pos == -1) {
+						return new String[] { "", path };
+					}
+					pos = currentPath.lastIndexOf('.', pos - 1);
+				} else if (!first && metaDataUtil.isEntity(ctx.rootClass, currentPath)) {
+					// when we reach an entity (excluding the very last
+					// segment), we're done
+					return new String[] { currentPath, path.substring(currentPath.length() + 1) };
+				}
+				first = false;
+
+				// for size, we need to go back to the 'first' behavior
+				// for the next segment
+				if (lastSegment.equals("size")) { // TODO make sure the previous
+					// is a collection
+					first = true;
+				}
+
+				// if that was the last segment, we're done
+				if (pos == -1) {
+					return new String[] { "", path };
+				}
+				// proceed to the next segment
+				currentPath = currentPath.substring(0, pos);
+				pos = currentPath.lastIndexOf('.');
+				if (pos == -1) {
+					lastSegment = currentPath;
+				} else {
+					lastSegment = currentPath.substring(pos + 1);
+				}
+			}
+
+		}
+
+		// 1st
+		// if "id", go 2; try again
+		// if component, go 1; try again
+		// if entity, go 1; try again
+		// if size, go 1; try 1st again
+
+		// successive
+		// if "id", go 2; try again
+		// if component, go 1; try again
+		// if entity, stop
 	}
 
 	/**
@@ -495,7 +575,9 @@ public abstract class BaseSearchProcessor {
 	 * given path, one will be created.
 	 */
 	protected AliasNode getAlias(SearchContext ctx, String path, boolean setFetch) {
-		if (ctx.aliases.containsKey(path)) {
+		if (path == null || path.equals("")) {
+			return ctx.aliases.get(ROOT_PATH);
+		} else if (ctx.aliases.containsKey(path)) {
 			AliasNode node = ctx.aliases.get(path);
 			if (setFetch) {
 				while (node.parent != null) {
@@ -506,24 +588,16 @@ public abstract class BaseSearchProcessor {
 
 			return node;
 		} else {
-			AliasNode node;
-			int pos = path.lastIndexOf('.');
-			String property = path.substring(pos + 1);
-			String subpath = (pos == -1) ? ROOT_PATH : path.substring(0, pos);
+			String[] parts = splitPath(ctx, path);
 
-			if (metaDataUtil.isEntity(ctx.rootClass, path)) {
-				String alias = "a" + Integer.toString(ctx.aliases.size() + 1) + "_" + property;
+			int pos = parts[1].lastIndexOf('.');
 
-				node = new AliasNode(property, alias);
+			String alias = "a" + (ctx.nextAliasNum++) + "_" + (pos == -1 ? parts[1] : parts[1].substring(pos + 1));
 
-				// set up path recursively
-				getAlias(ctx, subpath, setFetch).addChild(property, node);
+			AliasNode node = new AliasNode(parts[1], alias);
 
-			} else {
-				String alias = getAlias(ctx, subpath, setFetch).alias + "." + property;
-
-				node = new AliasNode(null, alias);
-			}
+			// set up path recursively
+			getAlias(ctx, parts[0], setFetch).addChild(node);
 
 			node.fetch = setFetch;
 			ctx.aliases.put(path, node);
@@ -537,15 +611,15 @@ public abstract class BaseSearchProcessor {
 		String alias;
 		boolean fetch;
 		AliasNode parent;
-		Map<String, AliasNode> children = new HashMap<String, AliasNode>();
+		List<AliasNode> children = new ArrayList<AliasNode>();
 
 		AliasNode(String property, String alias) {
 			this.property = property;
 			this.alias = alias;
 		}
 
-		void addChild(String prop, AliasNode node) {
-			children.put(prop, node);
+		void addChild(AliasNode node) {
+			children.add(node);
 			node.parent = this;
 		}
 
@@ -558,23 +632,26 @@ public abstract class BaseSearchProcessor {
 				return parent.getFullPath() + "." + property;
 		}
 	}
-	
+
 	protected static final class SearchContext {
 		Class<?> rootClass;
 		Map<String, AliasNode> aliases;
 		List<Object> paramList;
-		
+
+		int nextAliasNum = 1;
+		int nextSubqueryNum = 1;
+
 		public SearchContext(Class<?> rootClass, String rootAlias, List<Object> paramList) {
 			this.rootClass = rootClass;
 			this.aliases = new HashMap<String, AliasNode>();
 			setRootAlias(rootAlias);
 			this.paramList = paramList;
 		}
-		
+
 		public void setRootAlias(String rootAlias) {
 			this.aliases.put(ROOT_PATH, new AliasNode(ROOT_PATH, rootAlias));
 		}
-		
+
 		public String getRootAlias() {
 			return this.aliases.get(ROOT_PATH).alias;
 		}
@@ -619,7 +696,8 @@ public abstract class BaseSearchProcessor {
 					throw new IllegalArgumentException("The search contains a null Sort.");
 				}
 				if (sort.getProperty() == null) {
-					throw new IllegalArgumentException("There is a Sort in the search that has no property specified: " + sort.toString());
+					throw new IllegalArgumentException("There is a Sort in the search that has no property specified: "
+							+ sort.toString());
 				}
 				securityCheckProperty(sort.getProperty());
 			}
@@ -639,7 +717,8 @@ public abstract class BaseSearchProcessor {
 	protected void securityCheckFilter(Filter filter) {
 		if (filter == null) {
 			throw new IllegalArgumentException("The search contains a null Filter.");
-		} if (filter.getOperator() == Filter.OP_AND || filter.getOperator() == Filter.OP_OR) {
+		}
+		if (filter.getOperator() == Filter.OP_AND || filter.getOperator() == Filter.OP_OR) {
 			if (filter.getValue() instanceof List) {
 				for (Filter f : (List<Filter>) filter.getValue()) {
 					securityCheckFilter(f);

@@ -22,6 +22,12 @@ public interface MetaDataUtil {
 	 * could also, for example be a component or a value type.
 	 */
 	public boolean isEntity(Class<?> rootClass, String propertyPath);
+	
+	/**
+	 * Return true if the property at the given property path is a collection. It
+	 * could also, for example be a component or a value type.
+	 */
+	public boolean isCollection(Class<?> rootClass, String propertyPath);
 
 	/**
 	 * Return true if the property at the given property path is persisted as a

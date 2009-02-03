@@ -5,6 +5,7 @@ import java.util.List;
 import com.test.misc.SearchTestInterface;
 import com.test.model.Ingredient;
 import com.test.model.LimbedPet;
+import com.test.model.Person;
 import com.test.model.Pet;
 import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
@@ -56,6 +57,12 @@ public class TypesTest extends TestBase {
 		s.addField("id.recipe.title");
 		s.addFilterEqual("id.ingredient.name", "Salt");
 		assertListEqual(target.search(s), "Fried Chicken", "Bread");
+		
+		s.clear();
+		s.setSearchClass(Person.class);
+		s.addField("mother.father.id");
+		s.addFilterEqual("father.id", papaB.getId());
+		assertListEqual(target.search(s), grandpaA.getId(), grandpaA.getId());
 	}
 	
 	public void testClassProperty() {
