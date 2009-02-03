@@ -40,12 +40,12 @@
 
 ==0.4.2==
   * Add collection operators (see blog)
+  * Allow use of special .id, .class, .size properties
 
 ==Future==
   * Consider Issue 23 (query helper methods)
   * Consider how we deal with hibernate special properties .id and .class in Searches.
-  * Improve Search bean interfaces and provide utilities for merging and changing searches.
   * Possibly add ability to compare two properties in a filter.
   * Add implementation for JPA
   * Consider compatibility with multiple entity names per Java class
-  * Security roles with remote DAOs
+  * Look at security roles with remote DAOs
