@@ -4,13 +4,24 @@ import java.io.Serializable;
 
 public interface MetaDataUtil {
 	/**
-	 * Get the type of a property of a bean class. The property can be simple
+	 * Get the type of a property of a entity class. The property can be simple
 	 * ("name") or nested ("organization.name").
 	 * 
 	 * @throws PropertyNotFoundException
-	 *             if the class does not have the given bean property.
+	 *             if the class does not have the given property.
 	 */
 	public Class<?> getExpectedClass(Class<?> rootClass, String propertyPath);
+
+	/**
+	 * Get the type of elements in a collection property of a entity class. The
+	 * property can be simple ("name") or nested ("organization.name").
+	 * 
+	 * @throws PropertyNotFoundException
+	 *             if the class does not have the given property.
+	 * @throws IllegalArgumentException
+	 *             if the property is not a collection
+	 */
+	public Class<?> getCollectionElementClass(Class<?> rootClass, String propertyPath);
 
 	/**
 	 * Get the value of the ID property of an entity.
@@ -22,10 +33,10 @@ public interface MetaDataUtil {
 	 * could also, for example be a component or a value type.
 	 */
 	public boolean isEntity(Class<?> rootClass, String propertyPath);
-	
+
 	/**
-	 * Return true if the property at the given property path is a collection. It
-	 * could also, for example be a component or a value type.
+	 * Return true if the property at the given property path is a collection.
+	 * It could also, for example be a component or a value type.
 	 */
 	public boolean isCollection(Class<?> rootClass, String propertyPath);
 

@@ -88,17 +88,14 @@ public abstract class BaseSearchProcessor {
 		SearchContext ctx = new SearchContext(entityClass, rootAlias, paramList);
 
 		String select = generateSelectClause(ctx, search);
-		String where = generateWhereClause(ctx, search);
+		String where = generateWhereClause(ctx, search.getFilters(), search.isDisjunction());
 		String orderBy = generateOrderByClause(ctx, search);
-		String from = generateFromClause(ctx, search, true);
+		String from = generateFromClause(ctx, search.getFetches(), search.getFields(), true);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(select);
-		sb.append(" ");
 		sb.append(from);
-		sb.append(" ");
 		sb.append(where);
-		sb.append(" ");
 		sb.append(orderBy);
 
 		String query = sb.toString();
@@ -122,13 +119,12 @@ public abstract class BaseSearchProcessor {
 
 		SearchContext ctx = new SearchContext(entityClass, rootAlias, paramList);
 
-		String where = generateWhereClause(ctx, search);
-		String from = generateFromClause(ctx, search, false);
+		String where = generateWhereClause(ctx, search.getFilters(), search.isDisjunction());
+		String from = generateFromClause(ctx, search.getFetches(), search.getFields(), false);
 
 		StringBuilder sb = new StringBuilder();
-		sb.append("select count(distinct ").append(rootAlias).append(".id) ");
+		sb.append("select count(distinct ").append(rootAlias).append(".id)");
 		sb.append(from);
-		sb.append(" ");
 		sb.append(where);
 
 		String query = sb.toString();
@@ -215,21 +211,31 @@ public abstract class BaseSearchProcessor {
 	 * clauses and makes it available as an alias using left joins. It also adds
 	 * join fetching for properties specified by <code>fetches</code>
 	 */
-	protected String generateFromClause(SearchContext ctx, ISearch search, boolean doEagerFetching) {
-		if (search.getFetches() != null) {
+	protected String generateFromClause(SearchContext ctx, List<String> fetches, List<Field> fields,
+			boolean doEagerFetching) {
+		StringBuilder sb = new StringBuilder(" from ");
+		sb.append(ctx.rootClass.getName());
+		sb.append(" ");
+		sb.append(ctx.getRootAlias());
+		sb.append(generateJoins(ctx, fetches, fields, doEagerFetching));
+		return sb.toString();
+	}
+
+	protected String generateJoins(SearchContext ctx, List<String> fetches, List<Field> fields, boolean doEagerFetching) {
+		if (doEagerFetching && fetches != null) {
 			// apply fetches
 			boolean hasFetches = false, hasFields = false;
-			for (String fetch : search.getFetches()) {
+			for (String fetch : fetches) {
 				getAlias(ctx, fetch, true);
 				hasFetches = true;
 			}
-			if (hasFetches) {
+			if (hasFetches && fields != null) {
 				// don't fetch nodes whose ancestors aren't found in the select
 				// clause
-				List<String> fields = new ArrayList<String>();
-				for (Field field : search.getFields()) {
+				List<String> fieldProps = new ArrayList<String>();
+				for (Field field : fields) {
 					if (field.getOperator() == Field.OP_PROPERTY) {
-						fields.add(field.getProperty() + ".");
+						fieldProps.add(field.getProperty() + ".");
 					}
 					hasFields = true;
 				}
@@ -238,7 +244,7 @@ public abstract class BaseSearchProcessor {
 						if (node.fetch) {
 							// make sure it has an ancestor in the select clause
 							boolean hasAncestor = false;
-							for (String field : fields) {
+							for (String field : fieldProps) {
 								if (node.getFullPath().startsWith(field)) {
 									hasAncestor = true;
 									break;
@@ -252,10 +258,7 @@ public abstract class BaseSearchProcessor {
 			}
 		}
 
-		StringBuilder sb = new StringBuilder("from ");
-		sb.append(ctx.rootClass.getName());
-		sb.append(" ");
-		sb.append(ctx.getRootAlias());
+		StringBuilder sb = new StringBuilder();
 
 		// traverse alias graph breadth-first
 		Queue<AliasNode> queue = new LinkedList<AliasNode>();
@@ -292,7 +295,7 @@ public abstract class BaseSearchProcessor {
 		boolean first = true;
 		for (Sort sort : search.getSorts()) {
 			if (first) {
-				sb = new StringBuilder("order by ");
+				sb = new StringBuilder(" order by ");
 				first = false;
 			} else {
 				sb.append(", ");
@@ -316,19 +319,18 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating where clause for given search. Uses filter
 	 * options from search.
 	 */
-	protected String generateWhereClause(SearchContext ctx, ISearch search) {
-		List<Filter> filters = search.getFilters();
+	protected String generateWhereClause(SearchContext ctx, List<Filter> filters, boolean isDisjunction) {
 		String content = null;
 		if (filters == null || filters.size() == 0) {
 			return "";
 		} else if (filters.size() == 1) {
 			content = filterToQL(ctx, filters.get(0));
 		} else {
-			Filter junction = new Filter(null, filters, search.isDisjunction() ? Filter.OP_OR : Filter.OP_AND);
+			Filter junction = new Filter(null, filters, isDisjunction ? Filter.OP_OR : Filter.OP_AND);
 			content = filterToQL(ctx, junction);
 		}
 
-		return (content == null) ? "" : "where " + content;
+		return (content == null) ? "" : " where " + content;
 	}
 
 	/**
@@ -397,7 +399,8 @@ public abstract class BaseSearchProcessor {
 			value = val2;
 		} else if (operator != Filter.OP_AND && operator != Filter.OP_OR && operator != Filter.OP_NOT
 				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL && operator != Filter.OP_EMPTY
-				&& operator != Filter.OP_NOT_EMPTY) {
+				&& operator != Filter.OP_NOT_EMPTY && operator != Filter.OP_SOME && operator != Filter.OP_ALL
+				&& operator != Filter.OP_NONE) {
 			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
 			if ("class".equals(property) || property.endsWith(".class")) {
 				expectedClass = Class.class;
@@ -485,9 +488,54 @@ public abstract class BaseSearchProcessor {
 			} else {
 				return getPathRef(ctx, property) + " is not null";
 			}
+		case Filter.OP_SOME:
+			if (!(value instanceof Filter)) {
+				return null;
+			} else if (value instanceof Filter) {
+				return "exists " + generateSubquery(ctx, property, (Filter) value);
+			}
+		case Filter.OP_ALL:
+			if (!(value instanceof Filter)) {
+				return null;
+			} else if (value instanceof Filter) {
+				return "not exists " + generateSubquery(ctx, property, negate((Filter) value));
+			}
+		case Filter.OP_NONE:
+			if (!(value instanceof Filter)) {
+				return null;
+			} else if (value instanceof Filter) {
+				return "not exists " + generateSubquery(ctx, property, (Filter) value);
+			}
 		default:
 			throw new IllegalArgumentException("Filter comparison ( " + operator + " ) is invalid.");
 		}
+	}
+
+	protected String generateSubquery(SearchContext ctx, String property, Filter filter) {
+		SearchContext ctx2 = new SearchContext();
+		ctx2.rootClass = metaDataUtil.getCollectionElementClass(ctx.rootClass, property);
+		ctx2.setRootAlias(rootAlias + (ctx.nextSubqueryNum++));
+		ctx2.paramList = ctx.paramList;
+		ctx2.nextAliasNum = ctx.nextAliasNum;
+		ctx2.nextSubqueryNum = ctx.nextSubqueryNum;
+
+		List<Filter> filters = new ArrayList<Filter>(1);
+		filters.add(filter);
+		String where = generateWhereClause(ctx2, filters, false);
+		String joins = generateJoins(ctx2, null, null, false);
+		ctx.nextAliasNum = ctx2.nextAliasNum;
+		ctx.nextSubqueryNum = ctx2.nextSubqueryNum;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("(from ");
+		sb.append(getPathRef(ctx, property));
+		sb.append(" ");
+		sb.append(ctx2.getRootAlias());
+		sb.append(joins);
+		sb.append(where);
+		sb.append(")");
+
+		return sb.toString();
 	}
 
 	/**
@@ -654,15 +702,17 @@ public abstract class BaseSearchProcessor {
 
 	protected static final class SearchContext {
 		Class<?> rootClass;
-		Map<String, AliasNode> aliases;
+		Map<String, AliasNode> aliases = new HashMap<String, AliasNode>();
 		List<Object> paramList;
 
 		int nextAliasNum = 1;
 		int nextSubqueryNum = 1;
 
+		public SearchContext() {
+		}
+
 		public SearchContext(Class<?> rootClass, String rootAlias, List<Object> paramList) {
 			this.rootClass = rootClass;
-			this.aliases = new HashMap<String, AliasNode>();
 			setRootAlias(rootAlias);
 			this.paramList = paramList;
 		}
