@@ -99,22 +99,21 @@ public class FilterCollectionTest extends TestBase {
 		//with entity
 		Search s = new Search(Person.class);
 		s.addFilterEmpty("father");
-		assertListEqual(target.search(s), grandpaA, grandmaA, mamaB, papaB);
+		assertListEqual(target.search(s), grandpaA, grandmaA, mamaA, papaB);
 
 		s.clear();
 		s.addFilterEmpty("father.id");
-		assertListEqual(target.search(s), grandpaA, grandmaA, mamaB, papaB);
+		assertListEqual(target.search(s), grandpaA, grandmaA, mamaA, papaB);
 		
 		s.clear();
 		s.addFilterNotEmpty("father");
-		assertListEqual(target.search(s), mamaA, papaA, joeA, joeB, margretB, sallyA);
+		assertListEqual(target.search(s), mamaB, papaA, joeA, joeB, margretB, sallyA);
 		
 		//with int and string value
-		Person pete = copy(papaA);
+		Person pete = (Person) sessionFactory.getCurrentSession().get(Person.class, papaA.getId());
 		pete.setAge(null);
 		pete.setFirstName(null);
 		pete.setLastName("");
-		sessionFactory.getCurrentSession().update(pete);
 		
 		s.clear();
 		s.addFilterEmpty("age");
