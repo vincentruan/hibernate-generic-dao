@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Pattern;
 
+import org.hibernate.dialect.function.ConvertFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -383,41 +384,12 @@ public abstract class BaseSearchProcessor {
 
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (operator == Filter.OP_IN || operator == Filter.OP_NOT_IN) {
-			// with IN & NOT IN, check each element in the collection.
-			Class<?> expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
-			if ("class".equals(property) || property.endsWith(".class")) {
-				expectedClass = Class.class;
-			}
-
-			Object[] val2;
-
-			if (value instanceof Collection) {
-				val2 = new Object[((Collection) value).size()];
-				int i = 0;
-				for (Object item : (Collection) value) {
-					val2[i++] = Util.convertIfNeeded(item, expectedClass);
-				}
-			} else {
-				val2 = new Object[((Object[]) value).length];
-				int i = 0;
-				for (Object item : (Object[]) value) {
-					val2[i++] = Util.convertIfNeeded(item, expectedClass);
-				}
-			}
-			value = val2;
+			value = prepareValue(ctx.rootClass, property, value, true);
 		} else if (operator != Filter.OP_AND && operator != Filter.OP_OR && operator != Filter.OP_NOT
 				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL && operator != Filter.OP_EMPTY
 				&& operator != Filter.OP_NOT_EMPTY && operator != Filter.OP_SOME && operator != Filter.OP_ALL
 				&& operator != Filter.OP_NONE) {
-			Class<?> expectedClass;
-			if ("class".equals(property) || property.endsWith(".class")) {
-				expectedClass = Class.class;
-			} else if ("size".equals(property) || property.endsWith(".size")) {
-				expectedClass = Integer.class;
-			} else {
-				expectedClass = metaDataUtil.getExpectedClass(ctx.rootClass, property);
-			}
-			value = Util.convertIfNeeded(value, expectedClass);
+			value = prepareValue(ctx.rootClass, property, value, false);
 		}
 
 		switch (operator) {
@@ -504,19 +476,34 @@ public abstract class BaseSearchProcessor {
 			if (!(value instanceof Filter)) {
 				return null;
 			} else if (value instanceof Filter) {
-				return "exists " + generateSubquery(ctx, property, (Filter) value);
+				String simple = generateSimpleAllOrSome(ctx, property, (Filter) value, "some");
+				if (simple != null) {
+					return simple;
+				} else {
+					return "exists " + generateSubquery(ctx, property, (Filter) value);
+				}
 			}
 		case Filter.OP_ALL:
 			if (!(value instanceof Filter)) {
 				return null;
 			} else if (value instanceof Filter) {
-				return "not exists " + generateSubquery(ctx, property, negate((Filter) value));
+				String simple = generateSimpleAllOrSome(ctx, property, (Filter) value, "all");
+				if (simple != null) {
+					return simple;
+				} else {
+					return "not exists " + generateSubquery(ctx, property, negate((Filter) value));
+				}
 			}
 		case Filter.OP_NONE:
 			if (!(value instanceof Filter)) {
 				return null;
 			} else if (value instanceof Filter) {
-				return "not exists " + generateSubquery(ctx, property, (Filter) value);
+				String simple = generateSimpleAllOrSome(ctx, property, (Filter) value, "some");
+				if (simple != null) {
+					return "not ( " + simple + " )";
+				} else {
+					return "not exists " + generateSubquery(ctx, property, (Filter) value);
+				}
 			}
 		default:
 			throw new IllegalArgumentException("Filter comparison ( " + operator + " ) is invalid.");
@@ -552,6 +539,112 @@ public abstract class BaseSearchProcessor {
 		sb.append(")");
 
 		return sb.toString();
+	}
+
+	/**
+	 * <p>
+	 * In the case of simple ALL/SOME/NONE filters, a simpler hql syntax is used
+	 * (which is also compatible with collections of values). Simple filters
+	 * include ALL/SOME/NONE filters with exactly one sub-filter where that
+	 * filter applies to the elements of the collection directly (as opposed to
+	 * their properties) and the operator is =, !=, <, <=, >, or >=.
+	 * 
+	 * <p>
+	 * For example:
+	 * <pre>
+	 * Filter.some("some_collection", Filter.equal("", "Bob")
+	 * Filter.all("some_collection", Filter.greaterThan(null, 23)
+	 * </pre>
+	 * 
+	 * @param ctx
+	 * @param property
+	 * @param filter
+	 * @param operation
+	 * @return
+	 */
+	protected String generateSimpleAllOrSome(SearchContext ctx, String property, Filter filter, String operation) {
+		if (filter.getProperty() != null && !filter.getProperty().equals(""))
+			return null;
+
+		String op;
+
+		switch (filter.getOperator()) {
+		case Filter.OP_EQUAL:
+			op = " = ";
+			break;
+		case Filter.OP_NOT_EQUAL:
+			op = " != ";
+			break;
+		case Filter.OP_LESS_THAN:
+			op = " > ";
+			break;
+		case Filter.OP_LESS_OR_EQUAL:
+			op = " >= ";
+			break;
+		case Filter.OP_GREATER_THAN:
+			op = " < ";
+			break;
+		case Filter.OP_GREATER_OR_EQUAL:
+			op = " <= ";
+			break;
+		default:
+			return null;
+		}
+
+		Object value = Util.convertIfNeeded(filter.getValue(), metaDataUtil.getCollectionElementClass(ctx.rootClass,
+				property));
+		return param(ctx, value) + op + operation + " elements(" + getPathRef(ctx, property) + ")";
+	}
+
+	/**
+	 * Convert a property value to the expected type for that property. Ex. a
+	 * Long to and Integer.
+	 * 
+	 * @param isCollection
+	 *            <code>true</code> if the value is a collection of values, for
+	 *            example with IN and NOT_IN operators.
+	 * @return the converted value.
+	 */
+	@SuppressWarnings("unchecked")
+	protected Object prepareValue(Class<?> rootClass, String property, Object value, boolean isCollection) {
+		if (value == null)
+			return null;
+
+		// convert numbers to the expected type if needed (ex: Integer to Long)
+		if (isCollection) {
+			// Check each element in the collection.
+			Class<?> expectedClass = metaDataUtil.getExpectedClass(rootClass, property);
+			if ("class".equals(property) || property.endsWith(".class")) {
+				expectedClass = Class.class;
+			}
+
+			Object[] val2;
+
+			if (value instanceof Collection) {
+				val2 = new Object[((Collection) value).size()];
+				int i = 0;
+				for (Object item : (Collection) value) {
+					val2[i++] = Util.convertIfNeeded(item, expectedClass);
+				}
+			} else {
+				val2 = new Object[((Object[]) value).length];
+				int i = 0;
+				for (Object item : (Object[]) value) {
+					val2[i++] = Util.convertIfNeeded(item, expectedClass);
+				}
+			}
+			return val2;
+		} else {
+			Class<?> expectedClass;
+			if (property != null && ("class".equals(property) || property.endsWith(".class"))) {
+				expectedClass = Class.class;
+			} else if (property != null && ("size".equals(property) || property.endsWith(".size"))) {
+				expectedClass = Integer.class;
+			} else {
+				expectedClass = metaDataUtil.getExpectedClass(rootClass, property);
+			}
+			return Util.convertIfNeeded(value, expectedClass);
+		}
 	}
 
 	/**
