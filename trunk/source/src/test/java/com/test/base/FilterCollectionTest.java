@@ -65,7 +65,6 @@ public class FilterCollectionTest extends TestBase {
 		s.clearFilters();
 		s.addFilterAll("residents", Filter.greaterThan("father.age", 50));
 		assertEquals(0, target.search(s).size());
-		//TODO fails
 		
 		s.clearFilters();
 		s.addFilterNone("residents", Filter.equal("lastName", "Alpha"));
@@ -78,20 +77,17 @@ public class FilterCollectionTest extends TestBase {
 		
 		
 		//value collection
-		if (false) {
-			//It appears HQL does not support any way to do this with value collections.
-			s.clear();
-			s.setSearchClass(LimbedPet.class);
-			s.addFilterSome("limbs", Filter.equal("", "left front leg"));
-			assertEquals(3, target.count(s));
-			
-			s.clear();
-			s.setSearchClass(LimbedPet.class);
-			s.addFilterSome("limbs", Filter.equal(null, "left frontish leg"));
-			List<Pet> petResults = target.search(s);
-			assertEquals(1, petResults.size());
-			assertEquals(spiderJimmy.getId(), petResults.get(0).getId());
-		}
+		s.clear();
+		s.setSearchClass(LimbedPet.class);
+		s.addFilterSome("limbs", Filter.equal("", "left front leg"));
+		assertEquals(3, target.count(s));
+		
+		s.clear();
+		s.setSearchClass(LimbedPet.class);
+		s.addFilterSome("limbs", Filter.equal(null, "left frontish leg"));
+		List<Pet> petResults = target.search(s);
+		assertEquals(1, petResults.size());
+		assertEquals(spiderJimmy.getId(), petResults.get(0).getId());
 	}
 	
 	public void testEmpty() {
