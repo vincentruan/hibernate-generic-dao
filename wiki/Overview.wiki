@@ -48,7 +48,7 @@ See:
 `com.trg.dao.dao.standard.FlexDAOAdapter, com.trg.dao.dao.original.FlexDAOAdapter`
 
 == Customizable Generic DAOs ==
-The framework comes with two different generic DAO implementations (standard and original), each exposing different methods. But no one is limited to using these to, new generic DAOs can be created with only a little work and testing. Just extend `BaseDAOImpl`. It provides many protected methods to use in DAO implementations.
+The framework comes with two different generic DAO implementations (standard and original), each exposing different methods. But no one is limited to using these two, new generic DAOs can be created with only a little work and testing. Just extend `BaseDAOImpl`. It provides many protected methods to use in DAO implementations.
 
 See:
 `com.trg.dao.hibernate.BaseDAOImpl`
