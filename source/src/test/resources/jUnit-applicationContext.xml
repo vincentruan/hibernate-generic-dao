@@ -266,17 +266,17 @@
 		<property name="ingredients">
 			<set>
 				<bean class="com.test.model.RecipeIngredient" p:amount="4" p:measure="cups">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i3" />
 					</property>
 				</bean>
 				<bean class="com.test.model.RecipeIngredient" p:amount=".5" p:measure="tsp.">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i4" />
 					</property>
 				</bean>
 				<bean class="com.test.model.RecipeIngredient" p:amount="1" p:measure="Tbs.">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i5" />
 					</property>
 				</bean>
@@ -288,22 +288,22 @@
 		<property name="ingredients">
 			<set>
 				<bean class="com.test.model.RecipeIngredient" p:amount="6" p:measure="pieces">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i6" />
 					</property>
 				</bean>
 				<bean class="com.test.model.RecipeIngredient" p:amount="1" p:measure="cup">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i3" />
 					</property>
 				</bean>
 				<bean class="com.test.model.RecipeIngredient" p:amount=".25" p:measure="cup">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i2" />
 					</property>
 				</bean>
 				<bean class="com.test.model.RecipeIngredient" p:amount=".5" p:measure="tsp.">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i4" />
 					</property>
 				</bean>
@@ -315,12 +315,12 @@
 		<property name="ingredients">
 			<set>
 				<bean class="com.test.model.RecipeIngredient" p:amount="2" p:measure="cups">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r3" p:ingredient-ref="i1" />
 					</property>
 				</bean>
 				<bean class="com.test.model.RecipeIngredient" p:amount="2" p:measure="cups">
-					<property name="id">
+					<property name="compoundId">
 						<bean class="com.test.model.RecipeIngredientId" p:recipe-ref="r3" p:ingredient-ref="i2" />
 					</property>
 				</bean>

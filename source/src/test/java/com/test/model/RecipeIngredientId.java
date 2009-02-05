@@ -71,6 +71,6 @@ public class RecipeIngredientId implements Serializable {
 	}
 
 	public String toString() {
-		return "RecipeIngredientId::recipeId:" + (recipe == null ? "(none)" : recipe.getId()) + ",ingredientId:" + (ingredient == null ? "(none)" : ingredient.getId());
+		return "RecipeIngredientId::recipeId:" + (recipe == null ? "(none)" : recipe.getId()) + ",ingredientId:" + (ingredient == null ? "(none)" : ingredient.getIngredientId());
 	}
 }

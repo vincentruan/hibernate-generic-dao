@@ -200,7 +200,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 	}
 
 	private void merge(Session session, Ingredient i) {
-		i.setId(((Ingredient) session.merge(i)).getId());
+		i.setIngredientId(((Ingredient) session.merge(i)).getIngredientId());
 	}
 
 	private void merge(Session session, Store s) {
@@ -208,7 +208,7 @@ public class TestBase extends TestCaseSpringAutoWire {
 	}
 
 	private void merge(Session session, RecipeIngredient ri) {
-		ri.setId(((RecipeIngredient) session.merge(ri)).getId());
+		ri.setCompoundId(((RecipeIngredient) session.merge(ri)).getCompoundId());
 	}
 
 	protected void clearHibernate() {

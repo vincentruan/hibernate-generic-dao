@@ -83,11 +83,16 @@ public class FilterCollectionTest extends TestBase {
 		assertEquals(3, target.count(s));
 		
 		s.clear();
-		s.setSearchClass(LimbedPet.class);
 		s.addFilterSome("limbs", Filter.equal(null, "left frontish leg"));
-		List<Pet> petResults = target.search(s);
-		assertEquals(1, petResults.size());
-		assertEquals(spiderJimmy.getId(), petResults.get(0).getId());
+		assertListEqual(target.search(s), spiderJimmy);
+		
+		s.clear();
+		s.addFilterAll("limbs", Filter.notEqual(null, "left frontish leg"));
+		assertListEqual(target.search(s), catNorman, catPrissy);
+		
+		s.clear();
+		s.addFilterNone("limbs", Filter.equal(null, "left frontish leg"));
+		assertListEqual(target.search(s), catNorman, catPrissy);
 	}
 	
 	public void testEmpty() {

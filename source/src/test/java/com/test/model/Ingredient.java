@@ -7,17 +7,17 @@ import javax.persistence.Id;
 
 @Entity
 public class Ingredient {
-	private long id;
+	private long ingredientId;
 	private String name;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	public long getId() {
-		return id;
+	public long getIngredientId() {
+		return ingredientId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setIngredientId(long id) {
+		this.ingredientId = id;
 	}
 
 	public String getName() {
@@ -45,7 +45,7 @@ public class Ingredient {
 	}
 
 	public String toString() {
-		return "Ingredient::id:" + id + ",name:" + name;
+		return "Ingredient::ingredientId:" + ingredientId + ",name:" + name;
 	}
 
 }

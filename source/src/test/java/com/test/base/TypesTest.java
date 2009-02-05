@@ -50,12 +50,22 @@ public class TypesTest extends TestBase {
 		Search s = new Search(RecipeIngredient.class);
 		
 		s.addField("id.recipe.id");
-		s.addFilterEqual("id.ingredient.id", sugar.getId());
+		s.addFilterEqual("id.ingredient.id", sugar.getIngredientId());
 		assertListEqual(target.search(s), toffee.getId());
 		
 		s.clear();
 		s.addField("id.recipe.title");
 		s.addFilterEqual("id.ingredient.name", "Salt");
+		assertListEqual(target.search(s), "Fried Chicken", "Bread");
+		
+		s.clear();
+		s.addField("compoundId.recipe.id");
+		s.addFilterEqual("compoundId.ingredient.ingredientId", sugar.getIngredientId());
+		assertListEqual(target.search(s), toffee.getId());
+		
+		s.clear();
+		s.addField("compoundId.recipe.title");
+		s.addFilterEqual("compoundId.ingredient.name", "Salt");
 		assertListEqual(target.search(s), "Fried Chicken", "Bread");
 		
 		s.clear();
@@ -77,6 +87,7 @@ public class TypesTest extends TestBase {
 		assertListEqual(target.search(s), fishWiggles);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void testPlymorphism() {
 		initDB();
 		
@@ -87,5 +98,28 @@ public class TypesTest extends TestBase {
 		s.setSearchClass(LimbedPet.class);
 		result = target.search(s);
 		assertEquals(3, result.size());
+	}
+	
+	public void testBlankProperty() {
+		initDB();
+		
+		Search s = new Search(Person.class);
+		s.addFilterEqual("", grandpaA);
+		assertListEqual(target.search(s), grandpaA);
+		
+		s.clear();
+		s.addFilterNotEqual(null, grandmaA);
+		s.addFilterGreaterOrEqual("age", 55);
+		assertListEqual(target.search(s), grandpaA);
+		
+		s.clear();
+		s.addFilterIn(null, joeA, joeB, sallyA, margretB);
+		s.addFilterGreaterOrEqual("age", 10);
+		assertListEqual(target.search(s), joeA, joeB, margretB);
+		
+		s.clear();
+		s.setSearchClass(Pet.class);
+		s.addFilterEqual("class", "com.test.model.LimbedPet");
+		assertListEqual(target.search(s), spiderJimmy, catNorman, catPrissy);
 	}
 }

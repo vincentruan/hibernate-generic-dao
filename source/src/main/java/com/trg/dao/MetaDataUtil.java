@@ -45,4 +45,10 @@ public interface MetaDataUtil {
 	 * string (char or varchar) type in the database.
 	 */
 	public boolean isSQLStringType(Class<?> rootClass, String propertyPath);
+
+	/**
+	 * Return true if the property at the given property path is the id of some
+	 * entity.
+	 */
+	public boolean isId(Class<?> rootClass, String propertyPath);
 }
