@@ -63,7 +63,8 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 			throw new IllegalArgumentException("The property '" + propertyPath + "' on class " + rootClass
 					+ " is not a collection.");
 		} else {
-			return ((CollectionType) type).getElementType((SessionFactoryImplementor) sessionFactory).getReturnedClass();
+			return ((CollectionType) type).getElementType((SessionFactoryImplementor) sessionFactory)
+					.getReturnedClass();
 		}
 	}
 
@@ -97,6 +98,36 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 		return sessionFactory.getClassMetadata(object.getClass()).getIdentifier(object, EntityMode.POJO);
 	}
 
+	public boolean isId(Class<?> rootClass, String propertyPath) {
+		if (propertyPath == null || "".equals(propertyPath))
+			return false;
+		// with hibernate, "id" always refers to the id property, no matter what
+		// that property is named. just make sure the segment before this "id"
+		// refers to an entity since only entities have ids.
+		if (propertyPath.equals("id")
+				|| (propertyPath.endsWith(".id") && isEntity(rootClass, propertyPath.substring(0,
+						propertyPath.length() - 3))))
+			return true;
+
+		// see if the property is the identifier property of the entity it
+		// belongs to.
+		int pos = propertyPath.lastIndexOf(".");
+		if (pos != -1) {
+			Type parentType = getPathType(rootClass, propertyPath.substring(0, pos));
+			if (!parentType.isEntityType())
+				return false;
+			return propertyPath.substring(pos + 1).equals(
+					((EntityType) parentType).getIdentifierOrUniqueKeyPropertyName((Mapping) sessionFactory));
+		} else {
+			return propertyPath.equals(sessionFactory.getClassMetadata(rootClass).getIdentifierPropertyName());
+		}
+	}
+
+	/**
+	 * <p>This is a helper method to get the Hibernate metadata type of the specified association.
+	 * 
+	 * <p>If the propertyPath is blank (null or ""), return null.
+	 */
 	private Type getPathType(Class<?> rootClass, String propertyPath) {
 		if (propertyPath == null || "".equals(propertyPath))
 			return null;

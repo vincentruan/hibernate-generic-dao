@@ -32,7 +32,7 @@ public class Recipe {
 		this.title = title;
 	}
 
-	@OneToMany(mappedBy = "id.recipe")
+	@OneToMany(mappedBy = "compoundId.recipe")
 	public Set<RecipeIngredient> getIngredients() {
 		return ingredients;
 	}

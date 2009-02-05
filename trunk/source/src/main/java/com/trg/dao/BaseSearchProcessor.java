@@ -498,7 +498,13 @@ public abstract class BaseSearchProcessor {
 			if (!(value instanceof Filter)) {
 				return null;
 			} else if (value instanceof Filter) {
-				String simple = generateSimpleAllOrSome(ctx, property, (Filter) value, "some");
+				// NOTE: Using "all" for the simple all or some is logically
+				// incorrect. It should be "some". However,
+				// because of a bug in how Hibernate 3.1.1 tries to simplify
+				// "not ... some/all ...) it actually ends
+				// up working as desired. TODO: If and when the Hibernate bug is
+				// fixed, this should be switched to "some".
+				String simple = generateSimpleAllOrSome(ctx, property, (Filter) value, "all");
 				if (simple != null) {
 					return "not ( " + simple + " )";
 				} else {
@@ -513,6 +519,14 @@ public abstract class BaseSearchProcessor {
 	/**
 	 * Generate a QL string for a subquery on the given property that uses the
 	 * given filter. This is used by SOME, ALL and NONE filters.
+	 * 
+	 * @param ctx
+	 *            - a new context just for this sub-query
+	 * @param property
+	 *            - the property of the main query that points to the collection
+	 *            on which to query
+	 * @param filter
+	 *            - the filter to use for the where clause of the sub-query
 	 */
 	protected String generateSubquery(SearchContext ctx, String property, Filter filter) {
 		SearchContext ctx2 = new SearchContext();
@@ -551,16 +565,25 @@ public abstract class BaseSearchProcessor {
 	 * 
 	 * <p>
 	 * For example:
+	 * 
 	 * <pre>
-	 * Filter.some("some_collection", Filter.equal("", "Bob")
-	 * Filter.all("some_collection", Filter.greaterThan(null, 23)
+	 * Filter.some(&quot;some_collection_of_strings&quot;, Filter.equal(&quot;&quot;, &quot;Bob&quot;)
+	 * Filter.all(&quot;some_collection_of_numbers&quot;, Filter.greaterThan(null, 23)
 	 * </pre>
 	 * 
+	 * If the filter meets these criteria as a simple ALL/SOME/NONE filter, the
+	 * QL string for the filter will be returned. If not, <code>null</code> is
+	 * returned.
+	 * 
 	 * @param ctx
+	 *            - the context of the SOME/ALL/NONE filter
 	 * @param property
+	 *            - the property of the SOME/ALL/NONE filter
 	 * @param filter
+	 *            - the sub-filter that is the value of the SOME/ALL/NONE filter
 	 * @param operation
-	 * @return
+	 *            - a string used to fill in the collection operation. The value
+	 *            should be either "some" or "all".
 	 */
 	protected String generateSimpleAllOrSome(SearchContext ctx, String property, Filter filter, String operation) {
 		if (filter.getProperty() != null && !filter.getProperty().equals(""))
@@ -610,14 +633,18 @@ public abstract class BaseSearchProcessor {
 		if (value == null)
 			return null;
 
+		Class<?> expectedClass;
+		if (property != null && ("class".equals(property) || property.endsWith(".class"))) {
+			expectedClass = Class.class;
+		} else if (property != null && ("size".equals(property) || property.endsWith(".size"))) {
+			expectedClass = Integer.class;
+		} else {
+			expectedClass = metaDataUtil.getExpectedClass(rootClass, property);
+		}
+
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (isCollection) {
 			// Check each element in the collection.
-			Class<?> expectedClass = metaDataUtil.getExpectedClass(rootClass, property);
-			if ("class".equals(property) || property.endsWith(".class")) {
-				expectedClass = Class.class;
-			}
-
 			Object[] val2;
 
 			if (value instanceof Collection) {
@@ -635,14 +662,6 @@ public abstract class BaseSearchProcessor {
 			}
 			return val2;
 		} else {
-			Class<?> expectedClass;
-			if (property != null && ("class".equals(property) || property.endsWith(".class"))) {
-				expectedClass = Class.class;
-			} else if (property != null && ("size".equals(property) || property.endsWith(".size"))) {
-				expectedClass = Integer.class;
-			} else {
-				expectedClass = metaDataUtil.getExpectedClass(rootClass, property);
-			}
 			return Util.convertIfNeeded(value, expectedClass);
 		}
 	}
@@ -727,24 +746,24 @@ public abstract class BaseSearchProcessor {
 			// entity preceding it because (entity.id) is actually stored in the
 			// same table as the foreign key.
 			while (true) {
-				if (lastSegment.equals("id")) { // TODO: more rubust checking
-					// for whether it's an id property
+				if (metaDataUtil.isId(ctx.rootClass, currentPath)) {
+					// if it's an id property
 					// skip one segment
 					if (pos == -1) {
 						return new String[] { "", path };
 					}
 					pos = currentPath.lastIndexOf('.', pos - 1);
 				} else if (!first && metaDataUtil.isEntity(ctx.rootClass, currentPath)) {
-					// when we reach an entity (excluding the very last
+					// when we reach an entity (excluding the very first
 					// segment), we're done
 					return new String[] { currentPath, path.substring(currentPath.length() + 1) };
 				}
 				first = false;
 
-				// for size, we need to go back to the 'first' behavior
-				// for the next segment
-				if (lastSegment.equals("size")) { // TODO make sure the previous
-					// is a collection
+				// For size, we need to go back to the 'first' behavior
+				// for the next segment.
+				if (pos != -1 && lastSegment.equals("size")
+						&& metaDataUtil.isCollection(ctx.rootClass, currentPath.substring(0, pos))) {
 					first = true;
 				}
 

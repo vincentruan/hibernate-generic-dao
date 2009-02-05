@@ -517,7 +517,7 @@ public class BaseDAOTest extends TestBase {
 		// recipes:
 		// Bread, Fried Chicken, Toffee
 
-		assertTrue(target.exists(RecipeIngredient.class, recipes.get(0).getIngredients().iterator().next().getId()));
+		assertTrue(target.exists(RecipeIngredient.class, recipes.get(0).getIngredients().iterator().next().getCompoundId()));
 		assertTrue(target.exists(RecipeIngredient.class, new RecipeIngredientId(recipes.get(1), ingredients.get(1))));
 		assertFalse(target.exists(RecipeIngredient.class, new RecipeIngredientId(recipes.get(1), ingredients.get(5))));
 
@@ -526,10 +526,10 @@ public class BaseDAOTest extends TestBase {
 		RecipeIngredient ri = new RecipeIngredient();
 		assertFalse(target.exists(ri));
 
-		ri.setId(new RecipeIngredientId(recipes.get(1), ingredients.get(5)));
+		ri.setCompoundId(new RecipeIngredientId(recipes.get(1), ingredients.get(5)));
 		assertFalse(target.exists(ri));
 
-		ri.setId(new RecipeIngredientId(recipes.get(1), ingredients.get(1)));
+		ri.setCompoundId(new RecipeIngredientId(recipes.get(1), ingredients.get(1)));
 		assertTrue(target.exists(ri));
 	}
 
@@ -568,13 +568,13 @@ public class BaseDAOTest extends TestBase {
 		assertFalse(target.saveOrUpdateIsNew(ri4));
 		
 		//get
-		assertEquals(ri, target.get(RecipeIngredient.class, ri.getId()));
+		assertEquals(ri, target.get(RecipeIngredient.class, ri.getCompoundId()));
 		assertEquals(ri2, target.get(RecipeIngredient.class, new RecipeIngredientId(recipes.get(0), ingredients.get(1))));
 		
 		Recipe r = new Recipe();
 		r.setId(recipes.get(0).getId());
 		Ingredient i = new Ingredient();
-		i.setId(ingredients.get(0).getId());
+		i.setIngredientId(ingredients.get(0).getIngredientId());
 		
 		assertEquals(ri, target.get(RecipeIngredient.class, new RecipeIngredientId(r, i)));
 		
@@ -584,9 +584,9 @@ public class BaseDAOTest extends TestBase {
 		s.setResultMode(Search.RESULT_SINGLE);
 		s.addField("id");
 		s.addSortAsc("id");
-		s.addFilterEqual("id", ri.getId());
+		s.addFilterEqual("id", ri.getCompoundId());
 		
-		assertEquals(ri.getId(), target.searchUnique(s));
+		assertEquals(ri.getCompoundId(), target.searchUnique(s));
 		
 		//exists (see exists test)
 	}

@@ -233,5 +233,5 @@ public class FilterTest extends TestBase {
 		s.addFilterNull("firstName");
 		assertListEqual(new Person[] { g2 }, target.search(s));
 	}
-
+	
 }
