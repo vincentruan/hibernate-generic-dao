@@ -39,13 +39,13 @@
   * Add methods to SearchUtil for merging parts of Searches
 
 ==0.4.2==
-  * Add collection operators (see blog)
-  * Allow use of special .id, .class, .size properties
+  * Add collection operators. (see blog)
+  * Allow use of special .id, .class, .size properties in Filters.
   * Issue 25, handling nulls in sorts, filters, fields, etc.
 
 ==Future==
   * Consider Issue 23 (query helper methods)
-  * Consider how we deal with hibernate special properties .id and .class in Searches.
+  * Formalize separation between DAOs and search.
   * Possibly add ability to compare two properties in a filter.
   * Add implementation for JPA
   * Consider compatibility with multiple entity names per Java class
