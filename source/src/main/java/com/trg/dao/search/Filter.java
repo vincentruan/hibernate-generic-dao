@@ -63,11 +63,11 @@ public class Filter implements Serializable {
 	}
 
 	public static final int OP_EQUAL = 0, OP_NOT_EQUAL = 1, OP_LESS_THAN = 2, OP_GREATER_THAN = 3, OP_LESS_OR_EQUAL = 4,
-			OP_GREATER_OR_EQUAL = 5, OP_IN = 6, OP_NOT_IN = 7, OP_LIKE = 8, OP_ILIKE = 9, OP_NULL = 10, OP_NOT_NULL = 11,
+			OP_GREATER_OR_EQUAL = 5, OP_LIKE = 6, OP_ILIKE = 7, OP_IN = 8, OP_NOT_IN = 9, OP_NULL = 10, OP_NOT_NULL = 11,
 			OP_EMPTY = 12, OP_NOT_EMPTY = 13;
 	public static final int OP_AND = 100, OP_OR = 101, OP_NOT = 102;
 	public static final int OP_SOME = 200, OP_ALL = 201, OP_NONE = 202 /*not SOME*/;
-
+	
 	/**
 	 * Create a new Filter using the == operator.
 	 */
@@ -301,6 +301,60 @@ public class Filter implements Serializable {
 
 	public void setOperator(int operator) {
 		this.operator = operator;
+	}
+	
+	/**
+	 * @return true if the operator should have a single value specified.
+	 * 
+	 * <p><code>EQUAL, NOT_EQUAL, LESS_THAN, LESS_OR_EQUAL, GREATER_THAN, GREATER_OR_EQUAL, LIKE, ILIKE</code>
+	 */
+	public boolean isTakesSingleValue() {
+		return operator <= 7;
+	}
+	
+	/**
+	 * @return true if the operator should have a list of values specified.
+	 * 
+	 * <p><code>IN, NOT_IN</code>
+	 */
+	public boolean isTakesListOfValues() {
+		return operator == OP_IN || operator == OP_NOT_IN;
+	}
+	
+	/**
+	 * @return true if the operator does not require a value to be specified.
+	 * 
+	 * <p><code>NULL, NOT_NULL, EMPTY, NOT_EMPTY</code>
+	 */
+	public boolean isTakesNoValue() {
+		return operator >= 10 && operator <= 13;
+	}
+	
+	/**
+	 * @return true if the operator should have a single Filter specified for the value.
+	 * 
+	 * <p><code>NOT, ALL, SOME, NONE</code>
+	 */
+	public boolean isTakesSingleSubFilter() {
+		return operator == OP_NOT || operator >= 200;
+	}
+	
+	/**
+	 * @return true if the operator should have a list of Filters specified for the value.
+	 * 
+	 * <p><code>AND, OR</code>
+	 */
+	public boolean isTakesListOfSubFilters() {
+		return operator == OP_AND || operator == OP_OR;
+	}
+	
+	/**
+	 * @return true if the operator does not require a property to be specified.
+	 * 
+	 * <p><code>AND, OR, NOT</code>
+	 */
+	public boolean isTakesNoProperty() {
+		return operator >= 100 && operator <= 102;
 	}
 
 	@Override

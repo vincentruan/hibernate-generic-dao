@@ -29,12 +29,6 @@ import com.trg.dao.search.SearchResult;
 public class GenericDAOImpl<T, ID extends Serializable> extends
 		BaseDAOImpl implements GenericDAO<T, ID> {
 
-	@Override
-	@Resource
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		super.setSessionFactory(sessionFactory);
-	}
-
 	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass()
 			.getGenericSuperclass()).getActualTypeArguments()[0];
 

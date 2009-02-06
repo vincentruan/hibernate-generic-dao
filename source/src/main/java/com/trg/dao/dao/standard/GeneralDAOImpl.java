@@ -20,12 +20,6 @@ import com.trg.dao.search.SearchResult;
 @SuppressWarnings("unchecked")
 public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 
-	@Override
-	@Resource
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		super.setSessionFactory(sessionFactory);
-	}
-
 	public int count(ISearch search) {
 		return _count(search);
 	}

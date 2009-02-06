@@ -3,10 +3,7 @@ package com.trg.dao.dao.original;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.hibernate.NonUniqueResultException;
-import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
 import com.trg.dao.search.ISearch;
@@ -20,12 +17,6 @@ import com.trg.dao.search.SearchResult;
  */
 @SuppressWarnings("unchecked")
 public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
-
-	@Override
-	@Resource
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		super.setSessionFactory(sessionFactory);
-	}
 
 	public void create(Object object) {
 		_save(object);
