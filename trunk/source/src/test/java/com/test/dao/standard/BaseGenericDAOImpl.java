@@ -1,20 +1,24 @@
 package com.test.dao.standard;
 
+import java.io.Serializable;
+
 import javax.annotation.Resource;
 
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.trg.dao.dao.standard.GeneralDAOImpl;
+import com.trg.dao.dao.standard.GenericDAOImpl;
 
 /**
- * Extension of GeneralDAOImpl that is configured for Autowiring with Spring or J2EE.
+ * Extension of GenericDAOImpl that is configured for Autowiring with Spring or J2EE.
  */
 @Repository
-public class MyGeneralDAOImpl extends GeneralDAOImpl {
+public class BaseGenericDAOImpl<T, ID extends Serializable> extends GenericDAOImpl<T, ID> {
+
 	@Override
 	@Resource
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		super.setSessionFactory(sessionFactory);
 	}
+
 }

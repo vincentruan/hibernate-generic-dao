@@ -4,10 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.annotation.Resource;
-
 import org.hibernate.NonUniqueResultException;
-import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
 import com.trg.dao.search.ISearch;
@@ -29,12 +26,6 @@ import com.trg.dao.search.SearchResult;
 @SuppressWarnings("unchecked")
 public class GenericDAOImpl<T, ID extends Serializable> extends
 		BaseDAOImpl implements GenericDAO<T, ID> {
-
-	@Override
-	@Resource
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		super.setSessionFactory(sessionFactory);
-	}
 
 	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass()
 			.getGenericSuperclass()).getActualTypeArguments()[0];

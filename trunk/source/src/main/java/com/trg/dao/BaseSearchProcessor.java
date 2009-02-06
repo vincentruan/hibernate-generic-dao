@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.trg.dao.search.Field;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.ISearch;
+import com.trg.dao.search.SearchUtil;
 import com.trg.dao.search.Sort;
 
 /**
@@ -84,14 +85,15 @@ public abstract class BaseSearchProcessor {
 		if (entityClass == null)
 			throw new NullPointerException("The entity class for a search cannot be null");
 
-		securityCheck(entityClass, search);
-
 		SearchContext ctx = new SearchContext(entityClass, rootAlias, paramList);
 
-		String select = generateSelectClause(ctx, search);
-		String where = generateWhereClause(ctx, search.getFilters(), search.isDisjunction());
-		String orderBy = generateOrderByClause(ctx, search);
-		String from = generateFromClause(ctx, search.getFetches(), search.getFields(), true);
+		List<Field> fields = checkAndCleanFields(search.getFields());
+
+		String select = generateSelectClause(ctx, fields);
+		String where = generateWhereClause(ctx, checkAndCleanFilters(search.getFilters()), search.isDisjunction());
+		String orderBy = generateOrderByClause(ctx, checkAndCleanSorts(search.getSorts()));
+		applyFetches(ctx, checkAndCleanFetches(search.getFetches()), fields);
+		String from = generateFromClause(ctx, true);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(select);
@@ -116,12 +118,10 @@ public abstract class BaseSearchProcessor {
 		if (entityClass == null)
 			throw new NullPointerException("The entity class for a search cannot be null");
 
-		securityCheck(entityClass, search);
-
 		SearchContext ctx = new SearchContext(entityClass, rootAlias, paramList);
 
-		String where = generateWhereClause(ctx, search.getFilters(), search.isDisjunction());
-		String from = generateFromClause(ctx, search.getFetches(), search.getFields(), false);
+		String where = generateWhereClause(ctx, checkAndCleanFilters(search.getFilters()), search.isDisjunction());
+		String from = generateFromClause(ctx, false);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("select count(distinct ").append(rootAlias).append(".id)");
@@ -138,14 +138,14 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating the select clause based on the fields of
 	 * the given search.
 	 */
-	protected String generateSelectClause(SearchContext ctx, ISearch search) {
+	protected String generateSelectClause(SearchContext ctx, List<Field> fields) {
 
 		StringBuilder sb = null;
 		boolean useOperator = false, notUseOperator = false;
 		boolean first = true;
 
-		if (search.getFields() != null) {
-			for (Field field : search.getFields()) {
+		if (fields != null) {
+			for (Field field : fields) {
 				if (first) {
 					sb = new StringBuilder("select ");
 					first = false;
@@ -206,32 +206,10 @@ public abstract class BaseSearchProcessor {
 	}
 
 	/**
-	 * Internal method for generating from clause. This method should be called
-	 * after generating other clauses because it relies on the aliases they
-	 * create. This method takes every path that is called for in the other
-	 * clauses and makes it available as an alias using left joins. It also adds
-	 * join fetching for properties specified by <code>fetches</code>
+	 * Apply the fetch list to the alias tree in the search context.
 	 */
-	protected String generateFromClause(SearchContext ctx, List<String> fetches, List<Field> fields,
-			boolean doEagerFetching) {
-		StringBuilder sb = new StringBuilder(" from ");
-		sb.append(ctx.rootClass.getName());
-		sb.append(" ");
-		sb.append(ctx.getRootAlias());
-		sb.append(generateJoins(ctx, fetches, fields, doEagerFetching));
-		return sb.toString();
-	}
-
-	/**
-	 * Internal method for generating the join portion of the from clause. This
-	 * method should be called after generating other clauses because it relies
-	 * on the aliases they create. This method takes every path that is called
-	 * for in the other clauses and makes it available as an alias using left
-	 * joins. It also adds join fetching for properties specified by
-	 * <code>fetches</code> if <code>doEagerFetching</code> is <code>true</code>
-	 */
-	protected String generateJoins(SearchContext ctx, List<String> fetches, List<Field> fields, boolean doEagerFetching) {
-		if (doEagerFetching && fetches != null) {
+	protected void applyFetches(SearchContext ctx, List<String> fetches, List<Field> fields) {
+		if (fetches != null) {
 			// apply fetches
 			boolean hasFetches = false, hasFields = false;
 			for (String fetch : fetches) {
@@ -266,7 +244,37 @@ public abstract class BaseSearchProcessor {
 				}
 			}
 		}
+	}
 
+	/**
+	 * Internal method for generating from clause. This method should be called
+	 * after generating other clauses because it relies on the aliases they
+	 * create. This method takes every path that is called for in the other
+	 * clauses and makes it available as an alias using left joins. It also adds
+	 * join fetching for properties specified by <code>fetches</code> if
+	 * <code>doEagerFetching</code> is <code>true</code>. <b>NOTE:</b> When
+	 * using eager fetching, <code>applyFetches()</code> must be executed first.
+	 */
+	protected String generateFromClause(SearchContext ctx, boolean doEagerFetching) {
+		StringBuilder sb = new StringBuilder(" from ");
+		sb.append(ctx.rootClass.getName());
+		sb.append(" ");
+		sb.append(ctx.getRootAlias());
+		sb.append(generateJoins(ctx, doEagerFetching));
+		return sb.toString();
+	}
+
+	/**
+	 * Internal method for generating the join portion of the from clause. This
+	 * method should be called after generating other clauses because it relies
+	 * on the aliases they create. This method takes every path that is called
+	 * for in the other clauses and makes it available as an alias using left
+	 * joins. It also adds join fetching for properties specified by
+	 * <code>fetches</code> if <code>doEagerFetching</code> is <code>true</code>
+	 * . <b>NOTE:</b> When using eager fetching, <code>applyFetches()</code>
+	 * must be executed first.
+	 */
+	protected String generateJoins(SearchContext ctx, boolean doEagerFetching) {
 		StringBuilder sb = new StringBuilder();
 
 		// traverse alias graph breadth-first
@@ -296,13 +304,13 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating order by clause. Uses sort options from
 	 * search.
 	 */
-	protected String generateOrderByClause(SearchContext ctx, ISearch search) {
-		if (search.getSorts() == null)
+	protected String generateOrderByClause(SearchContext ctx, List<Sort> sorts) {
+		if (sorts == null)
 			return "";
 
 		StringBuilder sb = null;
 		boolean first = true;
-		for (Sort sort : search.getSorts()) {
+		for (Sort sort : sorts) {
 			if (first) {
 				sb = new StringBuilder(" order by ");
 				first = false;
@@ -343,18 +351,6 @@ public abstract class BaseSearchProcessor {
 	}
 
 	/**
-	 * Add value to paramList and return the named parameter string ":pX".
-	 */
-	protected String param(SearchContext ctx, Object value) {
-		if (value instanceof Class) {
-			return ((Class<?>) value).getName();
-		}
-
-		ctx.paramList.add(value);
-		return ":p" + Integer.toString(ctx.paramList.size());
-	}
-
-	/**
 	 * Recursively generate the QL fragment for a given search filter option.
 	 */
 	@SuppressWarnings("unchecked")
@@ -366,8 +362,7 @@ public abstract class BaseSearchProcessor {
 		// If the operator needs a value and no value is specified, ignore this
 		// filter.
 		// Only NULL, NOT_NULL, EMPTY and NOT_EMPTY do not need a value.
-		if (value == null && operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL
-				&& operator != Filter.OP_EMPTY && operator != Filter.OP_NOT_EMPTY) {
+		if (value == null && !filter.isTakesNoValue()) {
 			return null;
 		}
 
@@ -383,12 +378,9 @@ public abstract class BaseSearchProcessor {
 		}
 
 		// convert numbers to the expected type if needed (ex: Integer to Long)
-		if (operator == Filter.OP_IN || operator == Filter.OP_NOT_IN) {
+		if (filter.isTakesListOfValues()) {
 			value = prepareValue(ctx.rootClass, property, value, true);
-		} else if (operator != Filter.OP_AND && operator != Filter.OP_OR && operator != Filter.OP_NOT
-				&& operator != Filter.OP_NULL && operator != Filter.OP_NOT_NULL && operator != Filter.OP_EMPTY
-				&& operator != Filter.OP_NOT_EMPTY && operator != Filter.OP_SOME && operator != Filter.OP_ALL
-				&& operator != Filter.OP_NONE) {
+		} else if (filter.isTakesSingleValue()) {
 			value = prepareValue(ctx.rootClass, property, value, false);
 		}
 
@@ -539,7 +531,7 @@ public abstract class BaseSearchProcessor {
 		List<Filter> filters = new ArrayList<Filter>(1);
 		filters.add(filter);
 		String where = generateWhereClause(ctx2, filters, false);
-		String joins = generateJoins(ctx2, null, null, false);
+		String joins = generateJoins(ctx2, false);
 		ctx.nextAliasNum = ctx2.nextAliasNum;
 		ctx.nextSubqueryNum = ctx2.nextSubqueryNum;
 
@@ -680,30 +672,29 @@ public abstract class BaseSearchProcessor {
 	 * null check explicitly to all filters included in the given filter tree.
 	 */
 	protected Filter addExplicitNullChecks(Filter filter) {
-		switch (filter.getOperator()) {
-		case Filter.OP_AND:
-		case Filter.OP_OR:
-			Filter result = (filter.getOperator() == Filter.OP_AND ? Filter.and() : Filter.or());
-			if (filter.getValue() instanceof List) {
-				for (Filter f : (List<Filter>) filter.getValue()) {
-					result.add(addExplicitNullChecks(f));
+		return SearchUtil.walkFilter(filter, new SearchUtil.FilterVisitor() {
+			@Override
+			public Filter visitAfter(Filter filter) {
+				if (filter.isTakesSingleValue() || filter.isTakesListOfValues()) {
+					return Filter.and(filter, Filter.isNotNull(filter.getProperty()));
+				} else {
+					return filter;
 				}
 			}
-			return result;
-		case Filter.OP_NOT:
-			return Filter.not((filter.getValue() instanceof Filter) ? addExplicitNullChecks((Filter) filter.getValue())
-					: null);
-		case Filter.OP_EMPTY:
-		case Filter.OP_NOT_EMPTY:
-		case Filter.OP_NULL:
-		case Filter.OP_NOT_NULL:
-		case Filter.OP_ALL:
-		case Filter.OP_SOME:
-		case Filter.OP_NONE:
-			return filter;
-		default:
-			return Filter.and(filter, Filter.isNotNull(filter.getProperty()));
+		}, false);
+
+	}
+
+	/**
+	 * Add value to paramList and return the named parameter string ":pX".
+	 */
+	protected String param(SearchContext ctx, Object value) {
+		if (value instanceof Class) {
+			return ((Class<?>) value).getName();
 		}
+
+		ctx.paramList.add(value);
+		return ":p" + Integer.toString(ctx.paramList.size());
 	}
 
 	/**
@@ -888,86 +879,160 @@ public abstract class BaseSearchProcessor {
 	// ---- SECURITY CHECK ---- //
 
 	/**
+	 * <ol>
+	 * <li>Check for injection attack in property strings. <li>The field list
+	 * may not contain nulls.
+	 * </ol>
+	 */
+	protected List<Field> checkAndCleanFields(List<Field> fields) {
+		if (fields == null)
+			return null;
+
+		for (Field field : fields) {
+			if (field == null) {
+				throw new IllegalArgumentException("The search contains a null field.");
+			}
+			if (field.getProperty() != null)
+				securityCheckProperty(field.getProperty());
+		}
+
+		return fields;
+	}
+
+	/**
+	 * <ol>
+	 * <li>Check for injection attack in property strings. <li>Remove null
+	 * fetches from the list.
+	 * </ol>
+	 */
+	protected List<String> checkAndCleanFetches(List<String> fetches) {
+		return SearchUtil.walkList(fetches, new SearchUtil.ItemVisitor<String>() {
+			@Override
+			public String visit(String fetch) {
+				securityCheckProperty(fetch);
+				return fetch;
+			}
+		}, true);
+	}
+
+	/**
+	 * <ol>
+	 * <li>Check for injection attack in property strings. <li>Remove null sorts
+	 * from the list.
+	 * </ol>
+	 */
+	protected List<Sort> checkAndCleanSorts(List<Sort> sorts) {
+		return SearchUtil.walkList(sorts, new SearchUtil.ItemVisitor<Sort>() {
+			@Override
+			public Sort visit(Sort sort) {
+				securityCheckProperty(sort.getProperty());
+				return sort;
+			}
+		}, true);
+	}
+
+	/**
+	 * <ol>
+	 * <li>Check for injection attack in property strings. <li>Check for values
+	 * that are incongruent with the operator. <li>Remove null filters from the
+	 * list. <li>Simplify out junctions (and/or) that have only one sub-filter.
+	 * <li>Remove filters that require sub-filters but have none
+	 * (and/or/not/some/all/none)
+	 * </ol>
+	 */
+	protected List<Filter> checkAndCleanFilters(List<Filter> filters) {
+		return SearchUtil.walkFilters(filters, new SearchUtil.FilterVisitor() {
+			@Override
+			public Filter visitBefore(Filter filter) {
+				if (filter != null && filter.getValue() != null) {
+					if (filter.isTakesListOfSubFilters()) {
+						// make sure that filters that take lists of filters
+						// actually have lists of filters for their values
+						if (filter.getValue() instanceof List) {
+							for (Object o : (List) filter.getValue()) {
+								if (!(o instanceof Filter)) {
+									throw new IllegalArgumentException(
+											"The search has a filter ("
+													+ filter
+													+ ") for which the value should be a List of Filters but there is an element in the list that is of type: "
+													+ o.getClass());
+								}
+							}
+						} else {
+							throw new IllegalArgumentException(
+									"The search has a filter ("
+											+ filter
+											+ ") for which the value should be a List of Filters but is not a list. The actual type is "
+											+ filter.getValue().getClass());
+						}
+					} else if (filter.isTakesSingleSubFilter()) {
+						// make sure filters that take filters actually have
+						// filters for their values
+						if (!(filter.getValue() instanceof Filter)) {
+							throw new IllegalArgumentException("The search has a filter (" + filter
+									+ ") for which the value should be of type Filter but is of type: "
+									+ filter.getValue().getClass());
+						}
+					} else if (filter.isTakesListOfValues()) {
+						// make sure filters that take collections or arrays
+						// actually have collections or arrays for their values
+						if (!(filter.getValue() instanceof Collection) || !(filter.getValue() instanceof Object[])) {
+							throw new IllegalArgumentException("The search has a filter (" + filter
+									+ ") for which the value should be a collection or array but is of type: "
+									+ filter.getValue().getClass());
+						}
+					}
+				}
+
+				return filter;
+			}
+
+			@Override
+			public Filter visitAfter(Filter filter) {
+				if (filter == null)
+					return null;
+
+				if (!filter.isTakesNoProperty()) {
+					securityCheckProperty(filter.getProperty());
+				}
+
+				// Remove operators that take sub filters but have none
+				// assigned. Replace conjunctions that only have a single
+				// sub-filter with that sub-filter.
+				if (filter.isTakesSingleSubFilter()) {
+					if (filter.getValue() == null) {
+						return null;
+					}
+				} else if (filter.isTakesListOfSubFilters()) {
+					if (filter.getValue() == null) {
+						return null;
+					} else {
+						List<Filter> list = (List<Filter>) filter.getValue();
+						if (list.size() == 0) {
+							return null;
+						} else if (list.size() == 1) {
+							return list.get(0);
+						}
+					}
+				}
+
+				return filter;
+			}
+		}, true);
+	}
+
+	/**
 	 * Regex pattern for a valid property name/path.
 	 */
-	protected Pattern INJECTION_CHECK = Pattern.compile("^[\\w\\.]+$");
-
-	/**
-	 * Checks to make sure the search will not violate security.<br/><br/>
-	 * 
-	 * Current checks:
-	 * <ul>
-	 * <li>INJECTION - We check each property sepcified in the search to make
-	 * sure it only contains valid Java identifier characters</li>
-	 * </ul>
-	 */
-	protected void securityCheck(Class<?> entityClass, ISearch search) {
-		if (search.getFields() != null) {
-			for (Field field : search.getFields()) {
-				if (field != null && field.getProperty() != null && !field.getProperty().equals(""))
-					securityCheckProperty(field.getProperty());
-			}
-		}
-
-		if (search.getFetches() != null) {
-			for (String fetch : search.getFetches()) {
-				if (fetch == null) {
-					throw new IllegalArgumentException("The search contains a null fetch.");
-				}
-				securityCheckProperty(fetch);
-			}
-		}
-
-		if (search.getSorts() != null) {
-			for (Sort sort : search.getSorts()) {
-				if (sort == null) {
-					throw new IllegalArgumentException("The search contains a null Sort.");
-				}
-				if (sort.getProperty() == null) {
-					throw new IllegalArgumentException("There is a Sort in the search that has no property specified: "
-							+ sort.toString());
-				}
-				securityCheckProperty(sort.getProperty());
-			}
-		}
-
-		if (search.getFilters() != null) {
-			for (Filter filter : search.getFilters()) {
-				securityCheckFilter(filter);
-			}
-		}
-	}
-
-	/**
-	 * Used by <code>securityCheck()</code> to recursively check filters.
-	 */
-	@SuppressWarnings("unchecked")
-	protected void securityCheckFilter(Filter filter) {
-		if (filter == null) {
-			throw new IllegalArgumentException("The search contains a null Filter.");
-		}
-		if (filter.getOperator() == Filter.OP_AND || filter.getOperator() == Filter.OP_OR) {
-			if (filter.getValue() instanceof List) {
-				for (Filter f : (List<Filter>) filter.getValue()) {
-					securityCheckFilter(f);
-				}
-			}
-		} else if (filter.getOperator() == Filter.OP_NOT) {
-			if (filter.getValue() instanceof Filter) {
-				securityCheckFilter((Filter) filter.getValue());
-			}
-		} else {
-			if (filter.getProperty() != null && !filter.getProperty().equals("")) {
-				securityCheckProperty(filter.getProperty());
-			}
-		}
-	}
+	protected Pattern INJECTION_CHECK = Pattern.compile("^[\\w\\.]*$");
 
 	/**
 	 * Used by <code>securityCheck()</code> to check a property string for
 	 * injection attack.
 	 */
 	protected void securityCheckProperty(String property) {
+		if (property == null)
+			return;
 		if (!INJECTION_CHECK.matcher(property).matches())
 			throw new IllegalArgumentException(
 					"A property used in a Search may only contain word characters (alphabetic, numberic and underscore \"_\") and dot \".\" seperators. This constraint was violated: "

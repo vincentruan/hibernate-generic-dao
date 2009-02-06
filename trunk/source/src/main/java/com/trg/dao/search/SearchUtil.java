@@ -94,7 +94,7 @@ public class SearchUtil {
 	public static void addFilterAll(IMutableSearch search, String property, Filter filter) {
 		addFilter(search, Filter.all(property, filter));
 	}
-	
+
 	/**
 	 * Add a filter that uses the AND operator.
 	 * 
@@ -113,7 +113,7 @@ public class SearchUtil {
 	public static void addFilterEmpty(IMutableSearch search, String property) {
 		addFilter(search, Filter.isEmpty(property));
 	}
-	
+
 	/**
 	 * Add a filter that uses the == operator.
 	 */
@@ -226,7 +226,7 @@ public class SearchUtil {
 	public static void addFilterNotEmpty(IMutableSearch search, String property) {
 		addFilter(search, Filter.isNotEmpty(property));
 	}
-	
+
 	/**
 	 * Add a filter that uses the IS NOT NULL operator.
 	 */
@@ -259,7 +259,7 @@ public class SearchUtil {
 	public static void addFilterSome(IMutableSearch search, String property, Filter filter) {
 		addFilter(search, Filter.some(property, filter));
 	}
-	
+
 	// Sorts
 	public static void addSort(IMutableSearch search, Sort sort) {
 		if (sort == null)
@@ -425,10 +425,11 @@ public class SearchUtil {
 		if (search.getSorts() != null)
 			search.getSorts().clear();
 	}
-	
+
 	// ---------- Merge ----------
 	/**
-	 * Modify the search by adding the given sorts before the current sorts in the search.
+	 * Modify the search by adding the given sorts before the current sorts in
+	 * the search.
 	 */
 	public static void mergeSortsBefore(IMutableSearch search, List<Sort> sorts) {
 		List<Sort> list = search.getSorts();
@@ -436,9 +437,10 @@ public class SearchUtil {
 			list = new ArrayList<Sort>();
 			search.setSorts(list);
 		}
-		
+
 		if (list.size() > 0) {
-			//remove any sorts from the search that already sort on the same property as one of the new sorts
+			// remove any sorts from the search that already sort on the same
+			// property as one of the new sorts
 			Iterator<Sort> itr = list.iterator();
 			while (itr.hasNext()) {
 				String property = itr.next().getProperty();
@@ -454,19 +456,21 @@ public class SearchUtil {
 				}
 			}
 		}
-		
+
 		list.addAll(0, sorts);
 	}
-	
+
 	/**
-	 * Modify the search by adding the given sorts before the current sorts in the search.
+	 * Modify the search by adding the given sorts before the current sorts in
+	 * the search.
 	 */
 	public static void mergeSortsBefore(IMutableSearch search, Sort... sorts) {
 		mergeSortsBefore(search, Arrays.asList(sorts));
 	}
-	
+
 	/**
-	 * Modify the search by adding the given sorts after the current sorts in the search.
+	 * Modify the search by adding the given sorts after the current sorts in
+	 * the search.
 	 */
 	public static void mergeSortsAfter(IMutableSearch search, List<Sort> sorts) {
 		List<Sort> list = search.getSorts();
@@ -474,11 +478,11 @@ public class SearchUtil {
 			list = new ArrayList<Sort>();
 			search.setSorts(list);
 		}
-		
+
 		int origLen = list.size();
-		
+
 		if (origLen > 0) {
-			//don't add sorts that are already in the list
+			// don't add sorts that are already in the list
 			for (Sort sort : sorts) {
 				if (sort.getProperty() != null) {
 					boolean found = false;
@@ -496,16 +500,18 @@ public class SearchUtil {
 			list.addAll(sorts);
 		}
 	}
-	
+
 	/**
-	 * Modify the search by adding the given sorts after the current sorts in the search.
+	 * Modify the search by adding the given sorts after the current sorts in
+	 * the search.
 	 */
 	public static void mergeSortsAfter(IMutableSearch search, Sort... sorts) {
 		mergeSortsAfter(search, Arrays.asList(sorts));
 	}
-	
+
 	/**
-	 * Modify the search by adding the given fetches to the current fetches in the search.
+	 * Modify the search by adding the given fetches to the current fetches in
+	 * the search.
 	 */
 	public static void mergeFetches(IMutableSearch search, List<String> fetches) {
 		List<String> list = search.getFetches();
@@ -513,21 +519,22 @@ public class SearchUtil {
 			list = new ArrayList<String>();
 			search.setFetches(list);
 		}
-		
+
 		for (String fetch : fetches) {
 			if (!list.contains(fetch)) {
 				list.add(fetch);
 			}
 		}
 	}
-	
+
 	/**
-	 * Modify the search by adding the given fetches to the current fetches in the search.
+	 * Modify the search by adding the given fetches to the current fetches in
+	 * the search.
 	 */
 	public static void mergeFetches(IMutableSearch search, String... fetches) {
 		mergeFetches(search, Arrays.asList(fetches));
 	}
-	
+
 	/**
 	 * Modify the search by adding the given filters using AND semantics
 	 */
@@ -537,31 +544,31 @@ public class SearchUtil {
 			list = new ArrayList<Filter>();
 			search.setFilters(list);
 		}
-		
+
 		if (list.size() == 0 || !search.isDisjunction()) {
 			search.setDisjunction(false);
 			list.addAll(filters);
 		} else {
 			search.setFilters(new ArrayList<Filter>());
-			
-			//add the previous filters with an OR
+
+			// add the previous filters with an OR
 			Filter orFilter = Filter.or();
 			orFilter.setValue(list);
 			addFilter(search, orFilter);
-			
-			//add the new filters with AND
+
+			// add the new filters with AND
 			search.setDisjunction(false);
 			search.getFilters().addAll(filters);
 		}
 	}
-	
+
 	/**
 	 * Modify the search by adding the given filters using AND semantics
 	 */
 	public static void mergeFiltersAnd(IMutableSearch search, Filter... filters) {
 		mergeFiltersAnd(search, Arrays.asList(filters));
 	}
-	
+
 	/**
 	 * Modify the search by adding the given filters using OR semantics
 	 */
@@ -571,33 +578,34 @@ public class SearchUtil {
 			list = new ArrayList<Filter>();
 			search.setFilters(list);
 		}
-		
+
 		if (list.size() == 0 || search.isDisjunction()) {
 			search.setDisjunction(true);
 			list.addAll(filters);
 		} else {
 			search.setFilters(new ArrayList<Filter>());
-			
-			//add the previous filters with an AND
+
+			// add the previous filters with an AND
 			Filter orFilter = Filter.and();
 			orFilter.setValue(list);
 			addFilter(search, orFilter);
-			
-			//add the new filters with or
+
+			// add the new filters with or
 			search.setDisjunction(true);
 			search.getFilters().addAll(filters);
 		}
 	}
-	
+
 	/**
 	 * Modify the search by adding the given filters using OR semantics
 	 */
 	public static void mergeFiltersOr(IMutableSearch search, Filter... filters) {
 		mergeFiltersOr(search, Arrays.asList(filters));
 	}
-	
+
 	/**
-	 * Modify the search by adding the given fields before the current fields in the search.
+	 * Modify the search by adding the given fields before the current fields in
+	 * the search.
 	 */
 	public static void mergeFieldsBefore(IMutableSearch search, List<Field> fields) {
 		List<Field> list = search.getFields();
@@ -605,19 +613,21 @@ public class SearchUtil {
 			list = new ArrayList<Field>();
 			search.setFields(list);
 		}
-		
+
 		list.addAll(0, fields);
 	}
-	
+
 	/**
-	 * Modify the search by adding the given fields before the current fields in the search.
+	 * Modify the search by adding the given fields before the current fields in
+	 * the search.
 	 */
 	public static void mergeFieldsBefore(IMutableSearch search, Field... fields) {
 		mergeFieldsBefore(search, Arrays.asList(fields));
 	}
-	
+
 	/**
-	 * Modify the search by adding the given fields after the current fields in the search.
+	 * Modify the search by adding the given fields after the current fields in
+	 * the search.
 	 */
 	public static void mergeFieldsAfter(IMutableSearch search, List<Field> fields) {
 		List<Field> list = search.getFields();
@@ -625,18 +635,18 @@ public class SearchUtil {
 			list = new ArrayList<Field>();
 			search.setFields(list);
 		}
-		
+
 		list.addAll(fields);
 	}
-	
+
 	/**
-	 * Modify the search by adding the given fields after the current fields in the search.
+	 * Modify the search by adding the given fields after the current fields in
+	 * the search.
 	 */
 	public static void mergeFieldsAfter(IMutableSearch search, Field... fields) {
 		mergeFieldsAfter(search, Arrays.asList(fields));
 	}
-	
-	
+
 	// ---------- Other Methods ----------
 
 	/**
@@ -799,4 +809,137 @@ public class SearchUtil {
 			sb.append(o);
 		}
 	}
+
+	/**
+	 * Visit each non-null item is a list. Each item may be replaced by the
+	 * visitor. The modified list is returned. If removeNulls is true, any null
+	 * elements will be removed from the final list.
+	 * 
+	 * <p>
+	 * If there are any modifications to be made to the list a new list is made
+	 * with the changes so that the original list remains unchanged. If no
+	 * changes are made, the original list is returned.
+	 */
+	public static <T> List<T> walkList(List<T> list, ItemVisitor<T> visitor, boolean removeNulls) {
+		if (list == null)
+			return null;
+
+		ArrayList<T> copy = null;
+
+		int i = 0;
+		for (T item : list) {
+			T result = visitor.visit(item);
+			if (result != item || (removeNulls && result == null)) {
+				if (copy == null) {
+					copy = new ArrayList<T>(list.size());
+					copy.addAll(list);
+				}
+				copy.set(i, result);
+				item = result;
+			}
+			i++;
+		}
+		if (copy != null) {
+			if (removeNulls) {
+				for (int j = copy.size() - 1; j >= 0; j--) {
+					if (copy.get(i) == null)
+						copy.remove(i);
+				}
+			}
+			return copy;
+		} else {
+			return list;
+		}
+	}
+
+	/**
+	 * Visitor for use with walkList()
+	 */
+	public static class ItemVisitor<T> {
+		public T visit(T item) {
+			return item;
+		}
+	}
+
+	/**
+	 * Walk through a list of filters and all the sub filters, visiting each
+	 * filter in the tree. A FilterVisitor is used to visit each filter. The
+	 * FilterVisitor may replace the Filter that is is visiting. If it does, a
+	 * new tree and list of Filters will be created for every part of the tree
+	 * that is affected, thus preserving the original tree.
+	 * 
+	 * @return if any changes have been made, the new list of Filters; if not,
+	 *         the original list.
+	 */
+	public static List<Filter> walkFilters(List<Filter> filters, FilterVisitor visitor, boolean removeNulls) {
+		return walkList(filters, new FilterListVisitor(visitor, removeNulls), removeNulls);
+	}
+
+	/**
+	 * Used in walkFilters
+	 */
+	private static final class FilterListVisitor extends ItemVisitor<Filter> {
+		private FilterVisitor visitor;
+		private boolean removeNulls;
+
+		public FilterListVisitor(FilterVisitor visitor, boolean removeNulls) {
+			this.visitor = visitor;
+			this.removeNulls = removeNulls;
+		}
+
+		@Override
+		public Filter visit(Filter filter) {
+			return walkFilter(filter, visitor, removeNulls);
+		}
+	}
+
+	/**
+	 * Walk a filter and all its sub filters, visiting each filter in the tree.
+	 * A FilterVisitor is used to visit each filter. The FilterVisitor may
+	 * replace the Filter that is is visiting. If it does, a new tree and will
+	 * be created for every part of the tree that is affected, thus preserving
+	 * the original tree.
+	 * 
+	 * @return if any changes have been made, the new Filter; if not, the
+	 *         original Filter.
+	 */
+	public static Filter walkFilter(Filter filter, FilterVisitor visitor, boolean removeNulls) {
+		filter = visitor.visitBefore(filter);
+
+		if (filter != null) {
+			if (filter.isTakesSingleSubFilter()) {
+				if (filter.getValue() instanceof Filter) {
+					Filter result = walkFilter((Filter) filter.getValue(), visitor, removeNulls);
+					if (result != filter.getValue()) {
+						filter = new Filter(filter.getProperty(), result, filter.getOperator());
+					}
+				}
+			} else if (filter.isTakesListOfSubFilters()) {
+				if (filter.getValue() instanceof List) {
+					List<Filter> result = walkFilters((List<Filter>) filter.getValue(), visitor, removeNulls);
+					if (result != filter.getValue()) {
+						filter = new Filter(filter.getProperty(), result, filter.getOperator());
+					}
+				}
+			}
+		}
+
+		filter = visitor.visitAfter(filter);
+
+		return filter;
+	}
+
+	/**
+	 * Visitor for use with walkFilter and walkFilters
+	 */
+	public static class FilterVisitor {
+		public Filter visitBefore(Filter filter) {
+			return filter;
+		}
+
+		public Filter visitAfter(Filter filter) {
+			return filter;
+		}
+	}
+
 }
