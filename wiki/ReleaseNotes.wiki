@@ -44,6 +44,8 @@
   * Issue 25, handling nulls in sorts, filters, fields, etc.
 
 ==Future==
+  * Add find by example functionality (Issue 27)
+  * Possibly add SIZE and IS EMPTY for collections in fields.
   * Consider Issue 23 (query helper methods)
   * Formalize separation between DAOs and search.
   * Possibly add ability to compare two properties in a filter.
