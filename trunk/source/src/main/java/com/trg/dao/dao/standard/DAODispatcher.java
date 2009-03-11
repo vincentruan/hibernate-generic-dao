@@ -10,6 +10,7 @@ import com.trg.dao.DAODispatcherException;
 import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
+@SuppressWarnings("unchecked")
 public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 
 	protected GeneralDAO generalDAO;
@@ -57,7 +58,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return (T[]) ((GenericDAO) specificDAO).find(ids);
 			} else {
-				return (T[]) callMethod(specificDAO, "find", ids);
+				return (T[]) callMethod(specificDAO, "find", (Object[]) ids);
 			}
 		} else {
 			return (T[]) generalDAO.find(type, ids);
@@ -117,7 +118,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return (T[]) ((GenericDAO) specificDAO).getReferences(ids);
 			} else {
-				return (T[]) callMethod(specificDAO, "getReferences", ids);
+				return (T[]) callMethod(specificDAO, "getReferences", (Object[]) ids);
 			}
 		} else {
 			return generalDAO.getReferences(type, ids);
@@ -215,7 +216,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				((GenericDAO) specificDAO).removeByIds(ids);
 			} else {
-				callMethod(specificDAO, "removeByIds", ids);
+				callMethod(specificDAO, "removeByIds", (Object[]) ids);
 			}
 		} else {
 			generalDAO.removeByIds(type, ids);

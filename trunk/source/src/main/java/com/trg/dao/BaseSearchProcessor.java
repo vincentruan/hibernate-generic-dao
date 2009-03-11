@@ -9,7 +9,6 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Pattern;
 
-import org.hibernate.dialect.function.ConvertFunction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -942,6 +941,7 @@ public abstract class BaseSearchProcessor {
 	 */
 	protected List<Filter> checkAndCleanFilters(List<Filter> filters) {
 		return SearchUtil.walkFilters(filters, new SearchUtil.FilterVisitor() {
+			@SuppressWarnings("unchecked")
 			@Override
 			public Filter visitBefore(Filter filter) {
 				if (filter != null && filter.getValue() != null) {
@@ -987,6 +987,7 @@ public abstract class BaseSearchProcessor {
 				return filter;
 			}
 
+			@SuppressWarnings("unchecked")
 			@Override
 			public Filter visitAfter(Filter filter) {
 				if (filter == null)
