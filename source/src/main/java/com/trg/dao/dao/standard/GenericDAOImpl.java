@@ -4,10 +4,6 @@ import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import javax.annotation.Resource;
-
-import org.hibernate.SessionFactory;
-
 import com.trg.dao.hibernate.BaseDAOImpl;
 import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;

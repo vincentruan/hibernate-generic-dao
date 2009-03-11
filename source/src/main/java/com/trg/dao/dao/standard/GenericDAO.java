@@ -1,5 +1,6 @@
 package com.trg.dao.dao.standard;
 
+import java.io.Serializable;
 import java.util.List;
 
 import com.trg.dao.search.ISearch;
@@ -19,7 +20,7 @@ import com.trg.dao.search.SearchResult;
  *            The type of the id of the domain object for which this instance is
  *            to be used.
  */
-public interface GenericDAO<T, ID> {
+public interface GenericDAO<T, ID extends Serializable> {
 
 	/**
 	 * <p>

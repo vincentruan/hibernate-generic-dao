@@ -903,6 +903,7 @@ public class SearchUtil {
 	 * @return if any changes have been made, the new Filter; if not, the
 	 *         original Filter.
 	 */
+	@SuppressWarnings("unchecked")
 	public static Filter walkFilter(Filter filter, FilterVisitor visitor, boolean removeNulls) {
 		filter = visitor.visitBefore(filter);
 
