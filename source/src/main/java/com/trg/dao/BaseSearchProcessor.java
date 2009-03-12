@@ -976,7 +976,7 @@ public abstract class BaseSearchProcessor {
 					} else if (filter.isTakesListOfValues()) {
 						// make sure filters that take collections or arrays
 						// actually have collections or arrays for their values
-						if (!(filter.getValue() instanceof Collection) || !(filter.getValue() instanceof Object[])) {
+						if (!(filter.getValue() instanceof Collection) && !(filter.getValue() instanceof Object[])) {
 							throw new IllegalArgumentException("The search has a filter (" + filter
 									+ ") for which the value should be a collection or array but is of type: "
 									+ filter.getValue().getClass());
