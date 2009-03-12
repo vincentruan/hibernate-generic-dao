@@ -3,6 +3,8 @@ package com.trg.dao.dao.original;
 import java.io.Serializable;
 import java.util.List;
 
+import com.trg.dao.flex.FlexSearch;
+import com.trg.dao.flex.FlexSearchWrapper;
 import com.trg.dao.search.SearchResult;
 
 /**
