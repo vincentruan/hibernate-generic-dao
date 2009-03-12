@@ -53,15 +53,29 @@ The following filtering operators are available:
 || NONE || Same as SOME, except that none of the values may match the filter. || `Filter.none("pets", Filter.and(Filter.equal("species", "cat"), Filter.lessThan("age", .75)) //has no cats under 9 months old` ||
 || AND || Takes no property. Takes an array or collection of `Filter`s as a value. Matches when all the filters in the value match. || `Filter.and(Filter.greaterOrEqual("age",40), Filter.lessThan("age", 65))` ||
 || OR || Same as AND, except that it matches when any of the filters match. || `Filter.or(Filter.like("firstName","Wil%"), Filter.like("lastName","Wil%"))` ||
-|| NOT || Takes no property. Takes a single `Filter` as a value. Matches when the filter in the value does not match. || `Filter.not(Filter.greaterOrEqual("age", 65)) //not 65 or older` ||
+|| NOT || Takes no property. Takes a single `Filter` as a value. Matches when the filter in the value does not match. || `Filter.not(Filter.ilike("name", "W%")) //name does not start with 'w'` ||
 
 ===Selecting and Transforming Results===
+By default, the results of a search will be a list of the entity objects that were searched on. However, as with Hibernate queries, it is possible to get different information back in each row.
+
+*Fields*
+
+
+
+*Result Modes*
+
+The following result modes are available for a search:
+|| AUTO || The result mode is automatically determined according to the following rules: If any field is specified with a key, use MAP mode. Otherwise, if zero or one fields are specified, use SINGLE mode. Otherwise, use ARRAY mode. ||
+|| ARRAY || returns each result as an Object array (`Object[]`) with the entries corresponding to the fields added to the search. ||
+|| LIST || returns each result as a list of Objects (`List<Object>`). ||
+|| MAP || returns each row as a map with properties' names or keys for keys to the corresponding values. ||
+|| SINGLE || Exactly one field or no fields must be specified to use this result mode. The result list contains just the value of that property for each element or the entity if no fields are specified. ||
 
 ===Sorting===
 
 ===Paging===
 
-*Controlling Association Fetching*
+===Controlling Association Fetching===
 
 == Usage examples ==
 {{{
