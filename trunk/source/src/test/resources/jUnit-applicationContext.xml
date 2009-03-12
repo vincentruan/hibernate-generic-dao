@@ -338,6 +338,35 @@
 		<ref bean="r2"/>
 		<ref bean="r3"/>
 	</util:list>
+	
+	<util:list id="projects">
+		<bean class="com.test.model.Project" p:name="First" p:inceptionYear="1900">
+			<property name="members">
+				<set>
+					<ref bean="joeA"/>
+					<ref bean="joeB"/>
+				</set>
+			</property>
+		</bean>
+		<bean class="com.test.model.Project" p:name="Second" p:inceptionYear="1950">
+			<property name="members">
+				<set>
+					<ref bean="joeA"/>
+					<ref bean="sallyA"/>
+				</set>
+			</property>
+		</bean>
+		<bean class="com.test.model.Project" p:name="Third" p:inceptionYear="2000">
+			<property name="members">
+				<set>
+					<ref bean="papaA"/>
+					<ref bean="mamaA"/>
+					<ref bean="papaB"/>
+					<ref bean="mamaB"/>
+				</set>
+			</property>
+		</bean>
+	</util:list>
 
 </beans>
 

@@ -1,9 +1,7 @@
 package com.test.base;
 
-import java.awt.PageAttributes.OriginType;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -23,6 +21,7 @@ import com.test.model.LimbedPet;
 import com.test.model.Name;
 import com.test.model.Person;
 import com.test.model.Pet;
+import com.test.model.Project;
 import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
 import com.test.model.Store;
@@ -48,6 +47,8 @@ public class TestBase extends TestCaseSpringAutoWire {
 
 	protected List<Store> stores;
 	protected List<Recipe> recipes;
+	
+	protected List<Project> projects;
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
@@ -116,6 +117,10 @@ public class TestBase extends TestCaseSpringAutoWire {
 	public void setRecipes(List<Recipe> recipes) {
 		this.recipes = recipes;
 	}
+	
+	public void setProjects(List<Project> projects) {
+		this.projects = projects;
+	}
 
 	protected Session getSession() {
 		return sessionFactory.getCurrentSession();
@@ -166,6 +171,10 @@ public class TestBase extends TestCaseSpringAutoWire {
 			r.setIngredients(ris);
 		}
 
+		for (Project p : projects) {
+			merge(session, p);
+		}
+
 		// detatch all our Java copies of these from hibernate.
 		session.flush();
 		session.clear();
@@ -209,6 +218,10 @@ public class TestBase extends TestCaseSpringAutoWire {
 
 	private void merge(Session session, RecipeIngredient ri) {
 		ri.setCompoundId(((RecipeIngredient) session.merge(ri)).getCompoundId());
+	}
+	
+	private void merge(Session session, Project p) {
+		p.setId(((Project) session.merge(p)).getId());
 	}
 
 	protected void clearHibernate() {
