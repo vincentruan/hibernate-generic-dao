@@ -30,10 +30,10 @@ to be a read-only interface for a search object. The framework will not modify a
 Anyone can provide their own implementation of the `ISearch` and/or `IMutableSearch` objects, but the framework includes a general one with lots of extra convenience methods for manipulating search parameters. This is the `Search` class. This `Search` class will probably be all you need for all your server-side operations. (Note: The framework also has an example of another `ISearch` implementation with the Flex search.)
 
 ===Filtering===
-A search has a collection of _filters_. By default there is an 'AND' condition between these; however, the _disjunction_ property can be set to TRUE, and an 'OR' condition will be used.
+A search can have a collection of _filters_. By default there is an 'AND' condition between these; however, the _disjunction_ property can be set to TRUE, and an 'OR' condition will be used.
 
 The following filtering operators are available:
-|| Operator || Explanation || Example ||
+|| *Operator* || *Explanation* || *Example* ||
 || EQUAL ||  || `Filter.equal("name", "Bob")` ||
 || NOT_EQUAL ||  || `Filter.notEqual("age", 5)` ||
 || GREATER_THAN ||  || `Filter.greaterThan("age", 5)` ||
@@ -43,7 +43,7 @@ The following filtering operators are available:
 || IN || Equal to one of the items in the list of values. Value can be a collection or an array. || `Filter.in("eyeColor", EyeColor.BLUE, EyeColor.HAZEL)` ||
 || NOT_IN ||  || `Filter.notIn("hairColor", HairColor.BROWN, HairColor.BLACK)` ||
 || LIKE || Takes a SQL like expression || `Filter.like("name", "Wil%")` ||
-|| ILIKE || LIKE + ignore case || `Filter.ilike("name", "wiL%")` ||
+|| ILIKE || LIKE + ignore case (Note: Some databases ignore case by default) || `Filter.ilike("name", "wiL%")` ||
 || NULL || SQL IS NULL || `Filter.isNull("primaryDoctor")` ||
 || NOT_NULL ||  || `Filter.isNotNull("phone")` ||
 || EMPTY || NULL or empty string or empty collection/assocation || `Filter.isEmpty("children")` ||
@@ -60,7 +60,16 @@ By default, the results of a search will be a list of the entity objects that we
 
 *Fields*
 
+A search can have a collection of _fields_. These are analogous to the "SELECT" clause in SQL or HQL. Each field corresponds to a property value or a column operator applied to a property. Each field may also be assigned a key string. This will be used instead of the property name as a map key when using the MAP result mode. If no fields are specified, the entity itself is used as the single result for each record.
 
+Here are the available field operators:
+  * PROPERTY (i.e. no operator)
+  * COUNT
+  * COUNT_DISTINCT
+  * MAX
+  * MIN
+  * SUM
+  * AVG
 
 *Result Modes*
 
@@ -72,6 +81,7 @@ The following result modes are available for a search:
 || SINGLE || Exactly one field or no fields must be specified to use this result mode. The result list contains just the value of that property for each element or the entity if no fields are specified. ||
 
 ===Sorting===
+A search can have a collection of _sorts_. These sorts are applied in order, just as in the SQL "ORDER BY" clause. Each sort specifies a property and a direction (asc or desc). There is also a flag for whether or not to ignore case. (Note: Some databases ignore case by default.)
 
 ===Paging===
 
