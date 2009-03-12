@@ -10,6 +10,7 @@ import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.Mapping;
 import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.type.AbstractComponentType;
 import org.hibernate.type.CollectionType;
 import org.hibernate.type.EntityType;
@@ -135,7 +136,11 @@ public class HibernateMetaDataUtil implements MetaDataUtil {
 		String[] chain = propertyPath.split("\\.");
 
 		try {
-			Type type = sessionFactory.getClassMetadata(rootClass).getPropertyType(chain[0]);
+			ClassMetadata cm = sessionFactory.getClassMetadata(rootClass);
+			if (cm == null) {
+				throw new IllegalArgumentException("Unable to introspect " + rootClass.toString() + ". The class is not registered with Hibernate.");
+			}
+			Type type = cm.getPropertyType(chain[0]);
 
 			outer: for (int i = 1; i < chain.length; i++) {
 				String property = chain[i];
