@@ -2,23 +2,42 @@
 
 = Introduction =
 
-The framework features a powerful and flexible search functionality. This is used by passing a `Search` object to search methods on general and generic DAOs.
+The framework features a powerful and flexible search functionality. This is used by passing a search object to search methods on general and generic DAOs.
 
-`Search` provides flexible search options:
-  * Filtering on properties using standard operators ( =, !=, >, <, >=, <=, LIKE, IN ).
+The search object provides flexible search options:
+  * Filtering on properties using standard operators ( =, !=, >, <, >=, <=, LIKE, IN, IS NULL, IS EMPTY ).
   * Combining individual filters with any combination of logical operators ( AND, OR, NOT ).
   * Sorting on properties.
   * Paging.
   * Defining a search remotely from client code.
   * Transforming search results into objects, lists, arrays and maps
-  * Specifying which properties to fetch eagerly.
+  * Specifying which associations to fetch eagerly.
   * Specifying column operators such as COUNT, SUM, AVG, MAX, etc.
+  * All of the above work with nested properties (i.e. properties of related objects)
 
 Javadoc:
-http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/search/Search.html
+http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/search/ISearch.html
 
 = Details =
-Usage examples:
+== Full API Reference ==
+
+*General*
+The framework's search functionality API takes an `ISearch`. This interface is meant
+to be a read-only interface for a search object. The framework will not modify an `ISearch`. There is another interface, `IMutableSearch` which provides more methods for altering search parameters.
+
+Anyone can provide their own implementation of the `ISearch` and/or `IMutableSearch` objects, but the framework includes a general one with lots of extra convenience methods for manipulating search parameters. This is the `Search` class. This `Search` class will probably be all you need for all your server-side operations. (Note: The framework also has an example of another `ISearch` implementation with the Flex search.)
+
+*Filtering*
+
+*Selecting and Transforming Results*
+
+*Sorting*
+
+*Paging*
+
+*Controlling Association Fetching*
+
+== Usage examples ==
 {{{
 Search search = new Search(Project.class);
 
