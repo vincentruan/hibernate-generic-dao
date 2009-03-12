@@ -15,25 +15,51 @@ The search object provides flexible search options:
   * Specifying column operators such as COUNT, SUM, AVG, MAX, etc.
   * All of the above work with nested properties (i.e. properties of related objects)
 
-Javadoc:
-http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/search/ISearch.html
-
 = Details =
+*Javadocs*:
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/search/ISearch.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/search/IMutableSearch.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html?com/trg/dao/search/ISearch.html
+
 == Full API Reference ==
 
-*General*
+===General===
 The framework's search functionality API takes an `ISearch`. This interface is meant
 to be a read-only interface for a search object. The framework will not modify an `ISearch`. There is another interface, `IMutableSearch` which provides more methods for altering search parameters.
 
 Anyone can provide their own implementation of the `ISearch` and/or `IMutableSearch` objects, but the framework includes a general one with lots of extra convenience methods for manipulating search parameters. This is the `Search` class. This `Search` class will probably be all you need for all your server-side operations. (Note: The framework also has an example of another `ISearch` implementation with the Flex search.)
 
-*Filtering*
+===Filtering===
+A search has a collection of _filters_. By default there is an 'AND' condition between these; however, the _disjunction_ property can be set to TRUE, and an 'OR' condition will be used.
 
-*Selecting and Transforming Results*
+The following filtering operators are available:
+|| Operator || Explanation || Usage ||
+|| EQUAL ||  ||
+|| NOT_EQUAL ||  ||
+|| GREATER_THAN ||  ||
+|| GREATER_OR_EQUAL ||  ||
+|| LESS_THAN ||  ||
+|| LESS_OR_EQUAL ||  ||
+|| IN || Equal to one of the items in the list of values. Value can be a collection or an array. ||
+|| NOT_IN ||  ||
+|| LIKE || Takes a SQL like expression ||
+|| ILIKE || LIKE + ignore case ||
+|| NULL || SQL IS NULL ||
+|| NOT_NULL ||  ||
+|| EMPTY || NULL or empty string or empty collection/assocation ||
+|| NOT_EMPTY ||  ||
+|| SOME || Applies to collection/association properties. Takes another `Filter` as a value, and matches when at least one of the values in the collection matches the filter. ||
+|| ALL || Same as SOME, except that all values must match the filter. ||
+|| NONE || Same as SOME, except that none of the values may match the filter. ||
+|| AND || Takes no property. Takes an array or collection of `Filter`s as a value. Matches when all the filters in the value match.
+|| OR || Same as AND, except that it matches when any of the filters match. ||
+|| NOT || Takes no property. Takes a single `Filter` as a value. Matches when the filter in the value does not match. ||
 
-*Sorting*
+===Selecting and Transforming Results===
 
-*Paging*
+===Sorting===
+
+===Paging===
 
 *Controlling Association Fetching*
 
