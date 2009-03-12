@@ -1,21 +1,31 @@
 package com.test.junit.standard;
 
+import java.util.List;
+
 import org.hibernate.ObjectNotFoundException;
 
 import com.test.base.TestBase;
 import com.test.dao.standard.PersonDAO;
-import com.test.model.Home;
+import com.test.dao.standard.ProjectDAO;
 import com.test.model.Person;
-import com.trg.dao.DAODispatcherException;
+import com.test.model.Project;
 import com.trg.dao.search.Search;
+import com.trg.dao.search.Sort;
 
 public class GenericDAOTest extends TestBase {
 
 	private PersonDAO dao;
+	
+	private ProjectDAO projectDAO;
 
 	public void setPersonDAO(PersonDAO dao) {
 		this.dao = dao;
 	}
+	
+	public void setProjectDAO(ProjectDAO projectDAO) {
+		this.projectDAO = projectDAO;
+	}
+
 
 	/**
 	 * Just quickly check that all the methods basically work. The underlying
@@ -124,6 +134,38 @@ public class GenericDAOTest extends TestBase {
 			pp[1].getFirstName();
 			fail("Entity does not exist, should throw error.");
 		} catch (ObjectNotFoundException ex) { }
+	}
+	
+	/**
+	 * Test an example of adding and overriding DAO methods.
+	 */
+	public void testExtendingDAO() {
+		initDB();
+		
+		//two added methods...
+		
+		List<Project> expected = projectDAO.search(new Search().addFilterIn("name", "First", "Second"));
+		assertListEqual(projectDAO.findProjectsForMember(joeA), expected.toArray());
+		
+		assertListEqual(projectDAO.search(projectDAO.getProjectsForMemberSearch(joeA).addField("name")), "First", "Second");
+		
+		//overridden search method to deal with "duration"...
+		
+		Search s = new Search();
+		s.addFilterGreaterThan("duration", 50);
+		s.addSort(Sort.asc("duration"));
+		List<Project> results = projectDAO.search(s);
+		assertTrue(results.size() == 2);
+		assertEquals("Second", results.get(0).getName());
+		assertEquals("First", results.get(1).getName());
+		
+		s.clear();
+		s.addFilterLessThan("duration", 100);
+		s.addSort(Sort.desc("duration"));
+		results = projectDAO.search(s);
+		assertTrue(results.size() == 2);
+		assertEquals("Second", results.get(0).getName());
+		assertEquals("Third", results.get(1).getName());
 	}
 
 }

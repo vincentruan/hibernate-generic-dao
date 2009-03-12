@@ -9,6 +9,7 @@
 
 	<!-- Standard DAOs -->
 	<bean id="personDAO" class="com.test.dao.standard.PersonDAOImpl"/>
+	<bean id="projectDAO" class="com.test.dao.standard.ProjectDAOImpl"/>
 
 	<bean id="generalDAO" class="com.test.dao.standard.MyGeneralDAOImpl"/>
 	

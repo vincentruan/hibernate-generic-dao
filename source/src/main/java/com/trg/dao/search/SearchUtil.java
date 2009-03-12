@@ -671,17 +671,42 @@ public class SearchUtil {
 	/**
 	 * Copy the contents of the source search object to the destination search
 	 * object, overriding any contents previously found in the destination. All
-	 * collections are copied into new collections, but them items in those
-	 * collections are not duplicated; they still point to the same objects.
+	 * destination properties reference the same objects from the source
+	 * properties.
 	 */
-	public static void copy(ISearch source, IMutableSearch destination) {
+	public static IMutableSearch shallowCopy(ISearch source, IMutableSearch destination) {
 		destination.setSearchClass(source.getSearchClass());
 		destination.setDisjunction(source.isDisjunction());
 		destination.setResultMode(source.getResultMode());
 		destination.setFirstResult(source.getFirstResult());
 		destination.setPage(source.getPage());
 		destination.setMaxResults(source.getMaxResults());
-		destination.setFilters(new ArrayList<Filter>());
+		destination.setFetches(source.getFetches());
+		destination.setFields(source.getFields());
+		destination.setFilters(source.getFilters());
+		destination.setSorts(source.getSorts());
+
+		return destination;
+	}
+
+	/**
+	 * Copy the contents of the source search object to the destination search
+	 * object, overriding any contents previously found in the destination. All
+	 * destination properties reference the same objects from the source
+	 * properties.
+	 */
+	public static IMutableSearch shallowCopy(ISearch source) {
+		return shallowCopy(source, new Search());
+	}
+
+	/**
+	 * Copy the contents of the source search object to the destination search
+	 * object, overriding any contents previously found in the destination. All
+	 * collections are copied into new collections, but the items in those
+	 * collections are not duplicated; they still point to the same objects.
+	 */
+	public static IMutableSearch copy(ISearch source, IMutableSearch destination) {
+		shallowCopy(source, destination);
 
 		ArrayList<String> fetches = new ArrayList<String>();
 		fetches.addAll(source.getFetches());
@@ -698,6 +723,17 @@ public class SearchUtil {
 		ArrayList<Sort> sorts = new ArrayList<Sort>();
 		sorts.addAll(source.getSorts());
 		destination.setSorts(sorts);
+
+		return destination;
+	}
+
+	/**
+	 * Copy the contents of the source search object into a new search object.
+	 * All collections are copied into new collections, but the items in those
+	 * collections are not duplicated; they still point to the same objects.
+	 */
+	public static IMutableSearch copy(ISearch source) {
+		return copy(source, new Search());
 	}
 
 	/**
