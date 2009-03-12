@@ -32,6 +32,7 @@ Anyone can provide their own implementation of the `ISearch` and/or `IMutableSea
 ===What to search For===
 A search object has a `searchClass` property that specifies which entity to search for. This may be left `null` when using a specific generic DAO; the DAO already knows what entity it is searching for.
 
+Example:
 {{{
 //create a new search for Projects
 new Search(Project.class);
@@ -91,17 +92,50 @@ The following result modes are available for a search:
 || MAP || returns each row as a map with properties' names or keys for keys to the corresponding values. ||
 || SINGLE || Exactly one field or no fields must be specified to use this result mode. The result list contains just the value of that property for each element or the entity if no fields are specified. ||
 
+Examples
+{{{
+Search search = new Search(Project.class);
+
+//The first field is the name of the project. 
+search.addField("name");
+//Project has a many-to-one relationship with type. Type objects have a 'name' property.
+//We are using "type" for the key (or alias) of this field.
+search.addField("type.name", "type");
+
+//Using resultMode AUTO, this will produce a Map for each result because a key is
+//specified. Each result will be something like
+//Map{ 'name': 'Hibernate Generic DAO', 'type': 'cooler than cool' }.
+dao.search(search);
+
+search.setResultMode(Search.RESULT_ARRAY);
+//Now using resultMode ARRAY, each result will be something like
+//Array[ 'Hibernate Generic DAO', 'cooler than cool' ]
+dao.search(search);
+
+
+}}}
+
 ===Sorting===
 A search can have a collection of _sorts_. These sorts are applied in order, just as in the SQL "ORDER BY" clause. Each sort specifies a property and a direction (asc or desc). There is also a flag for whether or not to ignore case. (Note: Some databases ignore case by default.)
 
 ===Paging===
-Sorts have three properties that define paging behavior.
+Searches have three properties that define paging behavior.
 
   * `maxResults` - the maximum number of results to return. (If `<= 0, maxResults` is ignored.)
   * `firstResult` - the zero-based offset of the first result to return. (If `<= 0, firstResult` is ignored.)
   * `page` - the zero-based offset of the first page to return. `page` applies only if `firstResult` is `<= 0`. `maxResults` is used as the page size for determining the record offset. For example, if `maxResults` is 10 and `page` is 3, results 30 through 39 (zero-based) will be returned.
 
 ===Controlling Association Fetching===
+Search objects can also have a _fetches_ collection. Each fetch is simply a string that identifies an association to eagerly fetch.
+
+Example:
+{{{
+Search search = new Search(Project.class);
+search.addFetch("members");
+
+//The members of each project in the result set will be join fetched with
+//the results of this search.
+}}}
 
 == Usage examples ==
 {{{
