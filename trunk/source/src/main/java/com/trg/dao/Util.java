@@ -73,41 +73,6 @@ public class Util {
 	 * parameters. It is used for dispatching to specific DAOs that do not
 	 * implement the GenericDAO interface.
 	 */
-	public static Object XcallMethod(Object object, String methodName, Object... args) throws NoSuchMethodException,
-			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-		for (Method method : object.getClass().getMethods()) {
-			if (method.getName().equals(methodName)) {
-				Class<?>[] paramTypes = method.getParameterTypes();
-				if (paramTypes.length == args.length) {
-					if (method.isVarArgs()) {
-						int i = args.length - 1;
-						Object lastParam = Array.newInstance(args[i].getClass(), 1);
-						Array.set(lastParam, 0, args[i]);
-						args[i] = lastParam;
-					}
-				} else if (method.isVarArgs() && paramTypes.length == args.length + 1) {
-					Object[] temp = args;
-					args = new Object[temp.length + 1];
-					for (int i = 0; i < temp.length; i++) {
-						args[i] = temp[i];
-					}
-					args[args.length - 1] = Array.newInstance(paramTypes[paramTypes.length - 1].getComponentType(), 0);
-				} else {
-					continue;
-				}
-
-				for (int i = 0; i < paramTypes.length; i++) {
-					if (!paramTypes[i].isInstance(args[i]))
-						continue;
-				}
-
-				return method.invoke(object, args);
-			}
-		}
-
-		throw new NoSuchMethodException("Method: " + methodName + " not found on Class: " + object.getClass());
-	}
-
 	public static Object callMethod(Object object, String methodName, Object... args) throws NoSuchMethodException,
 			IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		Class<?>[] paramTypes = new Class<?>[args.length];
@@ -122,6 +87,11 @@ public class Util {
 		return Util.callMethod(object, methodName, paramTypes, args);
 	}
 
+	/**
+	 * This is a helper method to call a method on an Object with the given
+	 * parameters. It is used for dispatching to specific DAOs that do not
+	 * implement the GenericDAO interface.
+	 */
 	public static Object callMethod(Object object, String methodName, Class<?>[] paramTypes, Object... args)
 			throws NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 		Method method = getMethod(object.getClass(), methodName, paramTypes);
