@@ -29,6 +29,17 @@ to be a read-only interface for a search object. The framework will not modify a
 
 Anyone can provide their own implementation of the `ISearch` and/or `IMutableSearch` objects, but the framework includes a general one with lots of extra convenience methods for manipulating search parameters. This is the `Search` class. This `Search` class will probably be all you need for all your server-side operations. (Note: The framework also has an example of another `ISearch` implementation with the Flex search.)
 
+===What to search For===
+A search object has a `searchClass` property that specifies which entity to search for. This may be left `null` when using a specific generic DAO; the DAO already knows what entity it is searching for.
+
+{{{
+//create a new search for Projects
+new Search(Project.class);
+
+//or set the search class on an existing IMutableSearch
+search.setSearchClass(Project.class);
+}}}
+
 ===Filtering===
 A search can have a collection of _filters_. By default there is an 'AND' condition between these; however, the _disjunction_ property can be set to TRUE, and an 'OR' condition will be used.
 
@@ -84,6 +95,11 @@ The following result modes are available for a search:
 A search can have a collection of _sorts_. These sorts are applied in order, just as in the SQL "ORDER BY" clause. Each sort specifies a property and a direction (asc or desc). There is also a flag for whether or not to ignore case. (Note: Some databases ignore case by default.)
 
 ===Paging===
+Sorts have three properties that define paging behavior.
+
+  * `maxResults` - the maximum number of results to return. (If `<= 0, maxResults` is ignored.)
+  * `firstResult` - the zero-based offset of the first result to return. (If `<= 0, firstResult` is ignored.)
+  * `page` - the zero-based offset of the first page to return. `page` applies only if `firstResult` is `<= 0`. `maxResults` is used as the page size for determining the record offset. For example, if `maxResults` is 10 and `page` is 3, results 30 through 39 (zero-based) will be returned.
 
 ===Controlling Association Fetching===
 
