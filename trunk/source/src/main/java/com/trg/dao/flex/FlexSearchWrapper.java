@@ -1,4 +1,4 @@
-package com.trg.dao.dao.original;
+package com.trg.dao.flex;
 
 import java.util.List;
 
@@ -7,6 +7,13 @@ import com.trg.dao.search.Filter;
 import com.trg.dao.search.ISearch;
 import com.trg.dao.search.Sort;
 
+/**
+ * This provides a wrapper around a FlexSearch so that is can be passed into DAO
+ * methods requiring the ISearch interface.
+ * 
+ * @author dwolverton
+ * 
+ */
 public class FlexSearchWrapper implements ISearch {
 
 	FlexSearch search;
