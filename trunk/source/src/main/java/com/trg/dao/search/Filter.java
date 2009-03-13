@@ -40,8 +40,7 @@ public class Filter implements Serializable {
 	 * The type of comparison to do between the property and the value. The
 	 * options are limited to the integer constants on this class:
 	 * 
-	 * 
-	 * <code>OP_EQAUL, OP_LESS_THAN, OP_GREATER_THAN, LESS_OR_EQUAL, OP_GREATER_OR_EQUAL, OP_IN, OP_LIKE, OP_ILIKE, OP_NOT_EQUAL, OP_NOT_IN, OP_AND, OP_OR, OP_NOT</code>
+	 * <code>OP_EQAUL, OP_NOT_EQUAL, OP_LESS_THAN, OP_GREATER_THAN, LESS_OR_EQUAL, OP_GREATER_OR_EQUAL, OP_IN, OP_NOT_IN, OP_LIKE, OP_ILIKE, OP_NULL, OP_NOT_NULL, OP_EMPTY, OP_NOT_EMPTY, OP_SOME, OP_ALL, OP_NONE, OP_AND, OP_OR, OP_NOT</code>
 	 * .
 	 */
 	protected int operator;
