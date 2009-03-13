@@ -14,27 +14,29 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements Pro
 This could be customized by adding and/or overriding methods if needed:
 {{{
 public interface ProjectDAO extends GenericDAO<Project, Long> {
-	public Project fetchByName(String name);
+	public Project findByName(String name);
+	public Project findByStatus(String status);
 }
 
 public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements ProjectDAO {
 	//basic added method
-	public Project fetchByName(String name) {
+	public Project findByName(String name) {
 		Criteria crit getSession().createCriteria(Project.class);
 		crit.add(Restrictions.eq("name", name));
 		return (Project) crit.uniqueResult();
 	}
 
 	//basic added method using search
-	public Project fetchByStatus(String status) {
+	public Project findByStatus(String status) {
 		return search(new Search().addFilterEquals("status", status));
 	}
 
 	//overriding a method
 	@Override
-	public void create(Project project) {
-		project.setStatus("NEW");
-		super.create(project);
+	public void save(Project project) {
+		if (project.getId() == null)
+			project.setStatus("NEW");
+		super.save(project);
 	}
 }
 }}}
