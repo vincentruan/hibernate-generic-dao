@@ -40,3 +40,6 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements Pro
 	}
 }
 }}}
+
+A move complex example can be found in the test code at:
+http://code.google.com/p/hibernate-generic-dao/source/browse/trunk/source/src/test/java/com/test/dao/standard/ProjectDAOImpl.java
