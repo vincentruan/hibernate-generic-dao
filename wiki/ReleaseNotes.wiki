@@ -30,25 +30,26 @@
   * Known Issues
     * Javadocs for Search beans are out of date.
 
-==0.4.1 (01/20/2009 current release)==
-  * Add option to ignore case on sorts (Issue 24).
-  * Ignore Filters with null values (Issue 22).
-  * Implement Issue 20 (fields & fetches).
-  * Refactor Search bean to use interfaces.
-  * Provide a SearchUtil class to aid in working with search interfaces and creating implementations of search interfaces.
-  * Add methods to SearchUtil for merging parts of Searches
+==0.4.1 (01/20/2009)==
+  * Added option to ignore case on sorts (Issue 24).
+  * Implemented ignoring Filters with null values (Issue 22).
+  * Implemented Issue 20 (fields & fetches).
+  * Refactored Search bean to use interfaces.
+  * Provided a SearchUtil class to aid in working with search interfaces and creating implementations of search interfaces.
+  * Added methods to SearchUtil for merging parts of Searches
 
-==0.4.2==
-  * Add collection operators. (see blog)
-  * Allow use of special .id, .class, .size properties in Filters.
-  * Issue 25, handling nulls in sorts, filters, fields, etc.
+==0.4.2 (03/13/2009 current release)==
+  * Added collection operators. (see blog)
+  * Allowed use of special .id, .class, .size properties in Filters.
+  * Addressed Issue 25, handling nulls in sorts, filters, fields, etc.
 
-==Future==
+==0.4.3==
+  * Formalize separation between DAOs and search.
   * Add find by example functionality (Issue 27)
   * Possibly add SIZE and IS EMPTY for collections in fields.
-  * Consider Issue 23 (query helper methods)
-  * Formalize separation between DAOs and search.
+
+
+==Future==
   * Possibly add ability to compare two properties in a filter.
   * Add implementation for JPA
-  * Consider compatibility with multiple entity names per Java class
   * Look at security roles with remote DAOs
