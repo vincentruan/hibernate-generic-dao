@@ -12,6 +12,7 @@ import com.test.model.Home;
 import com.test.model.Ingredient;
 import com.test.model.Person;
 import com.test.model.Pet;
+import com.test.model.Project;
 import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
 import com.test.model.RecipeIngredientId;
@@ -137,6 +138,11 @@ public class BaseDAOTest extends TestBase {
 
 	public void testDelete() {
 		initDB();
+		//remove all project member relationships to avoid integrity constraint violations
+		for (Project project : target.all(Project.class)) {
+			if (project.getMembers() != null)
+				project.getMembers().clear();
+		}
 
 		List<Person> list = target.all(Person.class);
 		int sizeBefore = list.size();
@@ -415,7 +421,15 @@ public class BaseDAOTest extends TestBase {
 
 	public void testDeleteMulti() {
 		initDB();
-
+		//remove all project member relationships to avoid integrity constraint violations
+		for (Project project : target.all(Project.class)) {
+			if (project.getMembers() != null)
+				project.getMembers().clear();
+		}
+		getSession().flush();
+		getSession().clear();
+		
+		
 		Search s = new Search(Person.class);
 		s.setResultMode(Search.RESULT_SINGLE);
 		s.addField("id", Field.OP_MAX);
