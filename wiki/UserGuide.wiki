@@ -1,4 +1,5 @@
 #summary Guide to using the various features of the framework.
+#labels Featured
 
 = Introduction =
 
