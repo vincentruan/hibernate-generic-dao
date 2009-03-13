@@ -1,0 +1,18 @@
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+<session-factory>
+
+	<mapping class="com.test.model.Address"/>
+	<mapping class="com.test.model.Home"/>
+	<mapping class="com.test.model.Person"/>
+	<mapping class="com.test.model.Pet"/>
+	<mapping class="com.test.model.LimbedPet"/>
+	<mapping class="com.test.model.Recipe"/>
+	<mapping class="com.test.model.Ingredient"/>
+	<mapping class="com.test.model.RecipeIngredient"/>
+	<mapping class="com.test.model.Store"/>
+	<mapping class="com.test.model.Project"/>
+	
+</session-factory>
+
+</hibernate-configuration>
