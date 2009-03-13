@@ -199,14 +199,14 @@ search.setMaxResults(15);
 List<Project> results = projectDAO.search(search);
 
 //get the total number of results (ignores paging)
-int totalResults = projectDAO.searchLength(search);
+int totalResults = projectDAO.count(search);
 
 //get one page of results and the total number of results without paging
-SearchResult<Project> result = projectDAO.searchAndLength(search);
-results = result.results;
-totalResults = results.totalLength;
+SearchResult<Project> result = projectDAO.searchAndCount(search);
+results = result.getResults();
+totalResults = results.getTotalCount();
 
 //get the average userCount for project matching the filter criteria
 search.addField("userCount", Field.OP_AVG);
-long avgCount = (long) projectDAO.uniqueResult(search);
+long avgCount = (long) projectDAO.searchUnique(search);
 }}}
