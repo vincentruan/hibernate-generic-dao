@@ -79,6 +79,11 @@ public List<Person> findPeopleByName(String firstName, String lastName) {
 }
 }}}
 
+*NOTE:* Filters also support using the special HQL properties ".id", ".class" and ".size". For example, the following expression would produce a filter that would match objects whose members collection contains more than 10 elements:
+{{{
+Filter.greaterThan("members.size", 10)
+}}}
+
 ===Selecting and Transforming Results===
 By default, the results of a search will be a list of the entity objects that were searched on. However, as with Hibernate queries, it is possible to get different information back in each row.
 
@@ -161,6 +166,9 @@ search.addFetch("members");
 //The members of each project in the result set will be join fetched with
 //the results of this search.
 }}}
+
+===Miscellaneous===
+Search supports the use of HQL special properties ".id", ".class" and ".size" where ever they are supported in HQL. Just include them within the property. Ex: `"members.size"`, `"class"`, `"id.project"`.
 
 == Additional Usage examples ==
 {{{
