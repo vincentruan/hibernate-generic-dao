@@ -68,6 +68,17 @@ The following filtering operators are available:
 || OR || Same as AND, except that it matches when any of the filters match. || `Filter.or(Filter.like("firstName","Wil%"), Filter.like("lastName","Wil%"))` ||
 || NOT || Takes no property. Takes a single `Filter` as a value. Matches when the filter in the value does not match. || `Filter.not(Filter.ilike("name", "W%")) //name does not start with 'w'` ||
 
+*NOTE:* If any filter with an operator that expects a value has a null value, that filter is ignored. This is very handy in the case of writing a find method where null arguments are ignored. For example:
+{{{
+/**
+ * This is a DAO method that returns all the people with the given first and/or last name.
+ * If any parameter is not null, that parameter is ignored. So only non-null parameters are used in defining the search criteria.
+ */
+public List<Person> findPeopleByName(String firstName, String lastName) {
+    return search(new Search(Person.class).addFilterEqual("firstName", firstName).addFilterEqual("lastName", lastName));
+}
+}}}
+
 ===Selecting and Transforming Results===
 By default, the results of a search will be a list of the entity objects that were searched on. However, as with Hibernate queries, it is possible to get different information back in each row.
 
