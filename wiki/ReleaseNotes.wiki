@@ -50,6 +50,6 @@
 
 
 ==Future==
-  * Possibly add ability to compare two properties in a filter.
-  * Add implementation for JPA
-  * Look at security roles with remote DAOs
+  * Custom expressions in fields, filters and sorts.
+  * Add implementation for JPA.
+  * Look at security with remote DAOs.
