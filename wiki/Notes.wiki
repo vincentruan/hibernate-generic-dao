@@ -1,4 +1,4 @@
 #summary Developer notes for possible upcoming fixes and changes.
 
-=Custom filters=
-
+=Custom expressions in fields, filters, sorts=
+What will we do about type conversion for filter expressions. For example if long is required but int is passed?
