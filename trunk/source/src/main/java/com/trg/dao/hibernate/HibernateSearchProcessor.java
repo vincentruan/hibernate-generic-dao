@@ -103,6 +103,9 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 
 		List<Object> paramList = new ArrayList<Object>();
 		String hql = generateRowCountQL(searchClass, search, paramList);
+		if (hql == null) { //special case where the query uses column operators
+			return 1;
+		}
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
 

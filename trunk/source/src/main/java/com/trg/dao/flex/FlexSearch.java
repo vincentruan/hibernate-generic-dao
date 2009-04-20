@@ -35,6 +35,8 @@ public class FlexSearch implements Serializable {
 	protected List<Sort> sorts = new ArrayList<Sort>();
 
 	protected List<Field> fields = new ArrayList<Field>();
+	
+	protected boolean distinct;
 
 	protected List<String> fetches = new ArrayList<String>();
 
@@ -110,5 +112,53 @@ public class FlexSearch implements Serializable {
 					this.fetches.add(fetches[i]);
 			}
 		}
+	}
+
+	public int getFirstResult() {
+		return firstResult;
+	}
+
+	public void setFirstResult(int firstResult) {
+		this.firstResult = firstResult;
+	}
+
+	public int getMaxResults() {
+		return maxResults;
+	}
+
+	public void setMaxResults(int maxResults) {
+		this.maxResults = maxResults;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public boolean isDisjunction() {
+		return disjunction;
+	}
+
+	public void setDisjunction(boolean disjunction) {
+		this.disjunction = disjunction;
+	}
+
+	public boolean isDistinct() {
+		return distinct;
+	}
+
+	public void setDistinct(boolean distinct) {
+		this.distinct = distinct;
+	}
+
+	public int getResultMode() {
+		return resultMode;
+	}
+
+	public void setResultMode(int resultMode) {
+		this.resultMode = resultMode;
 	}
 }

@@ -30,6 +30,8 @@ public class Search implements IMutableSearch, Serializable {
 	protected List<Sort> sorts = new ArrayList<Sort>();
 
 	protected List<Field> fields = new ArrayList<Field>();
+	
+	protected boolean distinct;
 
 	protected List<String> fetches = new ArrayList<String>();
 
@@ -406,6 +408,15 @@ public class Search implements IMutableSearch, Serializable {
 
 	public void clearFields() {
 		SearchUtil.clearFields(this);
+	}
+	
+	public boolean isDistinct() {
+		return distinct;
+	}
+	
+	public IMutableSearch setDistinct(boolean distinct) {
+		this.distinct = distinct;
+		return this;
 	}
 
 	public int getResultMode() {

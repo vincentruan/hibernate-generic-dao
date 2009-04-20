@@ -27,7 +27,11 @@ import java.util.List;
  * Additionally, fields can be specified using column operators:
  * <code>COUNT, COUNT DISTINCT, SUM, AVG, MAX, MIN</code>. Note that fields with
  * column operators can not be mixed with fields that do not use column
- * operators.
+ * operators.<br/><br/>
+ * 
+ * Set <code>distinct</code> to <code>true</code> in order to filter out
+ * duplicate results.<br/><br/>
+ * 
  * <li>Fetch - This determines which attached objects to pull along with the
  * base search object. With Hibernate this eagerly loads the specified
  * properties. Otherwise they might be loaded lazily. This is useful for
@@ -185,6 +189,8 @@ public interface ISearch {
 	public List<Sort> getSorts();
 
 	public List<Field> getFields();
+	
+	public boolean isDistinct();
 
 	public List<String> getFetches();
 
