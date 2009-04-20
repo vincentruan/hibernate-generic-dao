@@ -109,6 +109,10 @@ The following result modes are available for a search:
 || MAP || returns each row as a map with properties' names or keys for keys to the corresponding values. ||
 || SINGLE || Exactly one field or no fields must be specified to use this result mode. The result list contains just the value of that property for each element or the entity if no fields are specified. ||
 
+*Distinct*
+
+The `distinct` option can be set on a search in order to filter out duplicate results. As with plain HQL or SQL, only use this option if your search requires it because it does affect performance.
+
 *_Examples:_*
 {{{
 Search search = new Search(Project.class);
