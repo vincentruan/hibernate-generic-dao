@@ -69,4 +69,8 @@ public class FlexSearchWrapper implements ISearch {
 	public boolean isDisjunction() {
 		return search.disjunction;
 	}
+
+	public boolean isDistinct() {
+		return search.distinct;
+	}
 }

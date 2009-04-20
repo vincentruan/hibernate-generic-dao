@@ -25,6 +25,8 @@ public interface IMutableSearch extends ISearch {
 	public IMutableSearch setSorts(List<Sort> sorts);
 
 	public IMutableSearch setFields(List<Field> fields);
+	
+	public IMutableSearch setDistinct(boolean distinct);
 
 	public IMutableSearch setFetches(List<String> fetches);
 

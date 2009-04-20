@@ -88,7 +88,7 @@ public abstract class BaseSearchProcessor {
 
 		List<Field> fields = checkAndCleanFields(search.getFields());
 
-		String select = generateSelectClause(ctx, fields);
+		String select = generateSelectClause(ctx, fields, search.isDistinct());
 		String where = generateWhereClause(ctx, checkAndCleanFilters(search.getFilters()), search.isDisjunction());
 		String orderBy = generateOrderByClause(ctx, checkAndCleanSorts(search.getSorts()));
 		applyFetches(ctx, checkAndCleanFetches(search.getFetches()), fields);
@@ -112,6 +112,9 @@ public abstract class BaseSearchProcessor {
 	 * used for the query. All parameters within the query string are specified
 	 * as named parameters ":pX", where X is the index of the parameter value in
 	 * paramList.
+	 * 
+	 * <b>NOTE:</b> Returns null if column operators are used in the search. Such a
+	 * search will always return 1 row.
 	 */
 	public String generateRowCountQL(Class<?> entityClass, ISearch search, List<Object> paramList) {
 		if (entityClass == null)
@@ -121,9 +124,52 @@ public abstract class BaseSearchProcessor {
 
 		String where = generateWhereClause(ctx, checkAndCleanFilters(search.getFilters()), search.isDisjunction());
 		String from = generateFromClause(ctx, false);
-
+		
+		boolean useOperator = false, notUseOperator = false;
+		List<Field> fields = search.getFields();
+		if (fields != null) {
+			for (Field field : fields) {
+				switch (field.getOperator()) {
+				case Field.OP_AVG:
+				case Field.OP_COUNT:
+				case Field.OP_COUNT_DISTINCT:
+				case Field.OP_MAX:
+				case Field.OP_MIN:
+				case Field.OP_SUM:
+					useOperator = true;
+					break;
+				default:
+					notUseOperator = true;
+					break;
+				}
+			}
+		}
+		if (useOperator && notUseOperator) {
+			throw new Error("A search can not have a mix of fields with operators and fields without operators.");
+		} else if (useOperator) {
+			return null; //if we're using column operators, the query will always return 1 result.
+		}
+		
+		
 		StringBuilder sb = new StringBuilder();
-		sb.append("select count(distinct ").append(rootAlias).append(".id)");
+		if (!search.isDistinct()) {
+			sb.append("select count(*)");
+		} else if (fields.size() == 0) {
+			sb.append("select count(distinct ");
+			sb.append(rootAlias).append(".id)");
+		} else if (fields.size() == 1) {
+			sb.append("select count(distinct ");
+			String prop = fields.get(0).getProperty();
+			if (prop == null || "".equals(prop)) {
+				sb.append(ctx.getRootAlias());
+			} else {
+				sb.append(getPathRef(ctx, prop));
+			}
+			sb.append(")");
+		} else {
+			throw new IllegalArgumentException("Unfortunately, Hibernate Generic DAO does not currently support "
+					+ "the count operation on a search that has distinct set with multiple fields.");
+		}
 		sb.append(from);
 		sb.append(where);
 
@@ -137,7 +183,7 @@ public abstract class BaseSearchProcessor {
 	 * Internal method for generating the select clause based on the fields of
 	 * the given search.
 	 */
-	protected String generateSelectClause(SearchContext ctx, List<Field> fields) {
+	protected String generateSelectClause(SearchContext ctx, List<Field> fields, boolean distinct) {
 
 		StringBuilder sb = null;
 		boolean useOperator = false, notUseOperator = false;
@@ -147,6 +193,8 @@ public abstract class BaseSearchProcessor {
 			for (Field field : fields) {
 				if (first) {
 					sb = new StringBuilder("select ");
+					if (distinct)
+						sb.append("distinct ");
 					first = false;
 				} else {
 					sb.append(", ");
@@ -154,7 +202,7 @@ public abstract class BaseSearchProcessor {
 
 				String prop;
 				if (field.getProperty() == null || "".equals(field.getProperty())) {
-					prop = "*";
+					prop = "*"; //TODO: I think this will be a problem
 				} else {
 					prop = getPathRef(ctx, field.getProperty());
 				}
@@ -196,7 +244,10 @@ public abstract class BaseSearchProcessor {
 		}
 		if (first) {
 			// there are no fields
-			return "select " + ctx.getRootAlias();
+			if (distinct)
+				return "select distinct " + ctx.getRootAlias();
+			else
+				return "select " + ctx.getRootAlias();
 		}
 		if (useOperator && notUseOperator) {
 			throw new Error("A search can not have a mix of fields with operators and fields without operators.");
