@@ -1,5 +1,6 @@
 package com.test.base;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -221,6 +222,50 @@ public class FieldAndFetchTest extends TestBase {
 		mapResult = (Map) target.searchUnique(s);
 		assertEquals(101, ((Number) mapResult.get("myAge")).intValue());
 		assertEquals(141, ((Number) mapResult.get("myMomsAge")).intValue());
+	}
+	
+	public void testDistinct() {
+		initDB();
+		
+		Search s = new Search(Person.class);
+		s.setDistinct(true);
+		
+		s.addFilterLessOrEqual("age", 15);
+		assertEquals(4, target.count(s));
+		assertListEqual(target.search(s), joeA, joeB, sallyA, margretB);
+		
+		s.clear();
+		s.setDistinct(true);
+		s.addField("lastName");
+		assertEquals(2, target.count(s));
+		assertListEqual(target.search(s), "Alpha", "Beta");
+		
+		s.clear();
+		s.setDistinct(true);
+		s.addField("mother");
+		assertEquals(3, target.count(s));
+		assertListEqual(target.search(s), mamaA, mamaB, grandmaA);
+		
+		s.clearFields();
+		s.addField("mother.firstName");
+		s.addField("mother.lastName");
+		try {
+			assertEquals(4, target.count(s));
+			fail();
+		} catch (IllegalArgumentException ex) {
+			//We don't support distinct counts with multiple fields at this time
+		}
+		List<Object[]> results = target.search(s);
+		List<String> results2 = new ArrayList<String>(results.size());
+		for (Object[] a : results) {
+			results2.add((String)a[0] + " " + (String)a[1]);
+		}
+		assertListEqual(results2, "null null", "Mama Alpha", "Mama Beta", "Grandma Alpha");
+		
+		//This is a miscellaneous test. When column operators are defined, the count should always be 1.
+		s.clear();
+		s.addField("age", Field.OP_COUNT);
+		assertEquals(1, target.count(s));
 	}
 
 	public void testResultModeAuto() {
