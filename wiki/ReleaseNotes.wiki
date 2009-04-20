@@ -44,6 +44,7 @@
   * Addressed Issue 25, handling nulls in sorts, filters, fields, etc.
 
 ==0.4.3==
+  * Added 'distinct' option to search.
   * Formalize separation between DAOs and search.
   * Add find by example functionality (Issue 27)
   * Possibly add SIZE and IS EMPTY for collections in fields.
