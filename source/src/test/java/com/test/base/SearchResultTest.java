@@ -18,12 +18,8 @@ public class SearchResultTest extends TestBase {
 		assertEquals(6, target.count(s));
 		
 		SearchResult<Person> result = target.searchAndCount(s);
-		assertEquals(s, result.getSearch());
-		assertEquals(s.getFirstResult(), result.getFirstResult());
-		assertEquals(s.getMaxResults(), result.getMaxResults());
-		assertEquals(s.getPage(), result.getPage());
 		assertEquals(6, result.getTotalCount());
-		assertListEqual(new Person[] { joeA, sallyA, papaA, mamaA, grandpaA, grandmaA }, result.getResults());
+		assertListEqual(new Person[] { joeA, sallyA, papaA, mamaA, grandpaA, grandmaA }, result.getResult());
 	}
 	
 }

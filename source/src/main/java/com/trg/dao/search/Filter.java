@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.trg.dao.Util;
+
 /**
  * <p>
  * A <code>Filter</code> is used by the <code>Search</code> class to specify a
@@ -395,25 +397,25 @@ public class Filter implements Serializable {
 	public String toString() {
 		switch (operator) {
 		case Filter.OP_IN:
-			return "`" + property + "` in (" + valueString(value) + ")";
+			return "`" + property + "` in (" + Util.paramDisplayString(value) + ")";
 		case Filter.OP_NOT_IN:
-			return "`" + property + "` not in (" + valueString(value) + ")";
+			return "`" + property + "` not in (" + Util.paramDisplayString(value) + ")";
 		case Filter.OP_EQUAL:
-			return "`" + property + "` = " + valueString(value);
+			return "`" + property + "` = " + Util.paramDisplayString(value);
 		case Filter.OP_NOT_EQUAL:
-			return "`" + property + "` != " + valueString(value);
+			return "`" + property + "` != " + Util.paramDisplayString(value);
 		case Filter.OP_GREATER_THAN:
-			return "`" + property + "` > " + valueString(value);
+			return "`" + property + "` > " + Util.paramDisplayString(value);
 		case Filter.OP_LESS_THAN:
-			return "`" + property + "` < " + valueString(value);
+			return "`" + property + "` < " + Util.paramDisplayString(value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return "`" + property + "` >= " + valueString(value);
+			return "`" + property + "` >= " + Util.paramDisplayString(value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return "`" + property + "` <= " + valueString(value);
+			return "`" + property + "` <= " + Util.paramDisplayString(value);
 		case Filter.OP_LIKE:
-			return "`" + property + "` LIKE " + valueString(value);
+			return "`" + property + "` LIKE " + Util.paramDisplayString(value);
 		case Filter.OP_ILIKE:
-			return "`" + property + "` ILIKE " + valueString(value);
+			return "`" + property + "` ILIKE " + Util.paramDisplayString(value);
 		case Filter.OP_AND:
 		case Filter.OP_OR:
 			if (!(value instanceof List)) {
@@ -463,47 +465,9 @@ public class Filter implements Serializable {
 			}
 			return "none `" + property + "` {" + value.toString() + "}";
 		default:
-			return "**INVALID OPERATOR: (" + operator + ") - VALUE: " + valueString(value) + " **";
+			return "**INVALID OPERATOR: (" + operator + ") - VALUE: " + Util.paramDisplayString(value) + " **";
 		}
 	}
 	
-	private String valueString(Object val) {
-		if (val == null) {
-			return "null";
-		} else if (val instanceof String) {
-			return "\"" + val + "\"";
-		} else if (val instanceof Collection) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(val.getClass().getSimpleName());
-			sb.append(" {");
-			boolean first = true;
-			for (Object o : (Collection<?>) val) {
-				if (first) {
-					first = false;
-				} else {
-					sb.append(", ");
-				}
-				sb.append(valueString(o));
-			}
-			sb.append("}");
-			return sb.toString();
-		} else if (val instanceof Object[]) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(val.getClass().getComponentType().getSimpleName());
-			sb.append("[] {");
-			boolean first = true;
-			for (Object o : (Object[]) val) {
-				if (first) {
-					first = false;
-				} else {
-					sb.append(", ");
-				}
-				sb.append(valueString(o));
-			}
-			sb.append("}");
-			return sb.toString();
-		} else {
-			return val.toString();
-		}
-	}
+
 }

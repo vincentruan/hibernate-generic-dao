@@ -218,8 +218,8 @@ public class BaseDAOTest extends TestBase {
 		assertEquals(Person.class, sP.getSearchClass());
 
 		// searchAndCount
-		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(Person.class, s).getResults());
-		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(Person.class, sP).getResults());
+		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(Person.class, s).getResult());
+		assertListEqual(new Person[] { bob, fred }, target.searchAndCount(Person.class, sP).getResult());
 		assertEquals(null, s.getSearchClass());
 		assertEquals(Person.class, sP.getSearchClass());
 

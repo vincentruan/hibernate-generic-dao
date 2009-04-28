@@ -54,9 +54,9 @@ public class GenericDAOTest extends TestBase {
 		
 		//searchAndCount
 		assertListEqual(new Person[] { bob, fred }, personDAO
-				.searchAndCount(new Search()).getResults());
+				.searchAndCount(new Search()).getResult());
 		assertListEqual(new Person[] { bob, fred }, personDAO
-				.searchAndCount(new Search(Person.class)).getResults());
+				.searchAndCount(new Search(Person.class)).getResult());
 
 		//searchUnique
 		Search s = new Search();

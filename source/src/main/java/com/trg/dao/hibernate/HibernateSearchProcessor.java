@@ -13,8 +13,11 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.trg.dao.BaseSearchProcessor;
+import com.trg.dao.Util;
 import com.trg.dao.search.Field;
 import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
@@ -25,6 +28,7 @@ import com.trg.dao.search.SearchUtil;
  * @author dwolverton
  */
 public class HibernateSearchProcessor extends BaseSearchProcessor {
+	private static Logger logger = LoggerFactory.getLogger(HibernateSearchProcessor.class);
 	
 	private static Map<SessionFactory, HibernateSearchProcessor> map = new HashMap<SessionFactory, HibernateSearchProcessor>();
 
@@ -139,17 +143,12 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 			return null;
 
 		SearchResult result = new SearchResult();
-		result.setSearch(search);
-		result.setFirstResult(search.getFirstResult());
-		result.setPage(search.getPage());
-		result.setMaxResults(search.getMaxResults());
-
-		result.setResults(search(session, searchClass, search));
+		result.setResult(search(session, searchClass, search));
 
 		if (search.getMaxResults() > 0) {
 			result.setTotalCount(count(session, searchClass, search));
 		} else {
-			result.setTotalCount(result.getResults().size()
+			result.setTotalCount(result.getResult().size()
 					+ SearchUtil.calcFirstResult(search));
 		}
 
@@ -185,8 +184,20 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 
 	@SuppressWarnings("unchecked")
 	private void addParams(Query query, List<Object> params) {
+		StringBuilder debug = null;
+			
 		int i = 1;
 		for (Object o : params) {
+			if (logger.isDebugEnabled()) {
+				if (debug == null)
+					debug = new StringBuilder();
+				else
+					debug.append("\n\t");
+				debug.append("p");
+				debug.append(i);
+				debug.append(": ");
+				debug.append(Util.paramDisplayString(o));
+			}
 			if (o instanceof Collection) {
 				query.setParameterList("p" + Integer.toString(i++),
 						(Collection) o);
@@ -196,6 +207,9 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 			} else {
 				query.setParameter("p" + Integer.toString(i++), o);
 			}
+		}
+		if (debug != null && debug.length() != 0) {
+			logger.debug(debug.toString());
 		}
 	}
 

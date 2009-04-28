@@ -90,8 +90,8 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	public SearchResult<T> searchAndCount(ISearch search) {
 		if (search == null) {
 			SearchResult<T> result = new SearchResult<T>();
-			result.setResults(fetchAll());
-			result.setTotalCount(result.getResults().size());
+			result.setResult(fetchAll());
+			result.setTotalCount(result.getResult().size());
 			return result;
 		}
 		

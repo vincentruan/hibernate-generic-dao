@@ -52,9 +52,7 @@ public class ProjectDAOImpl extends BaseGenericDAOImpl<Project, Long> implements
 	@Override
 	public SearchResult<Project> searchAndCount(ISearch search) {
 		ISearch s = prepareSearch(search);
-		SearchResult<Project> result = super.searchAndCount(s);
-		result.setSearch(search);
-		return result;
+		return super.searchAndCount(s);
 	}
 
 	@SuppressWarnings("unchecked")
