@@ -24,4 +24,3 @@ Problem is we may want to do a query that accesses a table, but we need to restr
 Maybe a helper method for checking a search against security criteria, including whether or not to allow ad-hoc expressions, what tables & fields are allowed, which are not alloweed.
 
 =Misc=
-DISTINCT column operator?
