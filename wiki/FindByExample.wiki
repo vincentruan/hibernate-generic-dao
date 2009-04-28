@@ -46,10 +46,20 @@ public ExampleOptions setLikeMode(int); //options (static constants on Example c
 public int getLikeMode();
 }}}
 
-It could then be used like this in the most basic case...
+Then if someone wants they can make a simple method on their own DAO like this...
 {{{
-Search s = new Search(Project.class);
-s.addFilter(projectDAO.filterFromExample(exampleProject));
+public List<Project> findByExample(Project exampleProject) {
+  Search s = new Search(Project.class);
+  s.addFilter(filterFromExample(exampleProject));
+  return search(s);
+}
+}}}
 
-List<Project> results = projectDAO.search(s);
+But they also have the freedom to add as many options as they want. For example...
+{{{
+public List<Project> findByExample(Project example, IMutableSearch additionalSearchOptions);
+
+public int countByExample(Project example);
+
+public int findByAnyExample(Project... examples);
 }}}
