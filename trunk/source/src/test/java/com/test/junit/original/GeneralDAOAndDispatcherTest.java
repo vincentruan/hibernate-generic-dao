@@ -93,7 +93,7 @@ public class GeneralDAOAndDispatcherTest extends TestBase {
 
 		assertEquals(2, dao.count(new Search(Person.class)));
 		assertListEqual(new Person[] { bob, fred }, dao
-				.searchAndCount(new Search(Person.class)).getResults());
+				.searchAndCount(new Search(Person.class)).getResult());
 
 		Search s = new Search(Person.class);
 		s.addFilterEqual("id", bob.getId());

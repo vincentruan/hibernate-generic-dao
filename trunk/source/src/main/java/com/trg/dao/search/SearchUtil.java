@@ -705,7 +705,7 @@ public class SearchUtil {
 	 * collections are copied into new collections, but the items in those
 	 * collections are not duplicated; they still point to the same objects.
 	 */
-	public static IMutableSearch copy(ISearch source, IMutableSearch destination) {
+	public static <T extends IMutableSearch> T copy(ISearch source, T destination) {
 		shallowCopy(source, destination);
 
 		ArrayList<String> fetches = new ArrayList<String>();

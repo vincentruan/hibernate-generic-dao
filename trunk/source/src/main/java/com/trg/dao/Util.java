@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -279,6 +280,46 @@ public class Util {
 			klass = klass.getSuperclass();
 			if (superClass.equals(klass))
 				return dist;
+		}
+	}
+	
+	public static String paramDisplayString(Object val) {
+		if (val == null) {
+			return "null";
+		} else if (val instanceof String) {
+			return "\"" + val + "\"";
+		} else if (val instanceof Collection) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(val.getClass().getSimpleName());
+			sb.append(" {");
+			boolean first = true;
+			for (Object o : (Collection<?>) val) {
+				if (first) {
+					first = false;
+				} else {
+					sb.append(", ");
+				}
+				sb.append(paramDisplayString(o));
+			}
+			sb.append("}");
+			return sb.toString();
+		} else if (val instanceof Object[]) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(val.getClass().getComponentType().getSimpleName());
+			sb.append("[] {");
+			boolean first = true;
+			for (Object o : (Object[]) val) {
+				if (first) {
+					first = false;
+				} else {
+					sb.append(", ");
+				}
+				sb.append(paramDisplayString(o));
+			}
+			sb.append("}");
+			return sb.toString();
+		} else {
+			return val.toString();
 		}
 	}
 }
