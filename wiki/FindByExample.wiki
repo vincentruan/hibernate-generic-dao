@@ -19,5 +19,29 @@ The conversion will also need to be publicly accessible so that developers have 
 
 Currently the only public classes that have access to the session factory are DAOs themselves.
 
+
+
+
 ==Conclusion==
 Maybe we should add a method or several methods to the DAO that will convert an example object to a filter.
+
+Add these methods to the base DAO, and add corresponding public methods to the original and standard DAOs.
+{{{
+protected Filter _filterFromExample(Object example);
+protected Filter _filterFromExample(Object example, ExampleOptions options);
+}}}
+
+The `ExampleOptions` class would have these methods:
+{{{
+public ExampleOptions setExcludeProps(Collection<String>)
+public Collection<String> getExcludeProps()
+public ExampleOptions excludeProp(String) //add a property to the excludeProps collection
+public ExampleOptions setExcludeNulls(boolean) //default TRUE
+public boolean getExcludeNulls()
+public ExampleOptions setExcludeZeros(boolean)
+public boolean getExcludeZeros()
+public ExampleOptions setIgnoreCase(boolean)
+public boolean getIgnoreCase()
+public ExampleOptions setLikeMode(int) //options (static constants on Example class): EXACT, START, END, ANYWHERE
+.getLikeMode()
+}}}
