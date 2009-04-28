@@ -45,3 +45,11 @@ public boolean getIgnoreCase();
 public ExampleOptions setLikeMode(int); //options (static constants on Example class): EXACT, START, END, ANYWHERE
 public int getLikeMode();
 }}}
+
+It could then be used like this in the most basic case...
+{{
+Search s = new Search(Project.class);
+s.addFilter(projectDAO.filterFromExample(exampleProject));
+
+List<Project> results = projectDAO.search(s);
+}}
