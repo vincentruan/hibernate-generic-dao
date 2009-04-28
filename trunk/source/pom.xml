@@ -4,7 +4,7 @@
 	<groupId>com.trg</groupId>
 	<artifactId>trg-dao</artifactId>
 	<name>Hibernate Generic DAO</name>
-	<version>0.4.2</version>
+	<version>0.4.3</version>
 	<url>http://code.google.com/p/hibernate-generic-dao</url>
 	<inceptionYear>2008</inceptionYear>
 	<properties></properties>
