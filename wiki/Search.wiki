@@ -141,9 +141,14 @@ A search can have a collection of _sorts_. These sorts are applied in order, jus
 
 *_Examples:_*
 {{{
+//this produces: ORDER BY startDate DESC
 search.addSort( Sort.desc("startDate") );
 
+//this produces: ORDER BY lower(name) ASC
 search.addSort( Sort.asc("name", true) ); //second parameter specifies ignore case
+
+//this produces: ORDER BY lastName ASC, firstName ASC
+search.addSortAsc("lastName").addSortAsc("firstName");
 }}}
 
 ===Paging===
