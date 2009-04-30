@@ -5,7 +5,8 @@ import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trg.dao.Util;
+import com.trg.dao.DAOUtil;
+import com.trg.search.InternalUtil;
 import com.trg.test.TestCaseSpringAutoWire;
 
 public class UtilTest extends TestCaseSpringAutoWire {
@@ -375,7 +376,7 @@ public class UtilTest extends TestCaseSpringAutoWire {
 	
 	private static Object callMethod(Object object, String methodName, Class<?>... paramTypes)
 			throws IllegalArgumentException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-		return Util.callMethod(object, methodName, paramTypes, new Object[paramTypes.length]);
+		return DAOUtil.callMethod(object, methodName, paramTypes, new Object[paramTypes.length]);
 	}
 
 }

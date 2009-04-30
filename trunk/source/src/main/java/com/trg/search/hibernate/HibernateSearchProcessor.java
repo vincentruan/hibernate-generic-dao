@@ -1,4 +1,4 @@
-package com.trg.dao.hibernate;
+package com.trg.search.hibernate;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,12 +16,12 @@ import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trg.dao.BaseSearchProcessor;
-import com.trg.dao.Util;
-import com.trg.dao.search.Field;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchResult;
-import com.trg.dao.search.SearchUtil;
+import com.trg.search.BaseSearchProcessor;
+import com.trg.search.Field;
+import com.trg.search.ISearch;
+import com.trg.search.SearchResult;
+import com.trg.search.SearchUtil;
+import com.trg.search.InternalUtil;
 
 /**
  * Implementation of SearchToQLProcessor that generates HQL
@@ -196,7 +196,7 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 				debug.append("p");
 				debug.append(i);
 				debug.append(": ");
-				debug.append(Util.paramDisplayString(o));
+				debug.append(InternalUtil.paramDisplayString(o));
 			}
 			if (o instanceof Collection) {
 				query.setParameterList("p" + Integer.toString(i++),

@@ -9,8 +9,8 @@ import com.test.dao.standard.PersonDAO;
 import com.test.dao.standard.ProjectDAO;
 import com.test.model.Person;
 import com.test.model.Project;
-import com.trg.dao.search.Search;
-import com.trg.dao.search.Sort;
+import com.trg.search.Search;
+import com.trg.search.Sort;
 
 public class GenericDAOTest extends TestBase {
 

@@ -7,8 +7,8 @@ import com.test.model.Person;
 import com.trg.dao.dao.original.DAODispatcher;
 import com.trg.dao.dao.original.FlexDAOAdapter;
 import com.trg.dao.dao.original.GeneralDAO;
-import com.trg.dao.flex.FlexSearch;
-import com.trg.dao.search.Filter;
+import com.trg.search.Filter;
+import com.trg.search.flex.FlexSearch;
 
 public class FlexDAOAdapterTest extends TestBase {
 	private GeneralDAO generalDAO;

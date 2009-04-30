@@ -3,7 +3,7 @@ package com.test.dao.standard;
 import java.util.List;
 
 import com.test.model.Person;
-import com.trg.dao.search.Search;
+import com.trg.search.Search;
 
 public class PersonDAOImpl extends BaseGenericDAOImpl<Person, Long> implements PersonDAO {
 

@@ -12,7 +12,7 @@ import com.test.model.Person;
 import com.trg.dao.DAODispatcherException;
 import com.trg.dao.dao.standard.DAODispatcher;
 import com.trg.dao.dao.standard.GeneralDAO;
-import com.trg.dao.search.Search;
+import com.trg.search.Search;
 
 public class GeneralDAOAndDispatcherTest extends TestBase {
 	private GeneralDAO generalDAO;

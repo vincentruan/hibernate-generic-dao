@@ -1,6 +1,6 @@
-package com.trg.dao.search;
+package com.trg.search;
 
-import static com.trg.dao.search.ISearch.*;
+import static com.trg.search.ISearch.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

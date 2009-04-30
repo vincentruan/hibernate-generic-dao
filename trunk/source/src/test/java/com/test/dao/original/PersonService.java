@@ -7,8 +7,8 @@ import javax.annotation.Resource;
 import org.hibernate.NonUniqueResultException;
 
 import com.test.model.Person;
-import com.trg.dao.search.Search;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.Search;
+import com.trg.search.SearchResult;
 
 public class PersonService {
 	PersonDAO dao;

@@ -6,7 +6,7 @@ import java.util.Map;
 import com.test.misc.SearchTestInterface;
 import com.test.model.Home;
 import com.test.model.Person;
-import com.trg.dao.search.Search;
+import com.trg.search.Search;
 
 public class TrickyIssueTest extends TestBase {
 	protected SearchTestInterface target;

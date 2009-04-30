@@ -17,8 +17,8 @@ import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
 import com.test.model.RecipeIngredientId;
 import com.test.model.Store;
-import com.trg.dao.search.Field;
-import com.trg.dao.search.Search;
+import com.trg.search.Field;
+import com.trg.search.Search;
 
 public class BaseDAOTest extends TestBase {
 

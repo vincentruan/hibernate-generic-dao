@@ -1,4 +1,4 @@
-package com.trg.dao.hibernate;
+package com.trg.search.hibernate;
 
 import java.io.Serializable;
 
@@ -10,7 +10,7 @@ import org.hibernate.type.CollectionType;
 import org.hibernate.type.EntityType;
 import org.hibernate.type.Type;
 
-import com.trg.dao.Metadata;
+import com.trg.search.Metadata;
 
 public class HibernateEntityMetadata implements Metadata {
 

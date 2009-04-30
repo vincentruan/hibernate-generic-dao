@@ -9,8 +9,8 @@ import org.hibernate.proxy.HibernateProxy;
 import com.test.base.TestBase;
 import com.test.misc.SearchTestInterface;
 import com.test.model.Person;
-import com.trg.dao.search.Field;
-import com.trg.dao.search.Search;
+import com.trg.search.Field;
+import com.trg.search.Search;
 
 public class FieldAndFetchTest extends TestBase {
 	protected SearchTestInterface target;

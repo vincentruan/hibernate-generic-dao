@@ -1,13 +1,13 @@
-package com.trg.dao.flex;
+package com.trg.search.flex;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.trg.dao.search.Field;
-import com.trg.dao.search.Filter;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.Sort;
+import com.trg.search.Field;
+import com.trg.search.Filter;
+import com.trg.search.ISearch;
+import com.trg.search.Sort;
 
 /**
  * This is a search DTO that is suitable for both Flex and Java. Is can be used

@@ -8,11 +8,11 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import com.test.model.Person;
-import com.trg.dao.search.Field;
-import com.trg.dao.search.Filter;
-import com.trg.dao.search.Search;
-import com.trg.dao.search.SearchUtil;
-import com.trg.dao.search.Sort;
+import com.trg.search.Field;
+import com.trg.search.Filter;
+import com.trg.search.Search;
+import com.trg.search.SearchUtil;
+import com.trg.search.Sort;
 
 public class SearchTest extends TestCase {
 	public void testToString() {

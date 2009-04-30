@@ -5,7 +5,7 @@ import java.util.List;
 import com.test.model.Person;
 import com.test.model.Project;
 import com.trg.dao.dao.standard.GenericDAO;
-import com.trg.dao.search.Search;
+import com.trg.search.Search;
 
 public interface ProjectDAO extends GenericDAO<Project, Long> {
 	/**

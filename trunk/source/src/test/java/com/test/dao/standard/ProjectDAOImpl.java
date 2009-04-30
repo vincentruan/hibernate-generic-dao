@@ -7,12 +7,12 @@ import java.util.List;
 
 import com.test.model.Person;
 import com.test.model.Project;
-import com.trg.dao.search.Filter;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.Search;
-import com.trg.dao.search.SearchResult;
-import com.trg.dao.search.SearchUtil;
-import com.trg.dao.search.Sort;
+import com.trg.search.Filter;
+import com.trg.search.ISearch;
+import com.trg.search.Search;
+import com.trg.search.SearchResult;
+import com.trg.search.SearchUtil;
+import com.trg.search.Sort;
 
 /**
  * <p>

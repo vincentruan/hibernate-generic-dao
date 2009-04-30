@@ -4,8 +4,8 @@ import com.test.model.LimbedPet;
 import com.test.model.Person;
 import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
-import com.trg.dao.Metadata;
-import com.trg.dao.MetadataUtil;
+import com.trg.search.Metadata;
+import com.trg.search.MetadataUtil;
 
 public class MetadataTest extends TestBase {
 	protected MetadataUtil metadataUtil;

@@ -7,8 +7,8 @@ import java.util.List;
 import org.hibernate.NonUniqueResultException;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.ISearch;
+import com.trg.search.SearchResult;
 
 /**
  * Implementation of <code>GenericDAO</code> using Hibernate.
