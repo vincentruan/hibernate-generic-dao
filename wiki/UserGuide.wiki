@@ -7,6 +7,8 @@ The purpose of this framework is to save the time, tedium and possible inconsist
 
 Javadoc: http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html
 
+See also InstallationAndConfiguration.
+
 = Features =
 
 == General and Generic DAOs ==
