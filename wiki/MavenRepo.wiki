@@ -1,5 +1,4 @@
 #summary Details for adding this framework as a Maven dependency
-#labels Featured
 
 = pom.xml =
 {{{
