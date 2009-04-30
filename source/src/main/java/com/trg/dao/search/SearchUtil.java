@@ -878,8 +878,8 @@ public class SearchUtil {
 		if (copy != null) {
 			if (removeNulls) {
 				for (int j = copy.size() - 1; j >= 0; j--) {
-					if (copy.get(i) == null)
-						copy.remove(i);
+					if (copy.get(j) == null)
+						copy.remove(j);
 				}
 			}
 			return copy;

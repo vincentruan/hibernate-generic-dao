@@ -9,7 +9,9 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
+import com.trg.dao.search.ExampleOptions;
 import com.trg.dao.search.ISearch;
+import com.trg.dao.search.Search;
 import com.trg.dao.search.SearchResult;
 
 public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInterface {
@@ -154,6 +156,13 @@ public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInt
 
 	public boolean exists(Object entity) {
 		return super._exists(entity);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List findByExample(Object example, ExampleOptions options) {
+		Search s = new Search(example.getClass());
+		s.addFilter(_getFilterFromExample(example, options));
+		return _search(s);
 	}
 	
 }

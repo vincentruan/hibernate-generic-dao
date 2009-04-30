@@ -308,6 +308,20 @@ public class TestBase extends TestCaseSpringAutoWire {
 				Assert.fail("The list did not match the expected results.");
 		}
 	}
+	
+	protected void assertArrayEqual(Object[] actual, Object... expected) {
+		Assert.assertEquals("The array did not have the expected length", expected.length, actual.length);
+
+		List<Object> remaining = new LinkedList<Object>();
+		for (Object o : actual) {
+			remaining.add(o);
+		}
+		
+		for (Object o : expected) {
+			if (!remaining.remove(o))
+				Assert.fail("The array did not match the expected results.");
+		}
+	}
 
 	protected void assertListOrderEqual(Person[] expected, List<Person> actual) {
 		Assert.assertEquals("The list did not have the expected length", expected.length, actual.size());

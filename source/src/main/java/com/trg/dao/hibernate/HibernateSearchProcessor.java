@@ -36,13 +36,13 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 			SessionFactory sessionFactory) {
 		HibernateSearchProcessor instance = map.get(sessionFactory);
 		if (instance == null) {
-			instance = new HibernateSearchProcessor(HibernateMetaDataUtil.getInstanceForSessionFactory(sessionFactory));
+			instance = new HibernateSearchProcessor(HibernateMetadataUtil.getInstanceForSessionFactory(sessionFactory));
 			map.put(sessionFactory, instance);
 		}
 		return instance;
 	}
 
-	private HibernateSearchProcessor(HibernateMetaDataUtil mdu) {
+	private HibernateSearchProcessor(HibernateMetadataUtil mdu) {
 		super(QLTYPE_HQL, mdu);
 	}
 	

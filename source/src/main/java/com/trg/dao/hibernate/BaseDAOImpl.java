@@ -14,6 +14,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
+import com.trg.dao.search.ExampleOptions;
+import com.trg.dao.search.Filter;
 import com.trg.dao.search.ISearch;
 import com.trg.dao.search.SearchResult;
 
@@ -30,12 +32,12 @@ public class BaseDAOImpl {
 
 	private SessionFactory sessionFactory;
 
-	private HibernateMetaDataUtil metaDataUtil;
+	private HibernateMetadataUtil metaDataUtil;
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 		searchProcessor = HibernateSearchProcessor.getInstanceForSessionFactory(sessionFactory);
-		metaDataUtil = HibernateMetaDataUtil.getInstanceForSessionFactory(sessionFactory);
+		metaDataUtil = HibernateMetadataUtil.getInstanceForSessionFactory(sessionFactory);
 	}
 
 	protected SessionFactory getSessionFactory() {
@@ -53,7 +55,7 @@ public class BaseDAOImpl {
 	 * Get the instance of HibernateMetaDataUtil associated with the session
 	 * factory
 	 */
-	protected HibernateMetaDataUtil getMetaDataUtil() {
+	protected HibernateMetadataUtil getMetaDataUtil() {
 		return metaDataUtil;
 	}
 
@@ -647,5 +649,13 @@ public class BaseDAOImpl {
 		}
 
 		return ret;
+	}
+	
+	protected Filter _getFilterFromExample(Object example) {
+		return searchProcessor.getFilterFromExample(example);
+	}
+	
+	protected Filter _getFilterFromExample(Object example, ExampleOptions options) {
+		return searchProcessor.getFilterFromExample(example, options);
 	}
 }

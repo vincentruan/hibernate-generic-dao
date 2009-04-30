@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import com.test.misc.SearchTestInterface;
 import com.test.model.Person;
+import com.trg.dao.search.ExampleOptions;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.Search;
 
@@ -234,4 +235,73 @@ public class FilterTest extends TestBase {
 		assertListEqual(new Person[] { g2 }, target.search(s));
 	}
 	
+	public void testExample() {
+		initDB();
+		
+		ExampleOptions options = new ExampleOptions();
+		Person person = new Person();
+		Person person2 = new Person();
+		
+		//just id
+		person.setId(joeA.getId());
+		assertListEqual(target.findByExample(person, options), joeA);
+		person.setId(null);
+		
+		//just first name
+		person.setFirstName("Joe");
+		assertListEqual(target.findByExample(person, options), joeA, joeB);
+		
+		//first name and age
+		person.setAge(10);
+		assertListEqual(target.findByExample(person, options), joeA, joeB);
+		
+		person.setAge(11);
+		assertListEqual(target.findByExample(person, options));
+		
+		//first name and zero age (excludeZero option)
+		person.setAge(0);
+		assertListEqual(target.findByExample(person, options));
+		
+		options.setExcludeZeros(true);
+		assertListEqual(target.findByExample(person, options), joeA, joeB);
+		//parent with id
+		person.setFather(papaA);
+		assertListEqual(target.findByExample(person, options), joeA);
+		
+		//parent without id
+		person2.setLastName("Alpha");
+		person.setFather(person2);
+		assertListEqual(target.findByExample(person, options), joeA);
+		
+		//null parents (excludeNull option)
+		person = copy(joeA);
+		person.setId(null);
+		options.setExcludeNulls(false);
+		options.excludeProp("id");
+		options.excludeProp("home");
+		assertListEqual(target.findByExample(person, options), joeA);
+		
+		person.setMother(null);
+		assertListEqual(target.findByExample(person, options));
+		
+		//exclude property
+		options = new ExampleOptions();
+		options.excludeProp("father");
+		options.excludeProp("lastName");
+		options.excludeProp("home");
+		options.excludeProp("weight");
+		options.excludeProp("dob");
+		assertListEqual(target.findByExample(person, options), joeA, joeB);
+		
+		options = new ExampleOptions();
+		person = new Person();
+		person2 = new Person();
+		person2.setFirstName("Papa");
+		person2.setLastName("Alpha");
+		person.setFather(person2);
+		assertListEqual(target.findByExample(person, options), joeA, sallyA);
+		
+		options.excludeProp("father.lastName");
+		assertListEqual(target.findByExample(person, options), joeA, sallyA, joeB, margretB);
+	}
 }
