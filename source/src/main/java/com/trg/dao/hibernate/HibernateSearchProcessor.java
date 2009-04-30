@@ -113,7 +113,7 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
 
-		return ((Long) query.uniqueResult()).intValue();
+		return ((Number) query.uniqueResult()).intValue();
 	}
 	
 	/**
