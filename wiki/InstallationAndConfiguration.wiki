@@ -1,0 +1,31 @@
+#summary How to use the framework in your project.
+
+=Installation=
+==Maven==
+If your project uses Maven, then simply add the repository and dependency...
+{{{
+<repository>
+        <id>trg-dao-repo</id>
+        <name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
+        <url>http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/</url>
+</repository>
+
+<dependency>
+        <groupId>com.trg</groupId>
+        <artifactId>trg-dao</artifactId>
+        <version>0.4.2</version> <!-- or whatever the latest version is -->
+</dependency>
+}}}
+
+==Other==
+Download the Jars from http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/
+
+Select the folder with the version you would like (the latest is generally the best). You only need the binary jar (trg-dao-X.X.X.jar), but you can also get the source jar to
+help out your IDE with Javadocs and to help yourself out being able to see what's going
+on (trg-dao-X.X.X-sources.jar).
+
+You will also need the Hibernate 3.3 jars and their dependencies. I'll leave you to do all the hibernate configuration.
+
+The project has one other dependency. That is Simple Logging Facade for Java (SLF4J). I think Hibernate 3.3 also requires this to be configured.
+
+=Configuration=
