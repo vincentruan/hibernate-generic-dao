@@ -2,9 +2,9 @@ package com.test.misc;
 
 import java.util.List;
 
-import com.trg.dao.search.ExampleOptions;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.ExampleOptions;
+import com.trg.search.ISearch;
+import com.trg.search.SearchResult;
 
 public interface SearchTestInterface {
 	@SuppressWarnings("unchecked")

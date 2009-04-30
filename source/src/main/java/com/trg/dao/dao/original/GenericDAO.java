@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.hibernate.NonUniqueResultException;
 
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.ISearch;
+import com.trg.search.SearchResult;
 
 /**
  * Interface for a Data Access Object that can be used for a single specified

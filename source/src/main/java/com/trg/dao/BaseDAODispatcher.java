@@ -23,7 +23,7 @@ public class BaseDAODispatcher {
 
 	protected Object callMethod(Object specificDAO, String methodName, Object... args) {
 		try {
-			return Util.callMethod(specificDAO, methodName, args);
+			return DAOUtil.callMethod(specificDAO, methodName, args);
 		} catch (IllegalArgumentException e) {
 			throw new DAODispatcherException(e);
 		} catch (NoSuchMethodException e) {
@@ -37,7 +37,7 @@ public class BaseDAODispatcher {
 
 	protected Object callMethod(Object specificDAO, String methodName, Class<?>[] paramTypes, Object... args) {
 		try {
-			return Util.callMethod(specificDAO, methodName, paramTypes, args);
+			return DAOUtil.callMethod(specificDAO, methodName, paramTypes, args);
 		} catch (IllegalArgumentException e) {
 			throw new DAODispatcherException(e);
 		} catch (NoSuchMethodException e) {

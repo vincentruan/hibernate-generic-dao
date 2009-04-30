@@ -3,8 +3,8 @@ package com.trg.dao.dao.standard;
 import java.io.Serializable;
 import java.util.List;
 
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.ISearch;
+import com.trg.search.SearchResult;
 
 /**
  * Interface for general Data Access Object that can be used for any type domain

@@ -5,9 +5,9 @@ import java.util.Collection;
 
 import com.test.misc.SearchTestInterface;
 import com.test.model.Person;
-import com.trg.dao.search.ExampleOptions;
-import com.trg.dao.search.Filter;
-import com.trg.dao.search.Search;
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
+import com.trg.search.Search;
 
 public class FilterTest extends TestBase {
 	protected SearchTestInterface target;

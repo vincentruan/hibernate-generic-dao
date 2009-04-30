@@ -7,8 +7,8 @@ import org.hibernate.NonUniqueResultException;
 
 import com.trg.dao.BaseDAODispatcher;
 import com.trg.dao.DAODispatcherException;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.ISearch;
+import com.trg.search.SearchResult;
 
 @SuppressWarnings("unchecked")
 public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {

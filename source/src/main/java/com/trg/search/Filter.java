@@ -1,11 +1,10 @@
-package com.trg.dao.search;
+package com.trg.search;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import com.trg.dao.Util;
 
 /**
  * <p>
@@ -397,25 +396,25 @@ public class Filter implements Serializable {
 	public String toString() {
 		switch (operator) {
 		case Filter.OP_IN:
-			return "`" + property + "` in (" + Util.paramDisplayString(value) + ")";
+			return "`" + property + "` in (" + InternalUtil.paramDisplayString(value) + ")";
 		case Filter.OP_NOT_IN:
-			return "`" + property + "` not in (" + Util.paramDisplayString(value) + ")";
+			return "`" + property + "` not in (" + InternalUtil.paramDisplayString(value) + ")";
 		case Filter.OP_EQUAL:
-			return "`" + property + "` = " + Util.paramDisplayString(value);
+			return "`" + property + "` = " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_NOT_EQUAL:
-			return "`" + property + "` != " + Util.paramDisplayString(value);
+			return "`" + property + "` != " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_GREATER_THAN:
-			return "`" + property + "` > " + Util.paramDisplayString(value);
+			return "`" + property + "` > " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_LESS_THAN:
-			return "`" + property + "` < " + Util.paramDisplayString(value);
+			return "`" + property + "` < " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_GREATER_OR_EQUAL:
-			return "`" + property + "` >= " + Util.paramDisplayString(value);
+			return "`" + property + "` >= " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_LESS_OR_EQUAL:
-			return "`" + property + "` <= " + Util.paramDisplayString(value);
+			return "`" + property + "` <= " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_LIKE:
-			return "`" + property + "` LIKE " + Util.paramDisplayString(value);
+			return "`" + property + "` LIKE " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_ILIKE:
-			return "`" + property + "` ILIKE " + Util.paramDisplayString(value);
+			return "`" + property + "` ILIKE " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_AND:
 		case Filter.OP_OR:
 			if (!(value instanceof List)) {
@@ -465,7 +464,7 @@ public class Filter implements Serializable {
 			}
 			return "none `" + property + "` {" + value.toString() + "}";
 		default:
-			return "**INVALID OPERATOR: (" + operator + ") - VALUE: " + Util.paramDisplayString(value) + " **";
+			return "**INVALID OPERATOR: (" + operator + ") - VALUE: " + InternalUtil.paramDisplayString(value) + " **";
 		}
 	}
 	

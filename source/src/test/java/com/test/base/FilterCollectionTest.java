@@ -11,8 +11,8 @@ import com.test.model.Person;
 import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
 import com.test.model.Store;
-import com.trg.dao.search.Filter;
-import com.trg.dao.search.Search;
+import com.trg.search.Filter;
+import com.trg.search.Search;
 
 public class FilterCollectionTest extends TestBase {
 	protected SearchTestInterface target;

@@ -1,4 +1,4 @@
-package com.trg.dao;
+package com.trg.search;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,12 +12,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trg.dao.search.ExampleOptions;
-import com.trg.dao.search.Field;
-import com.trg.dao.search.Filter;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchUtil;
-import com.trg.dao.search.Sort;
 
 /**
  * This class provides two methods for generating query language to fulfill a
@@ -661,7 +655,7 @@ public abstract class BaseSearchProcessor {
 			return null;
 		}
 
-		Object value = Util.convertIfNeeded(filter.getValue(), metadataUtil.get(ctx.rootClass,
+		Object value = InternalUtil.convertIfNeeded(filter.getValue(), metadataUtil.get(ctx.rootClass,
 				property).getJavaClass());
 		return param(ctx, value) + op + operation + " elements(" + getPathRef(ctx, property) + ")";
 	}
@@ -698,18 +692,18 @@ public abstract class BaseSearchProcessor {
 				val2 = new Object[((Collection) value).size()];
 				int i = 0;
 				for (Object item : (Collection) value) {
-					val2[i++] = Util.convertIfNeeded(item, expectedClass);
+					val2[i++] = InternalUtil.convertIfNeeded(item, expectedClass);
 				}
 			} else {
 				val2 = new Object[((Object[]) value).length];
 				int i = 0;
 				for (Object item : (Object[]) value) {
-					val2[i++] = Util.convertIfNeeded(item, expectedClass);
+					val2[i++] = InternalUtil.convertIfNeeded(item, expectedClass);
 				}
 			}
 			return val2;
 		} else {
-			return Util.convertIfNeeded(value, expectedClass);
+			return InternalUtil.convertIfNeeded(value, expectedClass);
 		}
 	}
 

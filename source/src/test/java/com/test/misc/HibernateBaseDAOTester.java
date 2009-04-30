@@ -9,10 +9,10 @@ import org.hibernate.NonUniqueResultException;
 import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
-import com.trg.dao.search.ExampleOptions;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.Search;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.ExampleOptions;
+import com.trg.search.ISearch;
+import com.trg.search.Search;
+import com.trg.search.SearchResult;
 
 public class HibernateBaseDAOTester extends BaseDAOImpl implements SearchTestInterface {
 

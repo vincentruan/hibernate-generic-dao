@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.test.misc.SearchTestInterface;
 import com.test.model.Person;
-import com.trg.dao.search.Search;
+import com.trg.search.Search;
 
 public class PagingAndSortingTest extends TestBase {
 

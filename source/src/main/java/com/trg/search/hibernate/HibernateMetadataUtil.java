@@ -1,4 +1,4 @@
-package com.trg.dao.hibernate;
+package com.trg.search.hibernate;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
 import org.hibernate.metadata.ClassMetadata;
 
-import com.trg.dao.Metadata;
-import com.trg.dao.MetadataUtil;
+import com.trg.search.Metadata;
+import com.trg.search.MetadataUtil;
 
 public class HibernateMetadataUtil implements MetadataUtil {
 

@@ -1,4 +1,4 @@
-package com.trg.dao;
+package com.trg.search;
 
 import java.io.Serializable;
 

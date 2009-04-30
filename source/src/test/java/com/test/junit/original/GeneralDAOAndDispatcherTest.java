@@ -9,7 +9,7 @@ import com.test.dao.original.PersonService;
 import com.test.model.Person;
 import com.trg.dao.dao.original.DAODispatcher;
 import com.trg.dao.dao.original.GeneralDAO;
-import com.trg.dao.search.Search;
+import com.trg.search.Search;
 
 public class GeneralDAOAndDispatcherTest extends TestBase {
 	private GeneralDAO generalDAO;

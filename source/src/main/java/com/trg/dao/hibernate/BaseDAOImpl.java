@@ -14,10 +14,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-import com.trg.dao.search.ExampleOptions;
-import com.trg.dao.search.Filter;
-import com.trg.dao.search.ISearch;
-import com.trg.dao.search.SearchResult;
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
+import com.trg.search.ISearch;
+import com.trg.search.SearchResult;
+import com.trg.search.hibernate.HibernateMetadataUtil;
+import com.trg.search.hibernate.HibernateSearchProcessor;
 
 /**
  * Base class for DAOs that uses Hibernate SessionFactory and HQL for searches.

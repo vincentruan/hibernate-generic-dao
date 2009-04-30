@@ -9,7 +9,7 @@ import com.test.model.Person;
 import com.test.model.Pet;
 import com.test.model.Recipe;
 import com.test.model.RecipeIngredient;
-import com.trg.dao.search.Search;
+import com.trg.search.Search;
 
 public class TypesTest extends TestBase {
 	protected SearchTestInterface target;
