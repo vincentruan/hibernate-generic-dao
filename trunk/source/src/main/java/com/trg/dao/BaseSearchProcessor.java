@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.trg.dao.search.ExampleOptions;
 import com.trg.dao.search.Field;
 import com.trg.dao.search.Filter;
 import com.trg.dao.search.ISearch;
@@ -53,15 +54,15 @@ public abstract class BaseSearchProcessor {
 
 	protected int qlType;
 
-	protected MetaDataUtil metaDataUtil;
+	protected MetadataUtil metadataUtil;
 
 	protected String rootAlias = "_it";
 
 	protected static final String ROOT_PATH = "";
 
-	protected BaseSearchProcessor(int qlType, MetaDataUtil metaDataUtil) {
+	protected BaseSearchProcessor(int qlType, MetadataUtil metaDataUtil) {
 		this.qlType = qlType;
-		this.metaDataUtil = metaDataUtil;
+		this.metadataUtil = metaDataUtil;
 	}
 
 	/**
@@ -367,7 +368,7 @@ public abstract class BaseSearchProcessor {
 			} else {
 				sb.append(", ");
 			}
-			if (sort.isIgnoreCase() && metaDataUtil.isSQLStringType(ctx.rootClass, sort.getProperty())) {
+			if (sort.isIgnoreCase() && metadataUtil.get(ctx.rootClass, sort.getProperty()).isString()) {
 				sb.append("lower(");
 				sb.append(getPathRef(ctx, sort.getProperty()));
 				sb.append(")");
@@ -426,7 +427,7 @@ public abstract class BaseSearchProcessor {
 				return operator == Filter.OP_IN ? "1 = 2" : "1 = 1";
 			}
 		}
-
+		
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (filter.isTakesListOfValues()) {
 			value = prepareValue(ctx.rootClass, property, value, true);
@@ -434,6 +435,8 @@ public abstract class BaseSearchProcessor {
 			value = prepareValue(ctx.rootClass, property, value, false);
 		}
 
+		Metadata metadata;
+		
 		switch (operator) {
 		case Filter.OP_NULL:
 			return getPathRef(ctx, property) + " is null";
@@ -497,20 +500,22 @@ public abstract class BaseSearchProcessor {
 
 			return "not " + filterStr;
 		case Filter.OP_EMPTY:
-			if (metaDataUtil.isSQLStringType(ctx.rootClass, property)) {
+			metadata = metadataUtil.get(ctx.rootClass, property);
+			if (metadata.isCollection()) {
+				return "not exists elements(" + getPathRef(ctx, property) + ")";
+			} else if (metadata.isString()) {
 				String pathRef = getPathRef(ctx, property);
 				return "(" + pathRef + " is null or " + pathRef + " = '')";
-			} else if (metaDataUtil.isCollection(ctx.rootClass, property)) {
-				return "not exists elements(" + getPathRef(ctx, property) + ")";
 			} else {
 				return getPathRef(ctx, property) + " is null";
 			}
 		case Filter.OP_NOT_EMPTY:
-			if (metaDataUtil.isSQLStringType(ctx.rootClass, property)) {
+			metadata = metadataUtil.get(ctx.rootClass, property);
+			if (metadata.isCollection()) {
+				return "exists elements(" + getPathRef(ctx, property) + ")";
+			} else if (metadata.isString()) {
 				String pathRef = getPathRef(ctx, property);
 				return "(" + pathRef + " is not null and " + pathRef + " != '')";
-			} else if (metaDataUtil.isCollection(ctx.rootClass, property)) {
-				return "exists elements(" + getPathRef(ctx, property) + ")";
 			} else {
 				return getPathRef(ctx, property) + " is not null";
 			}
@@ -572,7 +577,7 @@ public abstract class BaseSearchProcessor {
 	 */
 	protected String generateSubquery(SearchContext ctx, String property, Filter filter) {
 		SearchContext ctx2 = new SearchContext();
-		ctx2.rootClass = metaDataUtil.getCollectionElementClass(ctx.rootClass, property);
+		ctx2.rootClass = metadataUtil.get(ctx.rootClass, property).getJavaClass();
 		ctx2.setRootAlias(rootAlias + (ctx.nextSubqueryNum++));
 		ctx2.paramList = ctx.paramList;
 		ctx2.nextAliasNum = ctx.nextAliasNum;
@@ -656,8 +661,8 @@ public abstract class BaseSearchProcessor {
 			return null;
 		}
 
-		Object value = Util.convertIfNeeded(filter.getValue(), metaDataUtil.getCollectionElementClass(ctx.rootClass,
-				property));
+		Object value = Util.convertIfNeeded(filter.getValue(), metadataUtil.get(ctx.rootClass,
+				property).getJavaClass());
 		return param(ctx, value) + op + operation + " elements(" + getPathRef(ctx, property) + ")";
 	}
 
@@ -681,7 +686,7 @@ public abstract class BaseSearchProcessor {
 		} else if (property != null && ("size".equals(property) || property.endsWith(".size"))) {
 			expectedClass = Integer.class;
 		} else {
-			expectedClass = metaDataUtil.getExpectedClass(rootClass, property);
+			expectedClass = metadataUtil.get(rootClass, property).getJavaClass();
 		}
 
 		// convert numbers to the expected type if needed (ex: Integer to Long)
@@ -787,14 +792,14 @@ public abstract class BaseSearchProcessor {
 			// entity preceding it because (entity.id) is actually stored in the
 			// same table as the foreign key.
 			while (true) {
-				if (metaDataUtil.isId(ctx.rootClass, currentPath)) {
+				if (metadataUtil.isId(ctx.rootClass, currentPath)) {
 					// if it's an id property
 					// skip one segment
 					if (pos == -1) {
 						return new String[] { "", path };
 					}
 					pos = currentPath.lastIndexOf('.', pos - 1);
-				} else if (!first && metaDataUtil.isEntity(ctx.rootClass, currentPath)) {
+				} else if (!first && metadataUtil.get(ctx.rootClass, currentPath).isEntity()) {
 					// when we reach an entity (excluding the very first
 					// segment), we're done
 					return new String[] { currentPath, path.substring(currentPath.length() + 1) };
@@ -804,7 +809,7 @@ public abstract class BaseSearchProcessor {
 				// For size, we need to go back to the 'first' behavior
 				// for the next segment.
 				if (pos != -1 && lastSegment.equals("size")
-						&& metaDataUtil.isCollection(ctx.rootClass, currentPath.substring(0, pos))) {
+						&& metadataUtil.get(ctx.rootClass, currentPath.substring(0, pos)).isCollection()) {
 					first = true;
 				}
 
@@ -1089,5 +1094,94 @@ public abstract class BaseSearchProcessor {
 			throw new IllegalArgumentException(
 					"A property used in a Search may only contain word characters (alphabetic, numberic and underscore \"_\") and dot \".\" seperators. This constraint was violated: "
 							+ property);
+	}
+	
+	private static final ExampleOptions defaultExampleOptions = new ExampleOptions();
+	
+	public Filter getFilterFromExample(Object example) {
+		return getFilterFromExample(example, null);
+	}
+	
+	public Filter getFilterFromExample(Object example, ExampleOptions options) {
+		if (example == null)
+			return null;
+		if (options == null)
+			options = defaultExampleOptions;
+		
+		List<Filter> filters = new ArrayList<Filter>();
+		LinkedList<String> path = new LinkedList<String>();
+		Metadata metadata = metadataUtil.get(example.getClass());
+		f(example, metadata, options, path, filters);
+		
+		if (filters.size() == 0) {
+			return null;
+		} else if (filters.size() == 1) {
+			return filters.get(0);
+		} else {
+			return new Filter("AND", filters, Filter.OP_AND);
+		}
+	}
+	
+	private void f(Object example, Metadata metaData, ExampleOptions options, LinkedList<String> path, List<Filter> filters) {
+		if (metaData.isEntity() && !metaData.getIdType().isEmeddable()) {
+			Object id = metaData.getIdValue(example);
+			if (id != null) {
+				filters.add(Filter.equal(listToPath(path, "id"), id));
+				return;
+			}
+		}
+		
+		for (String property : metaData.getProperties()) {
+			if (options.getExcludeProps() != null && options.getExcludeProps().size() != 0) {
+				if (options.getExcludeProps().contains(listToPath(path, property)))
+					continue;
+			}
+			
+			Metadata pMetaData = metaData.getPropertyType(property);
+			if (pMetaData.isCollection()) {
+				//ignore collections
+			} else {
+				Object value = metaData.getPropertyValue(example, property);
+				if (value == null) {
+					if (!options.isExcludeNulls()) {
+						filters.add(Filter.isNull(listToPath(path, property)));
+					}
+				} else if (options.isExcludeZeros() && value instanceof Number && ((Number)value).longValue() == 0) {
+					//ignore zeros
+				} else {
+					if (pMetaData.isEntity() || pMetaData.isEmeddable()) {
+						path.add(property);
+						f(value, pMetaData, options, path, filters);
+						path.removeLast();
+					} else if (metaData.isString() && 
+							(options.getLikeMode() != ExampleOptions.EXACT || options.isIgnoreCase()) ) {
+						String val = value.toString();
+						switch (options.getLikeMode()) {
+						case ExampleOptions.START:
+							val = val + "%";
+							break;
+						case ExampleOptions.END:
+							val = "%" + val;
+							break;
+						case ExampleOptions.ANYWHERE:
+							val = "%" + val + "%";
+							break;
+						}
+						filters.add(new Filter(listToPath(path, property), val, options.isIgnoreCase() ? Filter.OP_ILIKE : Filter.OP_LIKE));
+					} else {
+						filters.add(Filter.equal(listToPath(path, property), value));
+					}
+				}
+			}
+		}
+	}
+	
+	private String listToPath(List<String> list, String lastProperty) {
+		StringBuilder sb = new StringBuilder();
+		for (String prop : list) {
+			sb.append(prop).append(".");
+		}
+		sb.append(lastProperty);
+		return sb.toString();
 	}
 }
