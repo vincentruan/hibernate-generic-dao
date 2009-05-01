@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 /**
- * Utilities for TRG Generic DAO
+ * Utilities for TRG Generic DAO Search
  * 
  * @author dwolverton
  */

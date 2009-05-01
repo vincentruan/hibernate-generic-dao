@@ -12,6 +12,11 @@ import org.hibernate.type.Type;
 
 import com.trg.search.Metadata;
 
+/**
+ * Implementation of Metadata for a Hibernate entity.
+ * 
+ * @author dwolverton
+ */
 public class HibernateEntityMetadata implements Metadata {
 
 	private SessionFactory sessionFactory;
