@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-2.5.xsd"> 
+
+	<!-- Standard DAOs -->
+	<bean id="personDAO" class="test.trg.dao.dao.standard.PersonDAOImpl"/>
+	<bean id="projectDAO" class="test.trg.dao.dao.standard.ProjectDAOImpl"/>
+
+	<bean id="generalDAO" class="test.trg.dao.dao.standard.MyGeneralDAOImpl"/>
+	
+	<bean id="DAODispatcher" class="com.trg.dao.dao.standard.DAODispatcher"/>
+	
+	<bean id="personService" class="test.trg.dao.dao.standard.PersonService"/>
+		
+	<!-- Original DAOs -->
+	<bean id="origPersonDAO" class="test.trg.dao.dao.original.PersonDAOImpl"/>
+	<bean id="origHomeDAO" class="test.trg.dao.dao.original.HomeDAOImpl"/>
+	<bean id="origAddressDAO" class="test.trg.dao.dao.original.AddressDAOImpl"/>
+	
+	<bean id="origGeneralDAO" class="test.trg.dao.dao.original.MyGeneralDAOImpl"/>
+	
+	<bean id="origFlexDAOAdapter" class="com.trg.dao.dao.original.FlexDAOAdapter">
+		<property name="DAO" ref="origDAODispatcher"/>
+	</bean>
+	
+	<bean id="origDAODispatcher" class="com.trg.dao.dao.original.DAODispatcher">
+		<property name="generalDAO" ref="origGeneralDAO"/>
+		<property name="specificDAOs">
+			<map>
+				<entry key="test.trg.shared.model.Home" value-ref="origHomeDAO"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean id="origPersonService" class="test.trg.dao.dao.original.PersonService"/>
+	
+	<!-- Misc -->
+	<bean id="hibernateBaseDAOTester" class="test.trg.dao.hibernate.HibernateBaseDAOTester"/>
+</beans>
