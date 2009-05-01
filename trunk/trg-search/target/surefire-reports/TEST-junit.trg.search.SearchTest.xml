@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuite failures="0" time="0.015" errors="0" skipped="0" tests="5" name="junit.trg.search.SearchTest">
+  <properties>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="sun.boot.library.path" value="C:\Program Files\Java\jdk\jre\bin"/>
+    <property name="java.vm.version" value="10.0-b22"/>
+    <property name="java.vm.vendor" value="Sun Microsystems Inc."/>
+    <property name="java.vendor.url" value="http://java.sun.com/"/>
+    <property name="path.separator" value=";"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) Client VM"/>
+    <property name="file.encoding.pkg" value="sun.io"/>
+    <property name="user.country" value="US"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.os.patch.level" value="Service Pack 3"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="user.dir" value="C:\workspace\eclipse1\trg-search"/>
+    <property name="java.runtime.version" value="1.6.0_06-b02"/>
+    <property name="java.awt.graphicsenv" value="sun.awt.Win32GraphicsEnvironment"/>
+    <property name="basedir" value="C:\workspace\eclipse1\trg-search"/>
+    <property name="java.endorsed.dirs" value="C:\Program Files\Java\jdk\jre\lib\endorsed"/>
+    <property name="os.arch" value="x86"/>
+    <property name="java.io.tmpdir" value="C:\DOCUME~1\DWOLVE~1\LOCALS~1\Temp\"/>
+    <property name="line.separator" value="
+"/>
+    <property name="java.vm.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.variant" value=""/>
+    <property name="os.name" value="Windows XP"/>
+    <property name="sun.jnu.encoding" value="Cp1252"/>
+    <property name="java.library.path" value="C:\Program Files\Java\jdk\jre\bin;.;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:/Program Files/Java/jdk/bin/../jre/bin/client;C:/Program Files/Java/jdk/bin/../jre/bin;c:\program files\imagemagick-6.4.3-q16;C:\Program Files\Java\jdk\bin;C:\oraclexe\app\oracle\product\10.2.0\server\bin;C:\oracle\OracleAS_1\jdk\bin;C:\oracle\product\10.2.0\client_1\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\Program Files\Wave Systems Corp\Dell Preboot Manager\Access Client\v5\;C:\maven-2.0.7\bin;C:\apache-ant-1.7.1\bin;C:\MyEclipse 5.5.1 GA\eclipse\plugins\org.apache.ant_1.6.5\bin;C:\WINDOWS\system32\WindowsPowerShell\v1.0;C:\oracle\OracleAS_1\MOBILE\sdk\bin;C:\Program Files\Adobe\Flex Builder 3\sdks\3.0.0\bin;C:\jboss-4.2.3.GA\bin;C:\grails-1.0.3\bin;C:\groovy-1.5.6\bin;C:\Program Files\CVSNT\;C:\scripts\;C:\Program Files\Java\jre6\bin\;C:\Program Files\QuickTime\QTSystem\"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.class.version" value="50.0"/>
+    <property name="sun.management.compiler" value="HotSpot Client Compiler"/>
+    <property name="os.version" value="5.1"/>
+    <property name="user.home" value="C:\Documents and Settings\dwolverton"/>
+    <property name="user.timezone" value="America/Chicago"/>
+    <property name="java.awt.printerjob" value="sun.awt.windows.WPrinterJob"/>
+    <property name="file.encoding" value="Cp1252"/>
+    <property name="java.specification.version" value="1.6"/>
+    <property name="user.name" value="dwolverton"/>
+    <property name="java.class.path" value="C:\Documents and Settings\dwolverton\.m2\repository\org\codehaus\plexus\plexus-archiver\1.0-alpha-7\plexus-archiver-1.0-alpha-7.jar;C:\Documents and Settings\dwolverton\.m2\repository\org\apache\maven\surefire\surefire-api\2.3\surefire-api-2.3.jar;C:\Documents and Settings\dwolverton\.m2\repository\org\codehaus\plexus\plexus-container-default\1.0-alpha-8\plexus-container-default-1.0-alpha-8.jar;C:\Documents and Settings\dwolverton\.m2\repository\org\codehaus\plexus\plexus-utils\1.1\plexus-utils-1.1.jar;C:\Documents and Settings\dwolverton\.m2\repository\classworlds\classworlds\1.1-alpha-2\classworlds-1.1-alpha-2.jar;C:\Documents and Settings\dwolverton\.m2\repository\org\apache\maven\surefire\surefire-booter\2.3\surefire-booter-2.3.jar;C:\Documents and Settings\dwolverton\.m2\repository\commons-lang\commons-lang\2.1\commons-lang-2.1.jar;C:\Documents and Settings\dwolverton\.m2\repository\junit\junit\3.8.1\junit-3.8.1.jar"/>
+    <property name="java.vm.specification.version" value="1.0"/>
+    <property name="sun.arch.data.model" value="32"/>
+    <property name="java.home" value="C:\Program Files\Java\jdk\jre"/>
+    <property name="java.specification.vendor" value="Sun Microsystems Inc."/>
+    <property name="user.language" value="en"/>
+    <property name="awt.toolkit" value="sun.awt.windows.WToolkit"/>
+    <property name="java.vm.info" value="mixed mode"/>
+    <property name="java.version" value="1.6.0_06"/>
+    <property name="java.ext.dirs" value="C:\Program Files\Java\jdk\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext"/>
+    <property name="sun.boot.class.path" value="C:\Program Files\Java\jdk\jre\lib\resources.jar;C:\Program Files\Java\jdk\jre\lib\rt.jar;C:\Program Files\Java\jdk\jre\lib\sunrsasign.jar;C:\Program Files\Java\jdk\jre\lib\jsse.jar;C:\Program Files\Java\jdk\jre\lib\jce.jar;C:\Program Files\Java\jdk\jre\lib\charsets.jar;C:\Program Files\Java\jdk\jre\classes"/>
+    <property name="java.vendor" value="Sun Microsystems Inc."/>
+    <property name="localRepository" value="C:\Documents and Settings\dwolverton\.m2\repository"/>
+    <property name="file.separator" value="\"/>
+    <property name="java.vendor.url.bug" value="http://java.sun.com/cgi-bin/bugreport.cgi"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="sun.desktop" value="windows"/>
+    <property name="sun.cpu.isalist" value="pentium_pro+mmx pentium_pro pentium+mmx pentium i486 i386 i86"/>
+  </properties>
+  <testcase time="0.015" name="testToString"/>
+  <testcase time="0" name="testMergeSorts"/>
+  <testcase time="0" name="testMergeFetches"/>
+  <testcase time="0" name="testMergeFilters"/>
+  <testcase time="0" name="testMergeFields"/>
+</testsuite>
