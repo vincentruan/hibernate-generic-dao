@@ -38,6 +38,8 @@ The biggest impetus for this framework is actually in the area of searches. It i
 
 The idea with this framework is to provide a Search object that consistently takes care of all the DAO implementation work for us and provides a uniform interface that we can take advantage of when writing reusable front-end components.
 
+Note that it is possible to use the search functionality without the DAO portion of the framework. See UsingSearchAlone.
+
 See:
 [Search], `com.trg.dao.search.*`
 
