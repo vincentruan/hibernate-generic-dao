@@ -3,6 +3,8 @@ package com.trg.dao.dao.standard;
 import java.io.Serializable;
 import java.util.List;
 
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
@@ -186,5 +188,15 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * Flushes changes in the Hibernate session to the datastore.
 	 */
 	public void flush();
+	
+	/**
+	 * Generates a search filter from the given example using default options. 
+	 */
+	public Filter getFilterFromExample(T example);
+	
+	/**
+	 * Generates a search filter from the given example using the specified options. 
+	 */
+	public Filter getFilterFromExample(T example, ExampleOptions options);
 
 }

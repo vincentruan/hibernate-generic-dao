@@ -7,6 +7,8 @@ import java.util.List;
 import org.hibernate.NonUniqueResultException;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
@@ -124,4 +126,10 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return _searchUnique(persistentClass, search);
 	}
 
-}
+	public Filter getFilterFromExample(T example) {
+		return _getFilterFromExample(example);
+	}
+
+	public Filter getFilterFromExample(T example, ExampleOptions options) {
+		return _getFilterFromExample(example, options);
+	}}

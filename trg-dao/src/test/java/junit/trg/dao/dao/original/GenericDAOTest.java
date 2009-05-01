@@ -5,6 +5,7 @@ import test.trg.shared.TestBase;
 import test.trg.shared.model.Home;
 import test.trg.shared.model.Person;
 
+import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 
 public class GenericDAOTest extends TestBase {
@@ -96,6 +97,25 @@ public class GenericDAOTest extends TestBase {
 			personDAO.searchGeneric(new Search(Home.class));
 			fail("An error should be thrown when a different class is specified in the Search.");
 		} catch(IllegalArgumentException ex) {}
+		
+		//example
+		Person example = new Person();
+		example.setFirstName("Bob");
+		example.setLastName("Jones");
+		
+		s = new Search(Person.class);
+		s.addFilter(personDAO.getFilterFromExample(example));
+		assertEquals(bob, personDAO.searchUnique(s));
+		
+		example.setAge(0);
+		s.clear();
+		s.addFilter(personDAO.getFilterFromExample(example));
+		assertEquals(null, personDAO.searchUnique(s));
+		
+		s.clear();
+		s.addFilter(personDAO.getFilterFromExample(example, new ExampleOptions().setExcludeZeros(true)));
+		assertEquals(bob, personDAO.searchUnique(s));
+		
 		
 
 		personDAO.deleteEntity(bob);

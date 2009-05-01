@@ -7,9 +7,33 @@ import javax.annotation.Resource;
 
 import com.trg.dao.BaseDAODispatcher;
 import com.trg.dao.DAODispatcherException;
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
+/**
+ * <p>This is an implementation of GeneralDAO that delegates to other DAOs
+ * depending on what entity class is being processed.
+ * 
+ * <p>Set the specificDAOs Map in order to configure which DAO will be used
+ * for which entity class. If the map contains no entry for a given class,
+ * the generalDAO is used.
+ * 
+ * <p>For example to dispatch operation on com.myproject.model.Customer to a DAO called customerDAO,
+ * set the map like this. (Of course tools like Spring can be used to do this
+ * configuration more elequently.)
+ * <pre>
+ * Map<String,Object> specificDAOs = new HashMap<String,Object>();
+ * specificDAOs.put("com.myproject.model.Customer", customerDAO);
+ * 
+ * DAODispatcher dispatcher = new DAODispatcher();
+ * dispatcher.setSpecificDAOs(specificDAOs);
+ * </pre>
+ * 
+ * @author dwolverton
+ *
+ */
 @SuppressWarnings("unchecked")
 public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 
@@ -299,6 +323,32 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 			}
 		} else {
 			return generalDAO.searchUnique(search);
+		}
+	}
+	
+	public Filter getFilterFromExample(Object example) {
+		Object specificDAO = getSpecificDAO(example.getClass().getName());
+		if (specificDAO != null) {
+			if (specificDAO instanceof GenericDAO) {
+				return ((GenericDAO) specificDAO).getFilterFromExample(example);
+			} else {
+				return (Filter) callMethod(specificDAO, "getFilterFromExample", example);
+			}
+		} else {
+			return generalDAO.getFilterFromExample(example);
+		}
+	}
+	
+	public Filter getFilterFromExample(Object example, ExampleOptions options) {
+		Object specificDAO = getSpecificDAO(example.getClass().getName());
+		if (specificDAO != null) {
+			if (specificDAO instanceof GenericDAO) {
+				return ((GenericDAO) specificDAO).getFilterFromExample(example, options);
+			} else {
+				return (Filter) callMethod(specificDAO, "getFilterFromExample", example, options);
+			}
+		} else {
+			return generalDAO.getFilterFromExample(example, options);
 		}
 	}
 

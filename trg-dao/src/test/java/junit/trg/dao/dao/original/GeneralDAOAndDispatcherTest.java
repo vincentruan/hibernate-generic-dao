@@ -10,6 +10,7 @@ import test.trg.shared.model.Person;
 
 import com.trg.dao.dao.original.DAODispatcher;
 import com.trg.dao.dao.original.GeneralDAO;
+import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 
 public class GeneralDAOAndDispatcherTest extends TestBase {
@@ -99,6 +100,25 @@ public class GeneralDAOAndDispatcherTest extends TestBase {
 		Search s = new Search(Person.class);
 		s.addFilterEqual("id", bob.getId());
 		assertEquals(bob, dao.searchUnique(s));
+		
+		//example
+		Person example = new Person();
+		example.setFirstName("Bob");
+		example.setLastName("Jones");
+		
+		s = new Search(Person.class);
+		s.addFilter(dao.getFilterFromExample(example));
+		assertEquals(bob, dao.searchUnique(s));
+		
+		example.setAge(0);
+		s.clear();
+		s.addFilter(dao.getFilterFromExample(example));
+		assertEquals(null, dao.searchUnique(s));
+		
+		s.clear();
+		s.addFilter(dao.getFilterFromExample(example, new ExampleOptions().setExcludeZeros(true)));
+		assertEquals(bob, dao.searchUnique(s));
+		
 
 		dao.deleteEntity(bob);
 		assertEquals(null, dao.fetch(Person.class, bob.getId()));
@@ -107,7 +127,7 @@ public class GeneralDAOAndDispatcherTest extends TestBase {
 		assertEquals(null, dao.fetch(Person.class, fred.getId()));
 
 		assertEquals(0, dao.count(new Search(Person.class)));
-
+		
 		bob.setId(null);
 		fred.setId(null);
 

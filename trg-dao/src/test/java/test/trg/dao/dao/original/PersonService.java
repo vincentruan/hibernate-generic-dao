@@ -8,6 +8,8 @@ import org.hibernate.NonUniqueResultException;
 
 import test.trg.shared.model.Person;
 
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
@@ -80,5 +82,13 @@ public class PersonService {
 
 	public void refresh(Object object) {
 		dao.refresh(object);
+	}
+	
+	public Filter getFilterFromExample(Person example) {
+		return dao.getFilterFromExample(example);
+	}
+	
+	public Filter getFilterFromExample(Person example, ExampleOptions options) {
+		return dao.getFilterFromExample(example, options);
 	}
 }

@@ -3,6 +3,12 @@ package com.trg.dao;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+/**
+ * This class has some helpful properties and methods for use in making
+ * DAODispatchers for various DAO implementations.
+ * 
+ * @author dwolverton
+ */
 public class BaseDAODispatcher {
 
 	protected Map<String, Object> specificDAOs;
@@ -49,6 +55,11 @@ public class BaseDAODispatcher {
 		}
 	}
 
+	/**
+	 * Get the type of an array's elements. If the type of the array is more
+	 * specific than "Object", the array type will be returned. Otherwise the
+	 * most general of the types of the elements will be returned.
+	 */
 	protected static Class<?> getTypeFromArray(Object[] array) {
 		if (array == null)
 			return null;
@@ -93,7 +104,7 @@ public class BaseDAODispatcher {
 				}
 			}
 		}
-		
+
 		return klass;
 	}
 }

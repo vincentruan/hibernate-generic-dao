@@ -7,6 +7,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Utility methods for Hibernate Genereic DAO.
+ * 
+ * @author dwolverton
+ */
 public class DAOUtil {
 	/**
 	 * This is a helper method to call a method on an Object with the given

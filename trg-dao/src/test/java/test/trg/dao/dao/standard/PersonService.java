@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 
 import test.trg.shared.model.Person;
 
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
@@ -99,5 +101,12 @@ public class PersonService {
 	public Object searchUniqueGeneric(Search search) {
 		return dao.searchUniqueGeneric(search);
 	}
-
+	
+	public Filter getFilterFromExample(Person example) {
+		return dao.getFilterFromExample(example);
+	}
+	
+	public Filter getFilterFromExample(Person example, ExampleOptions options) {
+		return dao.getFilterFromExample(example, options);
+	}
 }
