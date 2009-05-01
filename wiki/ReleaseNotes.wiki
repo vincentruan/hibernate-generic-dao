@@ -38,19 +38,19 @@
   * Provided a SearchUtil class to aid in working with search interfaces and creating implementations of search interfaces.
   * Added methods to SearchUtil for merging parts of Searches
 
-==0.4.2 (03/13/2009 current release)==
+==0.4.2 (03/13/2009)==
   * Added collection operators. (see blog)
   * Allowed use of special .id, .class, .size properties in Filters.
   * Addressed Issue 25, handling nulls in sorts, filters, fields, etc.
 
-==0.4.3==
+==0.4.3 (05/1/2009 current release)==
   * Added 'distinct' option to search.
-  * Formalize separation between DAOs and search.
-  * Add find by example functionality (Issue 27)
-  * Possibly add SIZE and IS EMPTY for collections in fields.
-
+  * Formalized separation between DAOs and search.
+  * Added find by example functionality (Issue 27)
 
 ==Future==
   * Custom expressions in fields, filters and sorts.
   * Add implementation for JPA.
   * Look at security with remote DAOs.
+  * Possibly add SIZE and IS EMPTY for collections in fields.
+  * Look at case sensitivity options. (Issue 28)
