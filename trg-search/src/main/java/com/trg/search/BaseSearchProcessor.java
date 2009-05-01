@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This class provides two methods for generating query language to fulfill a
+ * This class provides two methods for generating query language to fulfill an
  * <code>ISearch</code>.
  * <ol>
  * <li><code>generateQL()</code> - is used for getting the actual search
@@ -1105,7 +1105,7 @@ public abstract class BaseSearchProcessor {
 		List<Filter> filters = new ArrayList<Filter>();
 		LinkedList<String> path = new LinkedList<String>();
 		Metadata metadata = metadataUtil.get(example.getClass());
-		f(example, metadata, options, path, filters);
+		getFilterFromExampleRecursive(example, metadata, options, path, filters);
 		
 		if (filters.size() == 0) {
 			return null;
@@ -1116,7 +1116,7 @@ public abstract class BaseSearchProcessor {
 		}
 	}
 	
-	private void f(Object example, Metadata metaData, ExampleOptions options, LinkedList<String> path, List<Filter> filters) {
+	private void getFilterFromExampleRecursive(Object example, Metadata metaData, ExampleOptions options, LinkedList<String> path, List<Filter> filters) {
 		if (metaData.isEntity() && !metaData.getIdType().isEmeddable()) {
 			Object id = metaData.getIdValue(example);
 			if (id != null) {
@@ -1145,9 +1145,9 @@ public abstract class BaseSearchProcessor {
 				} else {
 					if (pMetaData.isEntity() || pMetaData.isEmeddable()) {
 						path.add(property);
-						f(value, pMetaData, options, path, filters);
+						getFilterFromExampleRecursive(value, pMetaData, options, path, filters);
 						path.removeLast();
-					} else if (metaData.isString() && 
+					} else if (pMetaData.isString() && 
 							(options.getLikeMode() != ExampleOptions.EXACT || options.isIgnoreCase()) ) {
 						String val = value.toString();
 						switch (options.getLikeMode()) {
