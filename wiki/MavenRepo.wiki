@@ -8,10 +8,18 @@
 	<url>http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/</url>
 </repository>
 
+<!-- This for just the whole DAO -->
 <dependency>
 	<groupId>com.trg</groupId>
 	<artifactId>trg-dao</artifactId>
-	<version>0.4.2</version> <!-- or whatever the latest version is -->
+	<version>0.4.3</version> <!-- or whatever the latest version is -->
+</dependency>
+
+<!-- Or this for just the search -->
+<dependency>
+	<groupId>com.trg</groupId>
+	<artifactId>trg-search</artifactId>
+	<version>0.4.3</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
