@@ -85,6 +85,7 @@ Filter.greaterThan("members.size", 10)
 }}}
 
 *_Filter by Example_*
+
 The framework has a built-in utility for converting example objects into Filters that can be used in a search. All DAOs and the SearchFacade provide two methods for doing this:
 {{{
 public Filter getFilterFromExample(Object example);
