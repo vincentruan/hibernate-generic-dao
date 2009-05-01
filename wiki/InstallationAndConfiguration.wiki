@@ -55,4 +55,4 @@ Each DAO needs both a Session and a SessionFactory in order to work. By default 
 If using `getCurrentSession()` is what you want, all you have to do is make sure that each DAO has its SessionFactory set before it is used. If you need to do things differently, look at the "Hibernate session strategy" section in the "Details and Tips" on the UserGuide.
 
 
-To see an example project configuration using Spring auto-wiring, have a look at the test portion of the source code. The spring configuration is in trunk/trg-shared/src/test/resources and trunk/trg-dao/src/test/resources. The Java packages of interest are `com.test.dao.standard` and `com.test.model`.
+To see an example project configuration using Spring auto-wiring, have a look at the test portion of the source code. The spring configuration is in trunk/trg-shared/src/test/resources and trunk/trg-dao/src/test/resources. The Java packages of interest are trunk/trg-dao/src/test/java/`com.test.dao.standard` and trunk/trg-shared/src/test/java/`com.test.model`.
