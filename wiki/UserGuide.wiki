@@ -5,7 +5,7 @@
 
 The purpose of this framework is to save the time, tedium and possible inconsistency of hand coding DAO layer objects. This includes all of the basic CRUD methods as well as various "find" or "search" methods.
 
-Javadoc: http://hibernate-generic-dao.googlecode.com/svn/trunk/source/doc/index.html
+Javadoc: http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/index.html
 
 See also InstallationAndConfiguration.
 
