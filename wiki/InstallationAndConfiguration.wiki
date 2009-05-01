@@ -14,7 +14,7 @@ If your project uses Maven, then simply add the repository and dependency...
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-dao</artifactId>
-        <version>0.4.2</version> <!-- or whatever the latest version is -->
+        <version>0.4.3</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
@@ -28,6 +28,18 @@ on (trg-dao-X.X.X-sources.jar).
 You will also need the Hibernate 3.3 jars and their dependencies. I'll leave you to do all the hibernate configuration.
 
 The project has one other dependency. That is Simple Logging Facade for Java (SLF4J). I think Hibernate 3.3 also requires this to be configured.
+
+----
+===Installing only the Search without the DAOs===
+Use this dependency instead:
+{{{
+<dependency>
+        <groupId>com.trg</groupId>
+        <artifactId>trg-dao</artifactId>
+        <version>0.4.3</version> <!-- or whatever the latest version is -->
+</dependency>
+}}}
+----
 
 =Configuration=
 The Hibernate Generic DAO library is designed not to mandate any configuration. It's just a collection of POJOs that you can decide how to best to use. However, there are some things that the API requires in order to work.
