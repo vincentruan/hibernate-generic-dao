@@ -9,6 +9,8 @@ Javadoc: http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/index
 
 See also InstallationAndConfiguration.
 
+Also note that it is possible to use the search functionality alone without the DAO portion of the framework. For more, see UsingSearchAlone.
+
 = Features =
 
 == General and Generic DAOs ==
@@ -37,8 +39,6 @@ See:
 The biggest impetus for this framework is actually in the area of searches. It is very common to have lists of business objects in an application, for example a list of Customers or a list of Invoices. To make these lists usable each one needed to be sortable and usually filterable as well. Unfortunately, in order to add a single sortable column or a single filter field, we had to make tedious changes to four different files, add several trivial lines of code to the DAO implementation and then (if we were feeling particularly responsible) add code to the test case. The way we did this, the UI code was also pretty tricky and the DAO implementation slightly error-prone.
 
 The idea with this framework is to provide a Search object that consistently takes care of all the DAO implementation work for us and provides a uniform interface that we can take advantage of when writing reusable front-end components.
-
-Note that it is possible to use the search functionality without the DAO portion of the framework. See UsingSearchAlone.
 
 See:
 [Search], `com.trg.dao.search.*`
