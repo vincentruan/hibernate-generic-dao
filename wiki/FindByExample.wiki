@@ -1,5 +1,7 @@
 #summary Thoughts on how we might best incorporate find by example.
-
+----
+Find by example functionality was added to the SearchFacade and DAOs in 0.4.3. Below is the thought process behind it. The conclusion is pretty much what was implemented.
+----
 ==Feature Requirements==
   * Should be simple: add as few additional classes and/or methods as reasonable.
   * Should be flexible...
