@@ -306,6 +306,46 @@ public class FilterTest extends TestBase {
 		
 		options.excludeProp("father.lastName");
 		assertListEqual(findByExample(person, options), joeA, sallyA, joeB, margretB);
+		
+		//like mode & ignore case
+		options = new ExampleOptions();
+		person = new Person();
+		person.setLastName("Alpha");
+		
+		options.setLikeMode(ExampleOptions.ANYWHERE);
+		person.setFirstName("ll");
+		assertListEqual(findByExample(person, options), sallyA);
+		person.setFirstName("LL");
+		assertListEqual(findByExample(person, options));
+		options.setIgnoreCase(true);
+		assertListEqual(findByExample(person, options), sallyA);
+		
+		options.setIgnoreCase(false);
+		options.setLikeMode(ExampleOptions.END);
+		person.setFirstName("ll");
+		assertListEqual(findByExample(person, options));
+		person.setFirstName("lly");
+		assertListEqual(findByExample(person, options), sallyA);
+		person.setFirstName("LLy");
+		assertListEqual(findByExample(person, options));
+		options.setIgnoreCase(true);
+		assertListEqual(findByExample(person, options), sallyA);
+		person.setFirstName("LL");
+		assertListEqual(findByExample(person, options));
+		
+		options.setIgnoreCase(false);
+		options.setLikeMode(ExampleOptions.START);
+		person.setFirstName("ll");
+		assertListEqual(findByExample(person, options));
+		person.setFirstName("Sal");
+		assertListEqual(findByExample(person, options), sallyA);
+		person.setFirstName("sAl");
+		assertListEqual(findByExample(person, options));
+		options.setIgnoreCase(true);
+		assertListEqual(findByExample(person, options), sallyA);
+		person.setFirstName("LL");
+		assertListEqual(findByExample(person, options));
+		
 	}
 	
 	private List findByExample(Object example, ExampleOptions options) {
