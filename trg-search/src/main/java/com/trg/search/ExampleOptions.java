@@ -3,18 +3,23 @@ package com.trg.search;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Use this class to pass options to find by example functionality.
+ * 
+ * @author dwolverton
+ */
 public class ExampleOptions {
 	public final static int EXACT = 0;
 	public final static int START = 1;
 	public final static int END = 2;
 	public final static int ANYWHERE = 3;
-	
+
 	private Collection<String> excludeProps;
 	private int likeMode = EXACT;
 	private boolean excludeNulls = true;
 	private boolean excludeZeros = false;
 	private boolean ignoreCase = false;
-	
+
 	/**
 	 * Add a property to the excludeProps collection
 	 */

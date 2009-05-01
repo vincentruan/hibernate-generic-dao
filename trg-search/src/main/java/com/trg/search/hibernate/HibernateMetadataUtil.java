@@ -12,6 +12,15 @@ import org.hibernate.metadata.ClassMetadata;
 import com.trg.search.Metadata;
 import com.trg.search.MetadataUtil;
 
+/**
+ * Implementation of MetadataUtil for Hibernate
+ * 
+ * A singleton instance of this class is maintained for each SessionFactory.
+ * This should be accessed using
+ * {@link HibernateMetadataUtil#getInstanceForSessionFactory(SessionFactory)}.
+ * 
+ * @author dwolverton
+ */
 public class HibernateMetadataUtil implements MetadataUtil {
 
 	private static Map<SessionFactory, HibernateMetadataUtil> map = new HashMap<SessionFactory, HibernateMetadataUtil>();
@@ -46,8 +55,8 @@ public class HibernateMetadataUtil implements MetadataUtil {
 		// that property is named. just make sure the segment before this "id"
 		// refers to an entity since only entities have ids.
 		if (propertyPath.equals("id")
-				|| (propertyPath.endsWith(".id") && get(rootClass, propertyPath.substring(0,
-						propertyPath.length() - 3)).isEntity()))
+				|| (propertyPath.endsWith(".id") && get(rootClass, propertyPath.substring(0, propertyPath.length() - 3))
+						.isEntity()))
 			return true;
 
 		// see if the property is the identifier property of the entity it
@@ -66,11 +75,12 @@ public class HibernateMetadataUtil implements MetadataUtil {
 	public Metadata get(Class<?> entityClass) {
 		ClassMetadata cm = sessionFactory.getClassMetadata(entityClass);
 		if (cm == null)
-			throw new IllegalArgumentException("Unable to introspect " + entityClass.toString() + ". The class is not a registered Hibernate entity.");
+			throw new IllegalArgumentException("Unable to introspect " + entityClass.toString()
+					+ ". The class is not a registered Hibernate entity.");
 		else
 			return new HibernateEntityMetadata(sessionFactory, cm, null);
 	}
-	
+
 	public Metadata get(Class<?> rootEntityClass, String propertyPath) {
 		try {
 			Metadata md = get(rootEntityClass);
@@ -78,16 +88,16 @@ public class HibernateMetadataUtil implements MetadataUtil {
 				return md;
 
 			String[] chain = propertyPath.split("\\.");
-		
+
 			for (int i = 0; i < chain.length; i++) {
 				md = md.getPropertyType(chain[i]);
 			}
-			
+
 			return md;
 
 		} catch (HibernateException ex) {
-			throw new PropertyNotFoundException("Could not find property '" + propertyPath + "' on class " + rootEntityClass
-					+ ".");
+			throw new PropertyNotFoundException("Could not find property '" + propertyPath + "' on class "
+					+ rootEntityClass + ".");
 		}
 	}
 

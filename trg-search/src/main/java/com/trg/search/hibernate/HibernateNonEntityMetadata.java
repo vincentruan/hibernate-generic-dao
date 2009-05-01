@@ -13,6 +13,11 @@ import org.hibernate.type.Type;
 
 import com.trg.search.Metadata;
 
+/**
+ * Implementation of Metadata for a non-entity type in Hibernate.
+ * 
+ * @author dwolverton
+ */
 public class HibernateNonEntityMetadata implements Metadata {
 
 	private SessionFactory sessionFactory;

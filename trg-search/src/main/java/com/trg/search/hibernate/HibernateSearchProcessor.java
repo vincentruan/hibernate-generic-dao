@@ -24,16 +24,19 @@ import com.trg.search.SearchUtil;
 import com.trg.search.InternalUtil;
 
 /**
- * Implementation of SearchToQLProcessor that generates HQL
+ * Implementation of SearchToQLProcessor that generates HQL.
+ * 
+ * A singleton instance of this class is maintained for each SessionFactory. This should
+ * be accessed using {@link HibernateSearchProcessor#getInstanceForSessionFactory(SessionFactory)}.
+ * 
  * @author dwolverton
  */
 public class HibernateSearchProcessor extends BaseSearchProcessor {
 	private static Logger logger = LoggerFactory.getLogger(HibernateSearchProcessor.class);
-	
+
 	private static Map<SessionFactory, HibernateSearchProcessor> map = new HashMap<SessionFactory, HibernateSearchProcessor>();
 
-	public static HibernateSearchProcessor getInstanceForSessionFactory(
-			SessionFactory sessionFactory) {
+	public static HibernateSearchProcessor getInstanceForSessionFactory(SessionFactory sessionFactory) {
 		HibernateSearchProcessor instance = map.get(sessionFactory);
 		if (instance == null) {
 			instance = new HibernateSearchProcessor(HibernateMetadataUtil.getInstanceForSessionFactory(sessionFactory));
@@ -45,9 +48,9 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 	private HibernateSearchProcessor(HibernateMetadataUtil mdu) {
 		super(QLTYPE_HQL, mdu);
 	}
-	
+
 	// --- Public Methods ---
-	
+
 	/**
 	 * Search for objects based on the search parameters in the specified
 	 * <code>ISearch</code> object.
@@ -58,13 +61,14 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 	public List search(Session session, ISearch search) {
 		if (search == null)
 			return null;
-		
+
 		return search(session, search.getSearchClass(), search);
 	}
-	
+
 	/**
 	 * Search for objects based on the search parameters in the specified
-	 * <code>ISearch</code> object.
+	 * <code>ISearch</code> object. Uses the specified searchClass, ignoring the
+	 * searchClass specified on the search itself.
 	 * 
 	 * @see ISearch
 	 */
@@ -94,10 +98,12 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 			return 0;
 		return count(session, search.getSearchClass(), search);
 	}
-	
+
 	/**
 	 * Returns the total number of results that would be returned using the
 	 * given <code>ISearch</code> if there were no paging or maxResult limits.
+	 * Uses the specified searchClass, ignoring the searchClass specified on the
+	 * search itself.
 	 * 
 	 * @see ISearch
 	 */
@@ -107,7 +113,7 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 
 		List<Object> paramList = new ArrayList<Object>();
 		String hql = generateRowCountQL(searchClass, search, paramList);
-		if (hql == null) { //special case where the query uses column operators
+		if (hql == null) { // special case where the query uses column operators
 			return 1;
 		}
 		Query query = session.createQuery(hql);
@@ -115,7 +121,7 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 
 		return ((Number) query.uniqueResult()).intValue();
 	}
-	
+
 	/**
 	 * Returns a <code>SearchResult</code> object that includes the list of
 	 * results like <code>search()</code> and the total length like
@@ -133,7 +139,8 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 	/**
 	 * Returns a <code>SearchResult</code> object that includes the list of
 	 * results like <code>search()</code> and the total length like
-	 * <code>searchLength</code>.
+	 * <code>searchLength</code>. Uses the specified searchClass, ignoring the
+	 * searchClass specified on the search itself.
 	 * 
 	 * @see ISearch
 	 */
@@ -148,13 +155,12 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 		if (search.getMaxResults() > 0) {
 			result.setTotalCount(count(session, searchClass, search));
 		} else {
-			result.setTotalCount(result.getResult().size()
-					+ SearchUtil.calcFirstResult(search));
+			result.setTotalCount(result.getResult().size() + SearchUtil.calcFirstResult(search));
 		}
 
 		return result;
 	}
-	
+
 	/**
 	 * Search for a single result using the given parameters.
 	 */
@@ -163,9 +169,10 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 			return null;
 		return searchUnique(session, search.getSearchClass(), search);
 	}
-	
+
 	/**
-	 * Search for a single result using the given parameters.
+	 * Search for a single result using the given parameters. Uses the specified
+	 * searchClass, ignoring the searchClass specified on the search itself.
 	 */
 	public Object searchUnique(Session session, Class<?> entityClass, ISearch search) throws NonUniqueResultException {
 		if (search == null)
@@ -178,14 +185,14 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 		addResultMode(query, search);
 
 		return query.uniqueResult();
-	}	
-	
+	}
+
 	// ---- SEARCH HELPERS ---- //
 
 	@SuppressWarnings("unchecked")
 	private void addParams(Query query, List<Object> params) {
 		StringBuilder debug = null;
-			
+
 		int i = 1;
 		for (Object o : params) {
 			if (logger.isDebugEnabled()) {
@@ -199,11 +206,9 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 				debug.append(InternalUtil.paramDisplayString(o));
 			}
 			if (o instanceof Collection) {
-				query.setParameterList("p" + Integer.toString(i++),
-						(Collection) o);
+				query.setParameterList("p" + Integer.toString(i++), (Collection) o);
 			} else if (o instanceof Object[]) {
-				query.setParameterList("p" + Integer.toString(i++),
-						(Object[]) o);
+				query.setParameterList("p" + Integer.toString(i++), (Object[]) o);
 			} else {
 				query.setParameter("p" + Integer.toString(i++), o);
 			}
@@ -243,7 +248,7 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 					resultMode = ISearch.RESULT_SINGLE;
 			}
 		}
-		
+
 		switch (resultMode) {
 		case ISearch.RESULT_ARRAY:
 			query.setResultTransformer(ARRAY_RESULT_TRANSFORMER);
@@ -262,8 +267,7 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 					keyList.add(field.getProperty());
 				}
 			}
-			query.setResultTransformer(new MapResultTransformer(keyList
-					.toArray(new String[0])));
+			query.setResultTransformer(new MapResultTransformer(keyList.toArray(new String[0])));
 			break;
 		default: // ISearch.RESULT_SINGLE
 			break;
@@ -309,5 +313,5 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 			return map;
 		}
 	}
-	
+
 }
