@@ -23,5 +23,9 @@ public interface SearchFacade {
 	public Object searchUnique(ISearch search);
 
 	public Object searchUnique(Class<?> searchClass, ISearch search);
+	
+	public Filter getFilterFromExample(Object example);
+	
+	public Filter getFilterFromExample(Object example, ExampleOptions options);
 
 }

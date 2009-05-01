@@ -8,21 +8,21 @@
 		http://www.springframework.org/schema/context/spring-context-2.5.xsd"> 
 
 	<!-- Standard DAOs -->
-	<bean id="personDAO" class="com.test.dao.standard.PersonDAOImpl"/>
-	<bean id="projectDAO" class="com.test.dao.standard.ProjectDAOImpl"/>
+	<bean id="personDAO" class="test.trg.dao.dao.standard.PersonDAOImpl"/>
+	<bean id="projectDAO" class="test.trg.dao.dao.standard.ProjectDAOImpl"/>
 
-	<bean id="generalDAO" class="com.test.dao.standard.MyGeneralDAOImpl"/>
+	<bean id="generalDAO" class="test.trg.dao.dao.standard.MyGeneralDAOImpl"/>
 	
 	<bean id="DAODispatcher" class="com.trg.dao.dao.standard.DAODispatcher"/>
 	
-	<bean id="personService" class="com.test.dao.standard.PersonService"/>
+	<bean id="personService" class="test.trg.dao.dao.standard.PersonService"/>
 		
 	<!-- Original DAOs -->
-	<bean id="origPersonDAO" class="com.test.dao.original.PersonDAOImpl"/>
-	<bean id="origHomeDAO" class="com.test.dao.original.HomeDAOImpl"/>
-	<bean id="origAddressDAO" class="com.test.dao.original.AddressDAOImpl"/>
+	<bean id="origPersonDAO" class="test.trg.dao.dao.original.PersonDAOImpl"/>
+	<bean id="origHomeDAO" class="test.trg.dao.dao.original.HomeDAOImpl"/>
+	<bean id="origAddressDAO" class="test.trg.dao.dao.original.AddressDAOImpl"/>
 	
-	<bean id="origGeneralDAO" class="com.test.dao.original.MyGeneralDAOImpl"/>
+	<bean id="origGeneralDAO" class="test.trg.dao.dao.original.MyGeneralDAOImpl"/>
 	
 	<bean id="origFlexDAOAdapter" class="com.trg.dao.dao.original.FlexDAOAdapter">
 		<property name="DAO" ref="origDAODispatcher"/>
@@ -32,13 +32,13 @@
 		<property name="generalDAO" ref="origGeneralDAO"/>
 		<property name="specificDAOs">
 			<map>
-				<entry key="com.test.model.Home" value-ref="origHomeDAO"/>
+				<entry key="test.trg.shared.model.Home" value-ref="origHomeDAO"/>
 			</map>
 		</property>
 	</bean>
 	
-	<bean id="origPersonService" class="com.test.dao.original.PersonService"/>
+	<bean id="origPersonService" class="test.trg.dao.dao.original.PersonService"/>
 	
 	<!-- Misc -->
-	<bean id="hibernateBaseDAOTester" class="com.test.misc.HibernateBaseDAOTester"/>
+	<bean id="hibernateBaseDAOTester" class="test.trg.dao.hibernate.HibernateBaseDAOTester"/>
 </beans>
