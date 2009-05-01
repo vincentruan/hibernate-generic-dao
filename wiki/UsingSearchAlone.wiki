@@ -16,3 +16,30 @@ The tricky part is getting an instance of `SearchFacade`. At this point the only
 
 The `HibernateSearchFacade` needs a Hibernate `Session` on which to perform it's operations and also a `SessionFactory` for some Metadata. By default `HibernateSearchFacade` requires only that a `SessionFactory` be passed in (either through the constructor or through `setSessionFactory`. It then uses `SessionFactory.getCurrentSession()` to get a session whenever it needs one.
 
+Here's an example of how this might be set up with Spring framework:
+
+*applicationContext.xml*
+{{{
+...
+<bean id="searchFacade" class="com.trg.search.hibernate.HibernateSearchFacade">
+    <!-- The Hibernate sessionFactory bean is defined elsewhere -->
+    <property name="sessionFactory" ref="sessionFactory"/>
+</bean>
+...
+}}}
+
+*Class where facade is used (must be defined as spring bean)*
+{{{
+...
+private SearchFacade searchFacade;
+
+@Resource //Spring will automatically fill in properties marked with
+          //this annotation
+public setSearchFacade(SearchFacade searchFacade) {
+    this.searchFacade = searchFacade;
+}
+...
+    //Use search facade anywhere in class
+    searchFacade.search(search);
+...
+}}}
