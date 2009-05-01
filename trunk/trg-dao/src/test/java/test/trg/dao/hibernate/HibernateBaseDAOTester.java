@@ -10,6 +10,7 @@ import org.hibernate.SessionFactory;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
 import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
@@ -157,11 +158,11 @@ public class HibernateBaseDAOTester extends BaseDAOImpl {
 		return super._exists(entity);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List findByExample(Object example, ExampleOptions options) {
-		Search s = new Search(example.getClass());
-		s.addFilter(_getFilterFromExample(example, options));
-		return _search(s);
+	public Filter getFilterFromExample(Object example, ExampleOptions options) {
+		return _getFilterFromExample(example, options);
 	}
 	
+	public Filter getFilterFromExample(Object example) {
+		return _getFilterFromExample(example);
+	}
 }

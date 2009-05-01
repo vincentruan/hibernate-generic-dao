@@ -19,6 +19,7 @@ import test.trg.shared.model.RecipeIngredient;
 import test.trg.shared.model.RecipeIngredientId;
 import test.trg.shared.model.Store;
 
+import com.trg.search.ExampleOptions;
 import com.trg.search.Field;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
@@ -649,5 +650,26 @@ public class BaseDAOTest extends TestBase {
 			fail("An error should have been thrown");
 		} catch (IllegalArgumentException ex) { }
 		
+	}
+	
+	public void testExample() {
+		initDB();
+		
+		Person example = new Person();
+		example.setFirstName("Joe");
+		example.setLastName("Alpha");
+		
+		Search s = new Search(Person.class);
+		s.addFilter(target.getFilterFromExample(example));
+		assertEquals(joeA, target.searchUnique(s));
+		
+		example.setAge(0);
+		s.clear();
+		s.addFilter(target.getFilterFromExample(example));
+		assertEquals(null, target.searchUnique(s));
+		
+		s.clear();
+		s.addFilter(target.getFilterFromExample(example, new ExampleOptions().setExcludeZeros(true)));
+		assertEquals(joeA, target.searchUnique(s));
 	}
 }

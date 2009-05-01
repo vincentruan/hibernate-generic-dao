@@ -6,6 +6,8 @@ import java.util.List;
 import org.hibernate.NonUniqueResultException;
 
 import com.trg.dao.hibernate.BaseDAOImpl;
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
@@ -79,5 +81,13 @@ public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
 
 	public void refresh(Object object) {
 		_refresh(object);
+	}
+	
+	public Filter getFilterFromExample(Object example) {
+		return _getFilterFromExample(example);
+	}
+
+	public Filter getFilterFromExample(Object example, ExampleOptions options) {
+		return _getFilterFromExample(example, options);
 	}
 }

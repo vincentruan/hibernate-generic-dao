@@ -10,17 +10,18 @@ import test.trg.shared.TestBase;
 import test.trg.shared.model.Person;
 import test.trg.shared.model.Project;
 
+import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 import com.trg.search.Sort;
 
 public class GenericDAOTest extends TestBase {
 
-	private PersonDAO dao;
+	private PersonDAO personDAO;
 	
 	private ProjectDAO projectDAO;
 
-	public void setPersonDAO(PersonDAO dao) {
-		this.dao = dao;
+	public void setPersonDAO(PersonDAO personDAO) {
+		this.personDAO = personDAO;
 	}
 	
 	public void setProjectDAO(ProjectDAO projectDAO) {
@@ -40,67 +41,86 @@ public class GenericDAOTest extends TestBase {
 		Person marty = setup(new Person("Marty", "McFly", 58));
 
 		
-		assertTrue(dao.save(fred));
-		assertTrue(dao.save(bob));
+		assertTrue(personDAO.save(fred));
+		assertTrue(personDAO.save(bob));
 		fred.setFather(bob);
 
-		assertEquals(bob, dao.find(bob.getId()));
-		assertEquals(fred, dao.find(fred.getId()));
+		assertEquals(bob, personDAO.find(bob.getId()));
+		assertEquals(fred, personDAO.find(fred.getId()));
 
 		//count
-		assertEquals(2, dao.count(new Search()));
-		assertEquals(2, dao.count(new Search(Person.class)));
+		assertEquals(2, personDAO.count(new Search()));
+		assertEquals(2, personDAO.count(new Search(Person.class)));
 		
 		//searchAndCount
-		assertListEqual(new Person[] { bob, fred }, dao
+		assertListEqual(new Person[] { bob, fred }, personDAO
 				.searchAndCount(new Search()).getResult());
-		assertListEqual(new Person[] { bob, fred }, dao
+		assertListEqual(new Person[] { bob, fred }, personDAO
 				.searchAndCount(new Search(Person.class)).getResult());
 
 		//searchUnique
 		Search s = new Search();
 		s.addFilterEqual("id", bob.getId());
-		assertEquals(bob, dao.searchUnique(s));
+		assertEquals(bob, personDAO.searchUnique(s));
 		s = new Search(Person.class);
 		s.addFilterEqual("id", bob.getId());
-		assertEquals(bob, dao.searchUnique(s));
+		assertEquals(bob, personDAO.searchUnique(s));
 		
 		//searchGeneric
 		s = new Search();
 		s.addFilterEqual("id", bob.getId());
 		s.setResultMode(Search.RESULT_SINGLE);
 		s.addField("firstName");
-		assertEquals(bob.getFirstName(), dao.searchGeneric(s).get(0));
+		assertEquals(bob.getFirstName(), personDAO.searchGeneric(s).get(0));
 		s.setSearchClass(Person.class);
-		assertEquals(bob.getFirstName(), dao.searchGeneric(s).get(0));
+		assertEquals(bob.getFirstName(), personDAO.searchGeneric(s).get(0));
 
 		//searchUniqueGeneric
-		assertEquals(bob.getFirstName(), dao.searchUniqueGeneric(s));
+		assertEquals(bob.getFirstName(), personDAO.searchUniqueGeneric(s));
 		s.setSearchClass(null);
-		assertEquals(bob.getFirstName(), dao.searchUniqueGeneric(s));
+		assertEquals(bob.getFirstName(), personDAO.searchUniqueGeneric(s));
 		
-		assertTrue(dao.remove(bob));
-		assertEquals(null, dao.find(bob.getId()));
+		//example
+		Person example = new Person();
+		example.setFirstName("Bob");
+		example.setLastName("Jones");
+		
+		s = new Search(Person.class);
+		s.addFilter(personDAO.getFilterFromExample(example));
+		assertEquals(bob, personDAO.searchUnique(s));
+		
+		example.setAge(0);
+		s.clear();
+		s.addFilter(personDAO.getFilterFromExample(example));
+		assertEquals(null, personDAO.searchUnique(s));
+		
+		s.clear();
+		s.addFilter(personDAO.getFilterFromExample(example, new ExampleOptions().setExcludeZeros(true)));
+		assertEquals(bob, personDAO.searchUnique(s));
+		
+		
+		assertTrue(personDAO.remove(bob));
+		assertEquals(null, personDAO.find(bob.getId()));
 
-		assertTrue(dao.removeById(fred.getId()));
-		assertEquals(null, dao.find(fred.getId()));
+		assertTrue(personDAO.removeById(fred.getId()));
+		assertEquals(null, personDAO.find(fred.getId()));
 
-		assertEquals(0, dao.count(new Search(Person.class)));
+		assertEquals(0, personDAO.count(new Search(Person.class)));
 
 		bob.setId(null);
 		fred.setId(null);
 
-		assertTrue(dao.save(bob));
-		assertTrue(dao.save(fred));
+		assertTrue(personDAO.save(bob));
+		assertTrue(personDAO.save(fred));
 		
-		dao.save(cyndi, marty);
-		for (Person p : dao.find(cyndi.getId(), bob.getId(), fred.getId())) {
+		personDAO.save(cyndi, marty);
+		for (Person p : personDAO.find(cyndi.getId(), bob.getId(), fred.getId())) {
 			assertNotNull(p);
 		}
 		
-		dao.removeByIds(cyndi.getId(), marty.getId());
-		dao.remove(cyndi, fred);
-		for (Person p : dao.find(cyndi.getId(), marty.getId(), fred.getId())) {
+		personDAO.removeByIds(cyndi.getId(), marty.getId());
+		personDAO.remove(cyndi, fred);
+		for (Person p : personDAO.find(cyndi.getId(), marty.getId(), fred.getId())) {
 			assertNull(p);
 		}
 		
@@ -108,21 +128,21 @@ public class GenericDAOTest extends TestBase {
 		
 		Person bob2 = copy(bob);
 		bob2.setFirstName("Bobby");
-		assertFalse(dao.save(bob2));
+		assertFalse(personDAO.save(bob2));
 
-		dao.flush();
+		personDAO.flush();
 		
-		assertEquals("Bobby", dao.find(bob.getId()).getFirstName());
+		assertEquals("Bobby", personDAO.find(bob.getId()).getFirstName());
 		
 		
-		dao.refresh(bob2);
-		assertTrue(dao.isAttached(bob2));
-		assertFalse(dao.isAttached(bob));
+		personDAO.refresh(bob2);
+		assertTrue(personDAO.isAttached(bob2));
+		assertFalse(personDAO.isAttached(bob));
 		
-		Person a = dao.getReference(bob2.getId());
-		Person b = dao.getReference(bob2.getId() + 10);
+		Person a = personDAO.getReference(bob2.getId());
+		Person b = personDAO.getReference(bob2.getId() + 10);
 		
-		Person[] pp = dao.getReferences(bob2.getId(), bob2.getId() + 10);
+		Person[] pp = personDAO.getReferences(bob2.getId(), bob2.getId() + 10);
 		
 		assertEquals("Bobby", a.getFirstName());
 		assertEquals("Bobby", pp[0].getFirstName());

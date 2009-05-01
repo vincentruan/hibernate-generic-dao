@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.hibernate.NonUniqueResultException;
 
+import com.trg.search.ExampleOptions;
+import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
@@ -114,4 +116,15 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * Refresh the content of the given entity from the current datastore state.
 	 */
 	public void refresh(Object object);
+	
+	/**
+	 * Generates a search filter from the given example using default options. 
+	 */
+	public Filter getFilterFromExample(T example);
+	
+	/**
+	 * Generates a search filter from the given example using the specified options. 
+	 */
+	public Filter getFilterFromExample(T example, ExampleOptions options);
+
 }

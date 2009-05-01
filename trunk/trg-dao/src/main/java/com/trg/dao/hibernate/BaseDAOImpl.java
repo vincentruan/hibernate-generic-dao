@@ -23,6 +23,7 @@ import com.trg.search.hibernate.HibernateSearchProcessor;
 
 /**
  * Base class for DAOs that uses Hibernate SessionFactory and HQL for searches.
+ * This is the heart of Hibernate Generic DAO.
  * 
  * @author dwolverton
  * 
