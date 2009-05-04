@@ -1,0 +1,55 @@
+#summary List of changes made for each release and planned changes for upcoming releases.
+
+==0.3.3 (11/25/2008)==
+  * Cleaned up pom.xml (Issue #14):
+    * Removed unneeded dependencies and repositories
+    * Moved most dependencies to {{{test}}} scope
+  * Upgraded to Hibernate 3.3.1GA
+  * {{{deleteById()}}} no longer throws an error if no matching object is found in the database. (Issue #15))
+  * {{{deleteById()}}} and {{{deleteEntity()}}} now return boolean: true if found and deleted, false if not found.
+
+==0.3.4 (12/16/2008)==
+  * Use Hibernate MetaData for Util.getExpectedClass()
+  * Refactor RemoteDAO into a separate Remote adapter and DAO dispatcher
+  * Make RemoteDAO, GeneralDAO and GenericDAO implementations thinner and more replacable. This way developers can customize their own DAO and Remote methods for the particular project and technology.
+  * Separate RemoteDAO into separate remote adapter and DAO dispatcher
+  * Use RemoteDAO adapters for specific technologies
+
+==0.4.0 (12/31/2008)==
+  * Addressed problems with Components (@Embedded) as per Issue 19.
+  * Tested Search w/ polymorphism.
+  * Improved Util.callMethod to be more robust.
+  * Created new default DAO with different methods. (see blog)
+  * Created new default Flex remote DAO with different methods.
+  * Added ILIKE operator (Issue 21).
+  * Changed saveOrUpdate() to work with assigned as well as generated ids.
+  * Added tests for many-to-many relationships and compound ids.
+  * Refactored Search objects to be more bean-like
+
+  * Known Issues
+    * Javadocs for Search beans are out of date.
+
+==0.4.1 (01/20/2009)==
+  * Added option to ignore case on sorts (Issue 24).
+  * Implemented ignoring Filters with null values (Issue 22).
+  * Implemented Issue 20 (fields & fetches).
+  * Refactored Search bean to use interfaces.
+  * Provided a SearchUtil class to aid in working with search interfaces and creating implementations of search interfaces.
+  * Added methods to SearchUtil for merging parts of Searches
+
+==0.4.2 (03/13/2009)==
+  * Added collection operators. (see blog)
+  * Allowed use of special .id, .class, .size properties in Filters.
+  * Addressed Issue 25, handling nulls in sorts, filters, fields, etc.
+
+==0.4.3 (05/1/2009 current release)==
+  * Added 'distinct' option to search.
+  * Formalized separation between DAOs and search.
+  * Added find by example functionality (Issue 27)
+
+==Future==
+  * Custom expressions in fields, filters and sorts.
+  * Add implementation for JPA.
+  * Look at security with remote DAOs.
+  * Possibly add SIZE and IS EMPTY for collections in fields.
+  * Look at case sensitivity options. (Issue 28)
