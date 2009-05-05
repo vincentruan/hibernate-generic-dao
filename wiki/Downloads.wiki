@@ -1,5 +1,3 @@
-#summary Information on downloading the JARs.
-
 This project is published as a Maven artifact. See MavenRepo.
 
 Otherwise, the JARs can be downloaded here:
