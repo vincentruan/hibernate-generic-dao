@@ -55,11 +55,11 @@ public class PersonService {
 		return dao.search(search);
 	}
 
-	public int searchLength(Search search) {
+	public int count(Search search) {
 		return dao.count(search);
 	}
 
-	public SearchResult<Person> searchAndLength(Search search) {
+	public SearchResult<Person> searchAndCount(Search search) {
 		return dao.searchAndCount(search);
 	}
 

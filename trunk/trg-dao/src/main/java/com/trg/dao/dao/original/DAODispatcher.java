@@ -193,7 +193,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 				return ((GenericDAO) specificDAO).searchAndCount(search);
 			} else {
 				return (SearchResult) callMethod(specificDAO,
-						"searchAndLength", search);
+						"searchAndCount", search);
 			}
 		} else {
 			return generalDAO.searchAndCount(search);
@@ -206,7 +206,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 			if (specificDAO instanceof GenericDAO) {
 				return ((GenericDAO) specificDAO).count(search);
 			} else {
-				return (Integer) callMethod(specificDAO, "searchLength", search);
+				return (Integer) callMethod(specificDAO, "count", search);
 			}
 		} else {
 			return generalDAO.count(search);
