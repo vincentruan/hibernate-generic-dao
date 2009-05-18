@@ -91,7 +91,7 @@ The framework has a built-in utility for converting example objects into Filters
 public Filter getFilterFromExample(Object example);
 public Filter getFilterFromExample(Object example, ExampleOptions options);
 }}}
-The first method uses the default options for doing the conversion, while the second provides several options for controlling the result. See http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/com/trg/search/ExampleOptions.html for all the options.
+The first method uses the default options for doing the conversion, while the second provides several options for controlling the result. See http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/com/trg/search/ExampleOptions.html for all the options.
 
 ===Selecting and Transforming Results===
 By default, the results of a search will be a list of the entity objects that were searched on. However, as with Hibernate queries, it is possible to get different information back in each row.
