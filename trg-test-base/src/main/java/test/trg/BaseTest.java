@@ -47,6 +47,14 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	public void persist(Object entity) {
 		persistenceHelper.persist(entity);
 	}
+	
+	public void flush() {
+		persistenceHelper.flush();
+	}
+	
+	public void clear() {
+		persistenceHelper.clear();
+	}
 
 	protected String[] getConfigLocations() {
 		setAutowireMode(AUTOWIRE_BY_NAME);
