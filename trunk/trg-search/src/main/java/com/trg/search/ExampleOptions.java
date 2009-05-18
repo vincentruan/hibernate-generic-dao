@@ -34,6 +34,14 @@ public class ExampleOptions {
 		return excludeProps;
 	}
 
+	/**
+	 * <p>This is a list of properties to exclude. For example if a person object is
+	 * as an example and it is not desirable to filter on the person's parents, the
+	 * mother and father properties can be excluded by setting this list to contain
+	 * the strings "mother" and "father".
+	 * 
+	 * <p>Default: &lt;none&gt;
+	 */
 	public ExampleOptions setExcludeProps(Collection<String> excludeProps) {
 		this.excludeProps = excludeProps;
 		return this;
@@ -43,6 +51,11 @@ public class ExampleOptions {
 		return excludeNulls;
 	}
 
+	/**
+	 * <p>If this is true, all properties with <code>null</code> values will be ignored.
+	 * 
+	 * <p>Default: true
+	 */
 	public ExampleOptions setExcludeNulls(boolean excludeNulls) {
 		this.excludeNulls = excludeNulls;
 		return this;
@@ -52,6 +65,11 @@ public class ExampleOptions {
 		return excludeZeros;
 	}
 
+	/**
+	 * <p>If this is true, all properties with the value <code>0</code> will be ignored.
+	 * 
+	 * <p>Default: false
+	 */
 	public ExampleOptions setExcludeZeros(boolean excludeZeros) {
 		this.excludeZeros = excludeZeros;
 		return this;
@@ -61,6 +79,11 @@ public class ExampleOptions {
 		return ignoreCase;
 	}
 
+	/**
+	 * <p>If this is true, case is ignored when comparing string values.
+	 * 
+	 * <p>Default: true
+	 */
 	public ExampleOptions setIgnoreCase(boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
 		return this;
@@ -70,6 +93,17 @@ public class ExampleOptions {
 		return likeMode;
 	}
 
+	/**
+	 * <p>This options describes how all string values are compared. The options are:
+	 * <ul>
+	 * 	<li>EXACT: The entire strings must match entirely.
+	 *  <li>START: The value must start with the example string.
+	 *  <li>END: The value must end with the example string.
+	 *  <li>ANYWHERE: The value may contain the example string anywhere.
+	 * </ul>
+	 * 
+	 * <p>Default: EXACT
+	 */
 	public ExampleOptions setLikeMode(int likeMode) {
 		this.likeMode = likeMode;
 		return this;
