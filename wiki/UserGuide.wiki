@@ -5,7 +5,7 @@
 
 The purpose of this framework is to save the time, tedium and possible inconsistency of hand coding DAO layer objects. This includes all of the basic CRUD methods as well as various "find" or "search" methods.
 
-Javadoc: http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/index.html
+Javadoc: http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html
 
 See also InstallationAndConfiguration.
 
@@ -19,16 +19,16 @@ The foundation of this framework are the General and Generic DAOs.
 The *GeneralDAO* is a single DAO class that can be used to access all classes of domain objects. GeneralDAO has methods that require the developer to specify which type of domain object to use. An application only needs a single instance of the GeneralDAO class to access all domain objects.
 
 Javadoc: <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/index.html?com/trg/dao/dao/standard/GeneralDAO.html <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/index.html?com/trg/dao/dao/original/GeneralDAO.html
+http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html?com/trg/dao/dao/standard/GeneralDAO.html <br/>
+http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html?com/trg/dao/dao/original/GeneralDAO.html
 
 *GenericDAO* is a class that can be extended to make individual DAOs. A basic domain-object-specific DAO is created by extending GenericDAO and specifying the domain object type with generic type parameters. The default implementation can be customized by adding and/or overriding methods.
 
 [GenericDAOExamples]
 
 Javadoc: <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/index.html?com/trg/dao/dao/standard/GenericDAO.html <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/trg-dao/doc/index.html?com/trg/dao/dao/original/GenericDAO.html
+http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html?com/trg/dao/dao/standard/GenericDAO.html <br/>
+http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html?com/trg/dao/dao/original/GenericDAO.html
 
 NOTE: All of these implementations annotate the `setSessionFactory()` method with `@Resource` which is useful with EJB3 or Spring.
 
