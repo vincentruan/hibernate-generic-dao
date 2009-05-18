@@ -122,6 +122,13 @@ The following result modes are available for a search:
 
 The `distinct` option can be set on a search in order to filter out duplicate results. As with plain HQL or SQL, only use this option if your search requires it because it does affect performance.
 
+"Distinct" can only be used on queries that return a single field. Here are some examples:
+{{{
+search(new Search().setDistinct(true)); //would work. Only the root entity is returned for each result.
+search(new Search().setDistinct(true).addField("firstName"); //would work. Only the single "firstName" value is returned for each result.
+search(new Search().setDistinct(true).addField("firstName").addField("lastName")); //would NOT work. Two fields are returned for each result.
+}}}
+
 *_Examples:_*
 {{{
 Search search = new Search(Project.class);
