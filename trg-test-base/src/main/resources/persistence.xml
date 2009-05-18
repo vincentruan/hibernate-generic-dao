@@ -1,0 +1,14 @@
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+    <persistence-unit name="JPATest" transaction-type="RESOURCE_LOCAL">
+		<class>test.trg.model.Address</class>
+		<class>test.trg.model.Home</class>
+		<class>test.trg.model.Person</class>
+		<class>test.trg.model.Pet</class>
+		<class>test.trg.model.LimbedPet</class>
+		<class>test.trg.model.Recipe</class>
+		<class>test.trg.model.Ingredient</class>
+		<class>test.trg.model.RecipeIngredient</class>
+		<class>test.trg.model.Store</class>
+		<class>test.trg.model.Project</class>
+    </persistence-unit>
+</persistence>
