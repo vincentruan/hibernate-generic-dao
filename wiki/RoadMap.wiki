@@ -47,9 +47,12 @@
   * Formalized separation between DAOs and search.
   * Added find by example functionality (Issue 27)
 
+==0.5.0==
+  * Add implementation for JPA.
+
+
 ==Future==
   * Custom expressions in fields, filters and sorts.
-  * Add implementation for JPA.
   * Look at security with remote DAOs.
   * Possibly add SIZE and IS EMPTY for collections in fields.
   * Look at case sensitivity options. (Issue 28)
