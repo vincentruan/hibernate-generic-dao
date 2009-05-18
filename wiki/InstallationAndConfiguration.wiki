@@ -19,7 +19,7 @@ If your project uses Maven, then simply add the repository and dependency...
 }}}
 
 ==Other==
-Download the jars from http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/maven-repo/com/trg/
+Download the jars from http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/
 
 The DAO requires both the trg-dao jars and the trg-search jars. Inside each of these folders, select the folder with the version you would like (the latest is generally the best). You only need the binary jar (trg-dao-X.X.X.jar), but you can also get the source jar to
 help out your IDE with Javadocs and to help yourself out being able to see what's going
