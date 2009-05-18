@@ -10,18 +10,26 @@ import test.trg.PersistenceHelper;
 public class JPAPersistenceHelper implements PersistenceHelper {
 
 	public <T> T find(Class<T> type, Serializable id) {
-		return (T) enityManager.find(type, id);
+		return (T) entityManager.find(type, id);
 	}
 
 	public void persist(Object entity) {
-		enityManager.persist(entity);
+		entityManager.persist(entity);
 	}
 	
-	private EntityManager enityManager;
+	public void flush() {
+		entityManager.flush();
+	}
+	
+	public void clear() {
+		entityManager.clear();
+	}
+	
+	private EntityManager entityManager;
 
 	@PersistenceContext
 	public void setEnityManager(EntityManager enityManager) {
-		this.enityManager = enityManager;
+		this.entityManager = enityManager;
 	}
 
 }
