@@ -32,7 +32,7 @@ import com.trg.search.Sort;
  * @author dwolverton
  * 
  */
-public class ProjectDAOImpl extends BaseGenericDAOImpl<Project, Long> implements ProjectDAO {
+public class ProjectDAOImpl extends BaseDAOImpl<Project, Long> implements ProjectDAO {
 
 	public List<Project> findProjectsForMember(Person member) {
 		if (member == null)
