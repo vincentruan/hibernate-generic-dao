@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-2.5.xsd"> 
+
+	<!-- DAOs -->
+	<bean id="personDAO" class="test.trg.dao.jpa.dao.PersonDAOImpl"/>
+	<bean id="projectDAO" class="test.trg.dao.jpa.dao.ProjectDAOImpl"/>
+
+	<bean id="generalDAO" class="test.trg.dao.jpa.dao.MyGeneralDAOImpl"/>
+	
+	<bean id="DAODispatcher" class="com.trg.dao.jpa.DAODispatcher">
+		<property name="generalDAO" ref="generalDAO"/>
+	</bean>
+	
+	<bean id="personService" class="test.trg.dao.jpa.dao.PersonService"/>
+		
+	<!-- Misc -->
+	<bean id="jpaBaseDAOTester" class="test.trg.dao.jpa.JPABaseDAOTester"/>
+</beans>

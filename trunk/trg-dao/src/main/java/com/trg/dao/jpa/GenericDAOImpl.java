@@ -78,7 +78,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public void removeByIds(ID... ids) {
-		_removeById(persistentClass, ids);
+		_removeByIds(persistentClass, ids);
 	}
 
 	public T merge(T entity) {

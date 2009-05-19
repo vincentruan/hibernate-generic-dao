@@ -65,7 +65,8 @@ public class JPABaseDAO {
 	 */
 	protected void _persist(Object... entities) {
 		for (Object entity : entities) {
-			em().persist(entity);
+			if (entity != null)
+				em().persist(entity);
 		}
 	}
 
@@ -78,8 +79,7 @@ public class JPABaseDAO {
 	 */
 	protected boolean _removeById(Class<?> type, Serializable id) {
 		if (id != null) {
-			Query query = em().createQuery("select id from " + type.getName() + " where id = ?")
-					.setParameter(1, id);
+			Query query = em().createQuery("select id from " + type.getName() + " where id = ?").setParameter(1, id);
 			if (query.getResultList().size() != 0) {
 				em().remove(em().getReference(type, id));
 				return true;
@@ -92,7 +92,7 @@ public class JPABaseDAO {
 	 * Remove all the entities of the given type from the datastore that have
 	 * one of these ids.
 	 */
-	protected void _removeById(Class<?> type, Serializable... ids) {
+	protected void _removeByIds(Class<?> type, Serializable... ids) {
 		for (Serializable id : (List<Serializable>) pullByIds("select id", type, ids)) {
 			em().remove(em().getReference(type, id));
 		}
@@ -120,7 +120,7 @@ public class JPABaseDAO {
 	/**
 	 * Remove the specified entities from the datastore.
 	 */
-	protected void _removeEntity(Object... entities) {
+	protected void _removeEntities(Object... entities) {
 		for (Object entity : entities) {
 			_removeEntity(entity);
 		}
@@ -160,7 +160,7 @@ public class JPABaseDAO {
 	protected <T> T _getReference(Class<T> type, Serializable id) {
 		return em().getReference(type, id);
 	}
-	
+
 	protected <T> T[] _getReferences(Class<T> type, Serializable... ids) {
 		T[] retList = (T[]) Array.newInstance(type, ids.length);
 		for (int i = 0; i < ids.length; i++) {
@@ -246,7 +246,8 @@ public class JPABaseDAO {
 	 * entity. In either case, a managed entity with the changed values is
 	 * returned. It may or may not be the same object as was passed in.
 	 * 
-	 * <p>This version of the method allows the array type to be specified.
+	 * <p>
+	 * This version of the method allows the array type to be specified.
 	 * 
 	 * @return an array containing each managed entity corresponding to the
 	 *         entities passed in.
@@ -327,8 +328,7 @@ public class JPABaseDAO {
 	 * Returns the number of instances of this entity in the datastore.
 	 */
 	protected int _count(Class<?> type) {
-		return ((Number) em().createQuery("select count(*) from " + type.getName()).getSingleResult())
-				.intValue();
+		return ((Number) em().createQuery("select count(*) from " + type.getName()).getSingleResult()).intValue();
 	}
 
 	/**
@@ -499,11 +499,14 @@ public class JPABaseDAO {
 		}
 		return query.getResultList();
 	}
-	
+
 	private boolean validId(Serializable id) {
-		if (id == null) return false;
-		if (id instanceof Number && ((Number)id).equals(0)) return false;
-		if (id instanceof String && "".equals(id)) return false;
+		if (id == null)
+			return false;
+		if (id instanceof Number && ((Number) id).equals(0))
+			return false;
+		if (id instanceof String && "".equals(id))
+			return false;
 		return true;
 	}
 }
