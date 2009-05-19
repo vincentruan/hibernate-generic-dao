@@ -1,4 +1,4 @@
-package test.trg.dao.dao.original;
+package test.trg.dao.hibernate.dao.original;
 
 import test.trg.model.Address;
 

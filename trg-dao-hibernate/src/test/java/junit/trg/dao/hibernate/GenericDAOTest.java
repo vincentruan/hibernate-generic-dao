@@ -1,12 +1,12 @@
-package junit.trg.dao.dao.standard;
+package junit.trg.dao.hibernate;
 
 import java.util.List;
 
 import org.hibernate.ObjectNotFoundException;
 
 import test.trg.BaseTest;
-import test.trg.dao.dao.standard.PersonDAO;
-import test.trg.dao.dao.standard.ProjectDAO;
+import test.trg.dao.hibernate.dao.PersonDAO;
+import test.trg.dao.hibernate.dao.ProjectDAO;
 import test.trg.model.Person;
 import test.trg.model.Project;
 

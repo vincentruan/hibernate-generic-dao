@@ -8,23 +8,23 @@
 		http://www.springframework.org/schema/context/spring-context-2.5.xsd"> 
 
 	<!-- Standard DAOs -->
-	<bean id="personDAO" class="test.trg.dao.dao.standard.PersonDAOImpl"/>
-	<bean id="projectDAO" class="test.trg.dao.dao.standard.ProjectDAOImpl"/>
+	<bean id="personDAO" class="test.trg.dao.hibernate.dao.PersonDAOImpl"/>
+	<bean id="projectDAO" class="test.trg.dao.hibernate.dao.ProjectDAOImpl"/>
 
-	<bean id="generalDAO" class="test.trg.dao.dao.standard.MyGeneralDAOImpl"/>
+	<bean id="generalDAO" class="test.trg.dao.hibernate.dao.MyGeneralDAOImpl"/>
 	
 	<bean id="DAODispatcher" class="com.trg.dao.hibernate.DAODispatcher">
 		<property name="generalDAO" ref="generalDAO"/>
 	</bean>
 	
-	<bean id="personService" class="test.trg.dao.dao.standard.PersonService"/>
+	<bean id="personService" class="test.trg.dao.hibernate.dao.PersonService"/>
 		
 	<!-- Original DAOs -->
-	<bean id="origPersonDAO" class="test.trg.dao.dao.original.PersonDAOImpl"/>
-	<bean id="origHomeDAO" class="test.trg.dao.dao.original.HomeDAOImpl"/>
-	<bean id="origAddressDAO" class="test.trg.dao.dao.original.AddressDAOImpl"/>
+	<bean id="origPersonDAO" class="test.trg.dao.hibernate.dao.original.PersonDAOImpl"/>
+	<bean id="origHomeDAO" class="test.trg.dao.hibernate.dao.original.HomeDAOImpl"/>
+	<bean id="origAddressDAO" class="test.trg.dao.hibernate.dao.original.AddressDAOImpl"/>
 	
-	<bean id="origGeneralDAO" class="test.trg.dao.dao.original.MyGeneralDAOImpl"/>
+	<bean id="origGeneralDAO" class="test.trg.dao.hibernate.dao.original.MyGeneralDAOImpl"/>
 	
 	<bean id="origFlexDAOAdapter" class="com.trg.dao.hibernate.original.FlexDAOAdapter">
 		<property name="DAO" ref="origDAODispatcher"/>
@@ -39,7 +39,7 @@
 		</property>
 	</bean>
 	
-	<bean id="origPersonService" class="test.trg.dao.dao.original.PersonService"/>
+	<bean id="origPersonService" class="test.trg.dao.hibernate.dao.original.PersonService"/>
 	
 	<!-- Misc -->
 	<bean id="hibernateBaseDAOTester" class="test.trg.dao.hibernate.HibernateBaseDAOTester"/>

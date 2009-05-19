@@ -1,4 +1,4 @@
-package test.trg.dao.dao.standard;
+package test.trg.dao.hibernate.dao;
 
 import javax.annotation.Resource;
 

@@ -1,4 +1,4 @@
-package junit.trg.dao.dao.standard;
+package junit.trg.dao.hibernate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,8 +6,8 @@ import java.util.Map;
 import org.hibernate.ObjectNotFoundException;
 
 import test.trg.BaseTest;
-import test.trg.dao.dao.standard.PersonDAO;
-import test.trg.dao.dao.standard.PersonService;
+import test.trg.dao.hibernate.dao.PersonDAO;
+import test.trg.dao.hibernate.dao.PersonService;
 import test.trg.model.Person;
 
 import com.trg.dao.DAODispatcherException;

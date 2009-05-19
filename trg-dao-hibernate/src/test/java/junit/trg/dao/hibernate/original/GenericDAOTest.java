@@ -1,7 +1,7 @@
-package junit.trg.dao.dao.original;
+package junit.trg.dao.hibernate.original;
 
 import test.trg.BaseTest;
-import test.trg.dao.dao.original.PersonDAO;
+import test.trg.dao.hibernate.dao.original.PersonDAO;
 import test.trg.model.Home;
 import test.trg.model.Person;
 
