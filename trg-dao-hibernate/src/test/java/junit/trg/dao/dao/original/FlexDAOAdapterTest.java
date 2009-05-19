@@ -5,9 +5,9 @@ import java.util.HashMap;
 import test.trg.BaseTest;
 import test.trg.model.Person;
 
-import com.trg.dao.dao.original.DAODispatcher;
-import com.trg.dao.dao.original.FlexDAOAdapter;
-import com.trg.dao.dao.original.GeneralDAO;
+import com.trg.dao.hibernate.original.DAODispatcher;
+import com.trg.dao.hibernate.original.FlexDAOAdapter;
+import com.trg.dao.hibernate.original.GeneralDAO;
 import com.trg.search.Filter;
 import com.trg.search.flex.FlexSearch;
 

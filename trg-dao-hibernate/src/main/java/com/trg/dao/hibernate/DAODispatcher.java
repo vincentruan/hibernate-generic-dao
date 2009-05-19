@@ -1,4 +1,4 @@
-package com.trg.dao.dao.standard;
+package com.trg.dao.hibernate;
 
 import java.io.Serializable;
 import java.util.List;

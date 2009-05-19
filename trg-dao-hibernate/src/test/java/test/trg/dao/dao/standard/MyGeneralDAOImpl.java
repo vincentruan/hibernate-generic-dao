@@ -5,7 +5,7 @@ import javax.annotation.Resource;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.trg.dao.dao.standard.GeneralDAOImpl;
+import com.trg.dao.hibernate.GeneralDAOImpl;
 
 /**
  * Extension of GeneralDAOImpl that is configured for Autowiring with Spring or J2EE.

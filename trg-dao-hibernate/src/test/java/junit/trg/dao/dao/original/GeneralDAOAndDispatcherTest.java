@@ -8,8 +8,8 @@ import test.trg.dao.dao.original.PersonDAO;
 import test.trg.dao.dao.original.PersonService;
 import test.trg.model.Person;
 
-import com.trg.dao.dao.original.DAODispatcher;
-import com.trg.dao.dao.original.GeneralDAO;
+import com.trg.dao.hibernate.original.DAODispatcher;
+import com.trg.dao.hibernate.original.GeneralDAO;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 

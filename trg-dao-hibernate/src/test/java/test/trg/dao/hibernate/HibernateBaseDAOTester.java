@@ -8,13 +8,13 @@ import javax.annotation.Resource;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.SessionFactory;
 
-import com.trg.dao.hibernate.BaseDAOImpl;
+import com.trg.dao.hibernate.HibernateBaseDAO;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
-public class HibernateBaseDAOTester extends BaseDAOImpl {
+public class HibernateBaseDAOTester extends HibernateBaseDAO {
 	@Override
 	@Resource
 	public void setSessionFactory(SessionFactory sessionFactory) {
