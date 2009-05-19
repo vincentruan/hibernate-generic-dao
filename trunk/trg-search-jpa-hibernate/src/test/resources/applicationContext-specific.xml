@@ -23,9 +23,9 @@
 		<constructor-arg ref="entityManagerFactory"/>
 	</bean>
 	
-	<bean id="persistenceHelper" class="test.trg.search.jpa.JPAPersistenceHelper"/>
+	<bean id="persistenceHelper" class="test.trg.jpa.JPAPersistenceHelper"/>
 	
-	<bean id="internalHelper" class="test.trg.search.jpa.hibernate.HibernateInternalHelper"/>
+	<bean id="internalHelper" class="test.trg.jpa.hibernate.HibernateInternalHelper"/>
 	
 	
 	<bean id="entityManagerFactory"
