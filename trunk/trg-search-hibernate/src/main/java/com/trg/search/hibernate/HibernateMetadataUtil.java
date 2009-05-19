@@ -42,12 +42,12 @@ public class HibernateMetadataUtil implements MetadataUtil {
 
 	// --- Public Methods ---
 
-	public Serializable getId(Object object) {
-		if (object == null)
+	public Serializable getId(Object entity) {
+		if (entity == null)
 			throw new NullPointerException("Cannot get ID from null object.");
-		return get(object.getClass()).getIdValue(object);
+		return get(entity.getClass()).getIdValue(entity);
 	}
-
+	
 	public boolean isId(Class<?> rootClass, String propertyPath) {
 		if (propertyPath == null || "".equals(propertyPath))
 			return false;
