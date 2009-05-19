@@ -1,4 +1,4 @@
-package test.trg.dao.dao.standard;
+package test.trg.dao.hibernate.dao.original;
 
 import java.io.Serializable;
 
@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.trg.dao.hibernate.GenericDAOImpl;
+import com.trg.dao.hibernate.original.GenericDAOImpl;
 
 /**
  * Extension of GenericDAOImpl that is configured for Autowiring with Spring or J2EE.

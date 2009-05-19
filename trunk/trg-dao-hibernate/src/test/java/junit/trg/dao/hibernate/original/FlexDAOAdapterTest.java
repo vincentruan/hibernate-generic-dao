@@ -1,4 +1,4 @@
-package junit.trg.dao.dao.original;
+package junit.trg.dao.hibernate.original;
 
 import java.util.HashMap;
 

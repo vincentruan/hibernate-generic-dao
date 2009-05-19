@@ -1,11 +1,11 @@
-package junit.trg.dao.dao.original;
+package junit.trg.dao.hibernate.original;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import test.trg.BaseTest;
-import test.trg.dao.dao.original.PersonDAO;
-import test.trg.dao.dao.original.PersonService;
+import test.trg.dao.hibernate.dao.original.PersonDAO;
+import test.trg.dao.hibernate.dao.original.PersonService;
 import test.trg.model.Person;
 
 import com.trg.dao.hibernate.original.DAODispatcher;

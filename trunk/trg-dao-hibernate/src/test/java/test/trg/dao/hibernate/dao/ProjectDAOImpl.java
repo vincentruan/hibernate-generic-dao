@@ -1,4 +1,4 @@
-package test.trg.dao.dao.standard;
+package test.trg.dao.hibernate.dao;
 
 import java.util.ArrayList;
 import java.util.Calendar;
