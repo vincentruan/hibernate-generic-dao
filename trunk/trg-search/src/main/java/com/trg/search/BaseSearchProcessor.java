@@ -12,7 +12,6 @@ import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * This class provides two methods for generating query language to fulfill an
  * <code>ISearch</code>.
@@ -57,6 +56,14 @@ public abstract class BaseSearchProcessor {
 	protected BaseSearchProcessor(int qlType, MetadataUtil metaDataUtil) {
 		this.qlType = qlType;
 		this.metadataUtil = metaDataUtil;
+	}
+
+	/**
+	 * The MetadataUtil used by this search processor. This can only be set in
+	 * the constructor.
+	 */
+	public MetadataUtil getMetadataUtil() {
+		return metadataUtil;
 	}
 
 	/**
@@ -108,8 +115,8 @@ public abstract class BaseSearchProcessor {
 	 * as named parameters ":pX", where X is the index of the parameter value in
 	 * paramList.
 	 * 
-	 * <b>NOTE:</b> Returns null if column operators are used in the search. Such a
-	 * search will always return 1 row.
+	 * <b>NOTE:</b> Returns null if column operators are used in the search.
+	 * Such a search will always return 1 row.
 	 */
 	public String generateRowCountQL(Class<?> entityClass, ISearch search, List<Object> paramList) {
 		if (entityClass == null)
@@ -119,7 +126,7 @@ public abstract class BaseSearchProcessor {
 
 		String where = generateWhereClause(ctx, checkAndCleanFilters(search.getFilters()), search.isDisjunction());
 		String from = generateFromClause(ctx, false);
-		
+
 		boolean useOperator = false, notUseOperator = false;
 		List<Field> fields = search.getFields();
 		if (fields != null) {
@@ -142,10 +149,10 @@ public abstract class BaseSearchProcessor {
 		if (useOperator && notUseOperator) {
 			throw new Error("A search can not have a mix of fields with operators and fields without operators.");
 		} else if (useOperator) {
-			return null; //if we're using column operators, the query will always return 1 result.
+			return null; // if we're using column operators, the query will
+							// always return 1 result.
 		}
-		
-		
+
 		StringBuilder sb = new StringBuilder();
 		if (!search.isDistinct()) {
 			sb.append("select count(*)");
@@ -197,7 +204,7 @@ public abstract class BaseSearchProcessor {
 
 				String prop;
 				if (field.getProperty() == null || "".equals(field.getProperty())) {
-					prop = "*"; //TODO: I think this will be a problem
+					prop = "*"; // TODO: I think this will be a problem
 				} else {
 					prop = getPathRef(ctx, field.getProperty());
 				}
@@ -421,7 +428,7 @@ public abstract class BaseSearchProcessor {
 				return operator == Filter.OP_IN ? "1 = 2" : "1 = 1";
 			}
 		}
-		
+
 		// convert numbers to the expected type if needed (ex: Integer to Long)
 		if (filter.isTakesListOfValues()) {
 			value = prepareValue(ctx.rootClass, property, value, true);
@@ -430,7 +437,7 @@ public abstract class BaseSearchProcessor {
 		}
 
 		Metadata metadata;
-		
+
 		switch (operator) {
 		case Filter.OP_NULL:
 			return getPathRef(ctx, property) + " is null";
@@ -655,8 +662,8 @@ public abstract class BaseSearchProcessor {
 			return null;
 		}
 
-		Object value = InternalUtil.convertIfNeeded(filter.getValue(), metadataUtil.get(ctx.rootClass,
-				property).getJavaClass());
+		Object value = InternalUtil.convertIfNeeded(filter.getValue(), metadataUtil.get(ctx.rootClass, property)
+				.getJavaClass());
 		return param(ctx, value) + op + operation + " elements(" + getPathRef(ctx, property) + ")";
 	}
 
@@ -1119,24 +1126,24 @@ public abstract class BaseSearchProcessor {
 					"A property used in a Search may only contain word characters (alphabetic, numberic and underscore \"_\") and dot \".\" seperators. This constraint was violated: "
 							+ property);
 	}
-	
+
 	private static final ExampleOptions defaultExampleOptions = new ExampleOptions();
-	
+
 	public Filter getFilterFromExample(Object example) {
 		return getFilterFromExample(example, null);
 	}
-	
+
 	public Filter getFilterFromExample(Object example, ExampleOptions options) {
 		if (example == null)
 			return null;
 		if (options == null)
 			options = defaultExampleOptions;
-		
+
 		List<Filter> filters = new ArrayList<Filter>();
 		LinkedList<String> path = new LinkedList<String>();
 		Metadata metadata = metadataUtil.get(example.getClass());
 		getFilterFromExampleRecursive(example, metadata, options, path, filters);
-		
+
 		if (filters.size() == 0) {
 			return null;
 		} else if (filters.size() == 1) {
@@ -1145,8 +1152,9 @@ public abstract class BaseSearchProcessor {
 			return new Filter("AND", filters, Filter.OP_AND);
 		}
 	}
-	
-	private void getFilterFromExampleRecursive(Object example, Metadata metaData, ExampleOptions options, LinkedList<String> path, List<Filter> filters) {
+
+	private void getFilterFromExampleRecursive(Object example, Metadata metaData, ExampleOptions options,
+			LinkedList<String> path, List<Filter> filters) {
 		if (metaData.isEntity() && !metaData.getIdType().isEmeddable()) {
 			Object id = metaData.getIdValue(example);
 			if (id != null) {
@@ -1154,31 +1162,31 @@ public abstract class BaseSearchProcessor {
 				return;
 			}
 		}
-		
+
 		for (String property : metaData.getProperties()) {
 			if (options.getExcludeProps() != null && options.getExcludeProps().size() != 0) {
 				if (options.getExcludeProps().contains(listToPath(path, property)))
 					continue;
 			}
-			
+
 			Metadata pMetaData = metaData.getPropertyType(property);
 			if (pMetaData.isCollection()) {
-				//ignore collections
+				// ignore collections
 			} else {
 				Object value = metaData.getPropertyValue(example, property);
 				if (value == null) {
 					if (!options.isExcludeNulls()) {
 						filters.add(Filter.isNull(listToPath(path, property)));
 					}
-				} else if (options.isExcludeZeros() && value instanceof Number && ((Number)value).longValue() == 0) {
-					//ignore zeros
+				} else if (options.isExcludeZeros() && value instanceof Number && ((Number) value).longValue() == 0) {
+					// ignore zeros
 				} else {
 					if (pMetaData.isEntity() || pMetaData.isEmeddable()) {
 						path.add(property);
 						getFilterFromExampleRecursive(value, pMetaData, options, path, filters);
 						path.removeLast();
-					} else if (pMetaData.isString() && 
-							(options.getLikeMode() != ExampleOptions.EXACT || options.isIgnoreCase()) ) {
+					} else if (pMetaData.isString()
+							&& (options.getLikeMode() != ExampleOptions.EXACT || options.isIgnoreCase())) {
 						String val = value.toString();
 						switch (options.getLikeMode()) {
 						case ExampleOptions.START:
@@ -1191,7 +1199,8 @@ public abstract class BaseSearchProcessor {
 							val = "%" + val + "%";
 							break;
 						}
-						filters.add(new Filter(listToPath(path, property), val, options.isIgnoreCase() ? Filter.OP_ILIKE : Filter.OP_LIKE));
+						filters.add(new Filter(listToPath(path, property), val,
+								options.isIgnoreCase() ? Filter.OP_ILIKE : Filter.OP_LIKE));
 					} else {
 						filters.add(Filter.equal(listToPath(path, property), value));
 					}
@@ -1199,7 +1208,7 @@ public abstract class BaseSearchProcessor {
 			}
 		}
 	}
-	
+
 	private String listToPath(List<String> list, String lastProperty) {
 		StringBuilder sb = new StringBuilder();
 		for (String prop : list) {
