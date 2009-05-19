@@ -66,7 +66,7 @@ public class GeneralDAOImpl extends JPABaseDAO implements GeneralDAO {
 	}
 
 	public void removeByIds(Class<?> type, Serializable... ids) {
-		_removeById(type, ids);
+		_removeByIds(type, ids);
 	}
 
 	public <T> T merge(T entity) {

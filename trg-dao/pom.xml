@@ -91,10 +91,15 @@
 		</dependency>
 		
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.5</version>
-			<type>jar</type>
+			<groupId>com.trg</groupId>
+			<artifactId>trg-test-base</artifactId>
+			<version>0.5.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.trg</groupId>
+			<artifactId>trg-search-jpa-hibernate</artifactId>
+			<version>0.5.0</version>
 			<scope>test</scope>
 		</dependency>
 
