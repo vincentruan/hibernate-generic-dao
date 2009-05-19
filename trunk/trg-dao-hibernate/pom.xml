@@ -86,6 +86,11 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.trg</groupId>
+			<artifactId>trg-dao</artifactId>
+			<version>0.5.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.trg</groupId>
 			<artifactId>trg-search-hibernate</artifactId>
 			<version>0.5.0</version>
 		</dependency>

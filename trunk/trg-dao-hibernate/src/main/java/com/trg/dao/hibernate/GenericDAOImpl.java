@@ -1,10 +1,9 @@
-package com.trg.dao.dao.standard;
+package com.trg.dao.hibernate;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-import com.trg.dao.hibernate.BaseDAOImpl;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
@@ -25,7 +24,7 @@ import com.trg.search.SearchResult;
  */
 @SuppressWarnings("unchecked")
 public class GenericDAOImpl<T, ID extends Serializable> extends
-		BaseDAOImpl implements GenericDAO<T, ID> {
+		HibernateBaseDAO implements GenericDAO<T, ID> {
 
 	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass()
 			.getGenericSuperclass()).getActualTypeArguments()[0];

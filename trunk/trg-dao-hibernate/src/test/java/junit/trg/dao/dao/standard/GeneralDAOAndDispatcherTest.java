@@ -11,8 +11,8 @@ import test.trg.dao.dao.standard.PersonService;
 import test.trg.model.Person;
 
 import com.trg.dao.DAODispatcherException;
-import com.trg.dao.dao.standard.DAODispatcher;
-import com.trg.dao.dao.standard.GeneralDAO;
+import com.trg.dao.hibernate.DAODispatcher;
+import com.trg.dao.hibernate.GeneralDAO;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 

@@ -29,7 +29,7 @@ import com.trg.search.hibernate.HibernateSearchProcessor;
  * 
  */
 @SuppressWarnings("unchecked")
-public class BaseDAOImpl {
+public class HibernateBaseDAO {
 
 	private HibernateSearchProcessor searchProcessor;
 

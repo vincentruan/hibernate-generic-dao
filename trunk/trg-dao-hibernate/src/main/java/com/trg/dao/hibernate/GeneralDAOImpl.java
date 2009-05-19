@@ -1,9 +1,8 @@
-package com.trg.dao.dao.standard;
+package com.trg.dao.hibernate;
 
 import java.io.Serializable;
 import java.util.List;
 
-import com.trg.dao.hibernate.BaseDAOImpl;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
@@ -16,7 +15,7 @@ import com.trg.search.SearchResult;
  * @author dwolverton
  */
 @SuppressWarnings("unchecked")
-public class GeneralDAOImpl extends BaseDAOImpl implements GeneralDAO {
+public class GeneralDAOImpl extends HibernateBaseDAO implements GeneralDAO {
 
 	public int count(ISearch search) {
 		return _count(search);

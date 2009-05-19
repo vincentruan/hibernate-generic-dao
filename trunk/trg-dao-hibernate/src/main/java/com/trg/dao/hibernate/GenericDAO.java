@@ -1,4 +1,4 @@
-package com.trg.dao.dao.standard;
+package com.trg.dao.hibernate;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,13 +9,20 @@ import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
 /**
- * Interface for general Data Access Object that can be used for any type domain
- * object. A single instance implementing this interface can be used for
- * multiple types of domain objects.
+ * Interface for a Data Access Object that can be used for a single specified
+ * type domain object. A single instance implementing this interface can be used
+ * only for the type of domain object specified in the type parameters.
  * 
  * @author dwolverton
+ * 
+ * @param <T>
+ *            The type of the domain object for which this instance is to be
+ *            used.
+ * @param <ID>
+ *            The type of the id of the domain object for which this instance is
+ *            to be used.
  */
-public interface GeneralDAO {
+public interface GenericDAO<T, ID extends Serializable> {
 
 	/**
 	 * <p>
@@ -24,15 +31,13 @@ public interface GeneralDAO {
 	 * <p>
 	 * If none is found, return null.
 	 */
-	public <T> T find(Class<T> type, Serializable id);
+	public T find(ID id);
 
 	/**
 	 * Get all entities of the specified type from the datastore that have one
-	 * of these ids. An array of entities is returned that matches the same
-	 * order of the ids listed in the call. For each entity that is not found in
-	 * the datastore, a null will be inserted in its place in the return array.
+	 * of these ids.
 	 */
-	public <T> T[] find(Class<T> type, Serializable... ids);
+	public T[] find(ID... ids);
 
 	/**
 	 * <p>
@@ -48,13 +53,12 @@ public interface GeneralDAO {
 	 * @throws a
 	 *             HibernateException if no matching entity is found
 	 */
-	public <T> T getReference(Class<T> type, Serializable id);
+	public T getReference(ID id);
 
 	/**
 	 * <p>
 	 * Get a reference to the entities of the specified type with the given ids
-	 * from the datastore. An array of entities is returned that matches the
-	 * same order of the ids listed in the call.
+	 * from the datastore.
 	 * 
 	 * <p>
 	 * This does not require a call to the datastore and does not populate any
@@ -66,7 +70,7 @@ public interface GeneralDAO {
 	 *             HibernateException if any of the matching entities are not
 	 *             found.
 	 */
-	public <T> T[] getReferences(Class<T> type, Serializable... ids);
+	public T[] getReferences(ID... ids);
 
 	/**
 	 * <p>
@@ -82,7 +86,7 @@ public interface GeneralDAO {
 	 * 
 	 * @return <code>true</code> if create; <code>false</code> if update.
 	 */
-	public boolean save(Object entity);
+	public boolean save(T entity);
 
 	/**
 	 * <p>
@@ -96,7 +100,7 @@ public interface GeneralDAO {
 	 * will have no effect. If an entity to update has the same id as another
 	 * instance already attached to the session, an error will be thrown.
 	 */
-	public boolean[] save(Object... entities);
+	public boolean[] save(T... entities);
 
 	/**
 	 * Remove the specified entity from the datastore.
@@ -104,12 +108,12 @@ public interface GeneralDAO {
 	 * @return <code>true</code> if the entity is found in the datastore and
 	 *         removed, <code>false</code> if it is not found.
 	 */
-	public boolean remove(Object entity);
+	public boolean remove(T entity);
 
 	/**
 	 * Remove all of the specified entities from the datastore.
 	 */
-	public void remove(Object... entities);
+	public void remove(T... entities);
 
 	/**
 	 * Remove the entity with the specified type and id from the datastore.
@@ -117,30 +121,29 @@ public interface GeneralDAO {
 	 * @return <code>true</code> if the entity is found in the datastore and
 	 *         removed, <code>false</code> if it is not found.
 	 */
-	public boolean removeById(Class<?> type, Serializable id);
+	public boolean removeById(ID id);
 
 	/**
 	 * Remove all the entities of the given type from the datastore that have
 	 * one of these ids.
 	 */
-	public void removeByIds(Class<?> type, Serializable... ids);
+	public void removeByIds(ID... ids);
 
 	/**
 	 * Get a list of all the objects of the specified type.
 	 */
-	public <T> List<T> findAll(Class<T> type);
+	public List<T> findAll();
 
 	/**
-	 * Search for objects given the search parameters in the specified
+	 * Search for entities given the search parameters in the specified
 	 * <code>ISearch</code> object.
 	 */
-	@SuppressWarnings("unchecked")
-	public List search(ISearch search);
+	public List<T> search(ISearch search);
 
 	/**
-	 * Search for a single result using the given parameters.
+	 * Search for a single entity using the given parameters.
 	 */
-	public Object searchUnique(ISearch search);
+	public T searchUnique(ISearch search);
 
 	/**
 	 * Returns the total number of results that would be returned using the
@@ -153,33 +156,47 @@ public interface GeneralDAO {
 	 * results like <code>search()</code> and the total length like
 	 * <code>count()</code>.
 	 */
+	public SearchResult<T> searchAndCount(ISearch search);
+
+	/**
+	 * Search for objects given the search parameters in the specified
+	 * <code>ISearch</code> object. Return an untyped result list. The result
+	 * type can be determined by fetch mode and fetches on the search.
+	 */
 	@SuppressWarnings("unchecked")
-	public SearchResult searchAndCount(ISearch search);
+	public List searchGeneric(ISearch search);
+
+	/**
+	 * Search for a single result using the given parameters. Return an untyped
+	 * result. The result type can be determined by fetch mode and fetches on
+	 * the search.
+	 */
+	public Object searchUniqueGeneric(ISearch search);
 
 	/**
 	 * Returns <code>true</code> if the object is connected to the current
 	 * Hibernate session.
 	 */
-	public boolean isAttached(Object entity);
+	public boolean isAttached(T entity);
 
 	/**
 	 * Refresh the content of the given entity from the current datastore state.
 	 */
-	public void refresh(Object... entities);
+	public void refresh(T... entities);
 
 	/**
 	 * Flushes changes in the Hibernate session to the datastore.
 	 */
 	public void flush();
-
+	
 	/**
 	 * Generates a search filter from the given example using default options. 
 	 */
-	public Filter getFilterFromExample(Object example);
+	public Filter getFilterFromExample(T example);
 	
 	/**
 	 * Generates a search filter from the given example using the specified options. 
 	 */
-	public Filter getFilterFromExample(Object example, ExampleOptions options);
+	public Filter getFilterFromExample(T example, ExampleOptions options);
 
 }
