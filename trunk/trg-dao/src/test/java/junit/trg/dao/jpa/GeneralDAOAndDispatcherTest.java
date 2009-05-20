@@ -1,3 +1,17 @@
+/* Copyright 2009 The Revere Group
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package junit.trg.dao.jpa;
 
 import java.util.HashMap;
@@ -8,7 +22,6 @@ import test.trg.dao.jpa.dao.PersonDAO;
 import test.trg.dao.jpa.dao.PersonService;
 import test.trg.model.Person;
 
-import com.trg.dao.DAODispatcherException;
 import com.trg.dao.jpa.DAODispatcher;
 import com.trg.dao.jpa.GeneralDAO;
 import com.trg.search.ExampleOptions;
@@ -81,36 +94,26 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 		assertEquals(fred, dao.find(Person.class, fred.getId()));
 
 		//count
-		assertEquals(2, dao.count(new Search()));
 		assertEquals(2, dao.count(new Search(Person.class)));
 		
 		//searchAndCount
 		assertListEqual(new Person[] { bob, fred }, dao
-				.searchAndCount(new Search()).getResult());
-		assertListEqual(new Person[] { bob, fred }, dao
 				.searchAndCount(new Search(Person.class)).getResult());
 
 		//searchUnique
-		Search s = new Search();
+		Search s = new Search(Person.class);
 		s.addFilterEqual("id", bob.getId());
 		assertEquals(bob, dao.searchUnique(s));
-		s = new Search(Person.class);
-		s.addFilterEqual("father.id", bob.getId());
-		assertEquals(fred, dao.searchUnique(s));
 		
 		//searchGeneric
-		s = new Search();
-		s.addFilterEqual("id", bob.getId());
+		s = new Search(Person.class);
+		s.addFilterEqual("father.id", bob.getId());
 		s.setResultMode(Search.RESULT_SINGLE);
 		s.addField("firstName");
-		assertEquals(bob.getFirstName(), dao.search(s).get(0));
-		s.setSearchClass(Person.class);
-		assertEquals(bob.getFirstName(), dao.search(s).get(0));
+		assertEquals(fred.getFirstName(), dao.search(s).get(0));
 
 		//searchUniqueGeneric
-		assertEquals(bob.getFirstName(), dao.searchUnique(s));
-		s.setSearchClass(null);
-		assertEquals(bob.getFirstName(), dao.searchUnique(s));
+		assertEquals(fred.getFirstName(), dao.searchUnique(s));
 		
 		//example
 		Person example = new Person();
@@ -205,7 +208,7 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 		
 		dao.persist(new Person("Andy", "Warhol"), new Person("Jimmy", "Hendrix"));
 		
-		assertEquals(2, dao.count(new Search().addFilterIn("firstName", "Andy", "Jimmy")));
+		assertEquals(2, dao.count(new Search(Person.class).addFilterIn("firstName", "Andy", "Jimmy")));
 		
 		Person a = dao.getReference(Person.class, bob2.getId());
 		Person b = dao.getReference(Person.class, bob2.getId() + 10);
