@@ -1,3 +1,17 @@
+/* Copyright 2009 The Revere Group
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package junit.trg.dao.hibernate;
 
 import java.util.HashMap;
@@ -88,13 +102,27 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 		assertListEqual(new Person[] { bob, fred }, dao
 				.search(new Search(Person.class)));
 
+		//count
 		assertEquals(2, dao.count(new Search(Person.class)));
+		
+		//searchAndCount
 		assertListEqual(new Person[] { bob, fred }, dao
 				.searchAndCount(new Search(Person.class)).getResult());
 
+		//searchUnique
 		Search s = new Search(Person.class);
 		s.addFilterEqual("id", bob.getId());
 		assertEquals(bob, dao.searchUnique(s));
+		
+		//searchGeneric
+		s = new Search(Person.class);
+		s.addFilterEqual("father.id", bob.getId());
+		s.setResultMode(Search.RESULT_SINGLE);
+		s.addField("firstName");
+		assertEquals(fred.getFirstName(), dao.search(s).get(0));
+
+		//searchUniqueGeneric
+		assertEquals(fred.getFirstName(), dao.searchUnique(s));
 		
 		//example
 		Person example = new Person();
