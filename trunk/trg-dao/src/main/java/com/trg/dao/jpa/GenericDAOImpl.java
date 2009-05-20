@@ -70,7 +70,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public void remove(T... entities) {
-		_removeEntity(entities);
+		_removeEntities((Object[]) entities);
 	}
 
 	public boolean removeById(ID id) {
