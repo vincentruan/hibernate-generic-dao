@@ -1,3 +1,17 @@
+/* Copyright 2009 The Revere Group
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.trg.dao.jpa;
 
 import java.io.Serializable;
@@ -11,26 +25,30 @@ import com.trg.search.ISearch;
 import com.trg.search.SearchResult;
 
 /**
- * <p>This is an implementation of GeneralDAO that delegates to other DAOs
+ * <p>
+ * This is an implementation of GeneralDAO that delegates to other DAOs
  * depending on what entity class is being processed.
  * 
- * <p>Set the specificDAOs Map in order to configure which DAO will be used
- * for which entity class. If the map contains no entry for a given class,
- * the generalDAO is used.
+ * <p>
+ * Set the specificDAOs Map in order to configure which DAO will be used for
+ * which entity class. If the map contains no entry for a given class, the
+ * generalDAO is used.
  * 
- * <p>For example to dispatch operation on com.myproject.model.Customer to a DAO called customerDAO,
- * set the map like this. (Of course tools like Spring can be used to do this
- * configuration more elequently.)
+ * <p>
+ * For example to dispatch operation on com.myproject.model.Customer to a DAO
+ * called customerDAO, set the map like this. (Of course tools like Spring can
+ * be used to do this configuration more elequently.)
+ * 
  * <pre>
- * Map<String,Object> specificDAOs = new HashMap<String,Object>();
- * specificDAOs.put("com.myproject.model.Customer", customerDAO);
+ * Map&lt;String, Object&gt; specificDAOs = new HashMap&lt;String, Object&gt;();
+ * specificDAOs.put(&quot;com.myproject.model.Customer&quot;, customerDAO);
  * 
  * DAODispatcher dispatcher = new DAODispatcher();
  * dispatcher.setSpecificDAOs(specificDAOs);
  * </pre>
  * 
  * @author dwolverton
- *
+ * 
  */
 @SuppressWarnings("unchecked")
 public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
@@ -42,7 +60,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 	 * Which model class it uses is specified when calling the particular
 	 * method.
 	 */
-	
+
 	public void setGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
 	}
@@ -106,7 +124,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		throw new DAODispatcherException(
 				"The flush() method cannot be used with DAODispatcher because it could does not include a Class type to dispatch to. Use flush(Class<?>).");
 	}
-	
+
 	public void flush(Class<?> klass) {
 		Object specificDAO = getSpecificDAO(klass.getName());
 		if (specificDAO != null) {
@@ -161,15 +179,16 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 
 	public void refresh(Object... entities) {
 		Class<?> type = getUniformArrayType(entities);
-		if (type == null) return;
+		if (type == null)
+			return;
 		if (type.equals(Object.class)) {
-			//There are several different types of entities
+			// There are several different types of entities
 			for (Object entity : entities) {
 				refresh(entity);
 			}
 			return;
-		}		
-		
+		}
+
 		Object specificDAO = getSpecificDAO(type.getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
@@ -197,15 +216,16 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 
 	public void remove(Object... entities) {
 		Class<?> type = getUniformArrayType(entities);
-		if (type == null) return;
+		if (type == null)
+			return;
 		if (type.equals(Object.class)) {
-			//There are several different types of entities
+			// There are several different types of entities
 			for (Object entity : entities) {
 				remove(entity);
 			}
 			return;
 		}
-		
+
 		Object specificDAO = getSpecificDAO(type.getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
@@ -264,14 +284,14 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		if (type == null)
 			return new Object[entities.length];
 		if (type.equals(Object.class)) {
-			//There are several different types of entities
+			// There are several different types of entities
 			Object[] retVal = new Object[entities.length];
 			for (int i = 0; i < entities.length; i++) {
 				retVal[i] = save(entities[i]);
 			}
 			return retVal;
 		}
-		
+
 		Object specificDAO = getSpecificDAO(type.getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
@@ -288,9 +308,17 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
-				return ((GenericDAO) specificDAO).search(search);
+				return ((GenericDAO) specificDAO).searchGeneric(search);
 			} else {
-				return (List) callMethod(specificDAO, "search", search);
+				try {
+					return (List) callMethod(specificDAO, "searchGeneric", search);
+				} catch (DAODispatcherException ex) {
+					if (ex.getCause() instanceof NoSuchMethodException) {
+						return (List) callMethod(specificDAO, "search", search);
+					} else {
+						throw ex;
+					}
+				}
 			}
 		} else {
 			return generalDAO.search(search);
@@ -314,15 +342,23 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
-				return ((GenericDAO) specificDAO).searchUnique(search);
+				return ((GenericDAO) specificDAO).searchUniqueGeneric(search);
 			} else {
-				return callMethod(specificDAO, "searchUnique", search);
+				try {
+					return callMethod(specificDAO, "searchUniqueGeneric", search);
+				} catch (DAODispatcherException ex) {
+					if (ex.getCause() instanceof NoSuchMethodException) {
+						return callMethod(specificDAO, "searchUnique", search);
+					} else {
+						throw ex;
+					}
+				}
 			}
 		} else {
 			return generalDAO.searchUnique(search);
 		}
 	}
-	
+
 	public Filter getFilterFromExample(Object example) {
 		Object specificDAO = getSpecificDAO(example.getClass().getName());
 		if (specificDAO != null) {
@@ -335,7 +371,7 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 			return generalDAO.getFilterFromExample(example);
 		}
 	}
-	
+
 	public Filter getFilterFromExample(Object example, ExampleOptions options) {
 		Object specificDAO = getSpecificDAO(example.getClass().getName());
 		if (specificDAO != null) {
@@ -369,14 +405,14 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		if (type == null)
 			return new Object[entities.length];
 		if (type.equals(Object.class)) {
-			//There are several different types of entities
+			// There are several different types of entities
 			Object[] retVal = new Object[entities.length];
 			for (int i = 0; i < entities.length; i++) {
 				retVal[i] = merge(entities[i]);
 			}
 			return retVal;
 		}
-		
+
 		Object specificDAO = getSpecificDAO(type.getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
@@ -391,15 +427,16 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 
 	public void persist(Object... entities) {
 		Class<?> type = getUniformArrayType(entities);
-		if (type == null) return;
+		if (type == null)
+			return;
 		if (type.equals(Object.class)) {
-			//There are several different types of entities
+			// There are several different types of entities
 			for (Object entity : entities) {
 				persist(entity);
 			}
 			return;
-		}		
-		
+		}
+
 		Object specificDAO = getSpecificDAO(type.getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
