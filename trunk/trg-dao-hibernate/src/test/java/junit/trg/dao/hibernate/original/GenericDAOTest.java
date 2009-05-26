@@ -130,6 +130,18 @@ public class GenericDAOTest extends BaseTest {
 		s.addFilter(personDAO.getFilterFromExample(example, new ExampleOptions().setExcludeZeros(true)));
 		assertEquals(bob, personDAO.searchUnique(s));
 		
+		//check searching with null
+		assertListEqual(personDAO.search(null), fred, bob);
+		assertListEqual(personDAO.searchGeneric(null), fred, bob);
+		assertListEqual(personDAO.search(null), fred, bob);
+		assertListEqual(personDAO.searchGeneric(null), fred, bob);
+		assertEquals(2, personDAO.count(null));
+		assertListEqual(personDAO.searchAndCount(null).getResult(), fred, bob);
+		assertEquals(2, personDAO.searchAndCount(null).getTotalCount());
+		try {
+			personDAO.searchUnique(null);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
 		
 
 		personDAO.deleteEntity(bob);

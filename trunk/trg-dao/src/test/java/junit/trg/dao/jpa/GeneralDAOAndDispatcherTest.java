@@ -133,6 +133,41 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 		s.addFilter(dao.getFilterFromExample(example, new ExampleOptions().setExcludeZeros(true)));
 		assertEquals(bob, dao.searchUnique(s));
 		
+		//test nulls
+		try {
+			dao.search(null);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		try {
+			dao.count(null);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		try {
+			dao.searchAndCount(null);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		try {
+			dao.searchUnique(null);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		s = new Search();
+		try {
+			dao.search(s);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		try {
+			dao.count(s);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		try {
+			dao.searchAndCount(s);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		try {
+			dao.searchUnique(s);
+			fail("Should have thrown NullPointerException.");
+		} catch (NullPointerException ex) {}
+		
 
 		assertTrue(dao.removeById(Person.class, fred.getId()));
 		assertEquals(null, dao.find(Person.class, fred.getId()));
