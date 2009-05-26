@@ -23,6 +23,13 @@ import test.trg.PersistenceHelper;
 
 public class HibernatePersistenceHelper implements PersistenceHelper {
 
+	private SessionFactory sessionFactory;
+
+	@Autowired
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T> T find(Class<T> type, Serializable id) {
 		return (T) sessionFactory.getCurrentSession().get(type, id);
@@ -39,12 +46,10 @@ public class HibernatePersistenceHelper implements PersistenceHelper {
 	public void clear() {
 		sessionFactory.getCurrentSession().clear();
 	}
-	
-	private SessionFactory sessionFactory;
 
-	@Autowired
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
+	@SuppressWarnings("unchecked")
+	public <T> T getProxy(Class<T> type, Serializable id) {
+		return (T) sessionFactory.getCurrentSession().load(type, id);
 	}
 
 }
