@@ -1,0 +1,16 @@
+a {
+	color: blue;
+}
+
+a.sort_asc:after {
+	content: url(asc.gif);
+}
+
+a.sort_desc:after {
+	content: url(desc.gif);
+}
+
+.disabledLink {
+	color: gray;
+	text-decoration: underline;
+}
