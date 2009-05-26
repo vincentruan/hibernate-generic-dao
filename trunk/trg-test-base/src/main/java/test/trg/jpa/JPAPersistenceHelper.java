@@ -46,4 +46,8 @@ public class JPAPersistenceHelper implements PersistenceHelper {
 		this.entityManager = enityManager;
 	}
 
+	public <T> T getProxy(Class<T> type, Serializable id) {
+		return entityManager.getReference(type, id);
+	}
+
 }

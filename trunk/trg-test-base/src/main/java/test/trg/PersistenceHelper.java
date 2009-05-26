@@ -21,6 +21,8 @@ public interface PersistenceHelper {
 
 	public void persist(Object entity);
 	
+	public <T> T getProxy(Class<T> type, Serializable id);
+	
 	public void flush();
 	
 	public void clear();
