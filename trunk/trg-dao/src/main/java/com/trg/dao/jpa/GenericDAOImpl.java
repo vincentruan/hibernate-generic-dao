@@ -21,6 +21,7 @@ import java.util.List;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
+import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
 /**
@@ -44,6 +45,8 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 			.getGenericSuperclass()).getActualTypeArguments()[0];
 
 	public int count(ISearch search) {
+		if (search == null)
+			search = new Search();
 		return _count(persistentClass, search);
 	}
 
@@ -116,14 +119,24 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public List<T> search(ISearch search) {
+		if (search == null)
+			return findAll();
 		return _search(persistentClass, search);
 	}
 
 	public SearchResult<T> searchAndCount(ISearch search) {
+		if (search == null) {
+			SearchResult<T> result = new SearchResult<T>();
+			result.setResult(findAll());
+			result.setTotalCount(result.getResult().size());
+			return result;
+		}
 		return _searchAndCount(persistentClass, search);
 	}
 
 	public List searchGeneric(ISearch search) {
+		if (search == null)
+			return findAll();
 		return _search(persistentClass, search);
 	}
 

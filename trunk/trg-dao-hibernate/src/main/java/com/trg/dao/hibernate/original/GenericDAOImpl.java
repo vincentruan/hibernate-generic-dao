@@ -24,6 +24,7 @@ import com.trg.dao.hibernate.HibernateBaseDAO;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
+import com.trg.search.Search;
 import com.trg.search.SearchResult;
 
 /**
@@ -99,7 +100,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 
 	public int count(ISearch search) {
 		if (search == null)
-			return 0;
+			search = new Search();
 		return _count(persistentClass, search);
 	}
 
