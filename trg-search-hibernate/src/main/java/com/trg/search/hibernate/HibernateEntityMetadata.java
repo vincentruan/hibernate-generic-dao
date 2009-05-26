@@ -20,6 +20,7 @@ import org.hibernate.EntityMode;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.SessionFactoryImplementor;
 import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.CollectionType;
 import org.hibernate.type.EntityType;
 import org.hibernate.type.Type;
@@ -52,7 +53,11 @@ public class HibernateEntityMetadata implements Metadata {
 	}
 
 	public Serializable getIdValue(Object object) {
-		return metadata.getIdentifier(object, EntityMode.POJO);
+		if (object instanceof HibernateProxy) {
+			return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
+		} else {
+			return metadata.getIdentifier(object, EntityMode.POJO);
+		}
 	}
 
 	public Class<?> getJavaClass() {

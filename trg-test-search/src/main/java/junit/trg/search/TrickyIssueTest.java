@@ -18,12 +18,21 @@ import java.util.List;
 import java.util.Map;
 
 import test.trg.model.Home;
+import test.trg.model.LimbedPet;
 import test.trg.model.Person;
+import test.trg.model.Pet;
 import test.trg.search.BaseSearchTest;
 
+import com.trg.search.MetadataUtil;
 import com.trg.search.Search;
 
 public class TrickyIssueTest extends BaseSearchTest {
+	public void setMetadataUtil(MetadataUtil metadataUtil) {
+		this.metadataUtil = metadataUtil;
+	}
+
+	protected MetadataUtil metadataUtil;
+
 	/**
 	 * The alias error occurs when using result mode FETCH_MAP. It occurs when
 	 * there is a field that has a key with no "." in it and is the same as a
@@ -110,38 +119,66 @@ public class TrickyIssueTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")
 	public void testNumberClassCastError() {
 		initDB();
-		
+
 		Search s = new Search(Person.class);
-		
-		s.addFilterGreaterThan("id", new Integer(0)); //id should be Long
-		assertListEqual(new Person[] { sallyA, joeA, joeB, margretB, mamaB, papaA, mamaA, papaB, grandpaA, grandmaA }, target.search(s));
-		
+
+		s.addFilterGreaterThan("id", new Integer(0)); // id should be Long
+		assertListEqual(new Person[] { sallyA, joeA, joeB, margretB, mamaB, papaA, mamaA, papaB, grandpaA, grandmaA },
+				target.search(s));
+
 		s.clear();
 		s.addFilterEqual("age", new Long(40L));
 		assertListEqual(new Person[] { mamaA }, target.search(s));
-		
+
 		s.clear();
 		s.addFilterEqual("age", new Double(10.0));
 		assertListEqual(new Person[] { joeA, joeB }, target.search(s));
-		
+
 		s.clear();
 		s.addFilterEqual("mother.age", new Double(40.0));
 		assertListEqual(new Person[] { joeA, sallyA }, target.search(s));
-		
+
 		s.clear();
 		s.addFilterEqual("mother.home.address", mamaA.getHome().getAddress());
 		assertListEqual(new Person[] { joeA, sallyA }, target.search(s));
-		
+
 		s.clear();
 		s.addFilterEqual("mother.home.address.id", new Float(mamaA.getHome().getAddress().getId().floatValue()));
 		assertListEqual(new Person[] { joeA, sallyA }, target.search(s));
-		
+
 		s.clear();
-		s.addFilterIn("id", new Object[] { new Integer(joeA.getId().intValue()), new Integer(joeB.getId().intValue()) });
+		s
+				.addFilterIn("id", new Object[] { new Integer(joeA.getId().intValue()),
+						new Integer(joeB.getId().intValue()) });
 		assertListEqual(new Person[] { joeA, joeB }, target.search(s));
-		
+
 		s.clear();
-		s.addFilterIn("id", (Object[]) new Integer[] { new Integer(joeA.getId().intValue()), new Integer(joeB.getId().intValue()) });
+		s.addFilterIn("id", (Object[]) new Integer[] { new Integer(joeA.getId().intValue()),
+				new Integer(joeB.getId().intValue()) });
 		assertListEqual(new Person[] { joeA, joeB }, target.search(s));
+	}
+
+	/**
+	 * MetadataUtil uses an object's class to introspect it's persistent
+	 * properties. But proxied objects may have classes like
+	 * test.trg.model.Person_$$_javassist_5 which Hibernate does not recognize
+	 * as a configured entity class. So MetadataUtil needs to take special care
+	 * to function properly in these situations.
+	 */
+	public void testMetadataForProxy() {
+		initDB();
+		
+		Person p = (Person) target.searchUnique(new Search(Person.class).addFilterEqual("id", joeA.getId()));
+		//home will be a proxy object
+		assertEquals(Home.class, metadataUtil.get(p.getHome().getClass()).getJavaClass());
+		//test getting the id of a proxy
+		assertEquals(joeA.getHome().getId(), metadataUtil.getId(p.getHome()));
+		
+		//test with subclasses
+		Pet x = (Pet) getProxy(Pet.class, fishWiggles.getId());
+		LimbedPet y = (LimbedPet) getProxy(LimbedPet.class, catNorman.getId());
+		
+		assertEquals(Pet.class, metadataUtil.get(x.getClass()).getJavaClass());
+		assertEquals(LimbedPet.class, metadataUtil.get(y.getClass()).getJavaClass());
 	}
 }

@@ -15,9 +15,13 @@
 package com.trg.search.hibernate;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
+import org.hibernate.EntityMode;
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SessionFactory;
@@ -88,11 +92,40 @@ public class HibernateMetadataUtil implements MetadataUtil {
 
 	public Metadata get(Class<?> entityClass) {
 		ClassMetadata cm = sessionFactory.getClassMetadata(entityClass);
-		if (cm == null)
+		if (cm == null) {
+			//cm will be null if entityClass is not registered with Hibernate. However
+			//there are cases where this will return a false negative. For example when
+			//we have a Hibernate proxy class (e.x. test.trg.model.Person_$$_javassist_5),
+			//we need that to be recognized, but it is not. So if a class is not recognized,
+			//we will loop through all recognized classes and do a less strict comparison...
+			Map<String, ClassMetadata> m = sessionFactory.getAllClassMetadata();
+			List<ClassMetadata> candidates = new ArrayList<ClassMetadata>();
+			for (ClassMetadata md : m.values()) {
+				if (md.getMappedClass(EntityMode.POJO).isAssignableFrom(entityClass)) {
+					candidates.add(md);
+				}
+			}
+			
+			if (candidates.size() == 1) {
+				return new HibernateEntityMetadata(sessionFactory, candidates.get(0), null);
+			} else if (candidates.size() > 1) {
+				for (int i = candidates.size() - 1; i >= 0; i--) {
+					for (int j = 0; j < candidates.size(); j++) {
+						//if i is a superclass of j, drop i and keep j. we want the most specific class.
+						if (i != j && candidates.get(i).getMappedClass(EntityMode.POJO).isAssignableFrom(candidates.get(j).getMappedClass(EntityMode.POJO))) {
+							candidates.remove(i);
+							break;
+						}
+					}
+				}
+				return new HibernateEntityMetadata(sessionFactory, candidates.get(0), null);
+			}
+			
 			throw new IllegalArgumentException("Unable to introspect " + entityClass.toString()
 					+ ". The class is not a registered Hibernate entity.");
-		else
+		} else {
 			return new HibernateEntityMetadata(sessionFactory, cm, null);
+		}
 	}
 
 	public Metadata get(Class<?> rootEntityClass, String propertyPath) {
