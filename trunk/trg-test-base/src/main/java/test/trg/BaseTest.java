@@ -57,6 +57,10 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	public <T> T find(Class<T> type, Serializable id) {
 		return persistenceHelper.find(type, id);
 	}
+	
+	public <T> T getProxy(Class<T> type, Serializable id) {
+		return persistenceHelper.getProxy(type, id);
+	}
 
 	public void persist(Object entity) {
 		persistenceHelper.persist(entity);
