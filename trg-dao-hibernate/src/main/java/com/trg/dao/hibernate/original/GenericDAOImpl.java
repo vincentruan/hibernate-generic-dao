@@ -135,9 +135,6 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public Object searchUnique(ISearch search) throws NonUniqueResultException {
-		if (search == null)
-			return null;
-		
 		return _searchUnique(persistentClass, search);
 	}
 

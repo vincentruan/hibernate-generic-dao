@@ -360,7 +360,11 @@ public class BaseDAOTest extends BaseTest {
 	}
 	
 	public void testRefresh() {
-		//TODO
+		//This test isn't very complete. I don't have a way to alter the underlying data so I can refresh.
+		Person p = copy(grandpaA);
+		target.persist(p);
+		target.refresh(p, p);
+		p.getId();
 	}
 
 	public void testFindMulti() {
