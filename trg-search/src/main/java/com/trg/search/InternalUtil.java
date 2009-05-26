@@ -38,32 +38,58 @@ public class InternalUtil {
 	 */
 	public static Object convertIfNeeded(Object value, Class<?> type) throws ClassCastException {
 		if (value == null)
-			return value;
+			return null;
 		if (type.isInstance(value))
 			return value;
 
-		if (Number.class.isAssignableFrom(type) && value instanceof Number) {
-			Number num = (Number) value;
+		if (String.class.equals(type)) {
+			return value.toString();
+		} else if (Number.class.isAssignableFrom(type)) {
+			// the desired type is a number
+			if (value instanceof Number) {
+				// the value is also a number of some kind. do a conversion
+				// to the correct number type.
+				Number num = (Number) value;
 
-			if (type.equals(Double.class)) {
-				return new Double(num.doubleValue());
-			} else if (type.equals(Float.class)) {
-				return new Float(num.floatValue());
-			} else if (type.equals(Long.class)) {
-				return new Long(num.longValue());
-			} else if (type.equals(Integer.class)) {
-				return new Integer(num.intValue());
-			} else if (type.equals(Short.class)) {
-				return new Short(num.shortValue());
-			} else {
+				if (type.equals(Double.class)) {
+					return new Double(num.doubleValue());
+				} else if (type.equals(Float.class)) {
+					return new Float(num.floatValue());
+				} else if (type.equals(Long.class)) {
+					return new Long(num.longValue());
+				} else if (type.equals(Integer.class)) {
+					return new Integer(num.intValue());
+				} else if (type.equals(Short.class)) {
+					return new Short(num.shortValue());
+				} else {
+					try {
+						return type.getConstructor(String.class).newInstance(value.toString());
+					} catch (IllegalArgumentException e) {
+					} catch (SecurityException e) {
+					} catch (InstantiationException e) {
+					} catch (IllegalAccessException e) {
+					} catch (InvocationTargetException e) {
+					} catch (NoSuchMethodException e) {
+					}
+				}
+			} else if (value instanceof String) {
+				//the value is a String. attempt to parse the string
 				try {
-					return type.getConstructor(String.class).newInstance(value.toString());
-				} catch (IllegalArgumentException e) {
-				} catch (SecurityException e) {
-				} catch (InstantiationException e) {
-				} catch (IllegalAccessException e) {
-				} catch (InvocationTargetException e) {
-				} catch (NoSuchMethodException e) {
+					if (type.equals(Double.class)) {
+						return Double.parseDouble((String) value);
+					} else if (type.equals(Float.class)) {
+						return Float.parseFloat((String) value);
+					} else if (type.equals(Long.class)) {
+						return Long.parseLong((String) value);
+					} else if (type.equals(Integer.class)) {
+						return Integer.parseInt((String) value);
+					} else if (type.equals(Short.class)) {
+						return Short.parseShort((String) value);
+					} else if (type.equals(Byte.class)) {
+						return Byte.parseByte((String) value);
+					}
+				} catch (NumberFormatException ex) {
+					//fall through to the error thrown below
 				}
 			}
 		} else if (Class.class.equals(type)) {
