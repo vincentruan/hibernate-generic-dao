@@ -52,12 +52,12 @@ Download the jars from http://hibernate-generic-dao.googlecode.com/svn/trunk/mav
 
 The DAO requires both the _trg-search_ jar and the _trg-dao_ jar.
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/0.5.0/trg-dao-0.5.0.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/0.5.0/trg-dao-0.5.0.jar <br/>
 http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search/0.5.0/trg-search-0.5.0.jar
 
 If you are using standard Hibernate without JPA, you will also need the _trg-search-hibernate_ and _trg-dao-hibernate_ jars.
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao-hibernate/0.5.0/trg-dao-hibernate-0.5.0.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao-hibernate/0.5.0/trg-dao-hibernate-0.5.0.jar <br/>
 http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-hibernate/0.5.0/trg-search-hibernate-0.5.0.jar
 
 You can also get the source jar to help out your IDE with Javadocs and to help yourself out being able to see what's going on (trg-dao-X.X.X-sources.jar).
