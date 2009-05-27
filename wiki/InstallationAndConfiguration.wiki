@@ -1,20 +1,49 @@
 #summary How to use the framework in your project.
 #labels Featured
 
+=Introduction=
+Version 0.5.0 introduced support for JPA, which allows (in theory) for use of any JPA provider, not just Hibernate (ex: Hibernate Entity Manager, OpenJPA, TopLink). Here we lay out the different installation options.
+
+=The Options=
+  * Use standard Hibernate
+
+  * Use Hibernate's JPA implementation
+
+  
+
 =Installation=
 ==Maven==
-If your project uses Maven, then simply add the repository and dependency...
+For projects that use Maven for dependency management, we have a repository. Reference it in your POM as follows:
 {{{
 <repository>
         <id>trg-dao-repo</id>
         <name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
         <url>http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/</url>
 </repository>
+}}}
 
+If you want to use standard hibernate without JPA, include the following dependency...
+{{{
+<dependency>
+        <groupId>com.trg</groupId>
+        <artifactId>trg-dao-hibernate</artifactId>
+        <version>0.5.0</version> <!-- or whatever the latest version is -->
+</dependency>
+}}}
+
+If you want to use JPA with the Hibernate JPA implementation, include these dependencies instead...
+{{{
+<!-- This first dependency includes all the JPA implementations for the DAOs -->
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-dao</artifactId>
-        <version>0.4.3</version> <!-- or whatever the latest version is -->
+        <version>0.5.0</version> <!-- or whatever the latest version is -->
+</dependency>
+<!-- This second one includes the Hibernate Entity Manager JPA implementation -->
+<dependency>
+        <groupId>com.trg</groupId>
+        <artifactId>trg-search-jpa-hibernate</artifactId>
+        <version>0.5.0</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
