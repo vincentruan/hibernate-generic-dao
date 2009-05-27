@@ -6,6 +6,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+/**
+ * This is one of our DTOs. It is recognized by Hibernate as an entity by the @Entity
+ * annotation. Other annotations provide further information to Hibernate about
+ * how to map the Entity to a database tables.
+ * 
+ * @author dwolverton
+ * 
+ */
 @Entity
 public class Citizen {
 	@Id

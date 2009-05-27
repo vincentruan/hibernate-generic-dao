@@ -28,6 +28,7 @@ public class CitizenController {
 	public void list(HttpServletRequest request, Model model) {
 		Search search = new Search();
 		search.setMaxResults(10);
+		//Fill in the sort, paging, filters from request parameters automatically.
 		Util.getSearchFromParams(search, request.getParameterMap());
 		
 		SearchResult<Citizen> results = citizenService.searchAndCount(search);
@@ -39,6 +40,7 @@ public class CitizenController {
 	@RequestMapping
 	public String delete(@RequestParam("id") Long id, HttpServletRequest request) {
 		citizenService.delete(id);
+		//Preserve the search parameters over redirect by adding them to the URL.
 		return Util.addSearchParamsToURL("redirect:list.do", request.getParameterMap(), true, true, true);
 	}
 }

@@ -7,17 +7,47 @@
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context-2.5.xsd">
 
+	<!-- Use annotations (@Autowired) for property injection -->
 	<context:annotation-config />
-	
+
+	<!--
+		Spring will find all of our controllers automatically because they are
+		annotated with @Controller. We do not need to configure them in XML.
+	-->
 	<context:component-scan base-package="sample.trg.oldworld.web" />
-	
-	<bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" p:order="1"/>
-	
-	<bean class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping" p:order="2"/>
-	
-	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"/>
+
+	<!--
+		We have two Spring MVC handler mappings. The first looks at
+		@RequestMapping annotations and XML mappings.
+	-->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"
+		p:order="1" />
+
+	<!--
+		If an incoming request is not mapped by the first handler mapping, the
+		task falls to this mapping which uses the controller class name for
+		mapping (ex: /town.do or /town/... map to TownController)
+	-->
+	<bean
+		class="org.springframework.web.servlet.mvc.support.ControllerClassNameHandlerMapping"
+		p:order="2" />
+
+	<!--
+		Methods within the controllers are mapped to URLs by @RequestMapping
+		annotations. For example, TownController has an annotated method
+		"list"; /town/list.do will be mapped to this method.
+	-->
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" />
 
 
+	<!--
+		Views are located in /WEB-INF/view/ and end with a .jsp extension. If
+		a handler method does not explicitly specify a view, the view is
+		determined from the URL: for example, /town/list.do would default to
+		/WEB-INF/view/town/list.jsp
+	-->
 	<bean id="viewResolver"
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/view/" />

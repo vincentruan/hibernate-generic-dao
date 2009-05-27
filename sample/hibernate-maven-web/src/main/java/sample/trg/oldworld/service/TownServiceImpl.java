@@ -3,9 +3,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import sample.trg.oldworld.dao.TownDAO;
 import sample.trg.oldworld.model.Town;
@@ -13,8 +11,16 @@ import sample.trg.oldworld.model.Town;
 import com.trg.search.ISearch;
 import com.trg.search.Search;
 
+/**
+ * This is the implementation for our Town Service. The @Service annotation
+ * allows Spring to automatically detect this as a component rather than having
+ * to comfigure it in XML. The @Autowired annotation tells Spring to inject our
+ * Town DAO using the setDao() method.
+ * 
+ * @author dwolverton
+ * 
+ */
 @Service
-@Transactional
 public class TownServiceImpl implements TownService {
 
 	TownDAO dao;

@@ -7,13 +7,23 @@ import javax.servlet.jsp.JspTagException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
 
+/**
+ * A tag that creates a link and copies search parameters from the request to
+ * URL parameters on the link. Thus the search parameters will again be passed
+ * in the next request when the link is followed.
+ * 
+ * @author dwolverton
+ * 
+ */
 public class PreserveSearchLinkTag extends TagSupport {
+	private static final long serialVersionUID = 1L;
+
 	String href;
 	boolean includeSorts;
 	boolean includeFilters;
 	boolean includePaging;
 	boolean disabled;
-	
+
 	@Override
 	public void setPageContext(PageContext pageContext) {
 		includeFilters = true;
@@ -23,7 +33,7 @@ public class PreserveSearchLinkTag extends TagSupport {
 		attributes = new StringBuilder();
 		super.setPageContext(pageContext);
 	}
-	
+
 	public void setHref(String href) {
 		this.href = href;
 	}
@@ -35,7 +45,7 @@ public class PreserveSearchLinkTag extends TagSupport {
 	public void setIncludeFilters(boolean includeFilters) {
 		this.includeFilters = includeFilters;
 	}
-	
+
 	public void setIncludePaging(boolean includePaging) {
 		this.includePaging = includePaging;
 	}
@@ -43,7 +53,6 @@ public class PreserveSearchLinkTag extends TagSupport {
 	public void setTitle(String value) {
 		addAttribute("title", value);
 	}
-	
 
 	public void setStyleClass(String value) {
 		addAttribute("class", value);
@@ -56,7 +65,7 @@ public class PreserveSearchLinkTag extends TagSupport {
 	public void setStyle(String value) {
 		addAttribute("style", value);
 	}
-	
+
 	public void setDisabled(boolean value) {
 		disabled = value;
 	}
@@ -80,9 +89,10 @@ public class PreserveSearchLinkTag extends TagSupport {
 				pageContext.getOut().print("<span class=\"disabledLink\">");
 				return EVAL_BODY_INCLUDE;
 			}
-			
-			href = Util.addSearchParamsToURL(href, pageContext.getRequest().getParameterMap(), includeSorts, includeFilters, includePaging);
-		
+
+			href = Util.addSearchParamsToURL(href, pageContext.getRequest().getParameterMap(), includeSorts,
+					includeFilters, includePaging);
+
 			pageContext.getOut().print("<a href=\"");
 			pageContext.getOut().print(href);
 			pageContext.getOut().print("\"");

@@ -26,6 +26,7 @@ public class TownController {
 	
 	@RequestMapping
 	public List<Town> list(HttpServletRequest request) {
+		//Fill in the sort, paging, filters from request parameters automatically.
 		ISearch search = Util.getSearchFromParams(request.getParameterMap());
 		return townService.search(search);
 	}
@@ -33,6 +34,7 @@ public class TownController {
 	@RequestMapping
 	public String delete(@RequestParam("id") Long id, HttpServletRequest request) {
 		townService.delete(id);
+		//Preserve the search parameters over redirect by adding them to the URL.
 		return Util.addSearchParamsToURL("redirect:list.do", request.getParameterMap(), true, true, true);
 	}
 }

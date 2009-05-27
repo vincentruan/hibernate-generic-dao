@@ -37,6 +37,7 @@ public class TownForm {
 		if (result.hasErrors())
 			return null; //"town/edit";
 		townService.save(town);
+		//Preserve the search parameters so that we return to the list page just as we left it.
 		return Util.addSearchParamsToURL("redirect:/town/list.do", request.getParameterMap(), true, true, true);
 	}
 }

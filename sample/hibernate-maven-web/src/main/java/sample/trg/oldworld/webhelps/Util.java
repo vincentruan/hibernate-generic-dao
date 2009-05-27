@@ -11,6 +11,13 @@ import com.trg.search.Search;
 import com.trg.search.SearchUtil;
 
 public class Util {
+	/**
+	 * From a Map of request parameters, return a list of the parameters that
+	 * are valid and relevant to search. These include "sort", "page",
+	 * "pagesize", "f-...", and "fo-...". Each result is returned as an array of
+	 * two strings; the first is the parameter name, and the second is the
+	 * value.
+	 */
 	public static List<String[]> filterSearchParams(Map<String, String[]> params, boolean includeSorts,
 			boolean includeFilters, boolean includePaging) {
 		List<String[]> results = new ArrayList<String[]>();
@@ -44,8 +51,8 @@ public class Util {
 				}
 			}
 		}
-		
-		//Paging
+
+		// Paging
 		if (true) {
 			String[] values = params.get("page");
 			if (values != null && !"".equals(values[0])) {
@@ -53,7 +60,7 @@ public class Util {
 					Integer.parseInt(values[0]);
 					results.add(new String[] { "page", values[0] });
 				} catch (NumberFormatException ex) {
-					//don't add it
+					// don't add it
 				}
 			}
 			values = params.get("pagesize");
@@ -62,18 +69,38 @@ public class Util {
 					Integer.parseInt(values[0]);
 					results.add(new String[] { "pagesize", values[0] });
 				} catch (NumberFormatException ex) {
-					//don't add it
+					// don't add it
 				}
 			}
 		}
 
 		return results;
 	}
-	
+
 	public static ISearch getSearchFromParams(Map<String, String[]> params) {
 		return getSearchFromParams(null, params);
 	}
 
+	/**
+	 * Construct a search object based on a Map or request parameters. These
+	 * parameters are considered...
+	 * <ul>
+	 * <li>sort - a property on which to sort. If the value is preceded by an
+	 * "!", the sort will be descending. (ex: sort=name, sort=!name)
+	 * <li>page - the 1-based page number. (ex: page=1)
+	 * <li>pagesize - maxResults for the search. (ex: pagesize=10)
+	 * <li>f-... - a filter. The param name includes the property and the value
+	 * is the value for the filter. The default operator is ILIKE (with %
+	 * appended, so it's really "starts with..."). Another parameter can be
+	 * specified with another parameter starting with "fo-". (ex: f-name=Bob,
+	 * f-city.name=Chi, f-population=100&fo-population=5 [note that 5 is
+	 * OP_GREATER_OR_EQUAL])
+	 * </ul>
+	 * 
+	 * @param search
+	 *            - if not null, the search options will be added to the given
+	 *            search object.
+	 */
 	public static ISearch getSearchFromParams(IMutableSearch search, Map<String, String[]> params) {
 		List<String[]> paramList = filterSearchParams(params, true, true, true);
 
@@ -109,7 +136,7 @@ public class Util {
 					}
 				}
 				if (op == -1) {
-					SearchUtil.addFilterLike(search, name.substring(2), value + "%");
+					SearchUtil.addFilterILike(search, name.substring(2), value + "%");
 				} else {
 					SearchUtil.addFilter(search, new Filter(name.substring(2), value, op));
 				}
@@ -119,7 +146,16 @@ public class Util {
 		return search;
 	}
 
-	public static String searchParamsToURL(Map<String, String[]> params, boolean includeSorts, boolean includeFilters, boolean includePaging) {
+	/**
+	 * <p>
+	 * Build a URL parameter string based on the relevant search parameters in a
+	 * request parameter map.
+	 * 
+	 * <p>
+	 * An example return value would be "sort=name&f-name=Da".
+	 */
+	public static String searchParamsToURL(Map<String, String[]> params, boolean includeSorts, boolean includeFilters,
+			boolean includePaging) {
 		StringBuilder sb = new StringBuilder();
 
 		List<String[]> list = filterSearchParams(params, includeSorts, includeFilters, includePaging);
@@ -134,8 +170,13 @@ public class Util {
 
 		return sb.toString();
 	}
-	
-	public static String addSearchParamsToURL(String url, Map<String, String[]> params, boolean includeSorts, boolean includeFilters, boolean includePaging) {
+
+	/**
+	 * Add to a URL all the parameters based on the relevant search parameters
+	 * in a request parameter map.
+	 */
+	public static String addSearchParamsToURL(String url, Map<String, String[]> params, boolean includeSorts,
+			boolean includeFilters, boolean includePaging) {
 		String searchParams = searchParamsToURL(params, includeSorts, includeFilters, includePaging);
 		if (searchParams != null && !searchParams.equals("")) {
 			if (url.contains("?")) {
@@ -146,12 +187,22 @@ public class Util {
 		}
 		return url;
 	}
-	
-	public static String searchParamsToInputs(Map<String, String[]> params, boolean includeSorts, boolean includeFilters, boolean includePaging) {
+
+	/**
+	 * <p>
+	 * Build HTML for hidden inputs based on the relevant search parameters in a
+	 * request parameter map.
+	 * 
+	 * <p>
+	 * An example return value would be '<input type="hidden" name="sort"
+	 * value="name"/><input type="hidden" name="f-name" value="Da"/>'.
+	 */
+	public static String searchParamsToInputs(Map<String, String[]> params, boolean includeSorts,
+			boolean includeFilters, boolean includePaging) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		List<String[]> list = filterSearchParams(params, includeSorts, includeFilters, includePaging);
-		
+
 		for (String[] param : list) {
 			sb.append("<input type=\"hidden\" name=\"");
 			sb.append(param[0]);
@@ -159,24 +210,16 @@ public class Util {
 			sb.append(param[1]);
 			sb.append("\"/>");
 		}
-		
+
 		return sb.toString();
 	}
 
-	public static void myClass(Object o) {
-		System.out.println(o.getClass());
-	}
-
 	/**
-	 * Return the value of a constant. For example, passing a path
+	 * <p>Return the value of a constant. For example, passing a path
 	 * "java.lang.Double.NaN" would return the value of the static NaN field on
 	 * the java.lang.Double type.
 	 * 
-	 * @throws ClassNotFoundException
-	 * @throws NoSuchFieldException
-	 * @throws IllegalAccessException
-	 * @throws SecurityException
-	 * @throws IllegalArgumentException
+	 * <p>This is mapped as a custom EL function for use in JSPs.
 	 */
 	public static Object getConstant(String path) throws ClassNotFoundException, IllegalArgumentException,
 			SecurityException, IllegalAccessException, NoSuchFieldException {

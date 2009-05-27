@@ -6,25 +6,25 @@
 		http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
 		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context-2.5.xsd">    
-		
+	
+	<!-- Use annotations (@Autowired) for property injection -->	
 	<context:annotation-config/>
+	
+	<!-- Spring will find all of our service and DAO components because they
+		 have @Service and @Repository annotations. We do not need to configure them in XML -->
+	<context:component-scan base-package="sample.trg.oldworld" />
+	
 	<bean id="propertyConfigurer"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="locations">
 			<list>
+				<!-- Select either target-h2.properties or target-mysql.properties -->
 				<value>classpath:target-h2.properties</value>
 			</list>
 		</property>
 	</bean>
-	<context:component-scan base-package="sample.trg.oldworld" />
 	
+	
+	<!-- In this file we configure Hibernate and transactional behavior -->
 	<import resource="applicationContext-persistence.xml"/>
-	
-	<!-- Service Beans -->
-<!--	<bean id="citizenService" class="sample.trg.oldworld.service.CitizenServiceImpl"/>-->
-<!--	<bean id="townService" class="sample.trg.oldworld.service.TownServiceImpl"/>-->
-	
-	<!-- DAO Beans -->
-<!--	<bean id="citizenDAO" class="sample.trg.oldworld.dao.CitizenDAOImpl"/>-->
-<!--	<bean id="townDAO" class="sample.trg.oldworld.dao.TownDAOImpl"/>-->
 </beans>

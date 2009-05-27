@@ -3,12 +3,19 @@ package sample.trg.oldworld.service;
 import java.util.List;
 import java.util.Map;
 
-import com.trg.search.ISearch;
-
-import sample.trg.oldworld.model.Citizen;
 import sample.trg.oldworld.model.Town;
 
+import com.trg.search.ISearch;
 
+
+/**
+ * This is the interface for our Town Service. As a matter of best practice
+ * we reference this interface in other components rather than the
+ * implementation itself.
+ * 
+ * @author dwolverton
+ * 
+ */
 public interface TownService {
 
 	public void save(Town citizen);
