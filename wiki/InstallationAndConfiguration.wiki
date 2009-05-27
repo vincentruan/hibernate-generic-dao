@@ -39,7 +39,7 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
         <artifactId>trg-dao</artifactId>
         <version>0.5.0</version> <!-- or whatever the latest version is -->
 </dependency>
-<!-- This second one includes the Hibernate Entity Manager JPA implementation -->
+<!-- This second one includes the Hibernate Entity Manager plugin for the framework -->
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-search-jpa-hibernate</artifactId>
@@ -50,7 +50,9 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 ==Other==
 Download the jars from http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/
 
-The DAO requires both the trg-dao jars and the trg-search jars. Inside each of these folders, select the folder with the version you would like (the latest is generally the best). You only need the binary jar (trg-dao-X.X.X.jar), but you can also get the source jar to
+The DAO requires both the _trg-search_ jar and the _trg-dao_ jar. If you are using standard Hibernate without JPA, you will also need the _trg-search-hibernate_ and _trg-dao-hibernate_ jars.
+
+Inside each of these folders, select the folder with the version you would like (the latest is generally the best). You only need the binary jar (trg-dao-X.X.X.jar), but you can also get the source jar to
 help out your IDE with Javadocs and to help yourself out being able to see what's going
 on (trg-dao-X.X.X-sources.jar).
 
