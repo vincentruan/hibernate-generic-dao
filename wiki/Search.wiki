@@ -18,9 +18,9 @@ The search object provides flexible search options:
 
 = Details =
 *Javadocs*:
-  * http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html?com/trg/search/ISearch.html
-  * http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html?com/trg/search/IMutableSearch.html
-  * http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-dao/doc/index.html?com/trg/search/Search.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/ISearch.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/IMutableSearch.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Search.html
 
 == Full API Reference ==
 
