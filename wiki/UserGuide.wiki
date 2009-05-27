@@ -68,6 +68,8 @@ As we all know, an example is worth 1000 wiki pages, so we have set up two sampl
   * _/trunk/sample/hibernate-maven-web_ - a web project using standard Hibernate and Spring MVC
   * _/trunk/sample/jpa-hibernate-maven_ - a project using JPA with Hibernate Entity Manager and Spring
 
+Both projects use Maven and include Eclipse project files (which are only useful if you have all the right plugins). Both projects contain a README.TXT with instructions to build and run the project. Neither is particularly impressive in itself. The main purpose is to demonstrate basic configuration and usage of the framework.
+
 =Details and Tips=
 ===Hibernate session strategy===
 By default the DAOs and SearchFacade use `SessionFactory.getCurrentSession()` to get the session to use. However, you can change this behavior by overriding the protected getSession() method of a DAO. For example if you want to set the session manually, you could write something like this.
