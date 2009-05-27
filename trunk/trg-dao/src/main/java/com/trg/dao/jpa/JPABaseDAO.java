@@ -33,8 +33,17 @@ import com.trg.search.SearchResult;
 import com.trg.search.jpa.JPASearchProcessor;
 
 /**
- * Base class for DAOs that uses Hibernate SessionFactory and HQL for searches.
- * This is the heart of Hibernate Generic DAO.
+ * <p>
+ * Base class for DAOs that uses JPA EnityManagers and JPA Query Language.
+ * 
+ * <p>
+ * The <code>SearchProcessor</code> and <code>EntityManager</code> must be set
+ * in order for the DAO to function. Generally, a single
+ * SearchProcessor will be associated with an instance of a DAO for
+ * the lifetime of the instance, while a new "current" EntityManager will be
+ * injected as needed. Make sure that any EntityManager that is used is
+ * associated with the same persistence unit (i.e. EntityManagerFactory) as the
+ * SearchProcessor.
  * 
  * @author dwolverton
  * 
@@ -54,10 +63,17 @@ public class JPABaseDAO {
 
 	private EntityManager entityManager;
 
+	/**
+	 * Set the current EntityManager
+	 * @param entityManager
+	 */
 	public void setEntityManager(EntityManager entityManager) {
 		this.entityManager = entityManager;
 	}
 
+	/**
+	 * Get the current EntityManager
+	 */
 	protected EntityManager em() {
 		return entityManager;
 	}
