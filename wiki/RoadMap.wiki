@@ -57,3 +57,4 @@
   * Look at security with remote DAOs.
   * Possibly add SIZE and IS EMPTY for collections in fields.
   * Look at case sensitivity options. (Issue 28)
+  * STARTS_WITH, ENDS_WITH, CONTAINS operators
