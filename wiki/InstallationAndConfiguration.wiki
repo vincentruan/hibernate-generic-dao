@@ -60,6 +60,10 @@ If you are using standard Hibernate without JPA, you will also need the _trg-sea
 http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao-hibernate/0.5.0/trg-dao-hibernate-0.5.0.jar <br/>
 http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-hibernate/0.5.0/trg-search-hibernate-0.5.0.jar
 
+If you are using JPA with Hibernate Entity Manager, download just the _trg-search-jpa-hibernate_ jar instead.
+
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-jpa-hibernate/0.5.0/trg-search-jpa-hibernate-0.5.0.jar
+
 You can also get the source jar to help out your IDE with Javadocs and to help yourself out being able to see what's going on (trg-dao-X.X.X-sources.jar).
 
 You will also need the Hibernate 3.3 jars and their dependencies. I'll leave you to do all the hibernate configuration.
