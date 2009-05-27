@@ -105,7 +105,7 @@ If not using Maven, simply don't download the _trg-dao..._ jars. Only get the _t
 The Hibernate Generic DAO library is designed not to mandate any configuration. It's just a collection of POJOs that you can decide how to best to use. However, there are some things that the API requires in order to work.
 
 ===Generic DAOs===
-The Generic DAO classes will not work unless they are sub-classed with specific generic types. The idea of a generic DAO is to be a DAO for a specific domain object. The way to specify which domain object is to create a sub-class of GenericDAO that has the generic types of the domain object and its identifier. See GenericDAOExamples for examples.
+The Generic DAO classes will not work unless they are sub-classed with specific generic types. The idea of a generic DAO is to be a DAO for a specific domain object. The way to specify which domain object is to create a sub-class of GenericDAO that has the generic types of the domain object and its identifier. See [GenericDAOExamples] for examples.
 
 ===Hibernate Session and SessionFactory===
 Each DAO and the SearchFacade needs both a Session and a SessionFactory in order to work. By default they expose a `setSessionFactory()` method and use `SessionFactory.getCurrentSession()` to get a Session whenever they need it.
