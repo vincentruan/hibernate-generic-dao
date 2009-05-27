@@ -80,16 +80,25 @@ The project has one other dependency. That is Simple Logging Facade for Java (SL
 
 ----
 ===Installing only the Search without the DAOs===
-Use this dependency instead:
+For the first case, use this dependency instead:
 {{{
 <dependency>
         <groupId>com.trg</groupId>
-        <artifactId>trg-dao</artifactId>
-        <version>0.4.3</version> <!-- or whatever the latest version is -->
+        <artifactId>trg-search-hibernate</artifactId>
+        <version>0.5.0</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
-If not using Maven, simply don't download the trg-dao jars. Only get the trg-search ones.
+For the second you only need:
+{{{
+<dependency>
+        <groupId>com.trg</groupId>
+        <artifactId>trg-search-jpa-hibernate</artifactId>
+        <version>0.5.0</version> <!-- or whatever the latest version is -->
+</dependency>
+}}}
+
+If not using Maven, simply don't download the _trg-dao..._ jars. Only get the _trg-search..._ ones.
 ----
 
 =Configuration=
