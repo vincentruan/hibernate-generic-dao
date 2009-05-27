@@ -4,6 +4,8 @@
 =Introduction=
 Version 0.5.0 introduced support for JPA, which allows (in theory) for use of any JPA provider, not just Hibernate (ex: Hibernate Entity Manager, OpenJPA, TopLink). Here we lay out the different installation options.
 
+The documentation for the old version (0.4.3) is still available at [InstallationAndConfiguration0x4x3].
+
 =Installation=
 ==Maven==
 For projects that use Maven for dependency management, we have a repository. Reference it in your POM as follows:
