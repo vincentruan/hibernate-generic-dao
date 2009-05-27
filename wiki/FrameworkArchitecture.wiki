@@ -1,0 +1,22 @@
+#summary Description of the framework architecture behind the scenes.
+
+= Introduction =
+
+Since revision 0.5.0, the structure has gotten pretty complicated on the framework backend. This is necessary in order to provide the flexibility of using Hibernate or JPA with any number of JPA providers. But the complexity makes it necessary now to document clearly how things are arranged.
+
+
+= The Projects =
+
+There are X separate projects that make up the framework. Each corresponds to a different Maven artifact.
+
+===trg-test-base===
+This project has utilities, base classes, and configuration for testing the main projects. It is only referenced as a test dependency and will never be used by an end user.
+===trg-test-search===
+This project has utilities, base classes, and configuration for testing the search in main projects. It is only referenced as a test dependency and will never be used by an end user.
+===trg-search===
+===trg-search-hibernate===
+===trg-search-jpa-hibernate===
+===trg-dao===
+===trg-dao-hibernate===
+
+= Building the Framework =
