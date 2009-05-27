@@ -7,11 +7,11 @@
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css"/>
 </head>
 <body>
-	<p>
-		<span>Towns</span> <a href="../citizen/list.do">Citizens</a>
+	<p class="navigation">
+		Navigation: <span>Towns</span> / <a href="../citizen/list.do">Citizens</a>
 	</p>
 	<h1>These are the Towns</h1>
-	<form action="" method="GET">
+	<form class="filters" action="" method="GET">
 		<m:searchToInputs includeFilters="false"/>
 		Name <input type="text" name="f-name" value="${param['f-name']}"/><br/>
 		Population 
@@ -24,7 +24,7 @@
 		<input type="submit" value="Filter"/>
 		<m:a href="list.do" includeFilters="false"><button type="button">Clear Filter</button></m:a>
 	</form>
-	<table>
+	<table cellspacing="0" cellpadding="0" border="0">
 		<tr>
 			<th><m:sort path="name">Name</m:sort></th>
 			<th><m:sort path="population">Population</m:sort></th>

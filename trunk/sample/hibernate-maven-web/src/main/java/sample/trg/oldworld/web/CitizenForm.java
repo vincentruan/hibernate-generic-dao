@@ -45,6 +45,7 @@ public class CitizenForm {
 	@RequestMapping(method = RequestMethod.POST)
 	public String processSubmit(@ModelAttribute("citizen") Citizen citizen, HttpServletRequest request) {
 		citizenService.save(citizen);
+		//Preserve the search parameters so that we return to the list page just as we left it.
 		return Util.addSearchParamsToURL("redirect:/citizen/list.do", request.getParameterMap(), true, true, true);
 	}
 	
