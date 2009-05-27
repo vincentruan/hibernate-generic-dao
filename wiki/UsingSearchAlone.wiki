@@ -11,7 +11,7 @@ See InstallationAndConfiguration for the basics on how to include the search lib
 
 = Using the API =
 
-The API consists of one main interface `SearchFacade` (http://hibernate-generic-dao.googlecode.com/svn/tags/0.4.3/trg-search/doc/com/trg/search/SearchFacade.html). All of the methods for accessing the search functionality are here. Just create `ISearch` objects and pass them in. For more information on using `ISearch`, see [Search].
+The API consists of one main interface `SearchFacade` (http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/com/trg/search/SearchFacade.html). All of the methods for accessing the search functionality are here. Just create `ISearch` objects and pass them in. For more information on using `ISearch`, see [Search].
 
 The tricky part is getting an instance of `SearchFacade`. At this point the only implementation available is for Hibernate. It is `HibernateSearchFacade`.
 
