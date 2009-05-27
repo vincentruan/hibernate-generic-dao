@@ -107,10 +107,20 @@ The Hibernate Generic DAO library is designed not to mandate any configuration. 
 ===Generic DAOs===
 The Generic DAO classes will not work unless they are sub-classed with specific generic types. The idea of a generic DAO is to be a DAO for a specific domain object. The way to specify which domain object is to create a sub-class of GenericDAO that has the generic types of the domain object and its identifier. See [GenericDAOExamples] for examples.
 
-===Hibernate Session and SessionFactory===
-Each DAO and the SearchFacade needs both a Session and a SessionFactory in order to work. By default they expose a `setSessionFactory()` method and use `SessionFactory.getCurrentSession()` to get a Session whenever they need it.
+===Standard Hibernate: Session and SessionFactory===
+Each DAO and the SearchFacade needs both a Session and a SessionFactory in order to work. By default they expose a public `setSessionFactory()` method and use `SessionFactory.getCurrentSession()` to get a Session whenever they need it. With this configuration the SessionFactory is required and is generally set once when the object is initialized.
 
-If using `getCurrentSession()` is what you want, all you have to do is make sure that each DAO has its SessionFactory set before it is used. If you need to do things differently, look at the "Hibernate session strategy" section in the "Details and Tips" on the UserGuide.
+So if using `getCurrentSession()` is what you want, all you have to do is make sure that each DAO has its SessionFactory set before it is used. If you need to do things differently, look at the "Hibernate session strategy" section in the "Details and Tips" on the UserGuide.
 
+To see an example project configuration using Spring auto-wiring, have a look at the web project in SVN at /trunk/sample/hibernate-maven-web.
 
-To see an example project configuration using Spring auto-wiring, have a look at the test portion of the source code. The spring configuration is in trunk/trg-shared/src/test/resources and trunk/trg-dao/src/test/resources. The Java packages of interest are trunk/trg-dao/src/test/java/`com.test.dao.standard` and trunk/trg-shared/src/test/java/`com.test.model`.
+===JPA using Hibernate Entity Manager===
+This configuration is somewhat more difficult because of ability to use different JPA providers.
+
+Each *DAO* requires a JPASearchProcessor and an EntityManager. Generally, a single Search Processor will be associated with an instance of a DAO for the lifetime of the instance, while a new "current" EntityManager will be injected as needed. Make sure that any EntityManager that is used is associated with the same persistence unit (i.e. EntityManagerFactory) as the SearchProcessor.
+
+The *JPASearchProcessor* is designed to be used as a singleton. The constructor requires a MetadataUtil instance. A JPASearchProcessor can only be used with EntityManagers that are associated with the same persistence unit as that MetadataUtil. If an application has multiple persistence units, it will need to have multiple corresponding Search Processors.
+
+*MetadataUtil* is the layer of abstraction that allows the framework to work (in theory) with a variety of JPA providers. In order to use a particular JPA provider, an implementation of MetadataUtil must be provided. Currently the framework only has an implementation for Hibernate.
+
+In theory, different implementations of MetadataUtil will require different configurations. The Hibernate implementation is *com.trg.search.hibernate.HibernateMetadataUtil*. You will need one instance per persistence unit (i.e. EntityManagerFactory). Use `com.trg.search.jpa.hibernate.HibernateMetadataUtil.getInstanceForEntityManagerFactory(HibernateEntityManagerFactory)` to get these instances.
