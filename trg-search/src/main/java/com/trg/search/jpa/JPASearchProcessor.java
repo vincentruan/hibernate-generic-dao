@@ -37,10 +37,15 @@ import com.trg.search.SearchResult;
 import com.trg.search.SearchUtil;
 
 /**
- * Implementation of SearchToQLProcessor that generates HQL.
+ * <p>Implementation of BaseSearchProcessor that works with JPA.
  * 
- * A singleton instance of this class is maintained for each SessionFactory. This should
- * be accessed using {@link JPASearchProcessor#getInstanceEntityManager(SessionFactory)}.
+ * <p>This class is designed to be used as a singleton. The constructor requires a
+ * MetadataUtil instance. Each MetadataUtil instance is typically associated
+ * with a single persistence unit (i.e. EntityManagerFactory). A
+ * JPASearchProcessor can only be used with EntityManagers that are associated
+ * with the same persistence unit as the MetadataUtil. If an application has
+ * multiple persistence units, it will need to have multiple corresponding
+ * Search Processors.
  * 
  * @author dwolverton
  */
@@ -175,7 +180,8 @@ public class JPASearchProcessor extends BaseSearchProcessor {
 	 * Search for a single result using the given parameters. Uses the specified
 	 * searchClass, ignoring the searchClass specified on the search itself.
 	 */
-	public Object searchUnique(EntityManager entityManager, Class<?> entityClass, ISearch search) throws NonUniqueResultException {
+	public Object searchUnique(EntityManager entityManager, Class<?> entityClass, ISearch search)
+			throws NonUniqueResultException {
 		if (search == null)
 			return null;
 
@@ -230,12 +236,12 @@ public class JPASearchProcessor extends BaseSearchProcessor {
 		results.add(result);
 		return transformResults(results, search).get(0);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private List transformResults(List results, ISearch search) {
 		if (results.size() == 0)
 			return results;
-		
+
 		int resultMode = search.getResultMode();
 		if (resultMode == ISearch.RESULT_AUTO) {
 			int count = 0;
@@ -296,7 +302,7 @@ public class JPASearchProcessor extends BaseSearchProcessor {
 					keyList.add(field.getProperty());
 				}
 			}
-			
+
 			List<Map<String, Object>> rMap = new ArrayList<Map<String, Object>>(results.size());
 			if (results.get(0) instanceof Object[]) {
 				for (Object[] result : (List<Object[]>) results) {
@@ -309,17 +315,19 @@ public class JPASearchProcessor extends BaseSearchProcessor {
 					}
 					rMap.add(map);
 				}
-			} else if (keyList.size() == 1){
+			} else if (keyList.size() == 1) {
 				for (Object result : results) {
-					Map<String, Object> map = new HashMap<String, Object>();;
+					Map<String, Object> map = new HashMap<String, Object>();
+					;
 					if (keyList.get(0) != null)
 						map.put(keyList.get(0), result);
 					rMap.add(map);
 				}
 			} else {
-				throw new RuntimeException("Unexpected condition: a single object was returned from the query for each record, but the Search expects multiple.");
+				throw new RuntimeException(
+						"Unexpected condition: a single object was returned from the query for each record, but the Search expects multiple.");
 			}
-			
+
 			return rMap;
 		default: // ISearch.RESULT_SINGLE
 			return results;

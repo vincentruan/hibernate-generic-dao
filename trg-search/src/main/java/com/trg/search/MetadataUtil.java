@@ -21,9 +21,9 @@ import java.io.Serializable;
  * objects and relationships maintained by the JPA provider.
  * 
  * This interface provides a layer of abstraction between the framework and the
- * underlying JPA provider (ex. Hibernate). By switching out the implementation
- * of this interface, the framework should be able to be used with different JPA
- * providers.
+ * underlying ORM or JPA provider (ex. Hibernate). By switching out the
+ * implementation of this interface, the framework should be able to be used
+ * with different JPA providers.
  * 
  * @author dwolverton
  */

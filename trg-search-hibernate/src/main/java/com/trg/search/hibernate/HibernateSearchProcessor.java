@@ -38,10 +38,10 @@ import com.trg.search.SearchUtil;
 import com.trg.search.InternalUtil;
 
 /**
- * Implementation of SearchToQLProcessor that generates HQL.
+ * Implementation of BaseSearchProcessor that generates Works with standard Hibernate.
  * 
  * A singleton instance of this class is maintained for each SessionFactory. This should
- * be accessed using {@link SearchProcessor#getInstanceEntityManager(SessionFactory)}.
+ * be accessed using {@link HibernateSearchProcessor#getInstanceForSessionFactory(SessionFactory)}.
  * 
  * @author dwolverton
  */
