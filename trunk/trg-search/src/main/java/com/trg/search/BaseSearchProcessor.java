@@ -68,6 +68,9 @@ public abstract class BaseSearchProcessor {
 	protected static final String ROOT_PATH = "";
 
 	protected BaseSearchProcessor(int qlType, MetadataUtil metaDataUtil) {
+		if (metaDataUtil == null) {
+			throw new IllegalArgumentException("A SearchProcessor cannot be initialized with a null MetadataUtil.");
+		}
 		this.qlType = qlType;
 		this.metadataUtil = metaDataUtil;
 	}
