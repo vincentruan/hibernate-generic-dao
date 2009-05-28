@@ -73,7 +73,7 @@ Find people living in Hartford, Hereford, or Hampshire.
 {{{
 s.addFilterIn("city", "Hartford", "Hereford", "Hampshire");
 
-/* HQL produced...
+/* HQL equivalent...
  select p from Person p where p.city in ('Hartford', 'Hereford', 'Hampshire')
 */
 }}}
@@ -83,7 +83,26 @@ Find red and yellow game peices.
 s.addFilterIn("color", "red", "yellow");
 }}}
 
+Find bowls of porridge that would be neither too hot nor too cold.
+{{{
+s.addFilterNotIn("temperature", "hot", "cold");
+}}}
+
 ===Filter IS_NULL, NOT_NULL, IS_EMPTY, NOT_EMPTY===
+Find tasks that have not been assigned.
+{{{
+s.addFilterNull("owner");
+
+/* HQL equivalent...
+ select t from Task t where t.owner is null
+*/
+}}}
+
+Find lots that have a house.
+{{{
+s.addFilterNotNull("house");
+}}}
+
 
 ===Filter SIZE, CLASS, ID===
 
