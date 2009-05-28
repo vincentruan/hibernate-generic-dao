@@ -272,3 +272,10 @@ There is at least one member where that member is equal to me and that member is
 //HQL equivalent...
  where exists (from p.members m where m.id.person = :me and m.primary = 1 )
 }}}
+
+Find people who don't have any cats.
+{{{
+s.addFilterNone("pets",Filter.equal("class", Cat.class));
+}}}
+
+===AND, OR, NOT===
