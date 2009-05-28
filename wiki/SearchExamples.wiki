@@ -159,6 +159,19 @@ s.addFilterIn("class", Cat.class, Dog.class);
 Find people whose pet is a Cat.
 {{{
 s.addFilterEqual("pet.class", "com.fully.qualified.path.Cat");
-//Note that the value for a class can be specified as either a Class type or as a string with the fully qualified class name.
 }}}
+_Note that the value for a class can be specified as either a Class type (first example) or as a string with the fully qualified class name (second example)._
+
+Find People with the identifier 132. Note that this works even if the identifier property of the Person class is named something other than "id".
+{{{
+s.addFilterEqual("id", 132);
+}}}
+
+PersonPet is a many-to-many relationship. PersonPet has a compound id which references a person and a pet. Find all people with a pet named "Casper".
+{{{
+Search s = new Search(PersonPet);
+s.addFilterEqual("id.pet.name", "Casper");
+s.addField("id.person"); //return the Person as a result rather than the PersonPet.
+}}}
+
 ===Filter SOME, ALL, NONE===
