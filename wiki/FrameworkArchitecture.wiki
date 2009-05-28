@@ -7,12 +7,13 @@ Since revision 0.5.0, the structure has gotten pretty complicated on the framewo
 
 = The Projects =
 
-There are X separate projects that make up the framework. Each corresponds to a different Maven artifact.
+There are 7 separate projects that make up the framework. Each corresponds to a different Maven artifact.
 
   * _trg-test-base_
     * This project has utilities, base classes, and configuration for testing the main projects. It is only referenced as a test dependency and will never be used by an end user.
   * _trg-test-search_
     * This project has utilities, base classes, and configuration for testing the search in main projects. It is only referenced as a test dependency and will never be used by an end user.
+    * *depends on:* _trg-test-base_
   * _trg-search_
     * The core project of the framework. This contains the Search Object interfaces, the Base Search Processor, and the `SearchFacade` interface. It also contains the JPA Search Processor and JPA Search Facade implementation.
     * *packages:* com.trg.search, com.trg.search.jpa, com.trg.search.flex
@@ -20,11 +21,11 @@ There are X separate projects that make up the framework. Each corresponds to a 
   * _trg-search-hibernate_
     * The standard Hibernate implementation of for search. Contains the Hibernate Search Processor and the HibernateMetadataUtil. Also includes Hibernate dependencies in the POM.
     * *packages:* com.trg.search.hibernate
-    * *depends on:* trg-search
+    * *depends on:* _trg-search_
   * _trg-search-jpa-hibernate_
     * The Hibernate Entity Manager implementation for use with JPA. Contains utility for getting HibernateMetadataUtil from an EntityManager and the Hibernate Entity Manager dependencies in the POM. Also used to test JPA Search.
     * *packages:* com.trg.search.jpa.hibernate
-    * *depends on:* trg-search, trg-search-hibernate
+    * *depends on:* _trg-search_, _trg-search-hibernate_
   * _trg-dao_
     * Contains utilities for DAOs and the JPA DAO implementation.
     * *packages:* com.trg.dao, com.trg.dao.jpa
@@ -35,3 +36,8 @@ There are X separate projects that make up the framework. Each corresponds to a 
     * *depends on:* _trg-search_, _trg-search-hibernate_, _trg-dao_
 
 = Building the Framework =
+The framework should be built with Maven. Each project is built individually. Just use the `mvn package` to build a jar or `mvn install` to build the jar and install it in your local Maven repository.
+
+If you have a need to alter and build the framework, you can check out just the project(s) you need to modify and rebuild them. If there are projects you don't need to modify, you can just get the original from the online Maven repository. Of course you are free to check out all the projects and rebuild all of them if you like.
+
+The projects in SVN contain Eclipse project configuration files. If you are using Eclipse and you have all the right plugins and you're lucky, you may be able to check them out as Eclipse projects and hit the ground running. Each of the above projects is a separate Eclipse project. Each of the sample apps is also an Eclipse project. I'm mainly using the Sonatype, Inc. Maven Integration for Eclipse plugin. For the sample web project, I'm using the WST (Web Standard Tools) plugin and the Maven plugin to work with that. I'm using the Tigris.org SVN plugin for synchronization with the repository.
