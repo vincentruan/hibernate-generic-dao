@@ -46,3 +46,45 @@ s.setDisjunction(true); //disjunction makes it "or" rather than "and"
 
 s.addFilterOr(Filter.greaterOrEqual("salary", 40000), Filter.lessThan("salary", 100000));
 }}}
+
+Find children age 6 or under.
+{{{
+s.addFitlerLessOrEqual("age", 6);
+}}}
+
+Find companies with positive net profit.
+{{{
+s.addFilterGreaterThan("netProfit", 0);
+}}}
+
+===Filter LIKE, ILIKE===
+Find addresses in cities starting with "Chi".
+{{{
+s.addFilterLike("city", "Chi%");
+}}}
+
+Find addresses in cities starting with "chi", ignoring case.
+{{{
+s.addFilterILike("city", "chi%");
+}}}
+
+===Filter IN, NOT_IN===
+Find people living in Hartford, Hereford, or Hampshire.
+{{{
+s.addFilterIn("city", "Hartford", "Hereford", "Hampshire");
+
+/* HQL produced...
+ select p from Person p where p.city in ('Hartford', 'Hereford', 'Hampshire')
+*/
+}}}
+
+Find red and yellow game peices.
+{{{
+s.addFilterIn("color", "red", "yellow");
+}}}
+
+===Filter IS_NULL, NOT_NULL, IS_EMPTY, NOT_EMPTY===
+
+===Filter SIZE, CLASS, ID===
+
+===Filter SOME, ALL, NONE===
