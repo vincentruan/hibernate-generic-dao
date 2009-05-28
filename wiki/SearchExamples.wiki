@@ -182,8 +182,12 @@ Find projects that I am a member of
 
 - if projects.members is a list of people
 {{{
-s.addFilterSome("members", Filter.equal("", me));
+s.addFilterSome("members", Filter.equal("", me)); //note that using "" refers to the root entity itself
+//or equivalently...
 s.addFilterSome("members", Filter.equal("id", me.id));
+
+//English equivalent
+there is at least one member where that member is equal to me.
 
 //HQL equivalent...
  select p from Project p
@@ -194,6 +198,9 @@ s.addFilterSome("members", Filter.equal("id", me.id));
 {{{
 s.addFilterSome("members", Filter.equal("id.person", me));
 
+//English equivalent
+there is at least one member relationship where that relationship's person is equal to me.
+
 //HQL equivalent...
  where exists (from p.members pm where pm.id.person = :me)
 }}}
@@ -201,6 +208,9 @@ s.addFilterSome("members", Filter.equal("id.person", me));
 Find projects that have at least one of the given members
 {{{
 s.addFilterSome("members", Filter.in("", us));
+
+//English equivalent
+there is at least one member where that member is in the collection of people called us.
 
 //HQL equivalent... 
  where exists (from p.members where m in (:us))
@@ -211,7 +221,12 @@ Find projects that have all the given members
 s.addFilterSome("members", Filter.equal("", member1));
 s.addFilterSome("members", Filter.equal("", member2));
 s.addFilterSome("members", Filter.equal("", member3));
- 
+
+//English equivalent
+There is at least one member where that member is equal to member1,
+and there is at least one member where that member is equal to member2,
+and there is at least one member where that member is equal to member3.
+
 //HQL equivalent...
  where exists (from p.members sub1_m where sub1_m = :member1)
  and exists (from p.members sub2_m where sub2_m = :member2)
@@ -222,6 +237,9 @@ Find projects that have only the given members
 {{{
 s.addFilterAll("members", Filter.in("", us));
  
+//English equivalent
+it is true for every member that that member is in the collection of people called us
+
 //HQL equivalent...
  where not exists (from p.members m where m not in (:us))
 }}}
@@ -230,6 +248,9 @@ Find projects that have only members with top-secret clearance
 {{{
 s.addFilterAll(Filter.greaterOrEqual("clearance", TOP_SECRET));
 
+//English equivalent
+it is true for every member that that member's clearance is greater than or equal to TOP_SECRET
+
 //HQL equivalent... 
  where not exists (from p.members m where not (m.clearance >= :TOP_SECRET))
 }}}
@@ -237,6 +258,9 @@ s.addFilterAll(Filter.greaterOrEqual("clearance", TOP_SECRET));
 Find projects with me as primary member
 {{{
 s.addFilterSome("members", Filter.and( Filter.equal("id.person", me), Filter.equal("primary", true) ) );
+
+//English equivalent
+there is at least one member where that member is equal to me and that member is primary.
 
 //HQL equivalent...
  where exists (from p.members m where m.id.person = :me and m.primary = 1 )
