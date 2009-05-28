@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-
 /**
  * <p>
  * A <code>Filter</code> is used by the <code>Search</code> class to specify a
@@ -45,9 +44,7 @@ public class Filter implements Serializable {
 
 	/**
 	 * The value to compare the property with. Should be of a compatible type
-	 * with the property. Note that <code>null</code> is also valid for "equal"
-	 * and "not equal" comparisons. Examples:
-	 * <code>"Fred", new Date(), 45</code>
+	 * with the property. Examples: <code>"Fred", new Date(), 45</code>
 	 */
 	protected Object value;
 
@@ -76,12 +73,15 @@ public class Filter implements Serializable {
 		this.operator = OP_EQUAL;
 	}
 
-	public static final int OP_EQUAL = 0, OP_NOT_EQUAL = 1, OP_LESS_THAN = 2, OP_GREATER_THAN = 3, OP_LESS_OR_EQUAL = 4,
-			OP_GREATER_OR_EQUAL = 5, OP_LIKE = 6, OP_ILIKE = 7, OP_IN = 8, OP_NOT_IN = 9, OP_NULL = 10, OP_NOT_NULL = 11,
-			OP_EMPTY = 12, OP_NOT_EMPTY = 13;
+	public static final int OP_EQUAL = 0, OP_NOT_EQUAL = 1, OP_LESS_THAN = 2, OP_GREATER_THAN = 3,
+			OP_LESS_OR_EQUAL = 4, OP_GREATER_OR_EQUAL = 5, OP_LIKE = 6, OP_ILIKE = 7, OP_IN = 8, OP_NOT_IN = 9,
+			OP_NULL = 10, OP_NOT_NULL = 11, OP_EMPTY = 12, OP_NOT_EMPTY = 13;
 	public static final int OP_AND = 100, OP_OR = 101, OP_NOT = 102;
-	public static final int OP_SOME = 200, OP_ALL = 201, OP_NONE = 202 /*not SOME*/;
-	
+	public static final int OP_SOME = 200, OP_ALL = 201, OP_NONE = 202 /*
+																		 * not
+																		 * SOME
+																		 */;
+
 	/**
 	 * Create a new Filter using the == operator.
 	 */
@@ -181,28 +181,28 @@ public class Filter implements Serializable {
 	public static Filter notEqual(String property, Object value) {
 		return new Filter(property, value, OP_NOT_EQUAL);
 	}
-	
+
 	/**
 	 * Create a new Filter using the IS NULL operator.
 	 */
 	public static Filter isNull(String property) {
 		return new Filter(property, true, OP_NULL);
 	}
-	
+
 	/**
 	 * Create a new Filter using the IS NOT NULL operator.
 	 */
 	public static Filter isNotNull(String property) {
 		return new Filter(property, true, OP_NOT_NULL);
 	}
-	
+
 	/**
 	 * Create a new Filter using the IS EMPTY operator.
 	 */
 	public static Filter isEmpty(String property) {
 		return new Filter(property, true, OP_EMPTY);
 	}
-	
+
 	/**
 	 * Create a new Filter using the IS NOT EMPTY operator.
 	 */
@@ -267,8 +267,6 @@ public class Filter implements Serializable {
 		return new Filter(property, filter, OP_NONE);
 	}
 
-	
-	
 	/**
 	 * Used with OP_OR and OP_AND filters. These filters take a collection of
 	 * filters as their value. This method adds a filter to that list.
@@ -316,56 +314,64 @@ public class Filter implements Serializable {
 	public void setOperator(int operator) {
 		this.operator = operator;
 	}
-	
+
 	/**
 	 * @return true if the operator should have a single value specified.
 	 * 
-	 * <p><code>EQUAL, NOT_EQUAL, LESS_THAN, LESS_OR_EQUAL, GREATER_THAN, GREATER_OR_EQUAL, LIKE, ILIKE</code>
+	 *         <p>
+	 *         <code>EQUAL, NOT_EQUAL, LESS_THAN, LESS_OR_EQUAL, GREATER_THAN, GREATER_OR_EQUAL, LIKE, ILIKE</code>
 	 */
 	public boolean isTakesSingleValue() {
 		return operator <= 7;
 	}
-	
+
 	/**
 	 * @return true if the operator should have a list of values specified.
 	 * 
-	 * <p><code>IN, NOT_IN</code>
+	 *         <p>
+	 *         <code>IN, NOT_IN</code>
 	 */
 	public boolean isTakesListOfValues() {
 		return operator == OP_IN || operator == OP_NOT_IN;
 	}
-	
+
 	/**
 	 * @return true if the operator does not require a value to be specified.
 	 * 
-	 * <p><code>NULL, NOT_NULL, EMPTY, NOT_EMPTY</code>
+	 *         <p>
+	 *         <code>NULL, NOT_NULL, EMPTY, NOT_EMPTY</code>
 	 */
 	public boolean isTakesNoValue() {
 		return operator >= 10 && operator <= 13;
 	}
-	
+
 	/**
-	 * @return true if the operator should have a single Filter specified for the value.
+	 * @return true if the operator should have a single Filter specified for
+	 *         the value.
 	 * 
-	 * <p><code>NOT, ALL, SOME, NONE</code>
+	 *         <p>
+	 *         <code>NOT, ALL, SOME, NONE</code>
 	 */
 	public boolean isTakesSingleSubFilter() {
 		return operator == OP_NOT || operator >= 200;
 	}
-	
+
 	/**
-	 * @return true if the operator should have a list of Filters specified for the value.
+	 * @return true if the operator should have a list of Filters specified for
+	 *         the value.
 	 * 
-	 * <p><code>AND, OR</code>
+	 *         <p>
+	 *         <code>AND, OR</code>
 	 */
 	public boolean isTakesListOfSubFilters() {
 		return operator == OP_AND || operator == OP_OR;
 	}
-	
+
 	/**
 	 * @return true if the operator does not require a property to be specified.
 	 * 
-	 * <p><code>AND, OR, NOT</code>
+	 *         <p>
+	 *         <code>AND, OR, NOT</code>
 	 */
 	public boolean isTakesNoProperty() {
 		return operator >= 100 && operator <= 102;
@@ -481,6 +487,5 @@ public class Filter implements Serializable {
 			return "**INVALID OPERATOR: (" + operator + ") - VALUE: " + InternalUtil.paramDisplayString(value) + " **";
 		}
 	}
-	
 
 }
