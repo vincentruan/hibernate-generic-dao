@@ -102,7 +102,8 @@ s.addFilterNotNull("house");
 }}}
 
 ===IS_EMPTY, NOT_EMPTY===
-*EMPTY with entity (same as is null)*
+*_EMPTY with entity (same as is null)_*
+
 Find tasks that have not been assigned.
 {{{
 s.addFilterEmpty("owner");
@@ -116,7 +117,8 @@ Find lots that have a house.
 s.addFilterNotEmpty("house");
 }}}
 
-*EMPTY with string*
+*_EMPTY with string_*
+
 Find forms where the maiden name is blank (either null or empty string).
 {{{
 s.addFilterEmpty("maidenName");
@@ -130,7 +132,8 @@ Find people with the middle name specified (neither null nor empty string).
 s.addFilterNotEmpty("middleName");
 }}}
 
-*EMPTY with collection*
+*_EMPTY with collection_*
+
 Find clubs with no members.
 {{{
 s.addFilterEmpty("members");
@@ -175,3 +178,66 @@ s.addField("id.person"); //return the Person as a result rather than the PersonP
 }}}
 
 ===Filter SOME, ALL, NONE===
+Find projects that I am a member of
+
+- if projects.members is a list of people
+{{{
+s.addFilterSome("members", Filter.equal("", me));
+s.addFilterSome("members", Filter.equal("id", me.id));
+
+//HQL equivalent...
+ select p from Project p
+ where exists (from p.members m where m = :me)
+}}}
+ 
+- if projects.members is a list of ProjectMember many-to-many relationship class which in turn has an id component with "project" and "person" properties
+{{{
+s.addFilterSome("members", Filter.equal("id.person", me));
+
+//HQL equivalent...
+ where exists (from p.members pm where pm.id.person = :me)
+}}}
+
+Find projects that have at least one of the given members
+{{{
+s.addFilterSome("members", Filter.in("", us));
+
+//HQL equivalent... 
+ where exists (from p.members where m in (:us))
+}}}
+
+Find projects that have all the given members
+{{{
+s.addFilterSome("members", Filter.equal("", member1));
+s.addFilterSome("members", Filter.equal("", member2));
+s.addFilterSome("members", Filter.equal("", member3));
+ 
+//HQL equivalent...
+ where exists (from p.members sub1_m where sub1_m = :member1)
+ and exists (from p.members sub2_m where sub2_m = :member2)
+ and exists (from p.members sub3_m where sub3_m = :member3)
+}}}
+
+Find projects that have only the given members
+{{{
+s.addFilterAll("members", Filter.in("", us));
+ 
+//HQL equivalent...
+ where not exists (from p.members m where m not in (:us))
+}}}
+
+Find projects that have only members with top-secret clearance
+{{{
+s.addFilterAll(Filter.greaterOrEqual("clearance", TOP_SECRET));
+
+//HQL equivalent... 
+ where not exists (from p.members m where not (m.clearance >= :TOP_SECRET))
+}}}
+
+Find projects with me as primary member
+{{{
+s.addFilterSome("members", Filter.and( Filter.equal("id.person", me), Filter.equal("primary", true) ) );
+
+//HQL equivalent...
+ where exists (from p.members m where m.id.person = :me and m.primary = 1 )
+}}}
