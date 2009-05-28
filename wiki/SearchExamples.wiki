@@ -279,3 +279,25 @@ s.addFilterNone("pets",Filter.equal("class", Cat.class));
 }}}
 
 ===AND, OR, NOT===
+_These logical operator filters are used to combine other filters._
+
+Find people born in the 1950s.
+{{{
+s.addFilterAnd(Filter.greaterOrEqual("birthYear", 1950), Filter.lessThan("birthYear", 1960));
+}}}
+
+Find people named John Doe or Jane Doe.
+{{{
+s.addFilterEqual("lastName", "Doe");
+s.addFilterOr(Filter.equal("firstName", "Joe"), Filter.equal("firstName", "Jane"));
+
+//although the second line could be more simply written
+s.addFilterIn("firstName", "Joe", "Jane");
+}}}
+
+Find people who are named Bob, have a cat or who live in Florida and are at least 65.
+s.addFilterOr(
+    Filter.equal("name", "Bob"),
+    Filter.some("pets", Filter.equal("class", Cat.class)),
+    Filter.and(Filter.equal("address.state", "Florida"), Fitler.greaterOrEqual("age", 65))
+);
