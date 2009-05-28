@@ -1,0 +1,49 @@
+#summary Examples of using the Search object.
+
+===Important Notes===
+Most of the examples below reference a variable "s". If the code snippit does not initialize the variable explicitly, assume that it is initialized like this:
+{{{
+Search s = new Search();
+}}}
+
+Also note, when using a Generic DAO the root class that is being searched on implied by the DAO so we can simply use `new Search()`. However, when using General DAO, this is not the case. In that case, the search class is usually specified in the constructor--for example `new Search(Person.class)`.
+
+Many methods on the `Search` class return the search object itself. This allows for chaining of methods. Thus
+{{{
+Search s = new Search().addFilterEqual("name", "Joe").addFilterLessThan("age", 21).addSortAsc("age").setMaxResults(10).setPage(2);
+}}}
+is the same as
+{{{
+Search s = new Search();
+s.addFilterEqual("name", "Joe");
+s.addFilterLessThan("age", 21);
+s.addSortAsc("age");
+s.setMaxResults(10);
+s.setPage(2);
+}}}
+
+===Examples===
+==Filter EQUAL==
+Find all men named Bob.
+{{{
+Search s = new Search(Person.class);
+s.addFilterEqual("firstName", "Bob");
+s.addFilterEqual("male", true);
+}}}
+
+==Filter LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL==
+Find employees with salaries under $40,000.
+{{{
+s.addFilterLessThan("salary", 40000);
+}}}
+
+Find employees with salaries of at least $40,000 but less than $100,000.
+{{{
+s.addFilterGreaterOrEqual("salary", 40000).addFilterLessThan("salary", 100000);
+s.setDisjunction(true); //disjunction makes it "or" rather than "and"
+
+//another way to do this
+
+s.addFilterOr(Filter.greaterOrEqual("salary", 40000), Filter.lessThan("salary", 100000));
+}}}
+
