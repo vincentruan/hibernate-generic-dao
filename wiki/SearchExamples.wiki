@@ -22,6 +22,8 @@ s.setMaxResults(10);
 s.setPage(2);
 }}}
 
+For more information on Search see the [Search] page.
+
 ==Examples==
 ===Filter EQUAL===
 Find all men named Bob.
@@ -296,8 +298,15 @@ s.addFilterIn("firstName", "Joe", "Jane");
 }}}
 
 Find people who are named Bob, have a cat or who live in Florida and are at least 65.
+{{{
 s.addFilterOr(
     Filter.equal("name", "Bob"),
     Filter.some("pets", Filter.equal("class", Cat.class)),
     Filter.and(Filter.equal("address.state", "Florida"), Fitler.greaterOrEqual("age", 65))
 );
+}}}
+
+Find people whose name does not start with "Mr."
+{{{
+s.addFilterNot(Filter.like("name", "Mr.%"));
+}}}
