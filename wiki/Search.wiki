@@ -298,3 +298,5 @@ totalResults = results.getTotalCount();
 search.addField("userCount", Field.OP_AVG);
 long avgCount = (long) projectDAO.searchUnique(search);
 }}}
+
+More examples... SearchExamples
