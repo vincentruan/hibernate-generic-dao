@@ -64,10 +64,10 @@ The following filtering operators are available:
 || SOME || Applies to collection/association properties. Takes another `Filter` as a value, and matches when at least one of the values in the collection matches the filter. || `Filter.some("children", Filter.equal("name", "Joey")) //has a child named 'Joey'` ||
 || ALL || Same as SOME, except that all values must match the filter. || `Filter.all("children", Filter.greaterOrEqual("age", 18)) //all children are 18 or older` ||
 || NONE || Same as SOME, except that none of the values may match the filter. || `Filter.none("pets", Filter.and(Filter.equal("species", "cat"), Filter.lessThan("age", .75)) //has no cats under 9 months old` ||
-|||||| `**` For more examples of collection filters (SOME, ALL, NONE, EMPTY, NOT_EMPTY), see http://java-generic-dao.blogspot.com/2008/12/search-capability-needs-to-be-able-to.html ||
 || AND || Takes no property. Takes an array or collection of `Filter`s as a value. Matches when all the filters in the value match. || `Filter.and(Filter.greaterOrEqual("age",40), Filter.lessThan("age", 65))` ||
 || OR || Same as AND, except that it matches when any of the filters match. || `Filter.or(Filter.like("firstName","Wil%"), Filter.like("lastName","Wil%"))` ||
 || NOT || Takes no property. Takes a single `Filter` as a value. Matches when the filter in the value does not match. || `Filter.not(Filter.ilike("name", "W%")) //name does not start with 'w'` ||
+|||||| `**` For more examples of all these operators, see SearchExamples ||
 
 *NOTE:* If any filter with an operator that expects a value has a null value, that filter is ignored. This is very handy in the case of writing a find method where null arguments are ignored. For example:
 {{{
