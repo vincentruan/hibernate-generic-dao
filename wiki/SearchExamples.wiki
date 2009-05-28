@@ -103,7 +103,7 @@ Find lots that have a house.
 s.addFilterNotNull("house");
 }}}
 
-===IS_EMPTY, NOT_EMPTY===
+===Filter IS_EMPTY, NOT_EMPTY===
 *_EMPTY with entity (same as is null)_*
 
 Find tasks that have not been assigned.
@@ -280,7 +280,7 @@ Find people who don't have any cats.
 s.addFilterNone("pets",Filter.equal("class", Cat.class));
 }}}
 
-===AND, OR, NOT===
+===Filter AND, OR, NOT===
 _These logical operator filters are used to combine other filters._
 
 Find people born in the 1950s.
