@@ -17,6 +17,8 @@ The search object provides flexible search options:
   * All of the above work with nested properties (i.e. properties of related objects)
 
 = Details =
+A Search object is the POJO that carries the various parameters to pass to a search. The core elements are lists of Filter, Sort and Field objects, and there are a number of other options.
+
 *Javadocs*:
   * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/ISearch.html
   * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/IMutableSearch.html
@@ -44,6 +46,39 @@ search.setSearchClass(Project.class);
 
 ===Filtering===
 A search can have a collection of _filters_. By default there is an 'AND' condition between these; however, the _disjunction_ property can be set to TRUE, and an 'OR' condition will be used.
+
+Each Filter object has three fields:
+  * *property:* The name of the property to filter on. It may be nested. Examples: "name", "dateOfBirth", "employee.age", "employee.spouse.job.title"
+  * *operator:* The type of comparison to do between the property and the value.
+  * *value:* The value to compare the property with. Should be of a compatible type with the property. Examples: "Fred", new Date(), 45
+
+A filter can be created simply setting the fields and adding it to the search...
+{{{
+Filter f = new Filter();
+f.setProperty("name");
+f.setOperator(Filter.OP_EQUAL);
+f.setValue("Bob");
+search.addFilter(f);
+
+//or
+Filter f = new Filter("name", "Bob", Filter.OP_EQUAL);
+search.addFilter(f);
+}}}
+
+The Filter class also has static methods for creating filters with certain operators...
+{{{
+Filter f = Filter.equal("name", "Bob"); //creates a filter with the OP_EQUAL operator
+search.addFilter(f);
+
+//or another example with the OP_GREATER_THAN operator
+search.addFilter( Filter.greaterThan("age", 7) );
+}}}
+
+Finally, the `Search` class has methods for creating and adding a filter all in one step...
+{{{
+search.addFilterEqual("name", "Bob");
+search.addFilterGreaterThan("age", 7);
+}}}
 
 The following filtering operators are available:
 || *Operator* || *Explanation* || *Example* ||
