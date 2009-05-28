@@ -1,6 +1,6 @@
 #summary Examples of using the Search object.
 
-===Important Notes===
+==Important Notes==
 Most of the examples below reference a variable "s". If the code snippit does not initialize the variable explicitly, assume that it is initialized like this:
 {{{
 Search s = new Search();
@@ -22,8 +22,8 @@ s.setMaxResults(10);
 s.setPage(2);
 }}}
 
-===Examples===
-==Filter EQUAL==
+==Examples==
+===Filter EQUAL===
 Find all men named Bob.
 {{{
 Search s = new Search(Person.class);
@@ -31,7 +31,7 @@ s.addFilterEqual("firstName", "Bob");
 s.addFilterEqual("male", true);
 }}}
 
-==Filter LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL==
+===Filter LESS_THAN, GREATER_THAN, LESS_OR_EQUAL, GREATER_OR_EQUAL===
 Find employees with salaries under $40,000.
 {{{
 s.addFilterLessThan("salary", 40000);
@@ -46,4 +46,3 @@ s.setDisjunction(true); //disjunction makes it "or" rather than "and"
 
 s.addFilterOr(Filter.greaterOrEqual("salary", 40000), Filter.lessThan("salary", 100000));
 }}}
-
