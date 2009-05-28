@@ -24,6 +24,8 @@ A Search object is the POJO that carries the various parameters to pass to a sea
   * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/IMutableSearch.html
   * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Search.html
 
+For more help with Searches look at the SearchExamples page.
+
 == Full API Reference ==
 
 ===General===
@@ -108,7 +110,7 @@ The following filtering operators are available:
 {{{
 /**
  * This is a DAO method that returns all the people with the given first and/or last name.
- * If any parameter is not null, that parameter is ignored. So only non-null parameters are used in defining the search criteria.
+ * If any parameter is null, that parameter is ignored. So only non-null parameters are used in defining the search criteria.
  */
 public List<Person> findPeopleByName(String firstName, String lastName) {
     return search(new Search(Person.class).addFilterEqual("firstName", firstName).addFilterEqual("lastName", lastName));
