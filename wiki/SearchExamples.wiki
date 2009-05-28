@@ -88,7 +88,7 @@ Find bowls of porridge that would be neither too hot nor too cold.
 s.addFilterNotIn("temperature", "hot", "cold");
 }}}
 
-===Filter IS_NULL, NOT_NULL, IS_EMPTY, NOT_EMPTY===
+===Filter IS_NULL, NOT_NULL===
 Find tasks that have not been assigned.
 {{{
 s.addFilterNull("owner");
@@ -102,6 +102,39 @@ Find lots that have a house.
 {{{
 s.addFilterNotNull("house");
 }}}
+
+===IS_EMPTY, NOT_EMPTY===
+*EMPTY with entity (same as is null)*
+Find tasks that have not been assigned.
+{{{
+s.addFilterEmpty("owner");
+
+/* HQL equivalent...
+ select t from Task t where t.owner is null
+*/
+}}}
+
+Find lots that have a house.
+{{{
+s.addFilterNotEmpty("house");
+}}}
+
+*EMPTY with string*
+Find forms where the maiden name is blank (either null or empty string).
+{{{
+s.addFilterEmpty("maidenName");
+
+//HQL equivalent...
+ select f from Form f where f.maidenName is not null and f.maidenName != ''
+
+}}}
+
+Find people with the middle name specified (neither null nor empty string).
+{{{
+s.addFilterNotEmpty("middleName");
+}}}
+
+*EMPTY with collection*
 
 
 ===Filter SIZE, CLASS, ID===
