@@ -5,7 +5,7 @@
 	<artifactId>trg-test-search</artifactId>
 	<packaging>jar</packaging>
 	<name>The Revere Group Search - Tests</name>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<properties></properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>
@@ -60,12 +60,12 @@
 		<dependency>
 			<groupId>com.trg</groupId>
 			<artifactId>trg-test-base</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.trg</groupId>
 			<artifactId>trg-search</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 		</dependency>
 	</dependencies>
 </project>
