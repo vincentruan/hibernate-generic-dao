@@ -5,7 +5,7 @@
 	<artifactId>trg-test-base</artifactId>
 	<packaging>jar</packaging>
 	<name>The Revere Group Search and DAO - Test Base</name>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<properties></properties>
 	<build>
 		<sourceDirectory>src/main/java</sourceDirectory>

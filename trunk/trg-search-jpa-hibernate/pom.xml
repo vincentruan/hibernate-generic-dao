@@ -4,7 +4,7 @@
 	<groupId>com.trg</groupId>
 	<artifactId>trg-search-jpa-hibernate</artifactId>
 	<name>The Revere Group Search - JPA Hibernate</name>
-	<version>0.5.0</version>
+	<version>0.5.1</version>
 	<url>http://code.google.com/p/hibernate-generic-dao</url>
 	<inceptionYear>2008</inceptionYear>
 	<build>
@@ -92,7 +92,7 @@
 		<dependency>
 			<groupId>com.trg</groupId>
 			<artifactId>trg-search-hibernate</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -106,7 +106,7 @@
 		<dependency>
 			<groupId>com.trg</groupId>
 			<artifactId>trg-test-search</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 			<scope>test</scope>
 		</dependency>
 
