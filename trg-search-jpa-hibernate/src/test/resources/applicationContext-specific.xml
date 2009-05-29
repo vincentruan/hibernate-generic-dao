@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
 		
-	<bean id="searchFacade" class="com.trg.search.jpa.JPASearchFacade">
+	<bean id="searchFacade" class="test.trg.search.jpa.hibernate.SpringJPASearchFacade">
 		<property name="searchProcessor" ref="searchProcessor"/>
 	</bean>
 	
