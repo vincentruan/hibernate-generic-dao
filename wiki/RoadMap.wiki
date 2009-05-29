@@ -51,6 +51,9 @@
   * Added implementation for JPA.
   * Fixed Issue 34 HibernateMetadataUtil not working with proxy objects
 
+==0.5.1==
+  * Default JPA Metadata implementation
+  * Testing more JPA data model configurations
 
 ==Future==
   * Custom expressions in fields, filters and sorts.
