@@ -49,7 +49,8 @@
 
 ==0.5.0 (05/27/2009  current release)==
   * Added implementation for JPA.
-  * Fixed Issue 34 HibernateMetadataUtil not working with proxy objects
+  * Fixed Issue 34 HibernateMetadataUtil not working with proxy objects.
+  * Added a couple example projects to demonstrate configuration.
 
 ==0.5.1==
   * Default JPA Metadata implementation
