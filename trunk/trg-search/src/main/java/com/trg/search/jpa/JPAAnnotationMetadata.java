@@ -227,7 +227,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		}
 	}
 
-	public static class Property {
+	private static class Property {
 		public Property(String name) {
 			this.name = name;
 		}
@@ -266,10 +266,20 @@ public class JPAAnnotationMetadata implements Metadata {
 			return null;
 		}
 		
-		private <T extends Annotation> boolean hasAnnotation(Class<T> annotationClass) {
-			return (getter != null && getter.getAnnotation(annotationClass) != null)
-			|| (field != null && field.getAnnotation(annotationClass) != null)
-			|| (setter != null && setter.getAnnotation(annotationClass) != null);
+		public <T extends Annotation> boolean hasAnnotation(Class<T> annotationClass) {
+			return getAnnotation(annotationClass) != null;
+		}
+		
+		public <T extends Annotation> T getAnnotation(Class<T> annotationClass) {
+			T val = null;
+			if (getter != null)
+				val = getter.getAnnotation(annotationClass);
+			if (val == null && field != null)
+				val = field.getAnnotation(annotationClass);
+			if (val == null && setter != null)
+				val = setter.getAnnotation(annotationClass);
+			
+			return val;
 		}
 
 		String name;
