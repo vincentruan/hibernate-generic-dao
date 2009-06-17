@@ -53,6 +53,7 @@
   * Added a couple example projects to demonstrate configuration.
 
 ==0.5.1==
+  * Fixed Issue 35 : Missing some operators in Filter.toString()
   * Default JPA Metadata implementation
   * Testing more JPA data model configurations
 
