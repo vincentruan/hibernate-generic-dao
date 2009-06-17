@@ -65,6 +65,10 @@ public class SearchTest extends TestCase {
 				"cat.ilike", "Mon%")));
 		s.addFilter(new Filter(null, null, -3));
 		s.addFilter((Filter) null);
+		s.addFilterNull("nullProp");
+		s.addFilterNotNull("notNullProp");
+		s.addFilterEmpty("emptyProp");
+		s.addFilterNotEmpty("notEmptyProp");
 
 		s.addSort("more.sorts", true);
 		s.addSort(new Sort(null, false));

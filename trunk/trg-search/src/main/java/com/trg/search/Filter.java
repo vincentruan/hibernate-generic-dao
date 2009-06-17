@@ -435,6 +435,14 @@ public class Filter implements Serializable {
 			return "`" + property + "` LIKE " + InternalUtil.paramDisplayString(value);
 		case Filter.OP_ILIKE:
 			return "`" + property + "` ILIKE " + InternalUtil.paramDisplayString(value);
+		case Filter.OP_NULL:
+			return "`" + property + "` IS NULL";
+		case Filter.OP_NOT_NULL:
+			return "`" + property + "` IS NOT NULL";
+		case Filter.OP_EMPTY:
+			return "`" + property + "` IS EMPTY";
+		case Filter.OP_NOT_EMPTY:
+			return "`" + property + "` IS NOT EMPTY";
 		case Filter.OP_AND:
 		case Filter.OP_OR:
 			if (!(value instanceof List)) {
