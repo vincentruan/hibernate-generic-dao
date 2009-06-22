@@ -93,7 +93,6 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 
 		List<Object> paramList = new ArrayList<Object>();
 		String hql = generateQL(searchClass, search, paramList);
-		System.out.println(hql);
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
 		addPaging(query, search);
