@@ -21,19 +21,19 @@ There are 7 separate projects that make up the framework. Each corresponds to a 
   * _trg-search-hibernate_
     * The standard Hibernate implementation of for search. Contains the Hibernate Search Processor and the HibernateMetadataUtil. Also includes Hibernate dependencies in the POM.
     * *packages:* com.trg.search.hibernate
-    * *depends on:* _trg-search_ (_trg-test-search_ for test phase)
+    * *depends on:* _trg-search_ (and _trg-test-search_ for test phase)
   * _trg-search-jpa-hibernate_
     * The Hibernate Entity Manager implementation for use with JPA. Contains utility for getting HibernateMetadataUtil from an EntityManager and the Hibernate Entity Manager dependencies in the POM. Also used to test JPA Search.
     * *packages:* com.trg.search.jpa.hibernate
-    * *depends on:* _trg-search_, _trg-search-hibernate_ (_trg-test-search_ for test phase)
+    * *depends on:* _trg-search_, _trg-search-hibernate_ (and _trg-test-search_ for test phase)
   * _trg-dao_
     * Contains utilities for DAOs and the JPA DAO implementation.
     * *packages:* com.trg.dao, com.trg.dao.jpa
-    * *depends on:* _trg-search_ (_trg-test-base_ for test phase)
+    * *depends on:* _trg-search_ (and _trg-test-base_ for test phase)
   * _trg-dao-hibernate_
     * Standard Hibernate DAO implementations (both standard and original DAOs).
     * *packages:* com.trg.dao.hibernate, com.trg.dao.hibernate.original
-    * *depends on:* _trg-search_, _trg-search-hibernate_, _trg-dao_ (_trg-test-base_ for test phase)
+    * *depends on:* _trg-search_, _trg-search-hibernate_, _trg-dao_ (and _trg-test-base_ for test phase)
 
 = Building the Framework =
 The framework should be built with Maven. Each project is built individually. Just use the `mvn package` to build a jar or `mvn install` to build the jar and install it in your local Maven repository.
