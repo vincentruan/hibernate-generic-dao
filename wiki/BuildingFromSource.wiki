@@ -1,6 +1,6 @@
 #summary How to build the framework modules from the sources.
 
-see also FrameworkArchitecture for a basic understanding of how the sources and modules are structured.
+See also FrameworkArchitecture for a basic understanding of how the sources and modules are structured. Thanks Tercio for your contribution to this (see discussion [http://groups.google.com/group/java-generic-dao/browse_thread/thread/cae3cf17bb866fa9]).
 
 =Compiling from Source=
 
