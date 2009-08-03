@@ -55,6 +55,7 @@
 ==0.5.1==
   * Fixed Issue 35 : Missing some operators in Filter.toString()
   * Fixed Issue 36 : Removed left-over debug statement.
+  * Fixing Issue 40 : Sub-classing sub classes of GenericDAOImpl.
   * Default JPA Metadata implementation
   * Testing more JPA data model configurations
 
