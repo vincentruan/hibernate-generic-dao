@@ -17,11 +17,19 @@ package junit.trg.dao.hibernate;
 import java.io.Serializable;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
+import org.hibernate.SessionFactory;
+import org.hibernate.engine.SessionImplementor;
+import org.hibernate.proxy.HibernateProxy;
+import org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer;
+import org.hibernate.type.AnyType;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import test.trg.BaseTest;
 import test.trg.dao.hibernate.HibernateBaseDAOTester;
+import test.trg.model.Address;
 import test.trg.model.Home;
 import test.trg.model.Ingredient;
 import test.trg.model.Person;
@@ -39,6 +47,9 @@ import com.trg.search.SearchResult;
 
 public class BaseDAOTest extends BaseTest {
 
+	@Autowired
+	protected SessionFactory sessionFactory;
+	
 	private HibernateBaseDAOTester target;
 
 	public void setHibernateBaseDAOTester(HibernateBaseDAOTester dao) {
@@ -101,6 +112,46 @@ public class BaseDAOTest extends BaseTest {
 		} catch (HibernateException e) {
 		}
 	}
+	
+	public void testProxyIssues() throws HibernateException, SecurityException,
+			NoSuchMethodException {
+		initDB();
+		Address address = papaA.getHome().getAddress();
+		try {
+			Serializable id = address.getId();
+
+			// When working with 2 different session, the session.contains(entity) returns false
+			// see in _exists(Object entity) in HibernateBaseDAO
+			SessionImplementor openSession = (SessionImplementor) sessionFactory.openSession();
+			
+			Address proxy = (Address) JavassistLazyInitializer.getProxy(
+					Address.class.getName(),
+					Address.class,
+					new Class[] { HibernateProxy.class },
+					Address.class.getMethod("getId"),
+					Address.class.getMethod("setId", Long.class),
+					new AnyType(Hibernate.LONG, Hibernate.SERIALIZABLE),
+					id,
+					openSession
+			);
+
+
+			// If this is not working properly, this will throw an error
+			target.saveOrUpdateIsNew(proxy);
+			
+			//So will this
+			Address address2 = target.get(proxy.getClass(), id);
+
+			assertEquals("update on the proxy should work ", proxy.getCity(),
+					address2.getCity());
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+
+	}
+
 
 	public void testPersist() {
 		target.persist(grandpaA.getHome().getAddress());

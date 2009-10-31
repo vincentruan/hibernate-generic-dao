@@ -131,4 +131,16 @@ public class MetadataTest extends BaseSearchTest {
 		assertFalse(md3.getPropertyType("limbs").isEmeddable());
 		
 	}
+	
+
+	
+	public void testProxyIssues() {
+		initDB();
+		Person joe = getProxy(Person.class, joeA.getId());
+		
+		//joe's class is now actually a JavaAssist or CGLib generated extension of Person.
+		//these methods should return deal with that problem...
+		assertEquals(Person.class, metadataUtil.getUnproxiedClass(joe.getClass()));
+		assertEquals(Person.class, metadataUtil.getUnproxiedClass(joe));
+	}
 }

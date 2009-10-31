@@ -8,6 +8,8 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.hibernate.proxy.HibernateProxyHelper;
+
 import com.trg.search.Metadata;
 import com.trg.search.MetadataUtil;
 
@@ -60,4 +62,11 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 		}
 	}
 
+	public <T> Class<T> getUnproxiedClass(Class<?> klass) {
+		throw new RuntimeException("Method not implemented");
+	}
+	
+	public <T> Class<T> getUnproxiedClass(Object entity) {
+		throw new RuntimeException("Method not implemented");
+	}
 }

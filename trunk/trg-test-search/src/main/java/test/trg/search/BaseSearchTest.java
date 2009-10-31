@@ -21,6 +21,7 @@ import test.trg.BaseTest;
 public class BaseSearchTest extends BaseTest {
 	protected SearchFacade target;
 	
+	//This is automatically autowired by SpringTest
 	public void setSearchFacade(SearchFacade target) {
 		this.target = target;
 	}

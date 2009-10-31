@@ -10,7 +10,7 @@ import test.trg.model.Person;
 import test.trg.model.Recipe;
 import test.trg.model.RecipeIngredient;
 
-public class MetadataTest extends BaseTest {
+public class JPAAnnotationMetadataTest extends BaseTest {
 	protected MetadataUtil metadataUtil = new JPAAnnotationMetadataUtil();
 	
 	{
