@@ -201,10 +201,11 @@ public class HibernateBaseDAO {
 		Map<Class<?>, List<Integer>> mayExist = new HashMap<Class<?>, List<Integer>>();
 		for (int i = 0; i < entities.length; i++) {
 			if (exists[i] == null) {
-				List<Integer> l = mayExist.get(entities[i].getClass());
+				Class<?> entityClass = metaDataUtil.getUnproxiedClass(entities[i]); //Get the real entity class
+				List<Integer> l = mayExist.get(entityClass);
 				if (l == null) {
 					l = new ArrayList<Integer>();
-					mayExist.put(entities[i].getClass(), l);
+					mayExist.put(entityClass, l);
 				}
 				l.add(i);
 			}
@@ -268,6 +269,7 @@ public class HibernateBaseDAO {
 	 */
 	protected boolean _deleteById(Class<?> type, Serializable id) {
 		if (id != null) {
+			type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 			Object entity = getSession().get(type, id);
 			if (entity != null) {
 				getSession().delete(entity);
@@ -282,6 +284,7 @@ public class HibernateBaseDAO {
 	 * one of these ids.
 	 */
 	protected void _deleteById(Class<?> type, Serializable... ids) {
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 		Criteria c = getSession().createCriteria(type);
 		c.add(Restrictions.in("id", ids));
 		for (Object entity : c.list()) {
@@ -299,7 +302,7 @@ public class HibernateBaseDAO {
 		if (entity != null) {
 			Serializable id = getMetaDataUtil().getId(entity);
 			if (id != null) {
-				entity = getSession().get(entity.getClass(), id);
+				entity = getSession().get(metaDataUtil.getUnproxiedClass(entity), id);
 				if (entity != null) {
 					getSession().delete(entity);
 					return true;
@@ -325,6 +328,7 @@ public class HibernateBaseDAO {
 	 * <code>get()</code> always hits the database immediately.
 	 */
 	protected <T> T _get(Class<T> type, Serializable id) {
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 		return (T) getSession().get(type, id);
 	}
 
@@ -340,6 +344,7 @@ public class HibernateBaseDAO {
 	 * <code>get()</code> always hits the database immediately.
 	 */
 	protected <T> T[] _get(Class<T> type, Serializable... ids) {
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 		Criteria c = getSession().createCriteria(type);
 		c.add(Restrictions.in("id", ids));
 		Object[] retVal = (Object[]) Array.newInstance(type, ids.length);
@@ -372,6 +377,7 @@ public class HibernateBaseDAO {
 	 * if batch-size is defined for the class mapping.
 	 */
 	protected <T> T _load(Class<T> type, Serializable id) {
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 		return (T) getSession().load(type, id);
 	}
 
@@ -387,6 +393,7 @@ public class HibernateBaseDAO {
 	 * @see #_load(Class, Serializable)
 	 */
 	protected <T> T[] _load(Class<T> type, Serializable... ids) {
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 		Object[] retVal = (Object[]) Array.newInstance(type, ids.length);
 		for (int i = 0; i < ids.length; i++) {
 			if (ids[i] != null)
@@ -408,6 +415,7 @@ public class HibernateBaseDAO {
 	 * Get a list of all the objects of the specified class.
 	 */
 	protected <T> List<T> _all(Class<T> type) {
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 		return getSession().createCriteria(type).setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY).list();
 	}
 
@@ -625,6 +633,7 @@ public class HibernateBaseDAO {
 			throw new NullPointerException("Type is null.");
 		if (id == null)
 			return false;
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 
 		Query query = getSession().createQuery("select id from " + type.getName() + " where id = :id");
 		query.setParameter("id", id);
@@ -634,6 +643,7 @@ public class HibernateBaseDAO {
 	protected boolean[] _exists(Class<?> type, Serializable... ids) {
 		if (type == null)
 			throw new NullPointerException("Type is null.");
+		type = metaDataUtil.getUnproxiedClass(type); //Get the real entity class
 
 		boolean[] ret = new boolean[ids.length];
 

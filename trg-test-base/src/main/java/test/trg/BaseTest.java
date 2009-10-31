@@ -47,7 +47,7 @@ import test.trg.model.RecipeIngredient;
 import test.trg.model.Store;
 
 public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests {
-
+	//Many properties are automatically autowired by SpringTest
 	PersistenceHelper persistenceHelper;
 
 	public void setPersistenceHelper(PersistenceHelper persistenceHelper) {

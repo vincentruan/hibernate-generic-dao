@@ -57,4 +57,22 @@ public interface MetadataUtil {
 	 *             if the class does not have the given property.
 	 */
 	public Metadata get(Class<?> rootEntityClass, String propertyPath);
+	
+	/**
+	 * Return the actual entity class registered with the persistence provider.
+	 * This may be the same class or it may be different if the given class is
+	 * is a proxy. For example, the entity class may be Person, but the class
+	 * of the proxy may be Person_$$_javassist_5. We need to normalize this to
+	 * Person so that we can create correct queries and inspect metadata correctly.
+	 */
+	public <T> Class<T> getUnproxiedClass(Class<?> klass);
+	
+	/**
+	 * Return the actual entity class registered with the persistence provider.
+	 * This may be the same as entity.getClass() or it may be different if the object is
+	 * is a proxy. For example, the entity class may be Person, but the class
+	 * of the proxy object may be Person_$$_javassist_5. We need to normalize this to
+	 * Person so that we can create correct queries and inspect metadata correctly.
+	 */
+	public <T> Class<T> getUnproxiedClass(Object entity);
 }
