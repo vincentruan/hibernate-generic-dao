@@ -16,15 +16,24 @@ package junit.trg.dao.jpa;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import test.trg.BaseTest;
 import test.trg.dao.jpa.dao.PersonDAO;
 import test.trg.dao.jpa.dao.ProjectDAO;
+import test.trg.dao.jpa.dao.ProjectDAOImpl;
 import test.trg.model.Person;
 import test.trg.model.Project;
 
+import com.trg.dao.DAOUtil;
+import com.trg.dao.jpa.GenericDAOImpl;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 import com.trg.search.Sort;
+import com.trg.search.jpa.JPASearchProcessor;
 
 public class GenericDAOTest extends BaseTest {
 
@@ -39,6 +48,12 @@ public class GenericDAOTest extends BaseTest {
 	public void setProjectDAO(ProjectDAO projectDAO) {
 		this.projectDAO = projectDAO;
 	}
+	
+	@PersistenceContext
+	EntityManager entityManager;
+	
+	@Autowired
+	JPASearchProcessor searchProcessor;
 
 
 	/**
@@ -244,5 +259,34 @@ public class GenericDAOTest extends BaseTest {
 		assertEquals("Second", results.get(0).getName());
 		assertEquals("Third", results.get(1).getName());
 	}
-
+	
+	public void testSubclassingDAO() {
+		initDB();
+		
+		ProjectDAO2 p2 = new ProjectDAO2();
+		p2.setEntityManager(entityManager);
+		p2.setSearchProcessor(searchProcessor);
+		
+		assertTrue(p2.findAll().size() > 0);
+		
+		ProjectDAO2 p3 = new ProjectDAO2() {
+			@Override
+			public Project findFirstProject() {
+				assertEquals(Project.class, persistentClass);
+				
+				return searchUnique(new Search().addFilterEqual("name", "First"));
+			}
+		};
+		p3.setEntityManager(entityManager);
+		p3.setSearchProcessor(searchProcessor);
+		
+		assertEquals(projects.get(0), p3.findFirstProject());
+	}
+	
+	//Used for testSubclassingDAO()
+	private static class ProjectDAO2 extends ProjectDAOImpl {
+		public Project findFirstProject() {
+			return null; //placeholder method
+		}
+	}
 }

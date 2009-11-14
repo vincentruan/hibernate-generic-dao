@@ -14,8 +14,12 @@
  */
 package junit.trg.dao.hibernate.original;
 
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import test.trg.BaseTest;
 import test.trg.dao.hibernate.dao.original.PersonDAO;
+import test.trg.dao.hibernate.dao.original.PersonDAOImpl;
 import test.trg.model.Home;
 import test.trg.model.Person;
 
@@ -29,6 +33,9 @@ public class GenericDAOTest extends BaseTest {
 	public void setOrigPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
+	
+	@Autowired
+	SessionFactory sessionFactory;
 
 	/**
 	 * Just quickly check that all the methods basically work. The underlying
@@ -171,4 +178,31 @@ public class GenericDAOTest extends BaseTest {
 		assertFalse(personDAO.isConnected(bob));
 	}
 
+	public void testSubclassingDAO() {
+		initDB();
+		
+		PersonDAO2 p2 = new PersonDAO2();
+		p2.setSessionFactory(sessionFactory);
+		
+		assertTrue(p2.fetchAll().size() > 0);
+		
+		PersonDAO2 p3 = new PersonDAO2() {
+			@Override
+			public Person findJoeA() {
+				assertEquals(Person.class, persistentClass);
+				
+				return (Person) searchUnique(new Search().addFilterEqual("firstName", "Joe").addFilterLike("lastName", "A%"));
+			}
+		};
+		p3.setSessionFactory(sessionFactory);
+		
+		assertEquals(joeA, p3.findJoeA());
+	}
+	
+	//Used for testSubclassingDAO()
+	private static class PersonDAO2 extends PersonDAOImpl {
+		public Person findJoeA() {
+			return null; //placeholder method
+		}
+	}
 }

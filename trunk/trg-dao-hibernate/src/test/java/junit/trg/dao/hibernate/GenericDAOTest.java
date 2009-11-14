@@ -17,10 +17,13 @@ package junit.trg.dao.hibernate;
 import java.util.List;
 
 import org.hibernate.ObjectNotFoundException;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import test.trg.BaseTest;
 import test.trg.dao.hibernate.dao.PersonDAO;
 import test.trg.dao.hibernate.dao.ProjectDAO;
+import test.trg.dao.hibernate.dao.ProjectDAOImpl;
 import test.trg.model.Person;
 import test.trg.model.Project;
 
@@ -41,6 +44,9 @@ public class GenericDAOTest extends BaseTest {
 	public void setProjectDAO(ProjectDAO projectDAO) {
 		this.projectDAO = projectDAO;
 	}
+	
+	@Autowired
+	SessionFactory sessionFactory;
 
 
 	/**
@@ -219,6 +225,34 @@ public class GenericDAOTest extends BaseTest {
 		assertTrue(results.size() == 2);
 		assertEquals("Second", results.get(0).getName());
 		assertEquals("Third", results.get(1).getName());
+	}
+	
+	public void testSubclassingDAO() {
+		initDB();
+		
+		ProjectDAO2 p2 = new ProjectDAO2();
+		p2.setSessionFactory(sessionFactory);
+		
+		assertTrue(p2.findAll().size() > 0);
+		
+		ProjectDAO2 p3 = new ProjectDAO2() {
+			@Override
+			public Project findFirstProject() {
+				assertEquals(Project.class, persistentClass);
+				
+				return searchUnique(new Search().addFilterEqual("name", "First"));
+			}
+		};
+		p3.setSessionFactory(sessionFactory);
+		
+		assertEquals(projects.get(0), p3.findFirstProject());
+	}
+	
+	//Used for testSubclassingDAO()
+	private static class ProjectDAO2 extends ProjectDAOImpl {
+		public Project findFirstProject() {
+			return null; //placeholder method
+		}
 	}
 
 }
