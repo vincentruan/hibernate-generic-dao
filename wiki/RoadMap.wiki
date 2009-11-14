@@ -55,7 +55,10 @@
 ==0.5.1==
   * Fixed Issue 35 : Missing some operators in Filter.toString()
   * Fixed Issue 36 : Removed left-over debug statement.
-  * Fixing Issue 40 : Sub-classing sub classes of GenericDAOImpl.
+  * Fixed Issue 40 : Sub-classing sub classes of GenericDAOImpl.
+  * Fixed Issue 44 : BUG: SearchUtil.shallowCopy is missing setDistinct()
+  * Fixed Issue 49 : Saving not working with proxy objects
+  * Fixing Issue 51 : Referencing the root object using addField()
   * Default JPA Metadata implementation
   * Testing more JPA data model configurations
 
