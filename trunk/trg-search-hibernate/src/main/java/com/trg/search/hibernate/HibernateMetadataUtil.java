@@ -122,38 +122,17 @@ public class HibernateMetadataUtil implements MetadataUtil {
 	}
 	
 	public <T> Class<T> getUnproxiedClass(Class<?> klass) {
-		ClassMetadata cm = sessionFactory.getClassMetadata(klass);
-		if (cm != null) {
-			return (Class<T>) klass;
-		} else {
-			//cm will be null if entityClass is not registered with Hibernate or when
-			//it is a Hibernate proxy class (e.x. test.trg.model.Person_$$_javassist_5).
-			//So if a class is not recognized, we will loop through all recognized
-			//classes and do a less strict comparison...
-			Map<String, ClassMetadata> m = sessionFactory.getAllClassMetadata();
-			List<ClassMetadata> candidates = new ArrayList<ClassMetadata>();
-			for (ClassMetadata md : m.values()) {
-				if (md.getMappedClass(EntityMode.POJO).isAssignableFrom(klass)) {
-					candidates.add(md);
-				}
-			}
-			
-			if (candidates.size() == 1) {
-				return candidates.get(0).getMappedClass(EntityMode.POJO);
-			} else if (candidates.size() > 1) {
-				for (int i = candidates.size() - 1; i >= 0; i--) {
-					for (int j = 0; j < candidates.size(); j++) {
-						//if i is a superclass of j, drop i and keep j. we want the most specific class.
-						if (i != j && candidates.get(i).getMappedClass(EntityMode.POJO).isAssignableFrom(candidates.get(j).getMappedClass(EntityMode.POJO))) {
-							candidates.remove(i);
-							break;
-						}
-					}
-				}
-				return candidates.get(0).getMappedClass(EntityMode.POJO);
-			}
+		//cm will be null if entityClass is not registered with Hibernate or when
+		//it is a Hibernate proxy class (e.x. test.trg.model.Person_$$_javassist_5).
+		//So if a class is not recognized, we will look at superclasses to see if
+		//it is a proxy.
+		while (sessionFactory.getClassMetadata(klass) == null) {
+			klass = klass.getSuperclass();
+			if (Object.class.equals(klass))
+				return null;
 		}
-		return null;
+		
+		return (Class<T>) klass;
 	}
 	
 	public <T> Class<T> getUnproxiedClass(Object entity) {
