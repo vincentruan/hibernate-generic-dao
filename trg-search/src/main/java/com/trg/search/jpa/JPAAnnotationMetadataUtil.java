@@ -8,6 +8,9 @@ import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.persistence.Entity;
+
+import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxyHelper;
 
 import com.trg.search.Metadata;
@@ -63,10 +66,16 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 	}
 
 	public <T> Class<T> getUnproxiedClass(Class<?> klass) {
-		throw new RuntimeException("Method not implemented");
+		while (klass.getAnnotation(Entity.class) == null) {
+			klass = klass.getSuperclass();
+			if (Object.class.equals(klass))
+				return null;
+		}
+		
+		return (Class<T>) klass;
 	}
 	
 	public <T> Class<T> getUnproxiedClass(Object entity) {
-		throw new RuntimeException("Method not implemented");
+		return (Class<T>) getUnproxiedClass(entity.getClass());
 	}
 }

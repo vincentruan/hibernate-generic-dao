@@ -23,6 +23,8 @@
 		<constructor-arg ref="entityManagerFactory"/>
 	</bean>
 	
+<!--	<bean id="metadataUtil" class="com.trg.search.jpa.JPAAnnotationMetadataUtil"/>-->
+	
 	<bean id="persistenceHelper" class="test.trg.jpa.JPAPersistenceHelper"/>
 	
 	<bean id="internalHelper" class="test.trg.search.jpa.hibernate.HibernateInternalHelper"/>
