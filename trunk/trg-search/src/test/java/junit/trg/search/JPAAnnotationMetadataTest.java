@@ -118,10 +118,4 @@ public class JPAAnnotationMetadataTest extends BaseTest {
 		assertFalse(md3.getPropertyType("limbs").isEmeddable());
 		
 	}
-	
-	public void testInvalid() {
-		
-		
-		
-	}
 }
