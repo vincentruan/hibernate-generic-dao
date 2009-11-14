@@ -15,9 +15,9 @@
 package com.trg.dao.hibernate;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
+import com.trg.dao.DAOUtil;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
@@ -41,8 +41,7 @@ import com.trg.search.SearchResult;
 public class GenericDAOImpl<T, ID extends Serializable> extends
 		HibernateBaseDAO implements GenericDAO<T, ID> {
 
-	protected Class<T> persistentClass = (Class<T>) ((ParameterizedType) getClass()
-			.getGenericSuperclass()).getActualTypeArguments()[0];
+	protected Class<T> persistentClass = (Class<T>) DAOUtil.getTypeArguments(GenericDAOImpl.class, this.getClass()).get(0);
 
 	public int count(ISearch search) {
 		if (search == null)
