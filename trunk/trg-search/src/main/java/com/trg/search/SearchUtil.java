@@ -690,6 +690,7 @@ public class SearchUtil {
 	 */
 	public static IMutableSearch shallowCopy(ISearch source, IMutableSearch destination) {
 		destination.setSearchClass(source.getSearchClass());
+		destination.setDistinct(source.isDistinct());
 		destination.setDisjunction(source.isDisjunction());
 		destination.setResultMode(source.getResultMode());
 		destination.setFirstResult(source.getFirstResult());
