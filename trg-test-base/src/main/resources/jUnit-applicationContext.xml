@@ -16,6 +16,9 @@
 	-->
 	<import resource="applicationContext.xml" />
 
+	<!-- I'm not actually sure why this is here. I think I may have just copied it over without
+		understanding it. But it may be used for specifying the string format to use when specifying
+		date values for beans defined in spring beans XML -->
 	<bean id="customEditorConfigurer"
 		class="org.springframework.beans.factory.config.CustomEditorConfigurer">
 		<property name="customEditors">
