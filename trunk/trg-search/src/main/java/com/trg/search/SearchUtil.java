@@ -57,7 +57,7 @@ public class SearchUtil {
 	 * map.
 	 */
 	public static void addField(IMutableSearch search, String property) {
-		if (property == null || "".equals(property))
+		if (property == null)
 			return; // null properties do nothing, don't bother to add them.
 		addField(search, new Field(property));
 	}
@@ -68,7 +68,7 @@ public class SearchUtil {
 	 * map.
 	 */
 	public static void addField(IMutableSearch search, String property, int operator) {
-		if (property == null || "".equals(property))
+		if (property == null)
 			return; // null properties do nothing, don't bother to add them.
 		addField(search, new Field(property, operator));
 	}
@@ -78,7 +78,7 @@ public class SearchUtil {
 	 * <code>key</code> will be used as the key for this value in the map.
 	 */
 	public static void addField(IMutableSearch search, String property, int operator, String key) {
-		if (property == null || "".equals(property) || key == null || "".equals(key))
+		if (property == null || key == null)
 			return; // null properties do nothing, don't bother to add them.
 		addField(search, new Field(property, operator, key));
 	}
@@ -88,7 +88,7 @@ public class SearchUtil {
 	 * <code>key</code> will be used as the key for this value in the map.
 	 */
 	public static void addField(IMutableSearch search, String property, String key) {
-		if (property == null || "".equals(property) || key == null || "".equals(key))
+		if (property == null || key == null)
 			return; // null properties do nothing, don't bother to add them.
 		addField(search, new Field(property, key));
 	}

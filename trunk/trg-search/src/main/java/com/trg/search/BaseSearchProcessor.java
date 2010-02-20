@@ -221,7 +221,7 @@ public abstract class BaseSearchProcessor {
 
 				String prop;
 				if (field.getProperty() == null || "".equals(field.getProperty())) {
-					prop = "*"; // TODO: I think this will be a problem
+					prop = ctx.getRootAlias();
 				} else {
 					prop = getPathRef(ctx, field.getProperty());
 				}

@@ -37,6 +37,11 @@ public class Filter implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
+	 * Property string representing the root entity of the search. This is just the empty string ("").
+	 */
+	public static final String ROOT_ENTITY = "";
+	
+	/**
 	 * The name of the property to filter on. It may be nested. Examples:
 	 * <code>"name", "dateOfBirth", "employee.age", "employee.spouse.job.title"</code>
 	 */

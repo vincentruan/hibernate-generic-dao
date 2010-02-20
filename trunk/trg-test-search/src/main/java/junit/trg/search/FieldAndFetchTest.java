@@ -69,6 +69,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		s.addField("firstName", "first");
 		s.addField("lastName");
 		s.addField("age");
+		s.addField(Field.ROOT_ENTITY); //same as s.addField("");
 
 		s.setResultMode(Search.RESULT_ARRAY);
 		resultArray = target.search(s);
@@ -76,9 +77,11 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Joe", resultArray.get(0)[0]);
 		assertEquals("Alpha", resultArray.get(0)[1]);
 		assertEquals(10, resultArray.get(0)[2]);
+		assertEquals(joeA, resultArray.get(0)[3]);
 		assertEquals("Margret", resultArray.get(1)[0]);
 		assertEquals("Beta", resultArray.get(1)[1]);
 		assertEquals(14, resultArray.get(1)[2]);
+		assertEquals(margretB, resultArray.get(1)[3]);
 
 		s.setResultMode(Search.RESULT_LIST);
 		resultList = target.search(s);
@@ -86,9 +89,11 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Joe", resultList.get(0).get(0));
 		assertEquals("Alpha", resultList.get(0).get(1));
 		assertEquals(10, resultList.get(0).get(2));
+		assertEquals(joeA, resultList.get(0).get(3));
 		assertEquals("Margret", resultList.get(1).get(0));
 		assertEquals("Beta", resultList.get(1).get(1));
 		assertEquals(14, resultList.get(1).get(2));
+		assertEquals(margretB, resultList.get(1).get(3));
 
 		s.setResultMode(Search.RESULT_MAP);
 		resultMap = target.search(s);
@@ -96,9 +101,11 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Joe", resultMap.get(0).get("first"));
 		assertEquals("Alpha", resultMap.get(0).get("lastName"));
 		assertEquals(10, resultMap.get(0).get("age"));
+		assertEquals(joeA, resultMap.get(0).get(""));
 		assertEquals("Margret", resultMap.get(1).get("first"));
 		assertEquals("Beta", resultMap.get(1).get("lastName"));
 		assertEquals(14, resultMap.get(1).get("age"));
+		assertEquals(margretB, resultMap.get(1).get(""));
 
 		s.clearFields();
 		s.addField("firstName");

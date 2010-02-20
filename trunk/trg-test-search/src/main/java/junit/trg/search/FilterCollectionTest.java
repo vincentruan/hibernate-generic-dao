@@ -91,7 +91,7 @@ public class FilterCollectionTest extends BaseSearchTest {
 		//value collection
 		s.clear();
 		s.setSearchClass(LimbedPet.class);
-		s.addFilterSome("limbs", Filter.equal("", "left front leg"));
+		s.addFilterSome("limbs", Filter.equal(Filter.ROOT_ENTITY, "left front leg"));
 		assertEquals(3, target.count(s));
 		
 		s.clear();
