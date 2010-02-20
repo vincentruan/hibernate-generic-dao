@@ -52,7 +52,7 @@ A search can have a collection of _filters_. By default there is an 'AND' condit
 See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Filter.html.
 
 Each Filter object has three fields:
-  * *property:* The name of the property to filter on. It may be nested. Examples: "name", "dateOfBirth", "employee.age", "employee.spouse.job.title"
+  * *property:* The name of the property to filter on. It may be nested. Examples: "name", "dateOfBirth", "employee.age", "employee.spouse.job.title". _NOTE: the empty string ("") or the constant Filter.ROOT_ENTITY can be used to specify the root entity._
   * *operator:* The type of comparison to do between the property and the value.
   * *value:* The value to compare the property with. Should be of a compatible type with the property. Examples: "Fred", new Date(), 45
 
@@ -141,6 +141,8 @@ By default, the results of a search will be a list of the entity objects that we
 A search can have a collection of _fields_. These are analogous to the "SELECT" clause in SQL or HQL. Each field corresponds to a property value or a column operator applied to a property. Each field may also be assigned a key string. This will be used instead of the property name as a map key when using the MAP result mode. If no fields are specified, the entity itself is used as the single result for each record.
 
 See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Field.html.
+
+_NOTE: the empty string ("") or the constant Filter.ROOT_ENTITY can be used to specify the root entity._
 
 Here are the available field operators:
   * PROPERTY (i.e. no operator)
