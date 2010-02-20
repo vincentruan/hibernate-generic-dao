@@ -142,7 +142,7 @@ A search can have a collection of _fields_. These are analogous to the "SELECT" 
 
 See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Field.html.
 
-_NOTE: the empty string ("") or the constant Filter.ROOT_ENTITY can be used to specify the root entity._
+*NOTE:* the empty string ("") or the constant Filter.ROOT_ENTITY can be used to specify the root entity.
 
 Here are the available field operators:
   * PROPERTY (i.e. no operator)
