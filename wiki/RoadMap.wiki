@@ -58,8 +58,12 @@
   * Fixed Issue 40 : Sub-classing sub classes of GenericDAOImpl.
   * Fixed Issue 44 : BUG: SearchUtil.shallowCopy is missing setDistinct()
   * Fixed Issue 49 : Saving not working with proxy objects
-  * Fixing Issue 51 : Referencing the root object using addField()
-  * Default JPA Metadata implementation
+  * Fixed Issue 51 : Referencing the root object using addField()
+  * Default JPA Metadata implementation (still somewhat limited)
+  * Issue 41 : Return type of searchGeneric
+  * Issue 47 : Add load method with lock mode option
+
+==0.5.2==
   * Testing more JPA data model configurations
 
 ==Future==
@@ -68,3 +72,4 @@
   * Possibly add SIZE and IS EMPTY for collections in fields.
   * Look at case sensitivity options. (Issue 28)
   * STARTS_WITH, ENDS_WITH, CONTAINS operators
+  * Deployment to central maven repo
