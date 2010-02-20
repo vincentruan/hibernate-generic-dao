@@ -184,7 +184,7 @@ Find projects that I am a member of
 
 - if projects.members is a list of people
 {{{
-s.addFilterSome("members", Filter.equal("", me)); //note that using "" refers to the root entity itself
+s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, me)); //note that using Filter.ROOT_ENTITY (or just "") refers to the root entity itself
 //or equivalently...
 s.addFilterSome("members", Filter.equal("id", me.id));
 
@@ -211,7 +211,7 @@ There is at least one member relationship where that relationship's person is eq
 
 Find projects that have at least one of the given members
 {{{
-s.addFilterSome("members", Filter.in("", us));
+s.addFilterSome("members", Filter.in(Filter.ROOT_ENTITY, us));
 
 /*English equivalent
 There is at least one member where that member is in the collection of people called us.
@@ -223,9 +223,9 @@ There is at least one member where that member is in the collection of people ca
 
 Find projects that have all the given members
 {{{
-s.addFilterSome("members", Filter.equal("", member1));
-s.addFilterSome("members", Filter.equal("", member2));
-s.addFilterSome("members", Filter.equal("", member3));
+s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, member1));
+s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, member2));
+s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, member3));
 
 /*English equivalent
 There is at least one member where that member is equal to member1,
@@ -241,7 +241,7 @@ and there is at least one member where that member is equal to member3.
 
 Find projects that have only the given members
 {{{
-s.addFilterAll("members", Filter.in("", us));
+s.addFilterAll("members", Filter.in(Filter.ROOT_ENTITY, us));
  
 /*English equivalent
 It is true for every member that that member is in the collection of people called us.
