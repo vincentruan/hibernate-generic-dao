@@ -24,6 +24,11 @@ import java.io.Serializable;
 public class Field implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
+	/**
+	 * Property string representing the root entity of the search. This is just the empty string ("").
+	 */
+	public static final String ROOT_ENTITY = "";
 
 	/**
 	 * The property to include in the result.
