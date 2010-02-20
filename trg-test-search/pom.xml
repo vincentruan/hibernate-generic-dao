@@ -23,11 +23,6 @@
 		<extensions>
 		</extensions>
 	</build>
-	<distributionManagement>
-		<repository>
-			<url>${deployURL}</url>
-		</repository>
-	</distributionManagement>
 	<repositories>
 		<repository>
 			<snapshots>
