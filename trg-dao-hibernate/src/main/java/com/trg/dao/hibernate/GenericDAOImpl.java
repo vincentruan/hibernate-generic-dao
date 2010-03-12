@@ -105,34 +105,24 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return _saveOrUpdateIsNew(entities);
 	}
 
-	public List<T> search(ISearch search) {
+	public <RT> List<RT> search(ISearch search) {
 		if (search == null)
-			return findAll();
+			return (List<RT>) findAll();
 		return _search(persistentClass, search);
 	}
 
-	public SearchResult<T> searchAndCount(ISearch search) {
+	public <RT> SearchResult<RT> searchAndCount(ISearch search) {
 		if (search == null) {
-			SearchResult<T> result = new SearchResult<T>();
-			result.setResult(findAll());
+			SearchResult<RT> result = new SearchResult<RT>();
+			result.setResult((List<RT>) findAll());
 			result.setTotalCount(result.getResult().size());
 			return result;
 		}
 		return _searchAndCount(persistentClass, search);
 	}
 
-	public List searchGeneric(ISearch search) {
-		if (search == null)
-			return findAll();
-		return _search(persistentClass, search);
-	}
-
-	public T searchUnique(ISearch search) {
-		return (T) _searchUnique(persistentClass, search);
-	}
-
-	public Object searchUniqueGeneric(ISearch search) {
-		return _searchUnique(persistentClass, search);
+	public <RT> RT searchUnique(ISearch search) {
+		return (RT) _searchUnique(persistentClass, search);
 	}
 
 	public Filter getFilterFromExample(T example) {

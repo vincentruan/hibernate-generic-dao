@@ -77,11 +77,6 @@ public class PersonService {
 		return dao.searchAndCount(search);
 	}
 
-	@SuppressWarnings("unchecked")
-	public List searchGeneric(Search search) {
-		return dao.searchGeneric(search);
-	}
-
 	public Object searchUnique(Search search) throws NonUniqueResultException {
 		return dao.searchUnique(search);
 	}

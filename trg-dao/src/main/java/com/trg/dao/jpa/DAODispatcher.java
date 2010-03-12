@@ -308,17 +308,9 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
-				return ((GenericDAO) specificDAO).searchGeneric(search);
+				return ((GenericDAO) specificDAO).search(search);
 			} else {
-				try {
-					return (List) callMethod(specificDAO, "searchGeneric", search);
-				} catch (DAODispatcherException ex) {
-					if (ex.getCause() instanceof NoSuchMethodException) {
-						return (List) callMethod(specificDAO, "search", search);
-					} else {
-						throw ex;
-					}
-				}
+				return (List) callMethod(specificDAO, "search", search);
 			}
 		} else {
 			return generalDAO.search(search);
@@ -342,17 +334,9 @@ public class DAODispatcher extends BaseDAODispatcher implements GeneralDAO {
 		Object specificDAO = getSpecificDAO(search.getSearchClass().getName());
 		if (specificDAO != null) {
 			if (specificDAO instanceof GenericDAO) {
-				return ((GenericDAO) specificDAO).searchUniqueGeneric(search);
+				return ((GenericDAO) specificDAO).searchUnique(search);
 			} else {
-				try {
-					return callMethod(specificDAO, "searchUniqueGeneric", search);
-				} catch (DAODispatcherException ex) {
-					if (ex.getCause() instanceof NoSuchMethodException) {
-						return callMethod(specificDAO, "searchUnique", search);
-					} else {
-						throw ex;
-					}
-				}
+				return callMethod(specificDAO, "searchUnique", search);
 			}
 		} else {
 			return generalDAO.searchUnique(search);

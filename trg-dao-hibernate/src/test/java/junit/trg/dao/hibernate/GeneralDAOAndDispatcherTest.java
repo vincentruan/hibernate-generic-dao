@@ -114,14 +114,14 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 		s.addFilterEqual("id", bob.getId());
 		assertEquals(bob, dao.searchUnique(s));
 		
-		//searchGeneric
+		//search
 		s = new Search(Person.class);
 		s.addFilterEqual("father.id", bob.getId());
 		s.setResultMode(Search.RESULT_SINGLE);
 		s.addField("firstName");
 		assertEquals(fred.getFirstName(), dao.search(s).get(0));
 
-		//searchUniqueGeneric
+		//searchUnique
 		assertEquals(fred.getFirstName(), dao.searchUnique(s));
 		
 		//example

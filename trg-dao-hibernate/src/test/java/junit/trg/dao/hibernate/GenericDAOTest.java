@@ -29,6 +29,7 @@ import test.trg.model.Project;
 
 import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
+import com.trg.search.SearchResult;
 import com.trg.search.Sort;
 
 public class GenericDAOTest extends BaseTest {
@@ -73,10 +74,10 @@ public class GenericDAOTest extends BaseTest {
 		assertEquals(2, personDAO.count(new Search(Person.class)));
 		
 		//searchAndCount
-		assertListEqual(new Person[] { bob, fred }, personDAO
-				.searchAndCount(new Search()).getResult());
-		assertListEqual(new Person[] { bob, fred }, personDAO
-				.searchAndCount(new Search(Person.class)).getResult());
+		SearchResult<Person> result = personDAO.searchAndCount(new Search());
+		assertListEqual(new Person[] { bob, fred }, result.getResult());
+		result = personDAO.searchAndCount(new Search(Person.class));
+		assertListEqual(new Person[] { bob, fred }, result.getResult());
 
 		//searchUnique
 		Search s = new Search();
@@ -86,19 +87,19 @@ public class GenericDAOTest extends BaseTest {
 		s.addFilterEqual("id", bob.getId());
 		assertEquals(bob, personDAO.searchUnique(s));
 		
-		//searchGeneric
+		//search
 		s = new Search();
 		s.addFilterEqual("id", bob.getId());
 		s.setResultMode(Search.RESULT_SINGLE);
 		s.addField("firstName");
-		assertEquals(bob.getFirstName(), personDAO.searchGeneric(s).get(0));
+		assertEquals(bob.getFirstName(), personDAO.search(s).get(0));
 		s.setSearchClass(Person.class);
-		assertEquals(bob.getFirstName(), personDAO.searchGeneric(s).get(0));
+		assertEquals(bob.getFirstName(), personDAO.search(s).get(0));
 
-		//searchUniqueGeneric
-		assertEquals(bob.getFirstName(), personDAO.searchUniqueGeneric(s));
+		//searchUnique
+		assertEquals(bob.getFirstName(), personDAO.searchUnique(s));
 		s.setSearchClass(null);
-		assertEquals(bob.getFirstName(), personDAO.searchUniqueGeneric(s));
+		assertEquals(bob.getFirstName(), personDAO.searchUnique(s));
 		
 		//example
 		Person example = new Person();
@@ -120,18 +121,12 @@ public class GenericDAOTest extends BaseTest {
 		
 		//check searching with null
 		assertListEqual(personDAO.search(null), fred, bob);
-		assertListEqual(personDAO.searchGeneric(null), fred, bob);
 		assertListEqual(personDAO.search(null), fred, bob);
-		assertListEqual(personDAO.searchGeneric(null), fred, bob);
 		assertEquals(2, personDAO.count(null));
 		assertListEqual(personDAO.searchAndCount(null).getResult(), fred, bob);
 		assertEquals(2, personDAO.searchAndCount(null).getTotalCount());
 		try {
 			personDAO.searchUnique(null);
-			fail("Should have thrown NullPointerException.");
-		} catch (NullPointerException ex) {}
-		try {
-			personDAO.searchUniqueGeneric(null);
 			fail("Should have thrown NullPointerException.");
 		} catch (NullPointerException ex) {}
 		

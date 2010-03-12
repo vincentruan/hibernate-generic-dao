@@ -119,25 +119,17 @@ public class PersonService {
 		return dao.save(entity);
 	}
 
-	public List<Person> search(ISearch search) {
+	public <RT> List<RT> search(ISearch search) {
 		return dao.search(search);
 	}
 
-	public SearchResult<Person> searchAndCount(ISearch search) {
+	public <RT> SearchResult<RT> searchAndCount(ISearch search) {
 		return dao.searchAndCount(search);
 	}
 
 	@SuppressWarnings("unchecked")
-	public List searchGeneric(ISearch search) {
-		return dao.searchGeneric(search);
-	}
-
-	public Person searchUnique(ISearch search) {
-		return dao.searchUnique(search);
-	}
-
-	public Object searchUniqueGeneric(ISearch search) {
-		return dao.searchUniqueGeneric(search);
+	public <RT> RT searchUnique(ISearch search) {
+		return (RT) dao.searchUnique(search);
 	}
 
 }
