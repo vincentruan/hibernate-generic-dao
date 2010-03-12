@@ -59,12 +59,13 @@
   * Fixed Issue 44 : BUG: SearchUtil.shallowCopy is missing setDistinct()
   * Fixed Issue 49 : Saving not working with proxy objects
   * Fixed Issue 51 : Referencing the root object using addField()
+  * Fixed Issue 57 / Issue 58 : HibernateSearchProcessor prints HQL to console
+  * Completed Issue 41 : Return type of searchGeneric
   * Default JPA Metadata implementation (still somewhat limited)
-  * Issue 41 : Return type of searchGeneric
-  * Issue 47 : Add load method with lock mode option
 
 ==0.5.2==
   * Testing more JPA data model configurations
+  * Issue 47 : Add load method with lock mode option
 
 ==Future==
   * Custom expressions in fields, filters and sorts.
