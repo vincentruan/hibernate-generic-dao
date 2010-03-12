@@ -73,6 +73,11 @@ public class Search implements IMutableSearch, Serializable {
 		SearchUtil.addFilter(this, filter);
 		return this;
 	}
+	
+	public Search addFilters(Filter... filters) {
+		SearchUtil.addFilters(this, filters);
+		return this;
+	}
 
 	/**
 	 * Add a filter that uses the == operator.
@@ -301,6 +306,11 @@ public class Search implements IMutableSearch, Serializable {
 		SearchUtil.addSort(this, sort);
 		return this;
 	}
+	
+	public Search addSorts(Sort... sorts) {
+		SearchUtil.addSorts(this, sorts);
+		return this;
+	}
 
 	/**
 	 * Add ascending sort by property
@@ -367,6 +377,11 @@ public class Search implements IMutableSearch, Serializable {
 	// Fields
 	public Search addField(Field field) {
 		SearchUtil.addField(this, field);
+		return this;
+	}
+	
+	public Search addFields(Field... fields) {
+		SearchUtil.addFields(this, fields);
 		return this;
 	}
 
@@ -447,6 +462,11 @@ public class Search implements IMutableSearch, Serializable {
 	// Fetches
 	public Search addFetch(String property) {
 		SearchUtil.addFetch(this, property);
+		return this;
+	}
+	
+	public Search addFetches(String... properties) {
+		SearchUtil.addFetches(this, properties);
 		return this;
 	}
 
