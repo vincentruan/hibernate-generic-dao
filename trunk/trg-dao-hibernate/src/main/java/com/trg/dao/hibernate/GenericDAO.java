@@ -151,13 +151,17 @@ public interface GenericDAO<T, ID extends Serializable> {
 	/**
 	 * Search for entities given the search parameters in the specified
 	 * <code>ISearch</code> object.
+	 * 
+	 * @param RT The result type is automatically determined by the context in which the method is called.
 	 */
-	public List<T> search(ISearch search);
+	public <RT> List<RT> search(ISearch search);
 
 	/**
 	 * Search for a single entity using the given parameters.
+	 * 
+	 * @param RT The result type is automatically determined by the context in which the method is called.
 	 */
-	public T searchUnique(ISearch search);
+	public <RT> RT searchUnique(ISearch search);
 
 	/**
 	 * Returns the total number of results that would be returned using the
@@ -169,23 +173,10 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * Returns a <code>SearchResult</code> object that includes both the list of
 	 * results like <code>search()</code> and the total length like
 	 * <code>count()</code>.
+	 * 
+	 * @param RT The result type is automatically determined by the context in which the method is called.
 	 */
-	public SearchResult<T> searchAndCount(ISearch search);
-
-	/**
-	 * Search for objects given the search parameters in the specified
-	 * <code>ISearch</code> object. Return an untyped result list. The result
-	 * type can be determined by fetch mode and fetches on the search.
-	 */
-	@SuppressWarnings("unchecked")
-	public List searchGeneric(ISearch search);
-
-	/**
-	 * Search for a single result using the given parameters. Return an untyped
-	 * result. The result type can be determined by fetch mode and fetches on
-	 * the search.
-	 */
-	public Object searchUniqueGeneric(ISearch search);
+	public <RT> SearchResult<RT> searchAndCount(ISearch search);
 
 	/**
 	 * Returns <code>true</code> if the object is connected to the current

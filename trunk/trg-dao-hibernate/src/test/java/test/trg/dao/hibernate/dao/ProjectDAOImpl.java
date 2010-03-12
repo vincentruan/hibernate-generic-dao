@@ -60,30 +60,20 @@ public class ProjectDAOImpl extends BaseDAOImpl<Project, Long> implements Projec
 	}
 
 	@Override
-	public List<Project> search(ISearch search) {
+	public <RT> List<RT> search(ISearch search) {
 		return super.search(prepareSearch(search));
 	}
 
 	@Override
-	public SearchResult<Project> searchAndCount(ISearch search) {
+	public <RT> SearchResult<RT> searchAndCount(ISearch search) {
 		ISearch s = prepareSearch(search);
 		return super.searchAndCount(s);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List searchGeneric(ISearch search) {
-		return super.searchGeneric(prepareSearch(search));
-	}
-
-	@Override
-	public Project searchUnique(ISearch search) {
-		return super.searchUnique(prepareSearch(search));
-	}
-
-	@Override
-	public Object searchUniqueGeneric(ISearch search) {
-		return super.searchUniqueGeneric(prepareSearch(search));
+	public <RT> RT searchUnique(ISearch search) {
+		return (RT) super.searchUnique(prepareSearch(search));
 	}
 
 	/**
