@@ -32,7 +32,6 @@ import test.trg.model.Store;
 
 import com.trg.search.ExampleOptions;
 import com.trg.search.Field;
-import com.trg.search.Filter;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 

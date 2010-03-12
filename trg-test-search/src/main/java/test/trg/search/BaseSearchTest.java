@@ -14,9 +14,9 @@
  */
 package test.trg.search;
 
-import com.trg.search.SearchFacade;
-
 import test.trg.BaseTest;
+
+import com.trg.search.SearchFacade;
 
 public class BaseSearchTest extends BaseTest {
 	protected SearchFacade target;

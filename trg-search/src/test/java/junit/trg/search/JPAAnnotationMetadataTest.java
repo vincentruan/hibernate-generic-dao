@@ -1,14 +1,14 @@
 package junit.trg.search;
 
-import com.trg.search.Metadata;
-import com.trg.search.MetadataUtil;
-import com.trg.search.jpa.JPAAnnotationMetadataUtil;
-
 import test.trg.BaseTest;
 import test.trg.model.LimbedPet;
 import test.trg.model.Person;
 import test.trg.model.Recipe;
 import test.trg.model.RecipeIngredient;
+
+import com.trg.search.Metadata;
+import com.trg.search.MetadataUtil;
+import com.trg.search.jpa.JPAAnnotationMetadataUtil;
 
 public class JPAAnnotationMetadataTest extends BaseTest {
 	protected MetadataUtil metadataUtil = new JPAAnnotationMetadataUtil();

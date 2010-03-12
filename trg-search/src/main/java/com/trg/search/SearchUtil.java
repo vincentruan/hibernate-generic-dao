@@ -14,7 +14,11 @@
  */
 package com.trg.search;
 
-import static com.trg.search.ISearch.*;
+import static com.trg.search.ISearch.RESULT_ARRAY;
+import static com.trg.search.ISearch.RESULT_AUTO;
+import static com.trg.search.ISearch.RESULT_LIST;
+import static com.trg.search.ISearch.RESULT_MAP;
+import static com.trg.search.ISearch.RESULT_SINGLE;
 
 import java.util.ArrayList;
 import java.util.Arrays;

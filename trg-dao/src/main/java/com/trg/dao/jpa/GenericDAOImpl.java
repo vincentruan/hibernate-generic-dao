@@ -15,7 +15,6 @@
 package com.trg.dao.jpa;
 
 import java.io.Serializable;
-import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import com.trg.dao.DAOUtil;

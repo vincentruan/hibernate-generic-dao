@@ -33,9 +33,9 @@ import org.slf4j.LoggerFactory;
 import com.trg.search.BaseSearchProcessor;
 import com.trg.search.Field;
 import com.trg.search.ISearch;
+import com.trg.search.InternalUtil;
 import com.trg.search.SearchResult;
 import com.trg.search.SearchUtil;
-import com.trg.search.InternalUtil;
 
 /**
  * Implementation of BaseSearchProcessor that generates Works with standard Hibernate.

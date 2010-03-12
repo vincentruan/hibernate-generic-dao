@@ -1,17 +1,8 @@
 package com.trg.search.jpa;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Type;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.persistence.Entity;
-
-import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.proxy.HibernateProxyHelper;
 
 import com.trg.search.Metadata;
 import com.trg.search.MetadataUtil;
@@ -65,6 +56,7 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public <T> Class<T> getUnproxiedClass(Class<?> klass) {
 		while (klass.getAnnotation(Entity.class) == null) {
 			klass = klass.getSuperclass();
@@ -75,6 +67,7 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 		return (Class<T>) klass;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public <T> Class<T> getUnproxiedClass(Object entity) {
 		return (Class<T>) getUnproxiedClass(entity.getClass());
 	}
