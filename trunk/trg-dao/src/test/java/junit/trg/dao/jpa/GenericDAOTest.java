@@ -28,8 +28,6 @@ import test.trg.dao.jpa.dao.ProjectDAOImpl;
 import test.trg.model.Person;
 import test.trg.model.Project;
 
-import com.trg.dao.DAOUtil;
-import com.trg.dao.jpa.GenericDAOImpl;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;

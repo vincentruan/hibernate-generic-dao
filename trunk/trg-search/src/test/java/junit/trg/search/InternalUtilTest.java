@@ -14,9 +14,9 @@
  */
 package junit.trg.search;
 
-import com.trg.search.InternalUtil;
-
 import junit.framework.TestCase;
+
+import com.trg.search.InternalUtil;
 
 public class InternalUtilTest extends TestCase {
 	

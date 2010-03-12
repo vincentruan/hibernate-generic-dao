@@ -19,15 +19,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
+import test.trg.model.Person;
+import test.trg.model.Project;
+
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
 import com.trg.search.Search;
 import com.trg.search.SearchResult;
 import com.trg.search.SearchUtil;
 import com.trg.search.Sort;
-
-import test.trg.model.Person;
-import test.trg.model.Project;
 
 /**
  * <p>
