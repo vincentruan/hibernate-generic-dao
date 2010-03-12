@@ -22,7 +22,7 @@ If you want to use standard hibernate without JPA, include the following depende
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-dao-hibernate</artifactId>
-        <version>0.5.0</version> <!-- or whatever the latest version is -->
+        <version>0.5.1</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
@@ -32,13 +32,13 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-dao</artifactId>
-        <version>0.5.0</version> <!-- or whatever the latest version is -->
+        <version>0.5.1</version> <!-- or whatever the latest version is -->
 </dependency>
 <!-- This second one includes the Hibernate Entity Manager plugin for the framework -->
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-search-jpa-hibernate</artifactId>
-        <version>0.5.0</version> <!-- or whatever the latest version is -->
+        <version>0.5.1</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
@@ -47,27 +47,27 @@ Download the jars from http://hibernate-generic-dao.googlecode.com/svn/trunk/mav
 
 The DAO requires both the _trg-search_ jar and the _trg-dao_ jar.
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/0.5.0/trg-dao-0.5.0.jar <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search/0.5.0/trg-search-0.5.0.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/0.5.1/trg-dao-0.5.1.jar <br/>
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search/0.5.1/trg-search-0.5.1.jar
 
 If you are using standard Hibernate without JPA, you will also need the _trg-search-hibernate_ and _trg-dao-hibernate_ jars.
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao-hibernate/0.5.0/trg-dao-hibernate-0.5.0.jar <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-hibernate/0.5.0/trg-search-hibernate-0.5.0.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao-hibernate/0.5.1/trg-dao-hibernate-0.5.1.jar <br/>
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-hibernate/0.5.1/trg-search-hibernate-0.5.1.jar
 
 If you are using JPA with Hibernate Entity Manager, download just the _trg-search-jpa-hibernate_ jar instead.
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-jpa-hibernate/0.5.0/trg-search-jpa-hibernate-0.5.0.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-jpa-hibernate/0.5.1/trg-search-jpa-hibernate-0.5.1.jar
 
 If you like, you can also get the source jars to help out your IDE with Javadocs and to help yourself out being able to see what's going on (trg-XXX-X.X.X-sources.jar).
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/0.5.0/trg-dao-0.5.0-sources.jar <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search/0.5.0/trg-search-0.5.0-sources.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/0.5.1/trg-dao-0.5.1-sources.jar <br/>
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search/0.5.1/trg-search-0.5.1-sources.jar
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao-hibernate/0.5.0/trg-dao-hibernate-0.5.0-sources.jar <br/>
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-hibernate/0.5.0/trg-search-hibernate-0.5.0-sources.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao-hibernate/0.5.1/trg-dao-hibernate-0.5.1-sources.jar <br/>
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-hibernate/0.5.1/trg-search-hibernate-0.5.1-sources.jar
 
-http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-jpa-hibernate/0.5.0/trg-search-jpa-hibernate-0.5.0-sources.jar
+http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search-jpa-hibernate/0.5.1/trg-search-jpa-hibernate-0.5.1-sources.jar
 
 You will also need the Hibernate 3.3 jars and their dependencies. I'll leave you to do all the hibernate configuration.
 
@@ -80,7 +80,7 @@ For the first case, use this dependency instead:
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-search-hibernate</artifactId>
-        <version>0.5.0</version> <!-- or whatever the latest version is -->
+        <version>0.5.1</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
@@ -89,7 +89,7 @@ For the second you only need:
 <dependency>
         <groupId>com.trg</groupId>
         <artifactId>trg-search-jpa-hibernate</artifactId>
-        <version>0.5.0</version> <!-- or whatever the latest version is -->
+        <version>0.5.1</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
