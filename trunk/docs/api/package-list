@@ -1,9 +1,0 @@
-com.trg.dao
-com.trg.dao.hibernate
-com.trg.dao.hibernate.original
-com.trg.dao.jpa
-com.trg.search
-com.trg.search.flex
-com.trg.search.hibernate
-com.trg.search.jpa
-com.trg.search.jpa.hibernate
