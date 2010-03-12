@@ -16,8 +16,6 @@ package com.trg.search;
 
 import java.io.Serializable;
 
-import org.hibernate.PropertyNotFoundException;
-
 /**
  * The framework uses an implementation of this interface to introspect the
  * objects and relationships maintained by the JPA provider.
