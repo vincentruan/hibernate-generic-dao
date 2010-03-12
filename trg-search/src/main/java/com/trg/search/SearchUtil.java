@@ -41,6 +41,14 @@ public class SearchUtil {
 		}
 		fetches.add(property);
 	}
+	
+	public static void addFetches(IMutableSearch search, String... properties) {
+		if (properties != null) {
+			for (String property : properties) {
+				addFetch(search, property);
+			}
+		}
+	}
 
 	public static void addField(IMutableSearch search, Field field) {
 		List<Field> fields = search.getFields();
@@ -49,6 +57,14 @@ public class SearchUtil {
 			search.setFields(fields);
 		}
 		fields.add(field);
+	}
+	
+	public static void addFields(IMutableSearch search, Field... fields) {
+		if (fields != null) {
+			for (Field field : fields) {
+				addField(search, field);
+			}
+		}
 	}
 
 	/**
@@ -100,6 +116,14 @@ public class SearchUtil {
 			search.setFilters(filters);
 		}
 		filters.add(filter);
+	}
+	
+	public static void addFilters(IMutableSearch search, Filter... filters) {
+		if (filters != null) {
+			for (Filter filter : filters) {
+				addFilter(search, filter);
+			}
+		}
 	}
 
 	/**
@@ -285,6 +309,14 @@ public class SearchUtil {
 			search.setSorts(sorts);
 		}
 		sorts.add(sort);
+	}
+	
+	public static void addSorts(IMutableSearch search, Sort... sorts) {
+		if (sorts != null) {
+			for (Sort sort : sorts) {
+				addSort(search, sort);
+			}
+		}
 	}
 
 	/**
