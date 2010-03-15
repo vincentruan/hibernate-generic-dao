@@ -27,8 +27,8 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements Pro
 	}
 
 	//basic added method using search
-	public Project findByStatus(String status) {
-		return search(new Search().addFilterEquals("status", status));
+	public List<Project> searchByStatus(String status) {
+		return search(new Search().addFilterEqual("status", status));
 	}
 
 	//overriding a method
