@@ -18,7 +18,7 @@ import java.util.List;
 
 import test.trg.model.Person;
 
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Search;
 
 public class PersonDAOImpl extends BaseDAOImpl<Person, Long> implements PersonDAO {
 

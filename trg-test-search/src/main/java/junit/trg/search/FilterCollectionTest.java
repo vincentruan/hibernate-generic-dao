@@ -26,8 +26,8 @@ import test.trg.model.RecipeIngredient;
 import test.trg.model.Store;
 import test.trg.search.BaseSearchTest;
 
-import com.trg.search.Filter;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
 
 public class FilterCollectionTest extends BaseSearchTest {
 	public void testCollectionFilters() {

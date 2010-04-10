@@ -5,7 +5,7 @@ import java.util.Map;
 
 import sample.trg.oldworld.model.Town;
 
-import com.trg.search.ISearch;
+import com.googlecode.genericdao.search.ISearch;
 
 
 /**

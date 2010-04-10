@@ -30,12 +30,12 @@ import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.trg.search.BaseSearchProcessor;
-import com.trg.search.Field;
-import com.trg.search.ISearch;
-import com.trg.search.InternalUtil;
-import com.trg.search.SearchResult;
-import com.trg.search.SearchUtil;
+import com.googlecode.genericdao.search.BaseSearchProcessor;
+import com.googlecode.genericdao.search.Field;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.InternalUtil;
+import com.googlecode.genericdao.search.SearchResult;
+import com.googlecode.genericdao.search.SearchUtil;
 
 /**
  * Implementation of BaseSearchProcessor that generates Works with standard Hibernate.

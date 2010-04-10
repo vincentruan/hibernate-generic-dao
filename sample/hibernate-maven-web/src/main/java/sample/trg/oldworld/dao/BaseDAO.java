@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.trg.dao.hibernate.GenericDAOImpl;
+import com.googlecode.genericdao.dao.hibernate.GenericDAOImpl;
 
 /**
  * <p>

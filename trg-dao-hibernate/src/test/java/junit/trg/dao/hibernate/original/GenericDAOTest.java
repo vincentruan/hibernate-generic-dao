@@ -23,8 +23,8 @@ import test.trg.dao.hibernate.dao.original.PersonDAOImpl;
 import test.trg.model.Home;
 import test.trg.model.Person;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Search;
 
 public class GenericDAOTest extends BaseTest {
 

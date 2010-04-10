@@ -16,7 +16,7 @@ package junit.trg.search;
 
 import junit.framework.TestCase;
 
-import com.trg.search.InternalUtil;
+import com.googlecode.genericdao.search.InternalUtil;
 
 public class InternalUtilTest extends TestCase {
 	

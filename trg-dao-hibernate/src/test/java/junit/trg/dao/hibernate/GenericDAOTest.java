@@ -27,10 +27,10 @@ import test.trg.dao.hibernate.dao.ProjectDAOImpl;
 import test.trg.model.Person;
 import test.trg.model.Project;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
-import com.trg.search.Sort;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
+import com.googlecode.genericdao.search.Sort;
 
 public class GenericDAOTest extends BaseTest {
 

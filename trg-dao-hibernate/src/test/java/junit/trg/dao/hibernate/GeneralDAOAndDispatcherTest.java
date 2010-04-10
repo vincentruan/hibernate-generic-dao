@@ -25,10 +25,10 @@ import test.trg.dao.hibernate.dao.PersonService;
 import test.trg.model.Person;
 
 import com.googlecode.genericdao.dao.DAODispatcherException;
-import com.trg.dao.hibernate.DAODispatcher;
-import com.trg.dao.hibernate.GeneralDAO;
-import com.trg.search.ExampleOptions;
-import com.trg.search.Search;
+import com.googlecode.genericdao.dao.hibernate.DAODispatcher;
+import com.googlecode.genericdao.dao.hibernate.GeneralDAO;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Search;
 
 public class GeneralDAOAndDispatcherTest extends BaseTest {
 	private GeneralDAO generalDAO;

@@ -21,9 +21,9 @@ import java.util.List;
 import test.trg.model.Person;
 import test.trg.search.BaseSearchTest;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
 
 public class FilterTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")

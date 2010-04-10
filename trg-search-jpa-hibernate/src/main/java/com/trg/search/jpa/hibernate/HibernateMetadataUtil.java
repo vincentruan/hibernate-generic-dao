@@ -16,7 +16,7 @@ package com.trg.search.jpa.hibernate;
 
 import org.hibernate.ejb.HibernateEntityManagerFactory;
 
-import com.trg.search.MetadataUtil;
+import com.googlecode.genericdao.search.MetadataUtil;
 
 public class HibernateMetadataUtil {
 	public static MetadataUtil getInstanceForEntityManagerFactory(HibernateEntityManagerFactory emf) {

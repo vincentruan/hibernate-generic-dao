@@ -24,8 +24,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxyHelper;
 
-import com.trg.search.Metadata;
-import com.trg.search.MetadataUtil;
+import com.googlecode.genericdao.search.Metadata;
+import com.googlecode.genericdao.search.MetadataUtil;
 
 /**
  * Implementation of MetadataUtil for Hibernate

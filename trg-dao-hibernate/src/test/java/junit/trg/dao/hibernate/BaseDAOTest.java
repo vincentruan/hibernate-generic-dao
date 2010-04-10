@@ -40,10 +40,10 @@ import test.trg.model.RecipeIngredient;
 import test.trg.model.RecipeIngredientId;
 import test.trg.model.Store;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Field;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Field;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
 
 public class BaseDAOTest extends BaseTest {
 

@@ -19,7 +19,7 @@ import java.util.List;
 import test.trg.model.Person;
 import test.trg.search.BaseSearchTest;
 
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Search;
 
 public class PagingAndSortingTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")

@@ -13,7 +13,7 @@ import sample.trg.oldworld.model.Town;
 import sample.trg.oldworld.service.TownService;
 import sample.trg.oldworld.webhelps.Util;
 
-import com.trg.search.ISearch;
+import com.googlecode.genericdao.search.ISearch;
 
 @Controller
 public class TownController {

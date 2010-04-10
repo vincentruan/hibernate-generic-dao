@@ -17,8 +17,8 @@ package junit.trg.search;
 import test.trg.model.Person;
 import test.trg.search.BaseSearchTest;
 
-import com.trg.search.Filter;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
 
 public class SecurityTest extends BaseSearchTest {
 	public void testInjectionAttack() {

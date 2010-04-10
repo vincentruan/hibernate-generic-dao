@@ -22,8 +22,8 @@ import test.trg.model.Person;
 import test.trg.search.BaseSearchTest;
 import test.trg.search.InternalHelper;
 
-import com.trg.search.Field;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Field;
+import com.googlecode.genericdao.search.Search;
 
 public class FieldAndFetchTest extends BaseSearchTest {
 	

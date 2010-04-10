@@ -2,7 +2,7 @@ package sample.trg.oldworld.dao;
 
 import sample.trg.oldworld.model.Citizen;
 
-import com.trg.dao.hibernate.GenericDAO;
+import com.googlecode.genericdao.dao.hibernate.GenericDAO;
 
 /**
  * <p>

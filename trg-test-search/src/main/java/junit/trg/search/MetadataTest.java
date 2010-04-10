@@ -20,8 +20,8 @@ import test.trg.model.Recipe;
 import test.trg.model.RecipeIngredient;
 import test.trg.search.BaseSearchTest;
 
-import com.trg.search.Metadata;
-import com.trg.search.MetadataUtil;
+import com.googlecode.genericdao.search.Metadata;
+import com.googlecode.genericdao.search.MetadataUtil;
 
 public class MetadataTest extends BaseSearchTest {
 	public void setMetadataUtil(MetadataUtil metadataUtil) {

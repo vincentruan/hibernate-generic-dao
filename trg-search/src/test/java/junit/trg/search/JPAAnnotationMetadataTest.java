@@ -6,9 +6,9 @@ import test.trg.model.Person;
 import test.trg.model.Recipe;
 import test.trg.model.RecipeIngredient;
 
-import com.trg.search.Metadata;
-import com.trg.search.MetadataUtil;
-import com.trg.search.jpa.JPAAnnotationMetadataUtil;
+import com.googlecode.genericdao.search.Metadata;
+import com.googlecode.genericdao.search.MetadataUtil;
+import com.googlecode.genericdao.search.jpa.JPAAnnotationMetadataUtil;
 
 public class JPAAnnotationMetadataTest extends BaseTest {
 	protected MetadataUtil metadataUtil = new JPAAnnotationMetadataUtil();

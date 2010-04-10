@@ -2,8 +2,8 @@ package sample.trg.oldworld.service;
 
 import java.util.List;
 
-import com.trg.search.ISearch;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.SearchResult;
 
 import sample.trg.oldworld.model.Citizen;
 

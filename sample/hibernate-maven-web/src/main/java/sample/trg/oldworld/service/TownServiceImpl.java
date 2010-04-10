@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import sample.trg.oldworld.dao.TownDAO;
 import sample.trg.oldworld.model.Town;
 
-import com.trg.search.ISearch;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.Search;
 
 /**
  * This is the implementation for our Town Service. The @Service annotation
