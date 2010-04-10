@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.trg.search.jpa.hibernate;
+package com.googlecode.genericdao.search.jpa.hibernate;
 
 import org.hibernate.ejb.HibernateEntityManagerFactory;
 
@@ -20,6 +20,6 @@ import com.googlecode.genericdao.search.MetadataUtil;
 
 public class HibernateMetadataUtil {
 	public static MetadataUtil getInstanceForEntityManagerFactory(HibernateEntityManagerFactory emf) {
-		return com.trg.search.hibernate.HibernateMetadataUtil.getInstanceForSessionFactory(emf.getSessionFactory());
+		return com.googlecode.genericdao.search.hibernate.HibernateMetadataUtil.getInstanceForSessionFactory(emf.getSessionFactory());
 	}
 }
