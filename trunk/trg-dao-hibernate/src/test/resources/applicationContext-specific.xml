@@ -9,7 +9,7 @@
 		
 	<import resource="applicationContext-dao.xml"/>
 	
-	<bean id="persistenceHelper" class="test.trg.dao.hibernate.HibernatePersistenceHelper"/>
+	<bean id="persistenceHelper" class="test.googlecode.genericdao.dao.hibernate.HibernatePersistenceHelper"/>
 	
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
