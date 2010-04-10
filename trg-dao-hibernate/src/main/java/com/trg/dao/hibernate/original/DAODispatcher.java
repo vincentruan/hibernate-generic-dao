@@ -19,8 +19,8 @@ import java.util.List;
 
 import org.hibernate.NonUniqueResultException;
 
-import com.trg.dao.BaseDAODispatcher;
-import com.trg.dao.DAODispatcherException;
+import com.googlecode.genericdao.dao.BaseDAODispatcher;
+import com.googlecode.genericdao.dao.DAODispatcherException;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;

@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.trg.dao.jpa.GeneralDAO;
+import com.googlecode.genericdao.dao.jpa.GeneralDAO;
 import com.trg.search.Search;
 
 import sample.trg.model.Citizen;

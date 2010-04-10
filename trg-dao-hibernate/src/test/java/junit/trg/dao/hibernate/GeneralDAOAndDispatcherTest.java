@@ -24,7 +24,7 @@ import test.trg.dao.hibernate.dao.PersonDAO;
 import test.trg.dao.hibernate.dao.PersonService;
 import test.trg.model.Person;
 
-import com.trg.dao.DAODispatcherException;
+import com.googlecode.genericdao.dao.DAODispatcherException;
 import com.trg.dao.hibernate.DAODispatcher;
 import com.trg.dao.hibernate.GeneralDAO;
 import com.trg.search.ExampleOptions;

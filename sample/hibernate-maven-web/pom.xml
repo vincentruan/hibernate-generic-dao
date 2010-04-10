@@ -4,8 +4,8 @@
 	<groupId>sample.trg</groupId>
 	<artifactId>hibernate-maven-web</artifactId>
 	<packaging>war</packaging>
-	<name>TRG DAO Sample - Hibernate Maven Web</name>
-	<version>0.5.0</version>
+	<name>TRG DAO Sample - Hibernate, Maven, Web</name>
+	<version>0.5.1</version>
 	<description>TRG DAO Sample WebApp w/ Maven, Spring and Hibernate</description>
 	<url>http://code.google.com/p/hibernate-generic-dao/</url>
 	<inceptionYear>2009</inceptionYear>
@@ -45,9 +45,9 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.trg</groupId>
+			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>trg-dao-hibernate</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

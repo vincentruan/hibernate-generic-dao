@@ -3,9 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sample.trg</groupId>
 	<artifactId>jpa-hibernate-sample</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>spring-jpa</name>
-	<url>http://maven.apache.org</url>
+	<version>0.5.1</version>
+	<name>TRG DAO Sample - Hibernate Entity Manager, Maven</name>
+	<description>TRG DAO Sample Console App w/ Maven, JPA powered by Hibernate</description>
+	<url>http://code.google.com/p/hibernate-generic-dao/</url>
+	<inceptionYear>2009</inceptionYear>
 	<build>
 		<resources>
 			<resource>
@@ -87,16 +89,16 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.trg</groupId>
+			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>trg-dao</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.trg</groupId>
+			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>trg-search-jpa-hibernate</artifactId>
-			<version>0.5.0</version>
+			<version>0.5.1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

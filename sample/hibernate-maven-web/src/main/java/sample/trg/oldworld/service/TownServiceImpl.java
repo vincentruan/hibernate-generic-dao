@@ -48,7 +48,7 @@ public class TownServiceImpl implements TownService {
 		s.addField("name");
 		s.setResultMode(Search.RESULT_MAP);
 		s.addSortAsc("name");
-		return dao.searchGeneric(s);
+		return dao.search(s);
 	}
 
 	public void delete(Long id) {

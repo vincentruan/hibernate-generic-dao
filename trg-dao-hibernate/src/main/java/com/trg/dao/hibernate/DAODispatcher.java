@@ -17,8 +17,8 @@ package com.trg.dao.hibernate;
 import java.io.Serializable;
 import java.util.List;
 
-import com.trg.dao.BaseDAODispatcher;
-import com.trg.dao.DAODispatcherException;
+import com.googlecode.genericdao.dao.BaseDAODispatcher;
+import com.googlecode.genericdao.dao.DAODispatcherException;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
