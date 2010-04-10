@@ -12,10 +12,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package junit.trg.search.hibernate;
+package test.googlecode.genericdao.search;
 
-import junit.googlecode.genericdao.search.FilterTest;
+import test.googlecode.genericdao.BaseTest;
 
-public class HFilterTest extends FilterTest {
+import com.googlecode.genericdao.search.SearchFacade;
 
+public class BaseSearchTest extends BaseTest {
+	protected SearchFacade target;
+	
+	//This is automatically autowired by SpringTest
+	public void setSearchFacade(SearchFacade target) {
+		this.target = target;
+	}
 }

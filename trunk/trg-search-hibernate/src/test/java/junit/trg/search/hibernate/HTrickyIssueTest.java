@@ -14,7 +14,7 @@
  */
 package junit.trg.search.hibernate;
 
-import junit.trg.search.TrickyIssueTest;
+import junit.googlecode.genericdao.search.TrickyIssueTest;
 
 public class HTrickyIssueTest extends TrickyIssueTest {
 

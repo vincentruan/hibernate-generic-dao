@@ -14,7 +14,7 @@
  */
 package junit.trg.search.hibernate;
 
-import junit.trg.search.SecurityTest;
+import junit.googlecode.genericdao.search.SecurityTest;
 
 public class HSecurityTest extends SecurityTest {
 

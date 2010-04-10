@@ -16,14 +16,14 @@
 		<constructor-arg ref="sessionFactory"/>
 	</bean>
 	
-	<bean id="persistenceHelper" class="test.trg.search.hibernate.HibernatePersistenceHelper"/>
+	<bean id="persistenceHelper" class="test.googlecode.genericdao.search.hibernate.HibernatePersistenceHelper"/>
 	
-	<bean id="internalHelper" class="test.trg.search.hibernate.HibernateInternalHelper"/>
+	<bean id="internalHelper" class="test.googlecode.genericdao.search.hibernate.HibernateInternalHelper"/>
 	
 	
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="packagesToScan" value="test.trg.model"/>
+		<property name="packagesToScan" value="test.googlecode.genericdao.model"/>
 		<property name="hibernateProperties">
 			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 				<property name="properties">

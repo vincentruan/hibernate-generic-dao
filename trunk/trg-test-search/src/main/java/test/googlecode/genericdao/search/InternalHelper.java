@@ -12,10 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package junit.trg.search.hibernate;
+package test.googlecode.genericdao.search;
 
-import junit.googlecode.genericdao.search.FilterTest;
-
-public class HFilterTest extends FilterTest {
-
+public interface InternalHelper {
+	public boolean isEntityFetched(Object entity);
 }

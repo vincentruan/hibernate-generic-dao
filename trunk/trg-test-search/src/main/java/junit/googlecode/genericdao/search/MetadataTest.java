@@ -1,21 +1,34 @@
-package junit.trg.search;
+/* Copyright 2009 The Revere Group
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package junit.googlecode.genericdao.search;
 
-import test.googlecode.genericdao.BaseTest;
 import test.googlecode.genericdao.model.LimbedPet;
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.model.Recipe;
 import test.googlecode.genericdao.model.RecipeIngredient;
+import test.googlecode.genericdao.search.BaseSearchTest;
 
 import com.googlecode.genericdao.search.Metadata;
 import com.googlecode.genericdao.search.MetadataUtil;
-import com.googlecode.genericdao.search.jpa.JPAAnnotationMetadataUtil;
 
-public class JPAAnnotationMetadataTest extends BaseTest {
-	protected MetadataUtil metadataUtil = new JPAAnnotationMetadataUtil();
-	
-	{
-		setDependencyCheck(false);
+public class MetadataTest extends BaseSearchTest {
+	public void setMetadataUtil(MetadataUtil metadataUtil) {
+		this.metadataUtil = metadataUtil;
 	}
+
+	protected MetadataUtil metadataUtil;
 
 	public void testProperties() {
 		Metadata md = metadataUtil.get(Person.class);
@@ -117,5 +130,17 @@ public class JPAAnnotationMetadataTest extends BaseTest {
 		assertFalse(md3.getPropertyType("limbs").isEntity());
 		assertFalse(md3.getPropertyType("limbs").isEmeddable());
 		
+	}
+	
+
+	
+	public void testProxyIssues() {
+		initDB();
+		Person joe = getProxy(Person.class, joeA.getId());
+		
+		//joe's class is now actually a JavaAssist or CGLib generated extension of Person.
+		//these methods should return deal with that problem...
+		assertEquals(Person.class, metadataUtil.getUnproxiedClass(joe.getClass()));
+		assertEquals(Person.class, metadataUtil.getUnproxiedClass(joe));
 	}
 }
