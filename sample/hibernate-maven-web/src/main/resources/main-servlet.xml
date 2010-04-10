@@ -14,7 +14,7 @@
 		Spring will find all of our controllers automatically because they are
 		annotated with @Controller. We do not need to configure them in XML.
 	-->
-	<context:component-scan base-package="sample.trg.oldworld.web" />
+	<context:component-scan base-package="sample.googlecode.genericdao.oldworld.web" />
 
 	<!--
 		We have two Spring MVC handler mappings. The first looks at
