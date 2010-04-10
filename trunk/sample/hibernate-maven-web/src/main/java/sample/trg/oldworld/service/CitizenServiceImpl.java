@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import sample.trg.oldworld.dao.CitizenDAO;
 import sample.trg.oldworld.model.Citizen;
 
-import com.trg.search.ISearch;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
 
 /**
  * This is the implementation for our Citizen Service. The @Service annotation

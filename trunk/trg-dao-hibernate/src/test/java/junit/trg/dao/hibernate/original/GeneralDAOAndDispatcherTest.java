@@ -22,10 +22,10 @@ import test.trg.dao.hibernate.dao.original.PersonDAO;
 import test.trg.dao.hibernate.dao.original.PersonService;
 import test.trg.model.Person;
 
-import com.trg.dao.hibernate.original.DAODispatcher;
-import com.trg.dao.hibernate.original.GeneralDAO;
-import com.trg.search.ExampleOptions;
-import com.trg.search.Search;
+import com.googlecode.genericdao.dao.hibernate.original.DAODispatcher;
+import com.googlecode.genericdao.dao.hibernate.original.GeneralDAO;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Search;
 
 public class GeneralDAOAndDispatcherTest extends BaseTest {
 	private GeneralDAO generalDAO;

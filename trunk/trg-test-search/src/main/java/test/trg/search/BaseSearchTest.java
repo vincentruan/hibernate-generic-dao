@@ -16,7 +16,7 @@ package test.trg.search;
 
 import test.trg.BaseTest;
 
-import com.trg.search.SearchFacade;
+import com.googlecode.genericdao.search.SearchFacade;
 
 public class BaseSearchTest extends BaseTest {
 	protected SearchFacade target;

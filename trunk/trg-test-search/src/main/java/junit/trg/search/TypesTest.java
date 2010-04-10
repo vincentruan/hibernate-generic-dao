@@ -24,7 +24,7 @@ import test.trg.model.Recipe;
 import test.trg.model.RecipeIngredient;
 import test.trg.search.BaseSearchTest;
 
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Search;
 
 public class TypesTest extends BaseSearchTest {
 	public void testComponent() {

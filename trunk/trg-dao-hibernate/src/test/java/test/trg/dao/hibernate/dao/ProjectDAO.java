@@ -19,8 +19,8 @@ import java.util.List;
 import test.trg.model.Person;
 import test.trg.model.Project;
 
-import com.trg.dao.hibernate.GenericDAO;
-import com.trg.search.Search;
+import com.googlecode.genericdao.dao.hibernate.GenericDAO;
+import com.googlecode.genericdao.search.Search;
 
 public interface ProjectDAO extends GenericDAO<Project, Long> {
 	/**

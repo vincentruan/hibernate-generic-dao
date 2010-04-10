@@ -22,10 +22,10 @@ import org.hibernate.NonUniqueResultException;
 
 import test.trg.model.Person;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
 
 public class PersonService {
 	PersonDAO dao;

@@ -19,11 +19,11 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.ISearch;
-import com.trg.search.SearchFacade;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.SearchFacade;
+import com.googlecode.genericdao.search.SearchResult;
 
 /**
  * <p>

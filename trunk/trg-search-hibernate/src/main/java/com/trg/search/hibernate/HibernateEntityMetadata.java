@@ -25,7 +25,7 @@ import org.hibernate.type.CollectionType;
 import org.hibernate.type.EntityType;
 import org.hibernate.type.Type;
 
-import com.trg.search.Metadata;
+import com.googlecode.genericdao.search.Metadata;
 
 /**
  * Implementation of Metadata for a Hibernate entity.

@@ -12,8 +12,8 @@ import sample.trg.oldworld.model.Citizen;
 import sample.trg.oldworld.service.CitizenService;
 import sample.trg.oldworld.webhelps.Util;
 
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
 
 @Controller
 public class CitizenController {

@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 import org.hibernate.SessionFactory;
 import org.springframework.stereotype.Repository;
 
-import com.trg.dao.hibernate.GenericDAOImpl;
+import com.googlecode.genericdao.dao.hibernate.GenericDAOImpl;
 
 /**
  * Extension of GenericDAOImpl that is configured for Autowiring with Spring or J2EE.

@@ -19,11 +19,11 @@ import java.util.HashMap;
 import test.trg.BaseTest;
 import test.trg.model.Person;
 
-import com.trg.dao.hibernate.original.DAODispatcher;
-import com.trg.dao.hibernate.original.FlexDAOAdapter;
-import com.trg.dao.hibernate.original.GeneralDAO;
-import com.trg.search.Filter;
-import com.trg.search.flex.FlexSearch;
+import com.googlecode.genericdao.dao.hibernate.original.DAODispatcher;
+import com.googlecode.genericdao.dao.hibernate.original.FlexDAOAdapter;
+import com.googlecode.genericdao.dao.hibernate.original.GeneralDAO;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.flex.FlexSearch;
 
 public class FlexDAOAdapterTest extends BaseTest {
 	private GeneralDAO generalDAO;

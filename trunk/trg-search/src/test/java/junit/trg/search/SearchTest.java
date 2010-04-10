@@ -21,11 +21,11 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
-import com.trg.search.Field;
-import com.trg.search.Filter;
-import com.trg.search.Search;
-import com.trg.search.SearchUtil;
-import com.trg.search.Sort;
+import com.googlecode.genericdao.search.Field;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchUtil;
+import com.googlecode.genericdao.search.Sort;
 
 public class SearchTest extends TestCase {
 	public void testToString() {

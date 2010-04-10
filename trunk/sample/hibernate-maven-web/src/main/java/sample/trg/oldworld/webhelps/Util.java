@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import com.trg.search.Filter;
-import com.trg.search.IMutableSearch;
-import com.trg.search.ISearch;
-import com.trg.search.Search;
-import com.trg.search.SearchUtil;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.IMutableSearch;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchUtil;
 
 public class Util {
 	/**

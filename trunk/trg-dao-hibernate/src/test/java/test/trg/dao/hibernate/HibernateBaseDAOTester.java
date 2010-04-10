@@ -22,11 +22,11 @@ import javax.annotation.Resource;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.SessionFactory;
 
-import com.trg.dao.hibernate.HibernateBaseDAO;
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.ISearch;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.dao.hibernate.HibernateBaseDAO;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.SearchResult;
 
 public class HibernateBaseDAOTester extends HibernateBaseDAO {
 	@Override

@@ -23,8 +23,8 @@ import test.trg.model.Person;
 import test.trg.model.Pet;
 import test.trg.search.BaseSearchTest;
 
-import com.trg.search.MetadataUtil;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.MetadataUtil;
+import com.googlecode.genericdao.search.Search;
 
 public class TrickyIssueTest extends BaseSearchTest {
 	public void setMetadataUtil(MetadataUtil metadataUtil) {
