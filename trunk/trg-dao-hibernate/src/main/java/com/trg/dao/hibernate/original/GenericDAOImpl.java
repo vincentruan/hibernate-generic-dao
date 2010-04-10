@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.hibernate.NonUniqueResultException;
 
-import com.trg.dao.DAOUtil;
+import com.googlecode.genericdao.dao.DAOUtil;
 import com.trg.dao.hibernate.HibernateBaseDAO;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;

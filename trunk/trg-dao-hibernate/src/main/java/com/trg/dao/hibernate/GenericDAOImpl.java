@@ -17,7 +17,7 @@ package com.trg.dao.hibernate;
 import java.io.Serializable;
 import java.util.List;
 
-import com.trg.dao.DAOUtil;
+import com.googlecode.genericdao.dao.DAOUtil;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;

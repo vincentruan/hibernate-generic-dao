@@ -6,11 +6,6 @@
 	</projects>
 	<buildSpec>
 		<buildCommand>
-			<name>org.eclipse.wst.jsdt.core.javascriptValidator</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
-		<buildCommand>
 			<name>org.eclipse.wst.common.project.facet.core.builder</name>
 			<arguments>
 			</arguments>
@@ -43,7 +38,7 @@
 		<link>
 			<name>wtpwebapps</name>
 			<type>2</type>
-			<location>C:/workspace/eclipse1/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps</location>
+			<location>/Applications/eclipse/Eclipse.app/Contents/MacOS/C::/workspace/eclipse1/.metadata/.plugins/org.eclipse.wst.server.core/tmp0/wtpwebapps</location>
 		</link>
 	</linkedResources>
 </projectDescription>

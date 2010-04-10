@@ -13,7 +13,7 @@
 
 	<bean id="generalDAO" class="test.trg.dao.hibernate.dao.MyGeneralDAOImpl"/>
 	
-	<bean id="DAODispatcher" class="com.trg.dao.hibernate.DAODispatcher">
+	<bean id="DAODispatcher" class="com.googlecode.genericdao.dao.hibernate.DAODispatcher">
 		<property name="generalDAO" ref="generalDAO"/>
 	</bean>
 	
@@ -26,11 +26,11 @@
 	
 	<bean id="origGeneralDAO" class="test.trg.dao.hibernate.dao.original.MyGeneralDAOImpl"/>
 	
-	<bean id="origFlexDAOAdapter" class="com.trg.dao.hibernate.original.FlexDAOAdapter">
+	<bean id="origFlexDAOAdapter" class="com.googlecode.genericdao.dao.hibernate.original.FlexDAOAdapter">
 		<property name="DAO" ref="origDAODispatcher"/>
 	</bean>
 	
-	<bean id="origDAODispatcher" class="com.trg.dao.hibernate.original.DAODispatcher">
+	<bean id="origDAODispatcher" class="com.googlecode.genericdao.dao.hibernate.original.DAODispatcher">
 		<property name="generalDAO" ref="origGeneralDAO"/>
 		<property name="specificDAOs">
 			<map>

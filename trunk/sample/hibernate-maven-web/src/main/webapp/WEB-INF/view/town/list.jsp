@@ -16,9 +16,9 @@
 		Name <input type="text" name="f-name" value="${param['f-name']}"/><br/>
 		Population 
 		<select name="fo-population">
-			<option value="${m:const('com.trg.search.Filter.OP_EQUAL')}" ${param['fo-population'] == m:const('com.trg.search.Filter.OP_EQUAL') ? 'selected="selected"' : ''}>=</option>
-			<option value="${m:const('com.trg.search.Filter.OP_LESS_OR_EQUAL')}" ${param['fo-population'] == m:const('com.trg.search.Filter.OP_LESS_OR_EQUAL') ? 'selected="selected"' : ''}>&lt;=</option>
-			<option value="${m:const('com.trg.search.Filter.OP_GREATER_OR_EQUAL')}" ${param['fo-population'] == m:const('com.trg.search.Filter.OP_GREATER_OR_EQUAL') ? 'selected="selected"' : ''}>&gt;=</option>
+			<option value="${m:const('com.googlecode.genericdao.search.Filter.OP_EQUAL')}" ${param['fo-population'] == m:const('com.googlecode.genericdao.search.Filter.OP_EQUAL') ? 'selected="selected"' : ''}>=</option>
+			<option value="${m:const('com.googlecode.genericdao.search.Filter.OP_LESS_OR_EQUAL')}" ${param['fo-population'] == m:const('com.googlecode.genericdao.search.Filter.OP_LESS_OR_EQUAL') ? 'selected="selected"' : ''}>&lt;=</option>
+			<option value="${m:const('com.googlecode.genericdao.search.Filter.OP_GREATER_OR_EQUAL')}" ${param['fo-population'] == m:const('com.googlecode.genericdao.search.Filter.OP_GREATER_OR_EQUAL') ? 'selected="selected"' : ''}>&gt;=</option>
 		</select>
 		<input type="text" name="f-population" value="${param['f-population']}"/><br/>
 		<input type="submit" value="Filter"/>
