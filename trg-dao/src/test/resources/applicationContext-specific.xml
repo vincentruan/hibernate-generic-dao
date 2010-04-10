@@ -12,11 +12,11 @@
 		
 	<import resource="applicationContext-dao.xml"/>
 	
-	<bean id="searchProcessor" class="com.trg.search.jpa.JPASearchProcessor">
+	<bean id="searchProcessor" class="com.googlecode.genericdao.search.jpa.JPASearchProcessor">
 		<constructor-arg ref="metadataUtil"/>
 	</bean>
 	
-	<bean id="metadataUtil" class="com.trg.search.jpa.hibernate.HibernateMetadataUtil"
+	<bean id="metadataUtil" class="com.googlecode.genericdao.search.jpa.hibernate.HibernateMetadataUtil"
 		factory-method="getInstanceForEntityManagerFactory">
 		<constructor-arg ref="entityManagerFactory"/>
 	</bean>

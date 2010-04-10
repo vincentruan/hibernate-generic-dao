@@ -22,8 +22,8 @@ import test.trg.dao.jpa.dao.PersonDAO;
 import test.trg.dao.jpa.dao.PersonService;
 import test.trg.model.Person;
 
-import com.trg.dao.jpa.DAODispatcher;
-import com.trg.dao.jpa.GeneralDAO;
+import com.googlecode.genericdao.dao.jpa.DAODispatcher;
+import com.googlecode.genericdao.dao.jpa.GeneralDAO;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Search;
 

@@ -13,7 +13,7 @@
 
 	<bean id="generalDAO" class="test.trg.dao.jpa.dao.MyGeneralDAOImpl"/>
 	
-	<bean id="DAODispatcher" class="com.trg.dao.jpa.DAODispatcher">
+	<bean id="DAODispatcher" class="com.googlecode.genericdao.dao.jpa.DAODispatcher">
 		<property name="generalDAO" ref="generalDAO"/>
 	</bean>
 	

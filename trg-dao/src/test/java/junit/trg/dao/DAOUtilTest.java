@@ -21,7 +21,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import com.trg.dao.DAOUtil;
+import com.googlecode.genericdao.dao.DAOUtil;
 
 public class DAOUtilTest extends TestCase {
 

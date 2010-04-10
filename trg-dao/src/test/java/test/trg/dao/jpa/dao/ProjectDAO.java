@@ -19,7 +19,7 @@ import java.util.List;
 import test.trg.model.Person;
 import test.trg.model.Project;
 
-import com.trg.dao.jpa.GenericDAO;
+import com.googlecode.genericdao.dao.jpa.GenericDAO;
 import com.trg.search.Search;
 
 public interface ProjectDAO extends GenericDAO<Project, Long> {
