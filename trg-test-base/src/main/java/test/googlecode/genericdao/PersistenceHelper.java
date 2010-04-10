@@ -12,10 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package junit.trg.search.hibernate;
+package test.googlecode.genericdao;
 
-import junit.googlecode.genericdao.search.FilterTest;
+import java.io.Serializable;
 
-public class HFilterTest extends FilterTest {
+public interface PersistenceHelper {
+	public <T> T find(Class<T> type, Serializable id);
 
+	public void persist(Object entity);
+	
+	public <T> T getProxy(Class<T> type, Serializable id);
+	
+	public void flush();
+	
+	public void clear();
 }

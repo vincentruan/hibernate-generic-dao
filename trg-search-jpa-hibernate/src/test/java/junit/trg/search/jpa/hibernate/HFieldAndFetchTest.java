@@ -14,7 +14,7 @@
  */
 package junit.trg.search.jpa.hibernate;
 
-import junit.trg.search.FieldAndFetchTest;
+import junit.googlecode.genericdao.search.FieldAndFetchTest;
 
 public class HFieldAndFetchTest extends FieldAndFetchTest {
 

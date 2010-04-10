@@ -14,7 +14,7 @@
  */
 package junit.trg.search.hibernate;
 
-import junit.trg.search.MetadataTest;
+import junit.googlecode.genericdao.search.MetadataTest;
 
 public class HMetadataTest extends MetadataTest {
 

@@ -14,7 +14,7 @@
  */
 package junit.trg.search.hibernate;
 
-import junit.trg.search.TypesTest;
+import junit.googlecode.genericdao.search.TypesTest;
 
 public class HTypesTest extends TypesTest {
 

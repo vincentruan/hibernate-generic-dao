@@ -120,7 +120,7 @@ public class HibernateMetadataUtil implements MetadataUtil {
 	
 	public <T> Class<T> getUnproxiedClass(Class<?> klass) {
 		//cm will be null if entityClass is not registered with Hibernate or when
-		//it is a Hibernate proxy class (e.x. test.trg.model.Person_$$_javassist_5).
+		//it is a Hibernate proxy class (e.x. test.googlecode.genericdao.model.Person_$$_javassist_5).
 		//So if a class is not recognized, we will look at superclasses to see if
 		//it is a proxy.
 		while (sessionFactory.getClassMetadata(klass) == null) {

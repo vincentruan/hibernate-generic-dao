@@ -12,44 +12,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package test.trg.search.hibernate;
+package test.googlecode.genericdao.jpa;
 
 import java.io.Serializable;
 
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import test.googlecode.genericdao.PersistenceHelper;
 
-public class HibernatePersistenceHelper implements PersistenceHelper {
+public class JPAPersistenceHelper implements PersistenceHelper {
 
-	private SessionFactory sessionFactory;
-
-	@Autowired
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
-
-	@SuppressWarnings("unchecked")
 	public <T> T find(Class<T> type, Serializable id) {
-		return (T) sessionFactory.getCurrentSession().get(type, id);
-	}
-	
-	public void flush() {
-		sessionFactory.getCurrentSession().flush();
+		return (T) entityManager.find(type, id);
 	}
 
 	public void persist(Object entity) {
-		sessionFactory.getCurrentSession().persist(entity);
+		entityManager.persist(entity);
+	}
+	
+	public void flush() {
+		entityManager.flush();
 	}
 	
 	public void clear() {
-		sessionFactory.getCurrentSession().clear();
+		entityManager.clear();
 	}
 	
-	@SuppressWarnings("unchecked")
+	private EntityManager entityManager;
+
+	@PersistenceContext
+	public void setEnityManager(EntityManager enityManager) {
+		this.entityManager = enityManager;
+	}
+
 	public <T> T getProxy(Class<T> type, Serializable id) {
-		return (T) sessionFactory.getCurrentSession().load(type, id);
+		return entityManager.getReference(type, id);
 	}
 
 }

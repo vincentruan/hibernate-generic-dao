@@ -10,7 +10,7 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx-2.0.xsd">
 		
-	<bean id="searchFacade" class="test.trg.search.jpa.hibernate.SpringJPASearchFacade">
+	<bean id="searchFacade" class="test.googlecode.genericdao.search.jpa.hibernate.SpringJPASearchFacade">
 		<property name="searchProcessor" ref="searchProcessor"/>
 	</bean>
 	
@@ -25,9 +25,9 @@
 	
 <!--	<bean id="metadataUtil" class="com.googlecode.genericdao.search.jpa.JPAAnnotationMetadataUtil"/>-->
 	
-	<bean id="persistenceHelper" class="test.trg.jpa.JPAPersistenceHelper"/>
+	<bean id="persistenceHelper" class="test.googlecode.genericdao.jpa.JPAPersistenceHelper"/>
 	
-	<bean id="internalHelper" class="test.trg.search.jpa.hibernate.HibernateInternalHelper"/>
+	<bean id="internalHelper" class="test.googlecode.genericdao.search.jpa.hibernate.HibernateInternalHelper"/>
 	
 	
 	<bean id="entityManagerFactory"

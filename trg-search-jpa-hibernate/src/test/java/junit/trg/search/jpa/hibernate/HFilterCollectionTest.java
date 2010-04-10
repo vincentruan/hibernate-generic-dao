@@ -14,7 +14,7 @@
  */
 package junit.trg.search.jpa.hibernate;
 
-import junit.trg.search.FilterCollectionTest;
+import junit.googlecode.genericdao.search.FilterCollectionTest;
 
 public class HFilterCollectionTest extends FilterCollectionTest {
 

@@ -39,7 +39,7 @@
 	</bean>
 
 
-	<bean id="joeA" class="test.trg.model.Person">
+	<bean id="joeA" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="1"/>
 		<property name="firstName" value="Joe" />
 		<property name="lastName" value="Alpha" />
@@ -48,7 +48,7 @@
 		<property name="age" value="10" />
 		<property name="home" ref="homeA" />
 	</bean>
-	<bean id="sallyA" class="test.trg.model.Person">
+	<bean id="sallyA" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="2"/>
 		<property name="firstName" value="Sally" />
 		<property name="lastName" value="Alpha" />
@@ -57,7 +57,7 @@
 		<property name="age" value="9" />
 		<property name="home" ref="homeA" />
 	</bean>
-	<bean id="papaA" class="test.trg.model.Person">
+	<bean id="papaA" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="3"/>
 		<property name="firstName" value="Papa" />
 		<property name="lastName" value="Alpha" />
@@ -66,7 +66,7 @@
 		<property name="age" value="39" />
 		<property name="home" ref="homeA" />
 	</bean>
-	<bean id="mamaA" class="test.trg.model.Person">
+	<bean id="mamaA" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="4"/>
 		<property name="firstName" value="Mama" />
 		<property name="lastName" value="Alpha" />
@@ -74,7 +74,7 @@
 		<property name="home" ref="homeA" />
 	</bean>
 
-	<bean id="joeB" class="test.trg.model.Person">
+	<bean id="joeB" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="5"/>
 		<property name="firstName" value="Joe" />
 		<property name="lastName" value="Beta" />
@@ -83,7 +83,7 @@
 		<property name="age" value="10" />
 		<property name="home" ref="homeB" />
 	</bean>
-	<bean id="margretB" class="test.trg.model.Person">
+	<bean id="margretB" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="6"/>
 		<property name="firstName" value="Margret" />
 		<property name="lastName" value="Beta" />
@@ -92,14 +92,14 @@
 		<property name="age" value="14" />
 		<property name="home" ref="homeB" />
 	</bean>
-	<bean id="papaB" class="test.trg.model.Person">
+	<bean id="papaB" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="7"/>
 		<property name="firstName" value="Papa" />
 		<property name="lastName" value="Beta" />
 		<property name="age" value="39" />
 		<property name="home" ref="homeB" />
 	</bean>
-	<bean id="mamaB" class="test.trg.model.Person">
+	<bean id="mamaB" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="8"/>
 		<property name="firstName" value="Mama" />
 		<property name="lastName" value="Beta" />
@@ -109,14 +109,14 @@
 		<property name="home" ref="homeB" />
 	</bean>
 
-	<bean id="grandpaA" class="test.trg.model.Person">
+	<bean id="grandpaA" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="9"/>
 		<property name="firstName" value="Grandpa" />
 		<property name="lastName" value="Alpha" />
 		<property name="age" value="65" />
 		<property name="home" ref="homeC" />
 	</bean>
-	<bean id="grandmaA" class="test.trg.model.Person">
+	<bean id="grandmaA" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="10"/>
 		<property name="firstName" value="Grandma" />
 		<property name="lastName" value="Alpha" />
@@ -124,11 +124,11 @@
 		<property name="home" ref="homeC" />
 	</bean>
 	
-	<bean id="homeA" class="test.trg.model.Home">
+	<bean id="homeA" class="test.googlecode.genericdao.model.Home">
 		<property name="id" value="1"/>
 		<property name="type" value="house"/>
 		<property name="address">
-			<bean id="addressA" class="test.trg.model.Address">
+			<bean id="addressA" class="test.googlecode.genericdao.model.Address">
 				<property name="id" value="1"/>
 				<property name="street" value="940 N Fairfield"/>
 				<property name="city" value="Chicago"/>
@@ -137,11 +137,11 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="homeB" class="test.trg.model.Home">
+	<bean id="homeB" class="test.googlecode.genericdao.model.Home">
 		<property name="id" value="2"/>
 		<property name="type" value="apartment"/>
 		<property name="address">
-			<bean id="addressB" class="test.trg.model.Address">
+			<bean id="addressB" class="test.googlecode.genericdao.model.Address">
 				<property name="id" value="2"/>
 				<property name="street" value="734 N Fairfield, Apt 3"/>
 				<property name="city" value="Chicago"/>
@@ -150,11 +150,11 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="homeC" class="test.trg.model.Home">
+	<bean id="homeC" class="test.googlecode.genericdao.model.Home">
 		<property name="id" value="3"/>
 		<property name="type" value="house"/>
 		<property name="address">
-			<bean id="addressC" class="test.trg.model.Address">
+			<bean id="addressC" class="test.googlecode.genericdao.model.Address">
 				<property name="id" value="3"/>
 				<property name="street" value="3290 W Fulton"/>
 				<property name="city" value="Chicago"/>
@@ -165,13 +165,13 @@
 	</bean>
 	
 	
-	<bean id="fishWiggles" class="test.trg.model.Pet">
+	<bean id="fishWiggles" class="test.googlecode.genericdao.model.Pet">
 		<property name="id" value="1"/>
 		<property name="ident">
-			<bean class="test.trg.model.Ident">
+			<bean class="test.googlecode.genericdao.model.Ident">
 				<property name="idNumber" value="1111"/>
 				<property name="name">
-					<bean class="test.trg.model.Name">
+					<bean class="test.googlecode.genericdao.model.Name">
 						<property name="first" value="Mr"/>
 						<property name="last" value="Wiggles"/>
 					</bean>
@@ -181,13 +181,13 @@
 		<property name="species" value="fish"/>
 		<property name="favoritePlaymate" ref="spiderJimmy"/>
 	</bean>
-	<bean id="catPrissy" class="test.trg.model.LimbedPet">
+	<bean id="catPrissy" class="test.googlecode.genericdao.model.LimbedPet">
 		<property name="id" value="2"/>
 		<property name="ident">
-			<bean class="test.trg.model.Ident">
+			<bean class="test.googlecode.genericdao.model.Ident">
 				<property name="idNumber" value="2222"/>
 				<property name="name">
-					<bean class="test.trg.model.Name">
+					<bean class="test.googlecode.genericdao.model.Name">
 						<property name="first" value="Miss"/>
 						<property name="last" value="Prissy"/>
 					</bean>
@@ -205,13 +205,13 @@
 		</property>
 		<property name="favoritePlaymate" ref="fishWiggles"/>
 	</bean>
-	<bean id="catNorman" class="test.trg.model.LimbedPet">
+	<bean id="catNorman" class="test.googlecode.genericdao.model.LimbedPet">
 		<property name="id" value="3"/>
 		<property name="ident">
-			<bean class="test.trg.model.Ident">
+			<bean class="test.googlecode.genericdao.model.Ident">
 				<property name="idNumber" value="3333"/>
 				<property name="name">
-					<bean class="test.trg.model.Name">
+					<bean class="test.googlecode.genericdao.model.Name">
 						<property name="first" value="Norman"/>
 					</bean>
 				</property>
@@ -228,13 +228,13 @@
 		</property>
 		<property name="favoritePlaymate" ref="spiderJimmy"/>
 	</bean>
-	<bean id="spiderJimmy" class="test.trg.model.LimbedPet">
+	<bean id="spiderJimmy" class="test.googlecode.genericdao.model.LimbedPet">
 		<property name="id" value="4"/>
 		<property name="ident">
-			<bean class="test.trg.model.Ident">
+			<bean class="test.googlecode.genericdao.model.Ident">
 				<property name="idNumber" value="4444"/>
 				<property name="name">
-					<bean class="test.trg.model.Name">
+					<bean class="test.googlecode.genericdao.model.Name">
 						<property name="first" value="Jimmy"/>
 					</bean>
 				</property>
@@ -256,14 +256,14 @@
 		<property name="favoritePlaymate" ref="spiderJimmy"/>
 	</bean>
 	
-	<bean id="i1" class="test.trg.model.Ingredient" p:ingredientId="1" p:name="Sugar"/>
-	<bean id="i2" class="test.trg.model.Ingredient" p:ingredientId="2" p:name="Butter"/>
-	<bean id="i3" class="test.trg.model.Ingredient" p:ingredientId="3" p:name="Flour"/>
-	<bean id="i4" class="test.trg.model.Ingredient" p:ingredientId="4" p:name="Salt"/>
-	<bean id="i5" class="test.trg.model.Ingredient" p:ingredientId="5" p:name="Yeast"/>
-	<bean id="i6" class="test.trg.model.Ingredient" p:ingredientId="6" p:name="Chicken"/>
+	<bean id="i1" class="test.googlecode.genericdao.model.Ingredient" p:ingredientId="1" p:name="Sugar"/>
+	<bean id="i2" class="test.googlecode.genericdao.model.Ingredient" p:ingredientId="2" p:name="Butter"/>
+	<bean id="i3" class="test.googlecode.genericdao.model.Ingredient" p:ingredientId="3" p:name="Flour"/>
+	<bean id="i4" class="test.googlecode.genericdao.model.Ingredient" p:ingredientId="4" p:name="Salt"/>
+	<bean id="i5" class="test.googlecode.genericdao.model.Ingredient" p:ingredientId="5" p:name="Yeast"/>
+	<bean id="i6" class="test.googlecode.genericdao.model.Ingredient" p:ingredientId="6" p:name="Chicken"/>
 
-	<bean id="s1" class="test.trg.model.Store" p:id="1" p:name="Billy's Mini-Mart">
+	<bean id="s1" class="test.googlecode.genericdao.model.Store" p:id="1" p:name="Billy's Mini-Mart">
 		<property name="ingredientsCarried">
 			<set>
 				<ref bean="i1"/>
@@ -275,7 +275,7 @@
 			</set>
 		</property>
 	</bean>
-	<bean id="s2" class="test.trg.model.Store" p:id="2" p:name="Tom's Convenience Store">
+	<bean id="s2" class="test.googlecode.genericdao.model.Store" p:id="2" p:name="Tom's Convenience Store">
 		<property name="ingredientsCarried">
 			<set>
 				<ref bean="i1"/>
@@ -285,66 +285,66 @@
 		</property>
 	</bean>
 	
-	<bean id="r1" class="test.trg.model.Recipe" p:id="1" p:title="Bread">
+	<bean id="r1" class="test.googlecode.genericdao.model.Recipe" p:id="1" p:title="Bread">
 		<property name="ingredients">
 			<set>
-				<bean class="test.trg.model.RecipeIngredient" p:amount="4" p:measure="cups">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount="4" p:measure="cups">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i3" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i3" />
 					</property>
 				</bean>
-				<bean class="test.trg.model.RecipeIngredient" p:amount=".5" p:measure="tsp.">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount=".5" p:measure="tsp.">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i4" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i4" />
 					</property>
 				</bean>
-				<bean class="test.trg.model.RecipeIngredient" p:amount="1" p:measure="Tbs.">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount="1" p:measure="Tbs.">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i5" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r1" p:ingredient-ref="i5" />
 					</property>
 				</bean>
 			</set>
 		</property>
 	</bean>
 	
-	<bean id="r2" class="test.trg.model.Recipe" p:id="2" p:title="Fried Chicken">
+	<bean id="r2" class="test.googlecode.genericdao.model.Recipe" p:id="2" p:title="Fried Chicken">
 		<property name="ingredients">
 			<set>
-				<bean class="test.trg.model.RecipeIngredient" p:amount="6" p:measure="pieces">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount="6" p:measure="pieces">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i6" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i6" />
 					</property>
 				</bean>
-				<bean class="test.trg.model.RecipeIngredient" p:amount="1" p:measure="cup">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount="1" p:measure="cup">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i3" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i3" />
 					</property>
 				</bean>
-				<bean class="test.trg.model.RecipeIngredient" p:amount=".25" p:measure="cup">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount=".25" p:measure="cup">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i2" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i2" />
 					</property>
 				</bean>
-				<bean class="test.trg.model.RecipeIngredient" p:amount=".5" p:measure="tsp.">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount=".5" p:measure="tsp.">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i4" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r2" p:ingredient-ref="i4" />
 					</property>
 				</bean>
 			</set>
 		</property>
 	</bean>
 	
-	<bean id="r3" class="test.trg.model.Recipe" p:id="3" p:title="Toffee">
+	<bean id="r3" class="test.googlecode.genericdao.model.Recipe" p:id="3" p:title="Toffee">
 		<property name="ingredients">
 			<set>
-				<bean class="test.trg.model.RecipeIngredient" p:amount="2" p:measure="cups">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount="2" p:measure="cups">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r3" p:ingredient-ref="i1" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r3" p:ingredient-ref="i1" />
 					</property>
 				</bean>
-				<bean class="test.trg.model.RecipeIngredient" p:amount="2" p:measure="cups">
+				<bean class="test.googlecode.genericdao.model.RecipeIngredient" p:amount="2" p:measure="cups">
 					<property name="compoundId">
-						<bean class="test.trg.model.RecipeIngredientId" p:recipe-ref="r3" p:ingredient-ref="i2" />
+						<bean class="test.googlecode.genericdao.model.RecipeIngredientId" p:recipe-ref="r3" p:ingredient-ref="i2" />
 					</property>
 				</bean>
 			</set>
@@ -363,7 +363,7 @@
 	</util:list>
 	
 	<util:list id="projects">
-		<bean class="test.trg.model.Project" p:id="1" p:name="First" p:inceptionYear="1900">
+		<bean class="test.googlecode.genericdao.model.Project" p:id="1" p:name="First" p:inceptionYear="1900">
 			<property name="members">
 				<set>
 					<ref bean="joeA"/>
@@ -371,7 +371,7 @@
 				</set>
 			</property>
 		</bean>
-		<bean class="test.trg.model.Project" p:id="2" p:name="Second" p:inceptionYear="1950">
+		<bean class="test.googlecode.genericdao.model.Project" p:id="2" p:name="Second" p:inceptionYear="1950">
 			<property name="members">
 				<set>
 					<ref bean="joeA"/>
@@ -379,7 +379,7 @@
 				</set>
 			</property>
 		</bean>
-		<bean class="test.trg.model.Project" p:id="3" p:name="Third" p:inceptionYear="2000">
+		<bean class="test.googlecode.genericdao.model.Project" p:id="3" p:name="Third" p:inceptionYear="2000">
 			<property name="members">
 				<set>
 					<ref bean="papaA"/>

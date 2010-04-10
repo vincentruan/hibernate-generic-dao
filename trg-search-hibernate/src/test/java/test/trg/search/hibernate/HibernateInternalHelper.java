@@ -16,7 +16,7 @@ package test.trg.search.hibernate;
 
 import org.hibernate.proxy.HibernateProxy;
 
-import test.trg.search.InternalHelper;
+import test.googlecode.genericdao.search.InternalHelper;
 
 
 public class HibernateInternalHelper implements InternalHelper {
