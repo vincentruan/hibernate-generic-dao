@@ -16,7 +16,7 @@ package test.trg.dao.jpa.dao;
 
 import test.trg.model.Person;
 
-import com.trg.dao.jpa.GenericDAO;
+import com.googlecode.genericdao.dao.jpa.GenericDAO;
 
 public interface PersonDAO extends GenericDAO<Person, Long> {
 

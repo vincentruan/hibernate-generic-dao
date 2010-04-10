@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.trg</groupId>
+	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>trg-dao</artifactId>
 	<name>The Revere Group DAO</name>
 	<version>0.5.1</version>
@@ -85,19 +85,19 @@
 	</pluginRepositories>
 	<dependencies>
 		<dependency>
-			<groupId>com.trg</groupId>
+			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>trg-search</artifactId>
 			<version>0.5.1</version>
 		</dependency>
 		
 		<dependency>
-			<groupId>com.trg</groupId>
+			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>trg-test-base</artifactId>
 			<version>0.5.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.trg</groupId>
+			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>trg-search-jpa-hibernate</artifactId>
 			<version>0.5.1</version>
 			<scope>test</scope>

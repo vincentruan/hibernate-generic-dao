@@ -25,7 +25,7 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.trg.dao.jpa.JPABaseDAO;
+import com.googlecode.genericdao.dao.jpa.JPABaseDAO;
 import com.trg.search.ExampleOptions;
 import com.trg.search.Filter;
 import com.trg.search.ISearch;
