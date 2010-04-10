@@ -14,7 +14,7 @@
 		have @Service and @Repository annotations. We do not need to configure
 		them in XML
 	-->
-	<context:component-scan base-package="sample.trg.oldworld" />
+	<context:component-scan base-package="sample.googlecode.genericdao.oldworld" />
 
 	<context:property-placeholder location="classpath:target-h2.properties"/>
 
