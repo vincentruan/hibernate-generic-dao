@@ -16,8 +16,8 @@ package junit.googlecode.genericdao.dao.hibernate.original;
 
 import java.util.HashMap;
 
-import test.trg.BaseTest;
-import test.trg.model.Person;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.dao.hibernate.original.DAODispatcher;
 import com.googlecode.genericdao.dao.hibernate.original.FlexDAOAdapter;

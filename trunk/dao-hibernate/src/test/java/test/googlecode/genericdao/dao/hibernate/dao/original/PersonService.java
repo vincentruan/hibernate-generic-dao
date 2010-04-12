@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 
 import org.hibernate.NonUniqueResultException;
 
-import test.trg.model.Person;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.search.ExampleOptions;
 import com.googlecode.genericdao.search.Filter;

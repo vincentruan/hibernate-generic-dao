@@ -16,11 +16,11 @@ package test.googlecode.genericdao.dao.jpa.dao;
 
 import java.util.List;
 
-import test.trg.model.Person;
-import test.trg.model.Project;
+import test.googlecode.genericdao.model.Person;
+import test.googlecode.genericdao.model.Project;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAO;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Search;
 
 public interface ProjectDAO extends GenericDAO<Project, Long> {
 	/**

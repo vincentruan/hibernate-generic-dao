@@ -18,11 +18,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.googlecode.genericdao.dao.DAOUtil;
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.ISearch;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
 
 /**
  * Implementation of <code>GenericDAO</code> using Hibernate.

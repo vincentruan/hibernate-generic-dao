@@ -21,8 +21,8 @@ import org.hibernate.ObjectNotFoundException;
 
 import test.googlecode.genericdao.dao.hibernate.dao.PersonDAO;
 import test.googlecode.genericdao.dao.hibernate.dao.PersonService;
-import test.trg.BaseTest;
-import test.trg.model.Person;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.dao.DAODispatcherException;
 import com.googlecode.genericdao.dao.hibernate.DAODispatcher;

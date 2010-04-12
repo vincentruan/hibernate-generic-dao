@@ -19,7 +19,7 @@ import java.io.Serializable;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import test.trg.PersistenceHelper;
+import test.googlecode.genericdao.PersistenceHelper;
 
 public class HibernatePersistenceHelper implements PersistenceHelper {
 

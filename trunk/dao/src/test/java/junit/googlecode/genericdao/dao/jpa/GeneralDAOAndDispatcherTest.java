@@ -19,13 +19,13 @@ import java.util.Map;
 
 import test.googlecode.genericdao.dao.jpa.dao.PersonDAO;
 import test.googlecode.genericdao.dao.jpa.dao.PersonService;
-import test.trg.BaseTest;
-import test.trg.model.Person;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.dao.jpa.DAODispatcher;
 import com.googlecode.genericdao.dao.jpa.GeneralDAO;
-import com.trg.search.ExampleOptions;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Search;
 
 public class GeneralDAOAndDispatcherTest extends BaseTest {
 	private GeneralDAO generalDAO;

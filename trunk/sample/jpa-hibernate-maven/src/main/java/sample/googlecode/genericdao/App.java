@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.googlecode.genericdao.dao.jpa.GeneralDAO;
-import com.trg.search.Search;
+import com.googlecode.genericdao.search.Search;
 
 import sample.googlecode.genericdao.model.Citizen;
 import sample.googlecode.genericdao.model.Town;

@@ -19,15 +19,15 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-import test.trg.model.Person;
-import test.trg.model.Project;
+import test.googlecode.genericdao.model.Person;
+import test.googlecode.genericdao.model.Project;
 
-import com.trg.search.Filter;
-import com.trg.search.ISearch;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
-import com.trg.search.SearchUtil;
-import com.trg.search.Sort;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
+import com.googlecode.genericdao.search.SearchUtil;
+import com.googlecode.genericdao.search.Sort;
 
 /**
  * <p>

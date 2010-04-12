@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAOImpl;
-import com.trg.search.jpa.JPASearchProcessor;
+import com.googlecode.genericdao.search.jpa.JPASearchProcessor;
 
 
 @Repository

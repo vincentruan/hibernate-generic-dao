@@ -16,7 +16,7 @@ package test.googlecode.genericdao.dao.hibernate.dao;
 
 import java.util.List;
 
-import test.trg.model.Person;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.search.Search;
 

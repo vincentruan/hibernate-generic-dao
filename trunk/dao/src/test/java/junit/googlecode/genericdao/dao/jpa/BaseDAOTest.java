@@ -19,21 +19,21 @@ import java.util.List;
 import javax.persistence.EntityNotFoundException;
 
 import test.googlecode.genericdao.dao.jpa.JPABaseDAOTester;
-import test.trg.BaseTest;
-import test.trg.model.Home;
-import test.trg.model.Ingredient;
-import test.trg.model.Person;
-import test.trg.model.Pet;
-import test.trg.model.Project;
-import test.trg.model.Recipe;
-import test.trg.model.RecipeIngredient;
-import test.trg.model.RecipeIngredientId;
-import test.trg.model.Store;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Home;
+import test.googlecode.genericdao.model.Ingredient;
+import test.googlecode.genericdao.model.Person;
+import test.googlecode.genericdao.model.Pet;
+import test.googlecode.genericdao.model.Project;
+import test.googlecode.genericdao.model.Recipe;
+import test.googlecode.genericdao.model.RecipeIngredient;
+import test.googlecode.genericdao.model.RecipeIngredientId;
+import test.googlecode.genericdao.model.Store;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Field;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Field;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
 
 public class BaseDAOTest extends BaseTest {
 

@@ -14,7 +14,7 @@
  */
 package test.googlecode.genericdao.dao.jpa.dao;
 
-import test.trg.model.Person;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.dao.jpa.GenericDAO;
 

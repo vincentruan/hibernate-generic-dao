@@ -14,7 +14,7 @@
  */
 package test.googlecode.genericdao.dao.jpa.dao;
 
-import test.trg.model.Person;
+import test.googlecode.genericdao.model.Person;
 
 public class PersonDAOImpl extends BaseDAOImpl<Person, Long> implements PersonDAO {
 
