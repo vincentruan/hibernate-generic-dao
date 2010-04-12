@@ -25,12 +25,12 @@ import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.ISearch;
-import com.trg.search.MetadataUtil;
-import com.trg.search.SearchResult;
-import com.trg.search.jpa.JPASearchProcessor;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.MetadataUtil;
+import com.googlecode.genericdao.search.SearchResult;
+import com.googlecode.genericdao.search.jpa.JPASearchProcessor;
 
 /**
  * <p>

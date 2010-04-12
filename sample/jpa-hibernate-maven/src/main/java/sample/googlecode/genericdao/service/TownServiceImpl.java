@@ -5,10 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.googlecode.genericdao.search.Search;
+
 import sample.googlecode.genericdao.dao.TownDAO;
 import sample.googlecode.genericdao.model.Town;
 
-import com.trg.search.Search;
 
 @Repository
 @Transactional

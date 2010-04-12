@@ -24,15 +24,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import test.googlecode.genericdao.dao.jpa.dao.PersonDAO;
 import test.googlecode.genericdao.dao.jpa.dao.ProjectDAO;
 import test.googlecode.genericdao.dao.jpa.dao.ProjectDAOImpl;
-import test.trg.BaseTest;
-import test.trg.model.Person;
-import test.trg.model.Project;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Person;
+import test.googlecode.genericdao.model.Project;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Search;
-import com.trg.search.SearchResult;
-import com.trg.search.Sort;
-import com.trg.search.jpa.JPASearchProcessor;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.SearchResult;
+import com.googlecode.genericdao.search.Sort;
+import com.googlecode.genericdao.search.jpa.JPASearchProcessor;
 
 public class GenericDAOTest extends BaseTest {
 

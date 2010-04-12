@@ -18,12 +18,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import test.trg.model.Person;
+import test.googlecode.genericdao.model.Person;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.ISearch;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.SearchResult;
 
 public class PersonService {
 

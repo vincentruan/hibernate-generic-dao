@@ -17,10 +17,10 @@ package com.googlecode.genericdao.dao.jpa;
 import java.io.Serializable;
 import java.util.List;
 
-import com.trg.search.ExampleOptions;
-import com.trg.search.Filter;
-import com.trg.search.ISearch;
-import com.trg.search.SearchResult;
+import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Filter;
+import com.googlecode.genericdao.search.ISearch;
+import com.googlecode.genericdao.search.SearchResult;
 
 /**
  * Interface for general Data Access Object that can be used for any type domain

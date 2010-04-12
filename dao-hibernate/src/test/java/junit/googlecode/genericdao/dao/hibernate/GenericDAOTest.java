@@ -23,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import test.googlecode.genericdao.dao.hibernate.dao.PersonDAO;
 import test.googlecode.genericdao.dao.hibernate.dao.ProjectDAO;
 import test.googlecode.genericdao.dao.hibernate.dao.ProjectDAOImpl;
-import test.trg.BaseTest;
-import test.trg.model.Person;
-import test.trg.model.Project;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Person;
+import test.googlecode.genericdao.model.Project;
 
 import com.googlecode.genericdao.search.ExampleOptions;
 import com.googlecode.genericdao.search.Search;

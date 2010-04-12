@@ -28,17 +28,17 @@ import org.hibernate.type.AnyType;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import test.googlecode.genericdao.dao.hibernate.HibernateBaseDAOTester;
-import test.trg.BaseTest;
-import test.trg.model.Address;
-import test.trg.model.Home;
-import test.trg.model.Ingredient;
-import test.trg.model.Person;
-import test.trg.model.Pet;
-import test.trg.model.Project;
-import test.trg.model.Recipe;
-import test.trg.model.RecipeIngredient;
-import test.trg.model.RecipeIngredientId;
-import test.trg.model.Store;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Address;
+import test.googlecode.genericdao.model.Home;
+import test.googlecode.genericdao.model.Ingredient;
+import test.googlecode.genericdao.model.Person;
+import test.googlecode.genericdao.model.Pet;
+import test.googlecode.genericdao.model.Project;
+import test.googlecode.genericdao.model.Recipe;
+import test.googlecode.genericdao.model.RecipeIngredient;
+import test.googlecode.genericdao.model.RecipeIngredientId;
+import test.googlecode.genericdao.model.Store;
 
 import com.googlecode.genericdao.search.ExampleOptions;
 import com.googlecode.genericdao.search.Field;

@@ -19,8 +19,8 @@ import java.util.Map;
 
 import test.googlecode.genericdao.dao.hibernate.dao.original.PersonDAO;
 import test.googlecode.genericdao.dao.hibernate.dao.original.PersonService;
-import test.trg.BaseTest;
-import test.trg.model.Person;
+import test.googlecode.genericdao.BaseTest;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.dao.hibernate.original.DAODispatcher;
 import com.googlecode.genericdao.dao.hibernate.original.GeneralDAO;

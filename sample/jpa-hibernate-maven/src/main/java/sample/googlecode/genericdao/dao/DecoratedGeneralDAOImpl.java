@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.googlecode.genericdao.dao.jpa.GeneralDAO;
-import com.trg.search.jpa.JPASearchProcessor;
+import com.googlecode.genericdao.search.jpa.JPASearchProcessor;
 
 @Repository
 public class DecoratedGeneralDAOImpl extends com.googlecode.genericdao.dao.jpa.GeneralDAOImpl implements GeneralDAO {

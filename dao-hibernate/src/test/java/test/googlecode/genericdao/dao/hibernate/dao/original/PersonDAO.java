@@ -14,7 +14,7 @@
  */
 package test.googlecode.genericdao.dao.hibernate.dao.original;
 
-import test.trg.model.Person;
+import test.googlecode.genericdao.model.Person;
 
 import com.googlecode.genericdao.dao.hibernate.original.GenericDAO;
 

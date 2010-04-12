@@ -16,7 +16,7 @@ package test.googlecode.genericdao.dao.hibernate.dao.original;
 
 import org.springframework.stereotype.Repository;
 
-import test.trg.model.Home;
+import test.googlecode.genericdao.model.Home;
 
 
 @Repository

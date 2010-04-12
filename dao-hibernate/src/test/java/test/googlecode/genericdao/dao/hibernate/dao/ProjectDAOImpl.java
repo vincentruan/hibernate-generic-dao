@@ -19,8 +19,8 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
-import test.trg.model.Person;
-import test.trg.model.Project;
+import test.googlecode.genericdao.model.Person;
+import test.googlecode.genericdao.model.Project;
 
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.ISearch;

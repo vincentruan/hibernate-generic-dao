@@ -4,10 +4,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.googlecode.genericdao.search.Search;
+
 import sample.googlecode.genericdao.dao.CitizenDAO;
 import sample.googlecode.genericdao.model.Citizen;
 
-import com.trg.search.Search;
 
 
 @Transactional

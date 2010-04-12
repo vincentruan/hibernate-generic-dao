@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * 
  * This is an abstract class. A subclass must be used to implement individual
  * query languages. Currently only HQL query language is supported (
- * <code>com.trg.dao.hibernate.HibernateSearchToQLProcessor</code>). The that
+ * <code>com.googlecode.genericdao.dao.hibernate.HibernateSearchToQLProcessor</code>). The that
  * implementation could be used for EQL query language as well with no or minor
  * modifications.
  */
