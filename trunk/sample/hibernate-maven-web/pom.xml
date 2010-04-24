@@ -4,15 +4,11 @@
 	<groupId>sample.googlecode.genericdao</groupId>
 	<artifactId>hibernate-maven-web</artifactId>
 	<packaging>war</packaging>
-	<name>TRG DAO Sample - Hibernate, Maven, Web</name>
+	<name>Hibernate Generic DAO Sample - Hibernate, Maven, Web</name>
 	<version>1.0.0-SNAPSHOT</version>
-	<description>TRG DAO Sample WebApp w/ Maven, Spring and Hibernate</description>
+	<description>Hibernate Generic DAO Sample WebApp w/ Maven, Spring and Hibernate</description>
 	<url>http://code.google.com/p/hibernate-generic-dao/</url>
 	<inceptionYear>2009</inceptionYear>
-	<organization>
-		<name>The Revere Group</name>
-		<url>http://www.reveregroup.com/</url>
-	</organization>
 	<build>
 		<resources>
 			<resource>

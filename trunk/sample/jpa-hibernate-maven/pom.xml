@@ -4,8 +4,8 @@
 	<groupId>sample.googlecode.genericdao</groupId>
 	<artifactId>jpa-hibernate-sample</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
-	<name>TRG DAO Sample - Hibernate Entity Manager, Maven</name>
-	<description>TRG DAO Sample Console App w/ Maven, JPA powered by Hibernate</description>
+	<name>Hibernate Generic DAO Sample - Hibernate Entity Manager, Maven</name>
+	<description>Hibernate Generic DAO Sample Console App w/ Maven, JPA powered by Hibernate</description>
 	<url>http://code.google.com/p/hibernate-generic-dao/</url>
 	<inceptionYear>2009</inceptionYear>
 	<build>
