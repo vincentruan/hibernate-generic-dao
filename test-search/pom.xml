@@ -4,53 +4,15 @@
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>test-search</artifactId>
 	<packaging>jar</packaging>
-	<name>The Revere Group Search - Tests</name>
 	<version>1.0.0-SNAPSHOT</version>
-	<properties></properties>
-	<build>
-		<sourceDirectory>src/main/java</sourceDirectory>
-		<finalName>${artifactId}</finalName>
-		<plugins>
-			<plugin>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<configuration>
-					<source>1.5</source>
-					<target>1.5</target>
-					<tasks></tasks>
-				</configuration>
-			</plugin>
-		</plugins>
-		<extensions>
-		</extensions>
-	</build>
-	<repositories>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>central maven.org</id>
-			<name>Maven Repository Switchboard</name>
-			<url>http://repo1.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>trg-dao-repo</id>
-			<name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
-			<url>http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<releases>
-				<updatePolicy>never</updatePolicy>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>central</id>
-			<name>Maven Plugin Repository</name>
-			<url>http://repo1.maven.org/maven2</url>
-		</pluginRepository>
-	</pluginRepositories>
+	<name>Hibernate Generic DAO - Test Search</name>
+	
+	<parent>
+		<artifactId>genericdao-parent</artifactId>
+		<groupId>com.googlecode.genericdao</groupId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	
 	<dependencies>
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
