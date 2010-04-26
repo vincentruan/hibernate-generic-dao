@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>search-jpa-hibernate</artifactId>
+	<packaging>jar</packaging>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>Hibernate Generic DAO - Search JPA Hibernate</name>
 	
