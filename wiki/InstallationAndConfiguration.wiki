@@ -120,6 +120,6 @@ The *JPASearchProcessor* is designed to be used as a singleton. The constructor 
 
 In theory, different implementations of MetadataUtil will require different configurations. The Hibernate implementation is *`com.trg.search.hibernate.HibernateMetadataUtil`*. You will need one instance per persistence unit (i.e. EntityManagerFactory). Use `com.trg.search.jpa.hibernate.HibernateMetadataUtil.getInstanceForEntityManagerFactory(HibernateEntityManagerFactory)` to get these instances.
 
-To see an example project configuration using Spring auto-wiring, have a look at the project in SVN at /trunk/sample/jpa-hibernate-maven.
+To see an example project configuration using Spring auto-wiring, have a look at the project in SVN at /tags/0.5.1/sample/jpa-hibernate-maven.
 
 *JPASearchFacade* is configured in basically the same way as the DAOs.
