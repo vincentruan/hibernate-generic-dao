@@ -66,6 +66,7 @@
 ==0.5.2==
   * Testing more JPA data model configurations
   * Issue 47 : Add load method with lock mode option
+  * JPA 2.0 support
 
 ==Future==
   * Custom expressions in fields, filters and sorts.
