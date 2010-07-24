@@ -1,5 +1,7 @@
 #summary The framework features a powerful and flexible search functionality.
 
+<wiki:toc max_depth="3" />
+
 = Introduction =
 
 The framework features a powerful and flexible search functionality. This is used by passing a search object to search methods on general and generic DAOs.
@@ -26,7 +28,7 @@ A Search object is the POJO that carries the various parameters to pass to a sea
 
 For more help with Searches look at the SearchExamples page.
 
-== Full API Reference ==
+= Full API Reference =
 
 ===General===
 The framework's search functionality API takes an `ISearch`. This interface is meant
@@ -241,7 +243,7 @@ search.addFetch("members");
 ===Miscellaneous===
 Search supports the use of HQL special properties ".id", ".class" and ".size" where ever they are supported in HQL. Just include them within the property. Ex: `"members.size"`, `"class"`, `"id.project"`.
 
-== Additional Usage examples ==
+= Additional Usage examples =
 {{{
 Search search = new Search(Project.class);
 
