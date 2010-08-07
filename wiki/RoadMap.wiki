@@ -1,19 +1,38 @@
 #summary List of changes made for each release and planned changes for upcoming releases.
 
-==0.3.3 (11/25/2008)==
-  * Cleaned up pom.xml (Issue #14):
-    * Removed unneeded dependencies and repositories
-    * Moved most dependencies to {{{test}}} scope
-  * Upgraded to Hibernate 3.3.1GA
-  * {{{deleteById()}}} no longer throws an error if no matching object is found in the database. (Issue #15))
-  * {{{deleteById()}}} and {{{deleteEntity()}}} now return boolean: true if found and deleted, false if not found.
+==0.5.1 (3/11/2010  current release)==
+  * Fixed Issue 35 : Missing some operators in Filter.toString()
+  * Fixed Issue 36 : Removed left-over debug statement.
+  * Fixed Issue 40 : Sub-classing sub classes of GenericDAOImpl.
+  * Fixed Issue 44 : BUG: SearchUtil.shallowCopy is missing setDistinct()
+  * Fixed Issue 49 : Saving not working with proxy objects
+  * Fixed Issue 51 : Referencing the root object using addField()
+  * Fixed Issue 57 / Issue 58 : HibernateSearchProcessor prints HQL to console
+  * Completed Issue 41 : Return type of searchGeneric
+  * Default JPA Metadata implementation (still somewhat limited)
 
-==0.3.4 (12/16/2008)==
-  * Use Hibernate MetaData for Util.getExpectedClass()
-  * Refactor RemoteDAO into a separate Remote adapter and DAO dispatcher
-  * Make RemoteDAO, GeneralDAO and GenericDAO implementations thinner and more replacable. This way developers can customize their own DAO and Remote methods for the particular project and technology.
-  * Separate RemoteDAO into separate remote adapter and DAO dispatcher
-  * Use RemoteDAO adapters for specific technologies
+==0.5.0 (05/27/2009)==
+  * Added implementation for JPA.
+  * Fixed Issue 34 HibernateMetadataUtil not working with proxy objects.
+  * Added a couple example projects to demonstrate configuration.
+
+==0.4.3 (05/1/2009)==
+  * Added 'distinct' option to search.
+  * Formalized separation between DAOs and search.
+  * Added find by example functionality (Issue 27)
+
+==0.4.2 (03/13/2009)==
+  * Added collection operators. (see blog)
+  * Allowed use of special .id, .class, .size properties in Filters.
+  * Addressed Issue 25, handling nulls in sorts, filters, fields, etc.
+
+==0.4.1 (01/20/2009)==
+  * Added option to ignore case on sorts (Issue 24).
+  * Implemented ignoring Filters with null values (Issue 22).
+  * Implemented Issue 20 (fields & fetches).
+  * Refactored Search bean to use interfaces.
+  * Provided a SearchUtil class to aid in working with search interfaces and creating implementations of search interfaces.
+  * Added methods to SearchUtil for merging parts of Searches
 
 ==0.4.0 (12/31/2008)==
   * Addressed problems with Components (@Embedded) as per Issue 19.
@@ -29,46 +48,30 @@
   * Known Issues
     * Javadocs for Search beans are out of date.
 
-==0.4.1 (01/20/2009)==
-  * Added option to ignore case on sorts (Issue 24).
-  * Implemented ignoring Filters with null values (Issue 22).
-  * Implemented Issue 20 (fields & fetches).
-  * Refactored Search bean to use interfaces.
-  * Provided a SearchUtil class to aid in working with search interfaces and creating implementations of search interfaces.
-  * Added methods to SearchUtil for merging parts of Searches
+==0.3.4 (12/16/2008)==
+  * Use Hibernate MetaData for Util.getExpectedClass()
+  * Refactor RemoteDAO into a separate Remote adapter and DAO dispatcher
+  * Make RemoteDAO, GeneralDAO and GenericDAO implementations thinner and more replacable. This way developers can customize their own DAO and Remote methods for the particular project and technology.
+  * Separate RemoteDAO into separate remote adapter and DAO dispatcher
+  * Use RemoteDAO adapters for specific technologies
 
-==0.4.2 (03/13/2009)==
-  * Added collection operators. (see blog)
-  * Allowed use of special .id, .class, .size properties in Filters.
-  * Addressed Issue 25, handling nulls in sorts, filters, fields, etc.
+==0.3.3 (11/25/2008)==
+  * Cleaned up pom.xml (Issue #14):
+    * Removed unneeded dependencies and repositories
+    * Moved most dependencies to {{{test}}} scope
+  * Upgraded to Hibernate 3.3.1GA
+  * {{{deleteById()}}} no longer throws an error if no matching object is found in the database. (Issue #15))
+  * {{{deleteById()}}} and {{{deleteEntity()}}} now return boolean: true if found and deleted, false if not found.
 
-==0.4.3 (05/1/2009)==
-  * Added 'distinct' option to search.
-  * Formalized separation between DAOs and search.
-  * Added find by example functionality (Issue 27)
 
-==0.5.0 (05/27/2009)==
-  * Added implementation for JPA.
-  * Fixed Issue 34 HibernateMetadataUtil not working with proxy objects.
-  * Added a couple example projects to demonstrate configuration.
 
-==0.5.1 (3/11/2010  current release)==
-  * Fixed Issue 35 : Missing some operators in Filter.toString()
-  * Fixed Issue 36 : Removed left-over debug statement.
-  * Fixed Issue 40 : Sub-classing sub classes of GenericDAOImpl.
-  * Fixed Issue 44 : BUG: SearchUtil.shallowCopy is missing setDistinct()
-  * Fixed Issue 49 : Saving not working with proxy objects
-  * Fixed Issue 51 : Referencing the root object using addField()
-  * Fixed Issue 57 / Issue 58 : HibernateSearchProcessor prints HQL to console
-  * Completed Issue 41 : Return type of searchGeneric
-  * Default JPA Metadata implementation (still somewhat limited)
-
+=Future=
 ==0.5.2==
   * Testing more JPA data model configurations
   * Issue 47 : Add load method with lock mode option
   * JPA 2.0 support
 
-==Future==
+==Unknown==
   * Custom expressions in fields, filters and sorts.
   * Look at security with remote DAOs.
   * Possibly add SIZE and IS EMPTY for collections in fields.
