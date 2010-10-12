@@ -4,4 +4,6 @@
 
 com.trg.search.BaseSearchProcessor DEBUG: generated search queries
 
-com.trg.search.hibernate.HibernateSearchProcessor DEBUG: more detailed info on generated search queries
+com.trg.search.hibernate.HibernateSearchProcessor DEBUG: more detailed info on generated search queries with Hiberate
+
+com.trg.search.jpa.JPASearchProcessor DEBUG: more detailed info on generated search queries with JPA
