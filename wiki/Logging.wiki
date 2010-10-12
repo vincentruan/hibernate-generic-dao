@@ -1,0 +1,4 @@
+#summary Logging configuration
+
+= Logging categories =
+com.trg.search.BaseSearchProcessor DEBUG: generated search queries
