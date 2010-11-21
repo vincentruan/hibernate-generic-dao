@@ -172,10 +172,10 @@ public abstract class BaseSearchProcessor {
 
 		StringBuilder sb = new StringBuilder();
 		if (!search.isDistinct()) {
-			sb.append("select count(*)");
+			sb.append("select count(").append(rootAlias).append(")");
 		} else if (fields.size() == 0) {
 			sb.append("select count(distinct ");
-			sb.append(rootAlias).append(".id)");
+			sb.append(rootAlias).append(")");
 		} else if (fields.size() == 1) {
 			sb.append("select count(distinct ");
 			String prop = fields.get(0).getProperty();

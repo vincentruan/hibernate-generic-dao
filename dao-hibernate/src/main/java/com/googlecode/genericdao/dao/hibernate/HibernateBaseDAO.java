@@ -530,7 +530,7 @@ public class HibernateBaseDAO {
 	 * Returns the number of instances of this class in the datastore.
 	 */
 	protected int _count(Class<?> type) {
-		List counts = getSession().createQuery("select count(*) from " + type.getName()).list();
+		List counts = getSession().createQuery("select count(_it_) from " + type.getName() + " _it_").list();
 		int sum = 0;
 		for (Object count : counts) {
 			sum += ((Long) count).intValue();

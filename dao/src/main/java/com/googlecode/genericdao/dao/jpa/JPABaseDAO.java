@@ -358,7 +358,7 @@ public class JPABaseDAO {
 	 * Returns the number of instances of this entity in the datastore.
 	 */
 	protected int _count(Class<?> type) {
-		return ((Number) em().createQuery("select count(*) from " + type.getName()).getSingleResult()).intValue();
+		return ((Number) em().createQuery("select count(_it_) from " + type.getName() + " _it_").getSingleResult()).intValue();
 	}
 
 	/**
