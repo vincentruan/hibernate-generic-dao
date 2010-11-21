@@ -109,7 +109,7 @@ public class JPABaseDAO {
 	 */
 	protected boolean _removeById(Class<?> type, Serializable id) {
 		if (id != null) {
-			Query query = em().createQuery("select id from " + type.getName() + " where id = ?").setParameter(1, id);
+			Query query = em().createQuery("select _it_.id from " + type.getName() + " _it_ where _it_.id = ?").setParameter(1, id);
 			if (query.getResultList().size() != 0) {
 				em().remove(em().getReference(type, id));
 				return true;
@@ -123,7 +123,7 @@ public class JPABaseDAO {
 	 * one of these ids.
 	 */
 	protected void _removeByIds(Class<?> type, Serializable... ids) {
-		for (Serializable id : (List<Serializable>) pullByIds("select id", type, ids)) {
+		for (Serializable id : (List<Serializable>) pullByIds("select _it_.id", type, ids)) {
 			em().remove(em().getReference(type, id));
 		}
 	}
@@ -472,7 +472,7 @@ public class JPABaseDAO {
 		if (!validId(id))
 			return false;
 
-		Query query = em().createQuery("select id from " + type.getName() + " where id = :id");
+		Query query = em().createQuery("select _it_.id from " + type.getName() + " _it_ where _it_.id = :id");
 		query.setParameter("id", id);
 		return query.getResultList().size() == 1;
 	}
@@ -483,7 +483,7 @@ public class JPABaseDAO {
 
 		boolean[] ret = new boolean[ids.length];
 
-		for (Serializable id : (List<Serializable>) pullByIds("select id", type, ids)) {
+		for (Serializable id : (List<Serializable>) pullByIds("select _it_.id", type, ids)) {
 			for (int i = 0; i < ids.length; i++) {
 				if (id.equals(ids[i])) {
 					ret[i] = true;
@@ -513,9 +513,9 @@ public class JPABaseDAO {
 		for (Serializable id : ids) {
 			if (id != null) {
 				if (nonNulls.size() == 0)
-					sb.append("id = ?");
+					sb.append("_it_.id = ?");
 				else
-					sb.append(" or id = ?");
+					sb.append(" or _it_.id = ?");
 				nonNulls.add(id);
 			}
 		}
