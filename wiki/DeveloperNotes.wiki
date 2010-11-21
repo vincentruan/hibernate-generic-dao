@@ -1,2 +1,5 @@
 Maven Versions Plugin
 http://mojo.codehaus.org/versions-maven-plugin/set-mojo.html
+
+Release Instructions
+https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
