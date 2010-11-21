@@ -1,0 +1,2 @@
+Maven Versions Plugin
+http://mojo.codehaus.org/versions-maven-plugin/set-mojo.html
