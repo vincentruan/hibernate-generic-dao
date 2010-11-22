@@ -19,7 +19,11 @@ public class JPAAnnotationMetadataUtil implements MetadataUtil {
 			return md;
 		} else {
 			for (String prop : propertyPath.split("\\.")) {
-				md = md.getPropertyType(prop);
+				if ("id".equals(prop)) {
+					md = md.getIdType();
+				} else {
+					md = md.getPropertyType(prop);
+				}
 				if (md == null)
 					throw new IllegalArgumentException("Property path '" + propertyPath + "' invalid for type " + rootEntityClass.getName());
 			}
