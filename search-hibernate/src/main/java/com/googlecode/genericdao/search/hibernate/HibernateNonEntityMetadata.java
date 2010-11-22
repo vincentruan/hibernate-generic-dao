@@ -59,6 +59,10 @@ public class HibernateNonEntityMetadata implements Metadata {
 	public Class<?> getJavaClass() {
 		return type.getReturnedClass();
 	}
+	
+	public String getEntityName() {
+		throw new UnsupportedOperationException("Cannot get Entity Name of non-entity type.");
+	}
 
 	public String[] getProperties() {
 		if (type.isComponentType())
