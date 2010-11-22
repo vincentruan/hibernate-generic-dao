@@ -66,6 +66,19 @@ public class JPAAnnotationMetadata implements Metadata {
 	public Class<?> getCollectionClass() {
 		return null;
 	}
+	
+	public String getEntityName() {
+		Entity annotation = klass.getAnnotation(Entity.class);
+		if (annotation == null) {
+			throw new UnsupportedOperationException("Cannot get Entity Name of non-entity type.");
+		} else {
+			if (annotation.name() != null && !annotation.name().isEmpty()) {
+				return annotation.name();
+			} else {
+				return klass.getSimpleName();
+			}
+		}
+	}
 
 	public String getIdProperty() {
 		for (Property prop : getProps().values()) {

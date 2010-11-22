@@ -109,7 +109,7 @@ public class JPABaseDAO {
 	 */
 	protected boolean _removeById(Class<?> type, Serializable id) {
 		if (id != null) {
-			Query query = em().createQuery("select _it_.id from " + type.getName() + " _it_ where _it_.id = ?").setParameter(1, id);
+			Query query = em().createQuery("select _it_.id from " + getMetadataUtil().get(type).getEntityName() + " _it_ where _it_.id = ?").setParameter(1, id);
 			if (query.getResultList().size() != 0) {
 				em().remove(em().getReference(type, id));
 				return true;
@@ -203,7 +203,7 @@ public class JPABaseDAO {
 	 * Get a list of all the entities of the specified class.
 	 */
 	protected <T> List<T> _all(Class<T> type) {
-		return em().createQuery("select _it_ from " + type.getName() + " _it_").getResultList();
+		return em().createQuery("select _it_ from " + getMetadataUtil().get(type).getEntityName() + " _it_").getResultList();
 	}
 
 	/**
@@ -358,7 +358,7 @@ public class JPABaseDAO {
 	 * Returns the number of instances of this entity in the datastore.
 	 */
 	protected int _count(Class<?> type) {
-		return ((Number) em().createQuery("select count(_it_) from " + type.getName() + " _it_").getSingleResult()).intValue();
+		return ((Number) em().createQuery("select count(_it_) from " + getMetadataUtil().get(type).getEntityName() + " _it_").getSingleResult()).intValue();
 	}
 
 	/**
@@ -472,7 +472,7 @@ public class JPABaseDAO {
 		if (!validId(id))
 			return false;
 
-		Query query = em().createQuery("select _it_.id from " + type.getName() + " _it_ where _it_.id = :id");
+		Query query = em().createQuery("select _it_.id from " + getMetadataUtil().get(type).getEntityName() + " _it_ where _it_.id = :id");
 		query.setParameter("id", id);
 		return query.getResultList().size() == 1;
 	}
@@ -508,7 +508,7 @@ public class JPABaseDAO {
 
 		StringBuilder sb = new StringBuilder(select);
 		sb.append(" from ");
-		sb.append(type.getName());
+		sb.append(getMetadataUtil().get(type).getEntityName());
 		sb.append(" _it_ where ");
 		for (Serializable id : ids) {
 			if (id != null) {

@@ -17,12 +17,14 @@ package com.googlecode.genericdao.search;
 import java.io.Serializable;
 
 /**
- * This interface provides meta data for a single persistable type. Use {@link MetadataUtil#get(Class)} or 
- * {@link MetadataUtil#get(Class, String)} to get meta data instances.
+ * This interface provides meta data for a single persistable type. Use
+ * {@link MetadataUtil#get(Class)} or {@link MetadataUtil#get(Class, String)} to
+ * get meta data instances.
  * 
- * This interface provides a layer of abstraction between the framework and the underlying
- * JPA provider (ex. Hibernate). By switching out the implementation of this interface, the
- * framework should be able to be used with different JPA providers.
+ * This interface provides a layer of abstraction between the framework and the
+ * underlying JPA provider (ex. Hibernate). By switching out the implementation
+ * of this interface, the framework should be able to be used with different JPA
+ * providers.
  * 
  * @author dwolverton
  */
@@ -62,8 +64,14 @@ public interface Metadata {
 	public Class<?> getJavaClass();
 
 	/**
-	 * Return an array of the names of all the properties that this type has, if any.
-	 * Return null if this a simple value type with no properties.
+	 * If the type is an entity return the entity name. Otherwise throw an
+	 * UnsupportedOperationException.
+	 */
+	public String getEntityName();
+
+	/**
+	 * Return an array of the names of all the properties that this type has, if
+	 * any. Return null if this a simple value type with no properties.
 	 */
 	public String[] getProperties();
 
@@ -74,20 +82,20 @@ public interface Metadata {
 	public Object getPropertyValue(Object object, String property);
 
 	/**
-	 * Return the metadata for the given property of this type.
-	 * Return null if this a simple value type with no properties.
+	 * Return the metadata for the given property of this type. Return null if
+	 * this a simple value type with no properties.
 	 */
 	public Metadata getPropertyType(String property);
 
 	/**
-	 * Return the name of the id property of this type.
-	 * Return null if this is not an entity type.
+	 * Return the name of the id property of this type. Return null if this is
+	 * not an entity type.
 	 */
 	public String getIdProperty();
 
 	/**
-	 * Return the metadata for the id property of this type.
-	 * Return null if this is not an entity type.
+	 * Return the metadata for the id property of this type. Return null if this
+	 * is not an entity type.
 	 */
 	public Metadata getIdType();
 
@@ -99,8 +107,9 @@ public interface Metadata {
 
 	/**
 	 * If the type is a collection, return the Java class of the collection
-	 * itself, not the Java class of it's elements as with {@link #getJavaClass()}.
-	 * For example: ArrayList&lt;Project&gt;, Set&lt;Person&gt;, String[]. 
+	 * itself, not the Java class of it's elements as with
+	 * {@link #getJavaClass()}. For example: ArrayList&lt;Project&gt;,
+	 * Set&lt;Person&gt;, String[].
 	 */
 	public Class<?> getCollectionClass();
 }

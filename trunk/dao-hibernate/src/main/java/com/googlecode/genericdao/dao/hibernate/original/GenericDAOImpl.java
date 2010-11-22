@@ -54,7 +54,7 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 	}
 
 	public boolean createOrUpdate(T object) {
-		Serializable id = getMetaDataUtil().getId(object);
+		Serializable id = getMetadataUtil().getId(object);
 		if (id == null || (new Long(0)).equals(id)) {
 			create(object);
 			return true;

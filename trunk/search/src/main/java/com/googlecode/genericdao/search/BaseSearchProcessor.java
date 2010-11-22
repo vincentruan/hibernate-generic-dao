@@ -67,12 +67,12 @@ public abstract class BaseSearchProcessor {
 
 	protected static final String ROOT_PATH = "";
 
-	protected BaseSearchProcessor(int qlType, MetadataUtil metaDataUtil) {
-		if (metaDataUtil == null) {
+	protected BaseSearchProcessor(int qlType, MetadataUtil metadataUtil) {
+		if (metadataUtil == null) {
 			throw new IllegalArgumentException("A SearchProcessor cannot be initialized with a null MetadataUtil.");
 		}
 		this.qlType = qlType;
-		this.metadataUtil = metaDataUtil;
+		this.metadataUtil = metadataUtil;
 	}
 
 	/**
@@ -326,7 +326,8 @@ public abstract class BaseSearchProcessor {
 	 */
 	protected String generateFromClause(SearchContext ctx, boolean doEagerFetching) {
 		StringBuilder sb = new StringBuilder(" from ");
-		sb.append(ctx.rootClass.getName());
+		
+		sb.append(getMetadataUtil().get(ctx.rootClass).getEntityName());
 		sb.append(" ");
 		sb.append(ctx.getRootAlias());
 		sb.append(generateJoins(ctx, doEagerFetching));
@@ -1170,27 +1171,27 @@ public abstract class BaseSearchProcessor {
 		}
 	}
 
-	private void getFilterFromExampleRecursive(Object example, Metadata metaData, ExampleOptions options,
+	private void getFilterFromExampleRecursive(Object example, Metadata metadata, ExampleOptions options,
 			LinkedList<String> path, List<Filter> filters) {
-		if (metaData.isEntity() && !metaData.getIdType().isEmeddable()) {
-			Object id = metaData.getIdValue(example);
+		if (metadata.isEntity() && !metadata.getIdType().isEmeddable()) {
+			Object id = metadata.getIdValue(example);
 			if (id != null) {
 				filters.add(Filter.equal(listToPath(path, "id"), id));
 				return;
 			}
 		}
 
-		for (String property : metaData.getProperties()) {
+		for (String property : metadata.getProperties()) {
 			if (options.getExcludeProps() != null && options.getExcludeProps().size() != 0) {
 				if (options.getExcludeProps().contains(listToPath(path, property)))
 					continue;
 			}
 
-			Metadata pMetaData = metaData.getPropertyType(property);
-			if (pMetaData.isCollection()) {
+			Metadata pMetadata = metadata.getPropertyType(property);
+			if (pMetadata.isCollection()) {
 				// ignore collections
 			} else {
-				Object value = metaData.getPropertyValue(example, property);
+				Object value = metadata.getPropertyValue(example, property);
 				if (value == null) {
 					if (!options.isExcludeNulls()) {
 						filters.add(Filter.isNull(listToPath(path, property)));
@@ -1198,11 +1199,11 @@ public abstract class BaseSearchProcessor {
 				} else if (options.isExcludeZeros() && value instanceof Number && ((Number) value).longValue() == 0) {
 					// ignore zeros
 				} else {
-					if (pMetaData.isEntity() || pMetaData.isEmeddable()) {
+					if (pMetadata.isEntity() || pMetadata.isEmeddable()) {
 						path.add(property);
-						getFilterFromExampleRecursive(value, pMetaData, options, path, filters);
+						getFilterFromExampleRecursive(value, pMetadata, options, path, filters);
 						path.removeLast();
-					} else if (pMetaData.isString()
+					} else if (pMetadata.isString()
 							&& (options.getLikeMode() != ExampleOptions.EXACT || options.isIgnoreCase())) {
 						String val = value.toString();
 						switch (options.getLikeMode()) {

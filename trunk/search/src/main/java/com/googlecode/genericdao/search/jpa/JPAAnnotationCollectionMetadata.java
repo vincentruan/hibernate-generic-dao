@@ -33,6 +33,10 @@ public class JPAAnnotationCollectionMetadata implements Metadata {
 	public Class<?> getJavaClass() {
 		return classMetadata.getJavaClass();
 	}
+	
+	public String getEntityName() {
+		return classMetadata.getEntityName();
+	}
 
 	public String[] getProperties() {
 		return classMetadata.getProperties();

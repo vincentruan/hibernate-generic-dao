@@ -39,7 +39,7 @@ public class GeneralDAOImpl extends HibernateBaseDAO implements GeneralDAO {
 	}
 
 	public boolean createOrUpdate(Object object) {
-		Serializable id = getMetaDataUtil().getId(object);
+		Serializable id = getMetadataUtil().getId(object);
 		if (id == null || (new Long(0)).equals(id)) {
 			create(object);
 			return true;

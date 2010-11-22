@@ -38,10 +38,14 @@ public class HibernateEntityMetadata implements Metadata {
 	private ClassMetadata metadata;
 	private Class<?> collectionType;
 	
-	public HibernateEntityMetadata(SessionFactory sessionFactory, ClassMetadata classMetaData, Class<?> collectionType) {
+	public HibernateEntityMetadata(SessionFactory sessionFactory, ClassMetadata classMetadata, Class<?> collectionType) {
 		this.sessionFactory = sessionFactory;
-		this.metadata = classMetaData;
+		this.metadata = classMetadata;
 		this.collectionType = collectionType;
+	}
+	
+	public String getEntityName() {
+		return metadata.getEntityName();
 	}
 	
 	public String getIdProperty() {
