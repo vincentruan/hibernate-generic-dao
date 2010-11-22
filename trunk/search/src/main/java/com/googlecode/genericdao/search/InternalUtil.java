@@ -37,10 +37,35 @@ public class InternalUtil {
 	 *             if the value cannot be converted to the given type.
 	 */
 	public static Object convertIfNeeded(Object value, Class<?> type) throws ClassCastException {
+		
+		// Since we're returning an object, we will never be able to return a primitive value.
+		// We will return the boxed type instead.
+		if (type.isPrimitive()) {
+			if (boolean.class.equals(type)) {
+				type = Boolean.class;
+			} else if (char.class.equals(type)) {
+				type = Character.class;
+			} else if (byte.class.equals(type)) {
+				type = Byte.class;
+			} else if (short.class.equals(type)) {
+				type = Short.class;
+			} else if (int.class.equals(type)) {
+				type = Integer.class;
+			} else if (long.class.equals(type)) {
+				type = Long.class;
+			} else if (float.class.equals(type)) {
+				type = Float.class;
+			} else if (double.class.equals(type)) {
+				type = Double.class;
+			}
+		}
+		
 		if (value == null)
 			return null;
 		if (type.isInstance(value))
 			return value;
+		
+		
 
 		if (String.class.equals(type)) {
 			return value.toString();
