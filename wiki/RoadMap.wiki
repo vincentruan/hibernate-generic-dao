@@ -77,7 +77,7 @@
 ==0.5.3==
   * Issue 73 : Custom filters, fields and sorts
   * Issue 47 : Add load method with lock mode option
-
+  * Issue 50 / Issue 64 : More extensible HibernateSearchFacade and HibernateSearchProcessor
 
 ==Unknown==
   * JPA 2.0 metadata support
