@@ -67,14 +67,22 @@
 
 =Future=
 ==0.5.2==
-  * Testing more JPA data model configurations
+  * Deployment to central maven repo.
+  * Refactoring of maven architecture with parent pom.xml for whole framework.
+  * Refactoring of package names.
+  * Issue 59 : Should use Entity Name in the JPQL in terms of JPA specification
+  * Issue 66 : JPQL can not support asterisk (*) in COUNT function
+  * Issue 68 : Alias missed in JPABaseDAO's queries
+
+==0.5.3==
+  * Issue 73 : Custom filters, fields and sorts
   * Issue 47 : Add load method with lock mode option
-  * JPA 2.0 support
+
 
 ==Unknown==
-  * Custom expressions in fields, filters and sorts.
+  * JPA 2.0 metadata support
   * Look at security with remote DAOs.
   * Possibly add SIZE and IS EMPTY for collections in fields.
   * Look at case sensitivity options. (Issue 28)
   * STARTS_WITH, ENDS_WITH, CONTAINS operators
-  * Deployment to central maven repo
+  * Testing more data model configurations
