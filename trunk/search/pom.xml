@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>test-base</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
