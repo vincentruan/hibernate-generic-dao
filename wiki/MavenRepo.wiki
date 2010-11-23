@@ -13,19 +13,20 @@
 <dependency>
 	<groupId>com.trg</groupId>
 	<artifactId>trg-dao</artifactId>
-	<version>0.5.1</version> <!-- or whatever the latest version is -->
+	<version>0.5.1</version>
 </dependency>
 
 <!-- Or this for just the search -->
 <dependency>
 	<groupId>com.trg</groupId>
 	<artifactId>trg-search</artifactId>
-	<version>0.5.1</version> <!-- or whatever the latest version is -->
+	<version>0.5.1</version>
 </dependency>
 }}}
 
 =Latest Snapshot Build=
 This includes the latest bug fixes and enhancements and passes all tests.
+===pom.xml===
 {{{
 <repository>
 	<id>trg-dao-repo</id>
@@ -37,13 +38,13 @@ This includes the latest bug fixes and enhancements and passes all tests.
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>dao-hibernate</artifactId>
-	<version>1.0.0-SNAPSHOT</version> <!-- or whatever the latest version is -->
+	<version>1.0.0-SNAPSHOT</version>
 </dependency>
 
 <!-- Or this for just the search -->
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>search-hibernate</artifactId>
-	<version>1.0.0-SNAPSHOT</version> <!-- or whatever the latest version is -->
+	<version>1.0.0-SNAPSHOT</version>
 </dependency>
 }}}
