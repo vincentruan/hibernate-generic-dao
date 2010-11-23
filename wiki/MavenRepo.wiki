@@ -1,6 +1,7 @@
 #summary Details for adding this framework as a Maven dependency
 
-= pom.xml =
+=Latest Release=
+=== pom.xml ===
 {{{
 <repository>
 	<id>trg-dao-repo</id>
@@ -12,15 +13,37 @@
 <dependency>
 	<groupId>com.trg</groupId>
 	<artifactId>trg-dao</artifactId>
-	<version>0.4.3</version> <!-- or whatever the latest version is -->
+	<version>0.5.1</version> <!-- or whatever the latest version is -->
 </dependency>
 
 <!-- Or this for just the search -->
 <dependency>
 	<groupId>com.trg</groupId>
 	<artifactId>trg-search</artifactId>
-	<version>0.4.3</version> <!-- or whatever the latest version is -->
+	<version>0.5.1</version> <!-- or whatever the latest version is -->
 </dependency>
 }}}
 
-This project depends on Hibernate Core 3.3.
+=Latest Snapshot Build=
+This includes the latest bug fixes and enhancements and passes all tests.
+{{{
+<repository>
+	<id>trg-dao-repo</id>
+	<name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
+	<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+</repository>
+
+<!-- This for just the whole DAO -->
+<dependency>
+	<groupId>com.googlecode.genericdao</groupId>
+	<artifactId>dao-hibernate</artifactId>
+	<version>1.0.0-SNAPSHOT</version> <!-- or whatever the latest version is -->
+</dependency>
+
+<!-- Or this for just the search -->
+<dependency>
+	<groupId>com.googlecode.genericdao</groupId>
+	<artifactId>search-hibernate</artifactId>
+	<version>1.0.0-SNAPSHOT</version> <!-- or whatever the latest version is -->
+</dependency>
+}}}
