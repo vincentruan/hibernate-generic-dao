@@ -29,8 +29,8 @@ This includes the latest bug fixes and enhancements and passes all tests.
 ===pom.xml===
 {{{
 <repository>
-	<id>trg-dao-repo</id>
-	<name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
+	<id>sonatype-oss-repo</id>
+	<name>Sonatype Open Source maven snapshot repo</name>
 	<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 </repository>
 
