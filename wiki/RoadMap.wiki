@@ -1,5 +1,5 @@
 #summary List of changes made for each release and planned changes for upcoming releases.
-==1.0.0  (current release)==
+==1.0.0  (2/24/2011 current release)==
   * Deployment to central maven repo.
   * Refactoring of maven architecture with parent pom.xml for whole framework.
   * Refactoring of package names.
