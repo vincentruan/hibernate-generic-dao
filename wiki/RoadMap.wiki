@@ -1,6 +1,13 @@
 #summary List of changes made for each release and planned changes for upcoming releases.
+==1.0.0  (current release)==
+  * Deployment to central maven repo.
+  * Refactoring of maven architecture with parent pom.xml for whole framework.
+  * Refactoring of package names.
+  * Issue 59 : Should use Entity Name in the JPQL in terms of JPA specification
+  * Issue 66 : JPQL can not support asterisk (`*`) in COUNT function
+  * Issue 68 : Alias missed in JPABaseDAO's queries
 
-==0.5.1 (3/11/2010  current release)==
+==0.5.1 (3/11/2010)==
   * Fixed Issue 35 : Missing some operators in Filter.toString()
   * Fixed Issue 36 : Removed left-over debug statement.
   * Fixed Issue 40 : Sub-classing sub classes of GenericDAOImpl.
@@ -66,15 +73,8 @@
 
 
 =Future=
-==0.5.2==
-  * Deployment to central maven repo.
-  * Refactoring of maven architecture with parent pom.xml for whole framework.
-  * Refactoring of package names.
-  * Issue 59 : Should use Entity Name in the JPQL in terms of JPA specification
-  * Issue 66 : JPQL can not support asterisk (`*`) in COUNT function
-  * Issue 68 : Alias missed in JPABaseDAO's queries
 
-==0.5.3==
+==1.1.0==
   * Issue 73 : Custom filters, fields and sorts
   * Issue 47 : Add load method with lock mode option
   * Issue 50 / Issue 64 : More extensible HibernateSearchFacade and HibernateSearchProcessor
