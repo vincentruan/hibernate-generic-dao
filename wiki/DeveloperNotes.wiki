@@ -1,5 +1,3 @@
-
-
 ==Release Instructions==
 https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide#SonatypeOSSMavenRepositoryUsageGuide-7a.2.PublishSnapshots
 
@@ -21,6 +19,6 @@ mvn clean deploy
 Maven Release Plugin http://maven.apache.org/plugins/maven-release-plugin/
 {{{
 mvn release:clean
-mvn release:prepare autoVersionSubmodules=true
+mvn release:prepare -DautoVersionSubmodules=true
 mvn release:perform
 }}}
