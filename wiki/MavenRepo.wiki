@@ -2,7 +2,7 @@
 
 =Latest Release=
 === pom.xml ===
-NOTE: We're currently (as of Feb 25, 2011) getting this set up and verified. In the mean time, use the snapshot build below.
+_*>>> NOTE:* We're currently (as of Feb 25, 2011) getting this set up and verified. In the mean time, use the snapshot build below._
 {{{
 <repository>
 	<id>sonatype-oss-repo</id>
@@ -35,7 +35,7 @@ This includes the latest bug fixes and enhancements and passes all tests.
 	<url>https://oss.sonatype.org/content/repositories/snapshots/</url>
 </repository>
 
-<!-- This for just the whole DAO -->
+<!-- This for the whole DAO -->
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>dao-hibernate</artifactId>
