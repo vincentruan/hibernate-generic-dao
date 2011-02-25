@@ -3,7 +3,7 @@
 =Latest Release=
 === pom.xml ===
 {{{
-<!-- This for just the whole DAO -->
+<!-- This for the whole DAO -->
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>dao-hibernate</artifactId>
