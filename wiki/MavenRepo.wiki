@@ -2,6 +2,7 @@
 
 =Latest Release=
 === pom.xml ===
+NOTE: We're currently (as of Feb 25, 2011) getting this set up and verified. In the mean time, use the snapshot build below.
 {{{
 <repository>
 	<id>sonatype-oss-repo</id>
