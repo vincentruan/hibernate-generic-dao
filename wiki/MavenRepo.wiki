@@ -3,6 +3,12 @@
 =Latest Release=
 === pom.xml ===
 {{{
+<repository>
+	<id>sonatype-oss-repo</id>
+	<name>Sonatype Open Source maven staging repo</name>
+	<url>https://oss.sonatype.org/content/repositories/staging/</url>
+</repository>
+
 <!-- This for the whole DAO -->
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
