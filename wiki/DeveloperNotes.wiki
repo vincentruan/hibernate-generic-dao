@@ -1,5 +1,15 @@
 Maven Versions Plugin
 http://mojo.codehaus.org/versions-maven-plugin/set-mojo.html
 
-Release Instructions
+==Release Instructions==
 https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+
+===To Change version number===
+{{{mvn versions:set -DgenerateBackupPoms=false -DnewVersion=1.0.0}}}
+
+{{{mvn versions:set -DgenerateBackupPoms=false -DnewVersion=1.1.0-SNAPSHOT}}}
+
+Do this for main parent pom.xml and also both sample projects.
+
+===To deploy a snapshot===
+{{{mvn clean deploy}}}
