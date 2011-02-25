@@ -22,3 +22,5 @@ mvn release:clean
 mvn release:prepare -DautoVersionSubmodules=true
 mvn release:perform
 }}}
+
+NOTE: if prepare fails to authenticate to subversion (for Mac), manually call a svn commit from the command line and then indicate to always allow keychain access.
