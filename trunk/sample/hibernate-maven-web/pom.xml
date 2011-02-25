@@ -5,7 +5,7 @@
 	<artifactId>hibernate-maven-web</artifactId>
 	<packaging>war</packaging>
 	<name>Hibernate Generic DAO Sample - Hibernate, Maven, Web</name>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<description>Hibernate Generic DAO Sample WebApp w/ Maven, Spring and Hibernate</description>
 	<url>http://code.google.com/p/hibernate-generic-dao/</url>
 	<inceptionYear>2009</inceptionYear>
@@ -26,13 +26,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<repositories>
-		<repository>
-			<id>trg-dao-repo</id>
-			<name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
-			<url>http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/</url>
-		</repository>
-	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
