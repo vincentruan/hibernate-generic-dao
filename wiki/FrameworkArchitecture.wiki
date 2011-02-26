@@ -36,7 +36,7 @@ There are 7 separate projects that make up the framework. Each corresponds to a 
     * *depends on:* _search_, _search-hibernate_, _dao_ (and _test-base_ for test phase)
 
 = Building the Framework =
-The framework should be built with Maven. Each project is built individually. Just use the `mvn package` to build a jar or `mvn install` to build the jar and install it in your local Maven repository.
+The framework should be built with Maven. All seven projects can be built together through the parent project (i.e. the trunk folder itself). Just use the `mvn package` to build a jar or `mvn install` to build the jar and install it in your local Maven repository.
 
 If you have a need to alter and build the framework, you can check out just the project(s) you need to modify and rebuild them. If there are projects you don't need to modify, you can just get the original from the online Maven repository. Of course you are free to check out all the projects and rebuild all of them if you like.
 
