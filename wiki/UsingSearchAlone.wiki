@@ -11,7 +11,7 @@ See InstallationAndConfiguration for the basics on how to include the search lib
 
 = Using the API =
 
-The API consists of one main interface `SearchFacade` (http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/com/trg/search/SearchFacade.html). All of the methods for accessing the search functionality are here. Just create `ISearch` objects and pass them in. For more information on using `ISearch`, see [Search].
+The API consists of one main interface `SearchFacade` (http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/com/googlecode/genericdao/search/SearchFacade.html). All of the methods for accessing the search functionality are here. Just create `ISearch` objects and pass them in. For more information on using `ISearch`, see [Search].
 
 The tricky part is getting an instance of `SearchFacade`. At this point the only implementation available is for Hibernate. It is `HibernateSearchFacade`.
 
@@ -22,7 +22,7 @@ Here's an example of how this might be set up with Spring framework:
 *applicationContext.xml*
 {{{
 ...
-<bean id="searchFacade" class="com.trg.search.hibernate.HibernateSearchFacade">
+<bean id="searchFacade" class="com.googlecode.genericdao.search.hibernate.HibernateSearchFacade">
     <!-- The Hibernate sessionFactory bean is defined elsewhere -->
     <property name="sessionFactory" ref="sessionFactory"/>
 </bean>
