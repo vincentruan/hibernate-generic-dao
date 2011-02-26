@@ -1,6 +1,8 @@
 #summary How to use the framework in your project.
 #labels Featured
 
+*WARNING:* _This page is currently (as of 26 Feb, 2011) in the process of being revised for the 1.0.0 version. The information below is inconsistent. Please check back in a couple of days.
+
 =Introduction=
 Version 0.5.0 introduced support for JPA, which allows (in theory) for use of any JPA provider, not just Hibernate (ex: Hibernate Entity Manager, OpenJPA, TopLink). Here we lay out the different installation options.
 
@@ -11,18 +13,18 @@ The documentation for the old version (0.4.3) is still available at [Installatio
 For projects that use Maven for dependency management, we have a repository. Reference it in your POM as follows:
 {{{
 <repository>
-        <id>trg-dao-repo</id>
-        <name>Repository for The Revere Group's Hibernate Generic DAO framework</name>
-        <url>http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/</url>
+	<id>sonatype-oss-repo</id>
+	<name>Sonatype Open Source maven staging repo</name>
+	<url>https://oss.sonatype.org/content/groups/public/</url>
 </repository>
 }}}
 
 If you want to use standard hibernate without JPA, include the following dependency...
 {{{
 <dependency>
-        <groupId>com.trg</groupId>
-        <artifactId>trg-dao-hibernate</artifactId>
-        <version>0.5.1</version> <!-- or whatever the latest version is -->
+	<groupId>com.googlecode.genericdao</groupId>
+	<artifactId>dao-hibernate</artifactId>
+	<version>1.0.0</version>
 </dependency>
 }}}
 
@@ -30,22 +32,22 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 {{{
 <!-- This first dependency includes all the JPA implementations for the DAOs -->
 <dependency>
-        <groupId>com.trg</groupId>
-        <artifactId>trg-dao</artifactId>
-        <version>0.5.1</version> <!-- or whatever the latest version is -->
+	<groupId>com.googlecode.genericdao</groupId>
+	<artifactId>dao</artifactId>
+	<version>1.0.0</version>
 </dependency>
 <!-- This second one includes the Hibernate Entity Manager plugin for the framework -->
 <dependency>
-        <groupId>com.trg</groupId>
-        <artifactId>trg-search-jpa-hibernate</artifactId>
-        <version>0.5.1</version> <!-- or whatever the latest version is -->
+	<groupId>com.googlecode.genericdao</groupId>
+	<artifactId>search-jpa-hibernate</artifactId>
+	<version>1.0.0</version>
 </dependency>
 }}}
 
 ==Other==
-Download the jars from http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/
+Download the jars from https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/
 
-The DAO requires both the _trg-search_ jar and the _trg-dao_ jar.
+The DAO requires both the _search_ jar and the _dao_ jar.
 
 http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-dao/0.5.1/trg-dao-0.5.1.jar <br/>
 http://hibernate-generic-dao.googlecode.com/svn/trunk/maven-repo/com/trg/trg-search/0.5.1/trg-search-0.5.1.jar
