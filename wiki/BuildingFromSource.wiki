@@ -29,26 +29,9 @@ generic-dao
 
 ==Compiling==
 
-The following command will switch to directory you checked out the
-*hibernate-generic-dao* source and compile every sub-project in theirs
-respective order:
-
+Simply navigate to the hibernate-generic-dao directory where the code was checked out and run a maven build...
 {{{
-cd hibernate-generic-dao
-cd trg-test-base && \
-mvn install && \
-cd ../trg-search && \
-mvn install && \
-cd ../trg-test-search && \
-mvn install && \
-cd ../trg-search-hibernate && \
-mvn install && \
-cd ../trg-search-jpa-hibernate && \
-mvn install && \
-cd ../trg-dao && \
-mvn install && \
-cd ../trg-dao-hibernate && \
-mvn install
+mvn clean install
 }}}
 
 ==Note==
