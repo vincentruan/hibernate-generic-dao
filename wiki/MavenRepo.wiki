@@ -2,12 +2,11 @@
 
 =Latest Release=
 === pom.xml ===
-_*>>> NOTE:* We're currently (as of Feb 25, 2011) getting this set up and verified. In the mean time, use the snapshot build below._
 {{{
 <repository>
 	<id>sonatype-oss-repo</id>
 	<name>Sonatype Open Source maven staging repo</name>
-	<url>https://oss.sonatype.org/content/repositories/staging/</url>
+	<url>https://oss.sonatype.org/content/groups/public/</url>
 </repository>
 
 <!-- This for the whole DAO -->
