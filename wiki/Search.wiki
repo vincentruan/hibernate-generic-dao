@@ -22,9 +22,9 @@ The search object provides flexible search options:
 A Search object is the POJO that carries the various parameters to pass to a search. The core elements are lists of Filter, Sort and Field objects, and there are a number of other options.
 
 *Javadocs*:
-  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/ISearch.html
-  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/IMutableSearch.html
-  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Search.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/googlecode/genericdao/search/ISearch.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/googlecode/genericdao/search/IMutableSearch.html
+  * http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/googlecode/genericdao/search/Search.html
 
 For more help with Searches look at the SearchExamples page.
 
@@ -51,7 +51,7 @@ search.setSearchClass(Project.class);
 ===Filtering===
 A search can have a collection of _filters_. By default there is an 'AND' condition between these; however, the _disjunction_ property can be set to TRUE, and an 'OR' condition will be used.
 
-See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Filter.html.
+See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/googlecode/genericdao/search/Filter.html.
 
 Each Filter object has three fields:
   * *property:* The name of the property to filter on. It may be nested. Examples: "name", "dateOfBirth", "employee.age", "employee.spouse.job.title". _NOTE: the empty string ("") or the constant Filter.ROOT_ENTITY can be used to specify the root entity._
@@ -133,7 +133,7 @@ The framework has a built-in utility for converting example objects into Filters
 public Filter getFilterFromExample(Object example);
 public Filter getFilterFromExample(Object example, ExampleOptions options);
 }}}
-The first method uses the default options for doing the conversion, while the second provides several options for controlling the result. See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/com/trg/search/ExampleOptions.html for all the options.
+The first method uses the default options for doing the conversion, while the second provides several options for controlling the result. See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/com/googlecode/genericdao/search/ExampleOptions.html for all the options.
 
 ===Selecting and Transforming Results===
 By default, the results of a search will be a list of the entity objects that were searched on. However, as with Hibernate queries, it is possible to get different information back in each row.
@@ -142,7 +142,7 @@ By default, the results of a search will be a list of the entity objects that we
 
 A search can have a collection of _fields_. These are analogous to the "SELECT" clause in SQL or HQL. Each field corresponds to a property value or a column operator applied to a property. Each field may also be assigned a key string. This will be used instead of the property name as a map key when using the MAP result mode. If no fields are specified, the entity itself is used as the single result for each record.
 
-See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Field.html.
+See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/googlecode/genericdao/search/Field.html.
 
 *NOTE:* the empty string ("") or the constant Filter.ROOT_ENTITY can be used to specify the root entity.
 
@@ -201,7 +201,7 @@ dao.search(search);
 ===Sorting===
 A search can have a collection of _sorts_. These sorts are applied in order, just as in the SQL "ORDER BY" clause. Each sort specifies a property and a direction (asc or desc). There is also a flag for whether or not to ignore case. (Note: Some databases ignore case by default.)
 
-See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/trg/search/Sort.html.
+See http://hibernate-generic-dao.googlecode.com/svn/trunk/docs/api/index.html?com/googlecode/genericdao/search/Sort.html.
 
 *_Examples:_*
 {{{
