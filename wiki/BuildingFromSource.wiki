@@ -34,6 +34,4 @@ Simply navigate to the hibernate-generic-dao directory where the code was checke
 mvn clean install
 }}}
 
-==Note==
-
-The files will be instaled into your local Maven repository.
+This will compile and install all seven maven components into your local Maven repository.
