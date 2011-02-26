@@ -24,3 +24,10 @@ mvn release:perform
 }}}
 
 NOTE: if prepare fails to authenticate to subversion (for Mac), manually call a svn commit from the command line and then indicate to always allow keychain access.
+
+ # Login to the Nexus UI (https://oss.sonatype.org)
+ # Go to Staging Repositories page.
+ # Select a staging repository.
+ # Click the *Close* button.
+
+Then click *Release* button. There's no going back at this point.
