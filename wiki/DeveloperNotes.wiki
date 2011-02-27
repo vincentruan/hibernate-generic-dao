@@ -37,4 +37,8 @@ mvn versions:set -DgenerateBackupPoms=false -DnewVersion=1.0.0
 mvn versions:set -DgenerateBackupPoms=false -DnewVersion=1.1.0-SNAPSHOT
 }}}
 
+====6. Update wiki====
+
+====7. Blog Post====
+
 The release plugin takes care of this automatically for the main project.
