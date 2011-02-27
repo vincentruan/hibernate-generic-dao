@@ -42,4 +42,4 @@ public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements Pro
 }}}
 
 A more complex example can be found in the test code at:
-http://code.google.com/p/hibernate-generic-dao/source/browse/tags/0.5.1/trg-dao-hibernate/src/test/java/test/trg/dao/hibernate/dao/ProjectDAOImpl.java
+http://code.google.com/p/hibernate-generic-dao/source/browse/tags/1.0.0/dao-hibernate/src/test/java/test/googlecode/genericdao/dao/hibernate/dao/ProjectDAOImpl.java
