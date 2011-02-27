@@ -55,7 +55,7 @@ https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search/
 If you are using standard Hibernate without JPA, you will also need the _search-hibernate_ and _dao-hibernate_ jars.
 
 https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0.jar <br/>
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search-hibernate/01.0.0/search-hibernate-1.0.0.jar
+https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search-hibernate/1.0.0/search-hibernate-1.0.0.jar
 
 If you are using JPA with Hibernate Entity Manager, download just the _search-jpa-hibernate_ jar instead.
 
@@ -120,7 +120,7 @@ The *JPASearchProcessor* is designed to be used as a singleton. The constructor 
 
 *MetadataUtil* is the layer of abstraction that allows the framework to work (in theory) with a variety of JPA providers. In order to use a particular JPA provider, an implementation of MetadataUtil must be provided. Currently the framework only has an implementation for Hibernate.
 
-In theory, different implementations of MetadataUtil will require different configurations. The Hibernate implementation is *`com.trg.search.hibernate.HibernateMetadataUtil`*. You will need one instance per persistence unit (i.e. EntityManagerFactory). Use `com.trg.search.jpa.hibernate.HibernateMetadataUtil.getInstanceForEntityManagerFactory(HibernateEntityManagerFactory)` to get these instances.
+In theory, different implementations of MetadataUtil will require different configurations. The Hibernate implementation is *`com.googlecode.genericdao.search.hibernate.HibernateMetadataUtil`*. You will need one instance per persistence unit (i.e. EntityManagerFactory). Use `com.googlecode.genericdao.search.jpa.hibernate.HibernateMetadataUtil.getInstanceForEntityManagerFactory(HibernateEntityManagerFactory)` to get these instances.
 
 To see an example project configuration using Spring auto-wiring, have a look at the project in SVN at /tags/1.0.0/sample/jpa-hibernate-maven.
 
