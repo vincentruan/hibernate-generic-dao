@@ -81,6 +81,7 @@
   * Issue 50 / Issue 64 : More extensible HibernateSearchFacade and HibernateSearchProcessor
   * Issue 80 : Add paging to searchUnique()
   * Deprecate "original" daos?
+  * See about removing Hibernate version dependency.
 
 ==Unknown==
   * JPA 2.0 metadata support
