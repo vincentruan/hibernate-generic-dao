@@ -2,7 +2,7 @@
 ==1.0.0  (2/24/2011 current release)==
   * Deployment to central maven repo.
   * Refactoring of maven architecture with parent pom.xml for whole framework.
-  * Refactoring of package names.
+  * Issue 54 : Refactoring of package names.
   * Issue 59 : Should use Entity Name in the JPQL in terms of JPA specification
   * Issue 66 : JPQL can not support asterisk (`*`) in COUNT function
   * Issue 68 : Alias missed in JPABaseDAO's queries
@@ -77,7 +77,10 @@
 ==1.1.0==
   * Issue 73 : Custom filters, fields and sorts
   * Issue 47 : Add load method with lock mode option
+  * Issue 61 : Do not use PropertyNotFoundException in MetaDataUtil.get
   * Issue 50 / Issue 64 : More extensible HibernateSearchFacade and HibernateSearchProcessor
+  * Issue 80 : Add paging to searchUnique()
+  * Deprecate "original" daos?
 
 ==Unknown==
   * JPA 2.0 metadata support
