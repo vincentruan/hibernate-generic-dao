@@ -43,8 +43,6 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 }}}
 
 ==Other==
-*WARNING:* _The information below is currently (as of 26 Feb, 2011) in the process of being revised for the 1.0.0 version. The information below is inconsistent. Please check back in a couple of days.
-
 Download the jars from https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/
 
 The DAO requires both the _search_ jar and the _dao_ jar.
