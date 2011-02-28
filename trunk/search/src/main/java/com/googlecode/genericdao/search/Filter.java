@@ -15,6 +15,7 @@
 package com.googlecode.genericdao.search;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,14 +79,27 @@ public class Filter implements Serializable {
 		this.operator = OP_EQUAL;
 	}
 
-	public static final int OP_EQUAL = 0, OP_NOT_EQUAL = 1, OP_LESS_THAN = 2, OP_GREATER_THAN = 3,
-			OP_LESS_OR_EQUAL = 4, OP_GREATER_OR_EQUAL = 5, OP_LIKE = 6, OP_ILIKE = 7, OP_IN = 8, OP_NOT_IN = 9,
-			OP_NULL = 10, OP_NOT_NULL = 11, OP_EMPTY = 12, OP_NOT_EMPTY = 13;
-	public static final int OP_AND = 100, OP_OR = 101, OP_NOT = 102;
-	public static final int OP_SOME = 200, OP_ALL = 201, OP_NONE = 202 /*
-																		 * not
-																		 * SOME
-																		 */;
+	public static final int OP_EQUAL = 0;
+	public static final int OP_NOT_EQUAL = 1;
+	public static final int OP_LESS_THAN = 2;
+	public static final int OP_GREATER_THAN = 3;
+	public static final int OP_LESS_OR_EQUAL = 4;
+	public static final int OP_GREATER_OR_EQUAL = 5;
+	public static final int OP_LIKE = 6;
+	public static final int OP_ILIKE = 7;
+	public static final int OP_IN = 8;
+	public static final int OP_NOT_IN = 9;
+	public static final int OP_NULL = 10;
+	public static final int OP_NOT_NULL = 11;
+	public static final int OP_EMPTY = 12;
+	public static final int OP_NOT_EMPTY = 13;
+	public static final int OP_AND = 100;
+	public static final int OP_OR = 101;
+	public static final int OP_NOT = 102;
+	public static final int OP_SOME = 200;
+	public static final int OP_ALL = 201;
+	public static final int OP_NONE = 202;
+	public static final int OP_CUSTOM = 999;
 
 	/**
 	 * Create a new Filter using the == operator.
@@ -266,10 +280,96 @@ public class Filter implements Serializable {
 	}
 
 	/**
-	 * Create a new Filter using the NONE operator.
+	 * Create a new Filter using the NONE operator. This is equivalent to NOT
+	 * SOME.
 	 */
 	public static Filter none(String property, Filter filter) {
 		return new Filter(property, filter, OP_NONE);
+	}
+	
+	/**
+	 * <p>Create a new Filter using a custom JPQL/HQL expression. This can be
+	 * any valid where-clause type expression. Reference properties by wrapping
+	 * them with curly braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * // Referencing a property in a custom expression
+	 * Filter.custom("{serialNumber} like '%4780%'");
+	 * // comparing two properties
+	 * Filter.custom("{parent.spotCount} > {spotCount} + 4");
+	 * // A constant
+	 * Filter.custom("1 = 1");
+	 * // A function
+	 * Filter.custom("{dueDate} > current_date()");
+	 * // A subquery
+	 * Filter.custom("{id} in (select pc.cat_id from popular_cats pc where pc.color = 'blue')");
+	 * </pre>
+	 * 
+	 * @param expression JPQL/HQL where-clause expression
+	 */
+	public static Filter custom(String expression) {
+		return new Filter(expression, null, OP_CUSTOM);
+	}
+	
+	/**
+	 * <p>Create a new Filter using a custom JPQL/HQL expression. This can be
+	 * any valid where-clause type expression. Reference properties by wrapping
+	 * them with curly braces ({}). The expression can also contain place
+	 * holders for the Filter values; these are indicated by JPQL-style
+	 * positional parameters (i.e. a question mark (?) followed by a number
+	 * indicating the parameter order, starting with one).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * // Referencing a property in a custom expression
+	 * Filter.custom("{serialNumber} like ?1", "%4780%");
+	 * // comparing two properties
+	 * Filter.custom("{parent.spotCount} + ?1 > {spotCount} + ?2", 0, 4);
+	 * // A constant
+	 * Filter.custom("?1 = ?2", 1, 1);
+	 * // A function
+	 * Filter.custom("?1 > current_date()", someDate);
+	 * // A subquery
+	 * Filter.custom("{id} in (select pc.cat_id from popular_cats pc where pc.color = ?1)", "blue");
+	 * </pre>
+	 * 
+	 * @param expression JPQL/HQL where-clause expression
+	 * @param values one or more values to fill in the numbered placeholders in
+	 * 		  the expression
+	 */
+	public static Filter custom(String expression, Object... values) {
+		return new Filter(expression, values, OP_CUSTOM);
+	}
+
+	/**
+	 * <p>Create a new Filter using a custom JPQL/HQL expression. This can be
+	 * any valid where-clause type expression. Reference properties by wrapping
+	 * them with curly braces ({}). The expression can also contain place
+	 * holders for the Filter values; these are indicated by JPQL-style
+	 * positional parameters (i.e. a question mark (?) followed by a number
+	 * indicating the parameter order, starting with one).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * // Referencing a property in a custom expression
+	 * Filter.custom("{serialNumber} like ?1", Collections.singleton("%4780%"));
+	 * // comparing two properties
+	 * Filter.custom("{parent.spotCount} + ?1 > {spotCount} + ?2", Arrays.asList(0, 4));
+	 * // A constant
+	 * Filter.custom("?1 = ?2", Arrays.asList(1, 1));
+	 * // A function
+	 * Filter.custom("?1 > current_date()", Collections.singleton(someDate));
+	 * // A subquery
+	 * Filter.custom("{id} in (select pc.cat_id from popular_cats pc where pc.color = ?1)", Collections.singleton("blue"));
+	 * </pre>
+	 * 
+	 * @param expression JPQL/HQL where-clause expression
+	 * @param values one or more values to fill in the numbered placeholders in
+	 * 		  the expression
+	 */
+	public static Filter custom(String expression, Collection<?> values) {
+		return new Filter(expression, values, OP_CUSTOM);
 	}
 
 	/**
@@ -496,6 +596,36 @@ public class Filter implements Serializable {
 				return "NONE: **INVALID VALUE - NOT A FILTER: (" + value + ") **";
 			}
 			return "none `" + property + "` {" + value.toString() + "}";
+		case Filter.OP_CUSTOM:
+			if (value == null || (value instanceof Collection && ((Collection) value).isEmpty()) || (value.getClass().isArray() && Array.getLength(value) == 0)) {
+				return "CUSTOM[" + property + "]";
+			} else {
+				StringBuilder sb2 = new StringBuilder();
+				sb2.append("CUSTOM[").append(property).append("]values(");
+				boolean first2 = true;
+				if (value instanceof Collection) {
+					if (first2) {
+						first2 = false;
+					} else {
+						sb2.append(',');
+					}
+					for (Object o : (Collection) value) {
+						sb2.append(o);
+					}
+				} else if (value.getClass().isArray()) {
+					if (first2) {
+						first2 = false;
+					} else {
+						sb2.append(',');
+					}
+					for (int i = 0; i < Array.getLength(value); i++) {
+						sb2.append(Array.get(value, i));
+					}
+				} else {
+					sb2.append(value);
+				}
+				sb2.append(")");
+			}
 		default:
 			return "**INVALID OPERATOR: (" + operator + ") - VALUE: " + InternalUtil.paramDisplayString(value) + " **";
 		}

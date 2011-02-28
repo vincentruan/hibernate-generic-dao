@@ -16,6 +16,11 @@ package com.googlecode.genericdao.search;
 
 import java.io.Serializable;
 
+/**
+ * Used to specify field ordering in <code>Search</code>.
+ * 
+ * @see Search
+ */
 public class Sort implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -23,6 +28,7 @@ public class Sort implements Serializable {
 	protected String property;
 	protected boolean desc = false;
 	protected boolean ignoreCase = false;
+	protected boolean customExpression = false;
 
 	public Sort() {
 
@@ -43,6 +49,39 @@ public class Sort implements Serializable {
 		this.property = property;
 	}
 
+	/**
+	 * If isCustomExpression is true, the "property" of this Sort is reckoned
+	 * as a free-form JPQL/HQL order-by expression. Reference properties by
+	 * wrapping them with curly braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * new Sort(true, "cast({employeeno} as integer)");
+	 * new Sort(true, "abs({prop1} - {prop2})");
+	 * </pre> 
+	 */
+	public Sort(boolean isCustomExpression, String property, boolean desc) {
+		this.customExpression = isCustomExpression;
+		this.property = property;
+		this.desc = desc;
+	}
+
+	/**
+	 * If isCustomExpression is true, the "property" of this Sort is reckoned
+	 * as a free-form JPQL/HQL order-by expression. Reference properties by
+	 * wrapping them with curly braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * new Sort(true, "cast({employeeno} as integer)", true);
+	 * new Sort(true, "abs({prop1} - {prop2})", true);
+	 * </pre> 
+	 */
+	public Sort(boolean isCustomExpression, String property) {
+		this.customExpression = isCustomExpression;
+		this.property = property;
+	}
+
 	public static Sort asc(String property) {
 		return new Sort(property);
 	}
@@ -58,37 +97,124 @@ public class Sort implements Serializable {
 	public static Sort desc(String property, boolean ignoreCase) {
 		return new Sort(property, true, ignoreCase);
 	}
+	
+	/**
+	 * Instead of a property for this Sort, use a free-form JPQL/HQL order-by
+	 * expression. Reference properties by wrapping them with curly braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * Sort.ascCustom("cast({employeeno} as integer)");
+	 * Sort.ascCustom("abs({prop1} - {prop2})");
+	 * </pre> 
+	 */
+	public static Sort ascCustomExpression(String expression) {
+		return new Sort(true, expression);
+	}
 
+	/**
+	 * Instead of a property for this Sort, use a free-form JPQL/HQL order-by
+	 * expression. Reference properties by wrapping them with curly braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * Sort.descCustom("cast({employeeno} as integer)");
+	 * Sort.descCustom("abs({prop1} - {prop2})");
+	 * </pre> 
+	 */
+	public static Sort descCustomExpression(String expression) {
+		return new Sort(true, expression, true);
+	}
+
+	/**
+	 * Property on which to sort
+	 */
 	public String getProperty() {
 		return property;
 	}
 
+	/**
+	 * Property on which to sort
+	 */
 	public void setProperty(String property) {
 		this.property = property;
 	}
 
+	/**
+	 * If true, sort descending by the given property; otherwise, sort
+	 * ascending.
+	 */
 	public boolean isDesc() {
 		return desc;
 	}
 
+	/**
+	 * If true, sort descending by the given property; otherwise, sort
+	 * ascending.
+	 */
 	public void setDesc(boolean desc) {
 		this.desc = desc;
 	}
 
+	/**
+	 * If true the ordering will be case insensitive for this property. Ignore
+	 * case has no effect when customExpression is specified. 
+	 */
 	public boolean isIgnoreCase() {
 		return ignoreCase;
 	}
 
+	/**
+	 * If true the ordering will be case insensitive for this property. Ignore
+	 * case has no effect when customExpression is specified. 
+	 */
 	public void setIgnoreCase(boolean ignoreCase) {
 		this.ignoreCase = ignoreCase;
+	}
+	
+	/**
+	 * If true, the "property" of this Sort is reckoned as a free-form JPQL/HQL
+	 * order-by expression. Reference properties by wrapping them with curly
+	 * braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * new Sort(true, "cast({employeeno} as integer)");
+	 * new Sort(true, "abs({prop1} - {prop2})", true);
+	 * Sort.ascCustom("cast({employeeno} as integer)");
+	 * Sort.descCustom("abs({prop1} - {prop2})");
+	 * </pre> 
+	 */
+	public boolean isCustomExpression() {
+		return customExpression;
+	}
+
+	/**
+	 * If true, the "property" of this Sort is reckoned as a free-form JPQL/HQL
+	 * order-by expression. Reference properties by wrapping them with curly
+	 * braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * new Sort(true, "cast({employeeno} as integer)");
+	 * new Sort(true, "abs({prop1} - {prop2})", true);
+	 * Sort.ascCustom("cast({employeeno} as integer)");
+	 * Sort.descCustom("abs({prop1} - {prop2})");
+	 * </pre> 
+	 */
+	public void setCustomExpression(boolean customExpression) {
+		this.customExpression = customExpression;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((property == null) ? 0 : property.hashCode());
+		result = prime * result + (customExpression ? 1231 : 1237);
 		result = prime * result + (desc ? 1231 : 1237);
+		result = prime * result + (ignoreCase ? 1231 : 1237);
+		result = prime * result
+				+ ((property == null) ? 0 : property.hashCode());
 		return result;
 	}
 
@@ -101,7 +227,11 @@ public class Sort implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Sort other = (Sort) obj;
+		if (customExpression != other.customExpression)
+			return false;
 		if (desc != other.desc)
+			return false;
+		if (ignoreCase != other.ignoreCase)
 			return false;
 		if (property == null) {
 			if (other.property != null)
@@ -114,6 +244,10 @@ public class Sort implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
+		if (customExpression) {
+			sb.append("CUSTOM: ");
+		}
+		
 		if (property == null) {
 			sb.append("null");
 		} else {
@@ -122,7 +256,7 @@ public class Sort implements Serializable {
 			sb.append("`");
 		}
 		sb.append(desc ? " desc" : " asc");
-		if (ignoreCase) {
+		if (ignoreCase && !customExpression) {
 			sb.append(" (ignore case)");
 		}
 		return sb.toString();

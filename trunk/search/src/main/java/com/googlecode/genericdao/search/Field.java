@@ -90,6 +90,20 @@ public class Field implements Serializable {
 	 * value of the given property in the result set.
 	 */
 	public static final int OP_AVG = 6;
+	
+	/**
+	 * Possible value for <code>operator</code>. This allows a free-form
+	 * JPQL/HQL select-clause expression. When using this operator, the
+	 * expression is set in the "property" property of the Field. Reference
+	 * properties by wrapping them with curly braces ({}).
+	 * 
+	 * <p>Here are some examples:
+	 * <pre>
+	 * new Field("{firstName}||' '||{initial}||' '||upper({lastName})", Field.OP_CUSTOM);
+	 * new Field("max(({top} - {bottom}) / 2)", Field.OP_CUSTOM);
+	 * </pre> 
+	 */
+	public static final int OP_CUSTOM = 999;
 
 	public Field() {
 	}
@@ -178,13 +192,14 @@ public class Field implements Serializable {
 
 		boolean parens = true;
 		switch (operator) {
-		case OP_AVG: sb.append("AVG("); break;
-		case OP_COUNT: sb.append("COUNT("); break;
-		case OP_COUNT_DISTINCT: sb.append("COUNT_DISTINCT("); break;
-		case OP_MAX: sb.append("MAX("); break;
-		case OP_MIN: sb.append("MIN("); break;
-		case OP_PROPERTY: parens = false; break;
-		case OP_SUM: sb.append("SUM("); break;
+			case OP_AVG: sb.append("AVG("); break;
+			case OP_COUNT: sb.append("COUNT("); break;
+			case OP_COUNT_DISTINCT: sb.append("COUNT_DISTINCT("); break;
+			case OP_MAX: sb.append("MAX("); break;
+			case OP_MIN: sb.append("MIN("); break;
+			case OP_PROPERTY: parens = false; break;
+			case OP_SUM: sb.append("SUM("); break;
+			case OP_CUSTOM: sb.append("CUSTOM: "); parens = false; break;
 			default:  sb.append("**INVALID OPERATOR: (" + operator + ")** "); parens = false; break;
 		}
 		
