@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>sample.googlecode.genericdao</groupId>
 	<artifactId>jpa-hibernate-sample</artifactId>
-	<version>1.0.0</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<name>Hibernate Generic DAO Sample - Hibernate Entity Manager, Maven</name>
 	<description>Hibernate Generic DAO Sample Console App w/ Maven, JPA powered by Hibernate</description>
 	<url>http://code.google.com/p/hibernate-generic-dao/</url>
