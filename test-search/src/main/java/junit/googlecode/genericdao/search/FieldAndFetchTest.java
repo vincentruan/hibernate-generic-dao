@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Ignore;
+
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 import test.googlecode.genericdao.search.InternalHelper;
@@ -347,4 +349,84 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		s.clearFields();
 		s.addField("age", Field.OP_MAX);
 	}
+	
+	/*
+	@SuppressWarnings("unchecked")
+	public void testCustomField() {
+		initDB();
+		
+		Search s = new Search(Person.class);
+		s.addFilterEqual("id", joeA.getId());
+		
+		s.addField("{mother.firstName}||' '||{mother.lastName}", Field.OP_CUSTOM, "Yo Mama");
+		s.addField("'Alpha'", Field.OP_CUSTOM, "String Constant");
+		s.addField("24601", Field.OP_CUSTOM, "Numeric Constant");
+		
+		// Test with result array
+		s.setResultMode(Search.RESULT_ARRAY);
+		Object[] resultArray = (Object[]) target.searchUnique(s); 
+		assertEquals("Mama Alpha", resultArray[0]);
+		assertEquals("Alpha", resultArray[1]);
+		assertEquals(24601, resultArray[2]);
+		
+		// Test with map to make sure it works with column aliases
+		s.setResultMode(Search.RESULT_MAP);
+		Map<String, Object> resultMap = (Map<String, Object>) target.searchUnique(s);
+		assertEquals("Mama Alpha", resultMap.get("Yo Mama"));
+		assertEquals("Alpha", resultMap.get("String Constant"));
+		assertEquals(24601, resultMap.get("Numeric Constant"));
+		
+		// Test that auto mode works too.
+		s.setResultMode(Search.RESULT_AUTO);
+		resultMap = (Map<String, Object>) target.searchUnique(s);
+		assertEquals("Mama Alpha", resultMap.get("Yo Mama"));
+		assertEquals("Alpha", resultMap.get("String Constant"));
+		assertEquals(24601, resultMap.get("Numeric Constant"));
+		
+		// Test for mixing properties
+		s.addField("age");
+		
+		resultMap = (Map<String, Object>) target.searchUnique(s);
+		assertEquals("Mama Alpha", resultMap.get("Yo Mama"));
+		assertEquals("Alpha", resultMap.get("String Constant"));
+		assertEquals(24601, resultMap.get("Numeric Constant"));
+		assertEquals(10, resultMap.get("age"));
+		
+		// Test aggregation operators
+		s.clear();
+		s.addField("max({age})", Field.OP_CUSTOM);
+		assertEquals(65, target.searchUnique(s));
+		
+		// Test mixing aggregation operators
+		s.addField("firstName", Field.OP_MIN);
+		resultArray = (Object[]) target.searchUnique(s);
+		assertEquals(65, resultArray[0]);
+		assertEquals("Grandma", resultArray[1]);
+		
+		// Test that if OP_CUSTOM is not specified, the search fails.
+		s.clear();
+		s.addField("{mother.firstName}||' '||{mother.lastName}");
+		try {
+			target.search(s);
+			fail("An exception should have been thrown.");
+		} catch (RuntimeException ex) {
+		}
+		
+		s.clearFields();
+		s.addField("'Alpha'");
+		try {
+			target.search(s);
+			fail("An exception should have been thrown.");
+		} catch (RuntimeException ex) {
+		}
+		
+		s.clearFields();
+		s.addField("24601");
+		try {
+			target.search(s);
+			fail("An exception should have been thrown.");
+		} catch (RuntimeException ex) {
+		}
+	}
+	*/
 }
