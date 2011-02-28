@@ -273,6 +273,36 @@ public class Search implements IMutableSearch, Serializable {
 		return this;
 	}
 	
+	/**
+	 * Add a filter that uses a custom expression.
+	 * 
+	 * @see {@link Filter#custom(String)}
+	 */
+	public Search addFilterCustom(IMutableSearch search, String expression) {
+		SearchUtil.addFilterCustom(search, expression);
+		return this;
+	}
+
+	/**
+	 * Add a filter that uses a custom expression.
+	 * 
+	 * @see {@link Filter#custom(String, Object...)}
+	 */
+	public Search addFilterCustom(IMutableSearch search, String expression, Object... values) {
+		SearchUtil.addFilterCustom(search, expression, values);
+		return this;
+	}
+	
+	/**
+	 * Add a filter that uses a custom expression.
+	 * 
+	 * @see {@link Filter#custom(String, Collection)}
+	 */
+	public Search addFilterCustom(IMutableSearch search, String expression, Collection<?> values) {
+		SearchUtil.addFilterCustom(search, expression, values);
+		return this;
+	}
+	
 	public void removeFilter(Filter filter) {
 		SearchUtil.removeFilter(this, filter);
 	}
