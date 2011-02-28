@@ -301,6 +301,33 @@ public class SearchUtil {
 	public static void addFilterSome(IMutableSearch search, String property, Filter filter) {
 		addFilter(search, Filter.some(property, filter));
 	}
+	
+	/**
+	 * Add a filter that uses a custom expression.
+	 * 
+	 * @see {@link Filter#custom(String)}
+	 */
+	public static void addFilterCustom(IMutableSearch search, String expression) {
+		addFilter(search, Filter.custom(expression));
+	}
+
+	/**
+	 * Add a filter that uses a custom expression.
+	 * 
+	 * @see {@link Filter#custom(String, Object...)}
+	 */
+	public static void addFilterCustom(IMutableSearch search, String expression, Object... values) {
+		addFilter(search, Filter.custom(expression, values));
+	}
+	
+	/**
+	 * Add a filter that uses a custom expression.
+	 * 
+	 * @see {@link Filter#custom(String, Collection)}
+	 */
+	public static void addFilterCustom(IMutableSearch search, String expression, Collection<?> values) {
+		addFilter(search, Filter.custom(expression, values));
+	}
 
 	// Sorts
 	public static void addSort(IMutableSearch search, Sort sort) {
