@@ -8,14 +8,7 @@ The documentation for the old version (0.4.3) is still available at [Installatio
 
 =Installation=
 ==Maven==
-For projects that use Maven for dependency management, we have a repository. Reference it in your POM as follows:
-{{{
-<repository>
-	<id>sonatype-oss-repo</id>
-	<name>Sonatype Open Source maven staging repo</name>
-	<url>https://oss.sonatype.org/content/groups/public/</url>
-</repository>
-}}}
+Hibernate Generic DAO is available from the Maven Central repository. Just add it as a dependency.
 
 If you want to use standard hibernate without JPA, include the following dependency...
 {{{
@@ -43,31 +36,31 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 }}}
 
 ==Other==
-Download the jars from https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/
+If you're not using Maven, you can manually download the jars from the Maven repository at http://repo1.maven.org/maven2/com/googlecode/genericdao/
 
 The DAO requires both the _search_ jar and the _dao_ jar.
 
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0.jar <br/>
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search/1.0.0/search-1.0.0.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search/1.0.0/search-1.0.0.jar
 
 If you are using standard Hibernate without JPA, you will also need the _search-hibernate_ and _dao-hibernate_ jars.
 
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0.jar <br/>
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search-hibernate/1.0.0/search-hibernate-1.0.0.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-hibernate/1.0.0/search-hibernate-1.0.0.jar
 
 If you are using JPA with Hibernate Entity Manager, download just the _search-jpa-hibernate_ jar instead.
 
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search-jpa-hibernate/1.0.0/search-jpa-hibernate-1.0.0.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.0.0/search-jpa-hibernate-1.0.0.jar
 
 If you like, you can also get the source jars to help out your IDE with Javadocs and to help yourself out being able to see what's going on (XXX-X.X.X-sources.jar).
 
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0-sources.jar <br/>
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search/1.0.0/search-1.0.0-sources.jar
+hhttp://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0-sources.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search/1.0.0/search-1.0.0-sources.jar
 
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0-sources.jar <br/>
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search-hibernate/1.0.0/search-hibernate-1.0.0-sources.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0-sources.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-hibernate/1.0.0/search-hibernate-1.0.0-sources.jar
 
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/search-jpa-hibernate/1.0.0/search-jpa-hibernate-1.0.0-sources.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.0.0/search-jpa-hibernate-1.0.0-sources.jar
 
 You will also need the Hibernate 3.3 jars and their dependencies. I'll leave you to do all the hibernate configuration.
 
