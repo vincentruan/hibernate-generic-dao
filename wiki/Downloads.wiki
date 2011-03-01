@@ -1,6 +1,3 @@
-This project is published as a Maven artifact. See MavenRepo.
+This project is published as a Maven artifact, so you can use Maven to take care of downloading the framework as a dependency. Alternatively, the JARs can be downloaded manually from the Maven repository.
 
-Otherwise, the JARs can be downloaded here:
-https://oss.sonatype.org/content/groups/public/com/googlecode/genericdao/
-
- (See also InstallationAndConfiguration.)
+For instructions, see InstallationAndConfiguration.
