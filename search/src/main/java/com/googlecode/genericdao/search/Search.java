@@ -278,8 +278,8 @@ public class Search implements IMutableSearch, Serializable {
 	 * 
 	 * @see {@link Filter#custom(String)}
 	 */
-	public Search addFilterCustom(IMutableSearch search, String expression) {
-		SearchUtil.addFilterCustom(search, expression);
+	public Search addFilterCustom(String expression) {
+		SearchUtil.addFilterCustom(this, expression);
 		return this;
 	}
 
@@ -288,8 +288,8 @@ public class Search implements IMutableSearch, Serializable {
 	 * 
 	 * @see {@link Filter#custom(String, Object...)}
 	 */
-	public Search addFilterCustom(IMutableSearch search, String expression, Object... values) {
-		SearchUtil.addFilterCustom(search, expression, values);
+	public Search addFilterCustom(String expression, Object... values) {
+		SearchUtil.addFilterCustom(this, expression, values);
 		return this;
 	}
 	
@@ -298,8 +298,8 @@ public class Search implements IMutableSearch, Serializable {
 	 * 
 	 * @see {@link Filter#custom(String, Collection)}
 	 */
-	public Search addFilterCustom(IMutableSearch search, String expression, Collection<?> values) {
-		SearchUtil.addFilterCustom(search, expression, values);
+	public Search addFilterCustom(String expression, Collection<?> values) {
+		SearchUtil.addFilterCustom(this, expression, values);
 		return this;
 	}
 	
