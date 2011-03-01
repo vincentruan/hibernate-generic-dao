@@ -2,9 +2,7 @@
 #labels Featured
 
 =Introduction=
-Version 0.5.0 introduced support for JPA, which allows (in theory) for use of any JPA provider, not just Hibernate (ex: Hibernate Entity Manager, OpenJPA, TopLink). Here we lay out the different installation options.
-
-The documentation for the old version (0.4.3) is still available at [InstallationAndConfiguration0x4x3].
+Hibernate Generic DAO frame work allows can be used with original Hibernate or the Hibernate JPA implementation. It can also (in theory) be used with other JPA providers (ex: OpenJPA, TopLink) with some tweaking. Here we lay out the different installation options.
 
 =Installation=
 ==Maven==
@@ -35,7 +33,19 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 </dependency>
 }}}
 
-==Other==
+====Latest Maven Snapshot Build====
+We also release periodic development builds. These include the latest bug fixes and enhancements and passes all unit tests but may not be ready for a full release. These builds are available from the Sonatype Open Source snapshot repository.
+{{{
+<repository>
+        <id>sonatype-oss-repo</id>
+        <name>Sonatype Open Source maven snapshot repo</name>
+        <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+</repository>
+}}}
+
+Add this repository to your pom.xml and set the version number of the Hibernate Generic DAO dependencies to the snapshot version, (i.e. {{{"1.1.0-SNAPSHOT"}}})
+
+==Without Maven==
 If you're not using Maven, you can manually download the jars from the Maven repository at http://repo1.maven.org/maven2/com/googlecode/genericdao/
 
 The DAO requires both the _search_ jar and the _dao_ jar.
@@ -62,7 +72,7 @@ http://repo1.maven.org/maven2/com/googlecode/genericdao/search-hibernate/1.0.0/s
 
 http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.0.0/search-jpa-hibernate-1.0.0-sources.jar
 
-You will also need the Hibernate 3.3 jars and their dependencies. I'll leave you to do all the hibernate configuration.
+You will also need the Hibernate 3.3 (or later) jars and their dependencies. I'll leave you to do all the hibernate configuration.
 
 The project has one other dependency. That is Simple Logging Facade for Java (SLF4J). I think Hibernate 3.3 also requires this to be configured.
 
