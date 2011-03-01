@@ -30,6 +30,7 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
 public class FilterCollectionTest extends BaseSearchTest {
+	@SuppressWarnings("unchecked")
 	public void testCollectionFilters() {
 		initDB();
 		

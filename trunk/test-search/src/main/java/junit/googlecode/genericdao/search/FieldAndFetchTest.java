@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Ignore;
-
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 import test.googlecode.genericdao.search.InternalHelper;
@@ -247,6 +245,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals(141, ((Number) mapResult.get("myMomsAge")).intValue());
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testDistinct() {
 		initDB();
 
@@ -293,6 +292,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals(1, target.count(s));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testResultModeAuto() {
 		initDB();
 
@@ -350,7 +350,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		s.addField("age", Field.OP_MAX);
 	}
 	
-	/*
+	/* Commented out as a way of ignoring this test case until we finish implementing the feature.
 	@SuppressWarnings("unchecked")
 	public void testCustomField() {
 		initDB();

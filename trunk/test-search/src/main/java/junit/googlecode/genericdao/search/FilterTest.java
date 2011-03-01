@@ -15,13 +15,16 @@
 package junit.googlecode.genericdao.search;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 
 import com.googlecode.genericdao.search.ExampleOptions;
+import com.googlecode.genericdao.search.Field;
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
@@ -188,6 +191,7 @@ public class FilterTest extends BaseSearchTest {
 		assertListEqual(new Person[] { margretB, papaB, mamaB, papaA }, target.search(s));
 	}
 
+	@SuppressWarnings("unchecked")
 	public void testNull() {
 		persist(grandpaA.getHome().getAddress());
 		persist(grandpaA.getHome());
@@ -363,9 +367,260 @@ public class FilterTest extends BaseSearchTest {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	private List findByExample(Object example, ExampleOptions options) {
 		Search s = new Search(example.getClass());
 		s.addFilter(target.getFilterFromExample(example, options));
 		return target.search(s);
 	}
+
+	/* Commented out as a way of ignoring this test case until we finish implementing the feature. 
+	public void testCustomExpressions() {
+		initDB();
+		
+		// Test single
+		Search s = new Search(Person.class);
+		s.addField("id");
+		
+		s.addFilterCustom("{firstName} = 'Sally'");
+		assertEquals(sallyA.getId(), target.searchUnique(s));
+		
+		s.clearFilters();
+		s.addFilterCustom("{father} is not null and {firstName} <> {father.firstName}");
+		assertEquals(mamaB.getId(), target.searchUnique(s));
+		
+		// Test single with parameters
+		s.clearFilters();
+		s.addFilterCustom("{firstName} = ?1", "Sally");
+		assertEquals(sallyA.getId(), target.searchUnique(s));
+		
+		s.clearFilters();
+		s.addFilterCustom("{firstName} = ?1", Collections.singleton("Sally"));
+		assertEquals(sallyA.getId(), target.searchUnique(s));
+
+		s.clearFilters();
+		s.addFilterCustom("{age} >= ?1 AND {age} < ?2", 40, 50);
+		assertEquals(mamaA.getId(), target.searchUnique(s));
+		
+		s.clearFilters();
+		s.addFilterCustom("{age} >= ?1 AND {age} < ?2", Arrays.asList(40, 50));
+		assertEquals(mamaA.getId(), target.searchUnique(s));
+		
+		// Test multiple
+		s.clearFilters();
+		s.addFilterCustom("{firstName} == 'Joe'");
+		s.addFilterCustom("{lastName} == 'Beta'");
+		assertEquals(joeB.getId(), target.searchUnique(s));
+		
+		s.clearFilters();
+		s.addFilterOr(
+			Filter.custom("{age} > 100"),
+			Filter.custom("1 = 1")
+		);
+		s.addFilterCustom("{firstName}||{lastName} = 'PapaBeta'");
+		assertEquals(papaB.getId(), target.searchUnique(s));
+		
+		// Test multiple with parameters
+		s.clearFilters();
+		s.addFilterCustom("{firstName} == ?1", "Joe");
+		s.addFilterCustom("{lastName} == ?1", "Beta");
+		assertEquals(joeB.getId(), target.searchUnique(s));
+		
+		s.clearFilters();
+		s.addFilterOr(
+			Filter.custom("{age} > ?1", Collections.singleton(100)),
+			Filter.custom("?1 = ?2 / ?3", Arrays.asList(4, 8, 2))
+		);
+		s.addFilterCustom("{firstName}||{lastName} = ?1", "PapaBeta");
+		assertEquals(papaB.getId(), target.searchUnique(s));
+		
+		// Test combination with other filters
+		s.clearFilters();
+		s.addFilterCustom("{firstName} == 'Joe'");
+		s.addFilterEqual("lastName", "Beta");
+		assertEquals(joeB.getId(), target.searchUnique(s));
+		
+		s.clearFilters();
+		s.addFilterOr(
+			Filter.greaterThan("age", 100),
+			Filter.custom("1 = 1")
+		);
+		s.addFilterCustom("{firstName}||{lastName} = 'PapaBeta'");
+		assertEquals(papaB.getId(), target.searchUnique(s));
+		
+		// Test combination with parameters
+		s.clearFilters();
+		s.addFilterCustom("{firstName} == ?1", "Joe");
+		s.addFilterEqual("lastName", "Beta");
+		assertEquals(joeB.getId(), target.searchUnique(s));
+		
+		s.clearFilters();
+		s.addFilterOr(
+			Filter.greaterThan("age", 100),
+			Filter.custom("?1 = ?2 / ?3", Arrays.asList(4, 8, 2))
+		);
+		s.addFilterCustom("{firstName}||{lastName} = ?1", "PapaBeta");
+		assertEquals(papaB.getId(), target.searchUnique(s));
+		
+		// Test sub-query
+		s.clear();
+		s.addFilterCustom("{home} = ?1", grandmaA.getHome());
+		s.addFilterCustom("{} in (select dude from Person dude where dude.male = 1)");
+		assertEquals(grandpaA.getId(), target.searchUnique(s));
+		
+		// Test combination with fields
+		s.clear();
+		s.addField("{lastName}||', '||{firstName}", Field.OP_CUSTOM);
+		s.addFilterCustom("{firstName}||{lastName} = ?1", "PapaBeta");
+		assertEquals("Beta, Papa", target.searchUnique(s));
+		
+		// Test with invalid positional parameters
+		s.clear();
+		s.addFilterCustom("{firstName} = 'Sally'", "Andy");
+		try {
+			target.search(s);
+			fail("There is an unexpected parameter, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		s.clear();
+		s.addFilterCustom("{firstName} = ?1");
+		try {
+			target.search(s);
+			fail("There is a missing parameter, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		s.clear();
+		s.addFilterCustom("{firstName} = ?1", "Sally", "Andy");
+		try {
+			target.search(s);
+			fail("There is an unexpected parameter, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		// Test that no other operator allows custom expressions
+		try {
+			target.search(new Search(Person.class).addFilterEmpty("{firstName}"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterEqual("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterGreaterOrEqual("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterGreaterThan("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterILike("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterLessOrEqual("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterLessThan("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterLike("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterIn("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterNotEmpty("{firstName}"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterNotEqual("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterNotIn("{firstName}", "Joe"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterNotNull("{firstName}"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterNull("{firstName}"));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterAll("{firstName}", Filter.equal("firstName", "Joe")));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterNone("{firstName}", Filter.equal("firstName", "Joe")));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+		
+		try {
+			target.search(new Search(Person.class).addFilterSome("{firstName}", Filter.equal("firstName", "Joe")));
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+			
+		}
+	}
+	*/
 }
