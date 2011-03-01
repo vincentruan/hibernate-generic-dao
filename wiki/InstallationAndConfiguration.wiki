@@ -54,7 +54,7 @@ http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.0
 
 If you like, you can also get the source jars to help out your IDE with Javadocs and to help yourself out being able to see what's going on (XXX-X.X.X-sources.jar).
 
-hhttp://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0-sources.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0-sources.jar <br/>
 http://repo1.maven.org/maven2/com/googlecode/genericdao/search/1.0.0/search-1.0.0-sources.jar
 
 http://repo1.maven.org/maven2/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0-sources.jar <br/>
