@@ -36,7 +36,7 @@ public class MetadataTest extends BaseSearchTest {
 		Metadata md3 = metadataUtil.get(RecipeIngredient.class);
 		Metadata md4 = md3.getIdType();
 		
-		assertArrayEqual(md.getProperties(), "id", "firstName", "lastName", "age", "dob", "father", "mother", "weight", "home");
+		assertArrayEqual(md.getProperties(), "id", "firstName", "lastName", "age", "dob", "father", "mother", "isMale", "weight", "home");
 		assertArrayEqual(md2.getProperties(), "id", "type", "address", "residents");
 		assertArrayEqual(md3.getProperties(), "compoundId", "amount", "measure");
 		assertArrayEqual(md4.getProperties(), "recipe", "ingredient");
