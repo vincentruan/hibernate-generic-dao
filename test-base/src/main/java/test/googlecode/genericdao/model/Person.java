@@ -45,6 +45,7 @@ public class Person {
 	private Integer age;
 	private Date dob;
 	private Double weight;
+	private Boolean isMale;
 	
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="home_id")
@@ -133,6 +134,14 @@ public class Person {
 
 	public void setHome(Home home) {
 		this.home = home;
+	}
+
+	public Boolean getIsMale() {
+		return isMale;
+	}
+
+	public void setIsMale(Boolean isMale) {
+		this.isMale = isMale;
 	}
 
 	public boolean equals(Object o) {
