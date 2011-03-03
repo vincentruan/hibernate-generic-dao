@@ -31,7 +31,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		s.addSortAsc("lastName");
 		s.addSortAsc("firstName");
 
-		assertListEqual(new Person[] { grandmaA, grandpaA, joeA, mamaA, papaA, sallyA, joeB, mamaB, margretB, papaB },
+		assertListEqual(new Person[] { grandmaA, grandpaA, joeA, mamaA, papaA, sallyA, joeB, mamaB, margaretB, papaB },
 				target.search(s));
 
 		s.setMaxResults(3);
@@ -41,7 +41,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		assertListEqual(new Person[] { papaA, sallyA, joeB }, target.search(s));
 
 		s.setMaxResults(-1);
-		assertListEqual(new Person[] { papaA, sallyA, joeB, mamaB, margretB, papaB }, target.search(s));
+		assertListEqual(new Person[] { papaA, sallyA, joeB, mamaB, margaretB, papaB }, target.search(s));
 
 		s.setMaxResults(4);
 		s.setPage(1);
@@ -55,15 +55,15 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		assertListEqual(new Person[] { grandmaA, grandpaA, joeA, mamaA }, target.search(s));
 
 		s.setPage(2);
-		assertListEqual(new Person[] { margretB, papaB }, target.search(s));
+		assertListEqual(new Person[] { margaretB, papaB }, target.search(s));
 
 		s.clearPaging();
-		assertListEqual(new Person[] { grandmaA, grandpaA, joeA, mamaA, papaA, sallyA, joeB, mamaB, margretB, papaB },
+		assertListEqual(new Person[] { grandmaA, grandpaA, joeA, mamaA, papaA, sallyA, joeB, mamaB, margaretB, papaB },
 				target.search(s));
 
 		s.setPage(1); // page should have no effect when max results is not
 		// set
-		assertListEqual(new Person[] { grandmaA, grandpaA, joeA, mamaA, papaA, sallyA, joeB, mamaB, margretB, papaB },
+		assertListEqual(new Person[] { grandmaA, grandpaA, joeA, mamaA, papaA, sallyA, joeB, mamaB, margaretB, papaB },
 				target.search(s));
 	}
 
@@ -77,15 +77,15 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		s.addFilterNotIn("id", grandmaA.getId(), joeB.getId(), papaB.getId());
 
 		s.addSortAsc("age");
-		assertListOrderEqual(new Person[] { sallyA, joeA, margretB, mamaB, papaA, mamaA, grandpaA }, target.search(s));
+		assertListOrderEqual(new Person[] { sallyA, joeA, margaretB, mamaB, papaA, mamaA, grandpaA }, target.search(s));
 
 		s.clearSorts();
 		s.addSortDesc("age");
-		assertListOrderEqual(new Person[] { grandpaA, mamaA, papaA, mamaB, margretB, joeA, sallyA }, target.search(s));
+		assertListOrderEqual(new Person[] { grandpaA, mamaA, papaA, mamaB, margaretB, joeA, sallyA }, target.search(s));
 
 		s.removeSort("age");
 		s.addSortAsc("dob");
-		assertListOrderEqual(new Person[] { grandpaA, mamaA, papaA, mamaB, margretB, joeA, sallyA }, target.search(s));
+		assertListOrderEqual(new Person[] { grandpaA, mamaA, papaA, mamaB, margaretB, joeA, sallyA }, target.search(s));
 
 		// Test nested sort
 		s.clear();
@@ -97,16 +97,16 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		// Test multiple sort
 		s.clearFilters();
 		s.addSort("firstName", false);
-		assertListOrderEqual(new Person[] { grandmaA, grandpaA, joeB, mamaB, margretB, papaB, joeA, mamaA, papaA,
+		assertListOrderEqual(new Person[] { grandmaA, grandpaA, joeB, mamaB, margaretB, papaB, joeA, mamaA, papaA,
 				sallyA }, target.search(s));
 
 		// Test ignore case
 		s.clear();
-		// Set Margret's first name to "margaret" (lowercase). When ignoring
+		// Set Margaret's first name to "margaret" (lowercase). When ignoring
 		// case, Margaret < Sally, but when taking case into account,
 		// Sally < margaret
-		find(Person.class, margretB.getId()).setFirstName("margret");
-		s.addFilterIn("id", margretB.getId(), sallyA.getId());
+		find(Person.class, margaretB.getId()).setFirstName("margaret");
+		s.addFilterIn("id", margaretB.getId(), sallyA.getId());
 
 		List<Person> results;
 		// without ignore case
@@ -116,14 +116,14 @@ public class PagingAndSortingTest extends BaseSearchTest {
 			s.addSortAsc("firstName");
 			results = target.search(s);
 			assertEquals(sallyA.getId(), results.get(0).getId());
-			assertEquals(margretB.getId(), results.get(1).getId());
+			assertEquals(margaretB.getId(), results.get(1).getId());
 		}
 
 		// with ignore case
 		s.removeSort("firstName");
 		s.addSortAsc("firstName", true);
 		results = target.search(s);
-		assertEquals(margretB.getId(), results.get(0).getId());
+		assertEquals(margaretB.getId(), results.get(0).getId());
 		assertEquals(sallyA.getId(), results.get(1).getId());
 
 	}
@@ -136,37 +136,37 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		Search s = new Search(Person.class);
 		// remove duplicate ages for ease of testing
 		s.addFilterNotIn("id", grandmaA.getId(), joeB.getId(), papaB.getId());
-		// Folks: sallyA, joeA, margretB, mamaB, papaA, mamaA, grandpaA
+		// Folks: sallyA, joeA, margaretB, mamaB, papaA, mamaA, grandpaA
 		// Ages:  9       10    14        38     39     40     65
 		
 		// Test simple sorting 
 		s.addSort(Sort.customExpressionAsc("{age}"));
-		assertListOrderEqual(new Person[] { sallyA, joeA, margretB, mamaB, papaA, mamaA, grandpaA }, target.search(s));
+		assertListOrderEqual(new Person[] { sallyA, joeA, margaretB, mamaB, papaA, mamaA, grandpaA }, target.search(s));
 
 		s.clearSorts();
 		s.addSort(Sort.customExpressionDesc("{age}"));
-		assertListOrderEqual(new Person[] { grandpaA, mamaA, papaA, mamaB, margretB, joeA, sallyA }, target.search(s));
+		assertListOrderEqual(new Person[] { grandpaA, mamaA, papaA, mamaB, margaretB, joeA, sallyA }, target.search(s));
 		
 		// Test sorting with more complex expression
 		s.clearSorts();
 		s.addSort(Sort.customExpressionAsc("abs(40 - {age})"));
-		assertListOrderEqual(new Person[] { mamaA, papaA, mamaB, grandpaA, margretB, joeA, sallyA }, target.search(s));
+		assertListOrderEqual(new Person[] { mamaA, papaA, mamaB, grandpaA, margaretB, joeA, sallyA }, target.search(s));
 		
 		s.clearSorts();
 		s.addSort(Sort.customExpressionDesc("abs(40 - {age})"));
-		assertListOrderEqual(new Person[] { sallyA, joeA, margretB, grandpaA, mamaB, papaA, mamaA }, target.search(s));
+		assertListOrderEqual(new Person[] { sallyA, joeA, margaretB, grandpaA, mamaB, papaA, mamaA }, target.search(s));
 		
 		// Test multiple custEx sorts
 		s.clearSorts();
 		s.addSort(Sort.customExpressionAsc("{lastName}"));
 		s.addSort(Sort.customExpressionAsc("abs(40 - {age})"));
-		assertListOrderEqual(new Person[] { mamaA, papaA, grandpaA, joeA, sallyA, mamaB, margretB }, target.search(s));
+		assertListOrderEqual(new Person[] { mamaA, papaA, grandpaA, joeA, sallyA, mamaB, margaretB }, target.search(s));
 		
 		// Test mix of custEx and regular sorts
 		s.clearSorts();
 		s.addSort(Sort.customExpressionAsc("lastName"));
 		s.addSort(Sort.customExpressionAsc("abs(40 - {age})"));
-		assertListOrderEqual(new Person[] { mamaA, papaA, grandpaA, joeA, sallyA, mamaB, margretB }, target.search(s));
+		assertListOrderEqual(new Person[] { mamaA, papaA, grandpaA, joeA, sallyA, mamaB, margaretB }, target.search(s));
 		
 		// Test expression w/o custEx flag
 		s.clearSorts();
@@ -203,8 +203,8 @@ public class PagingAndSortingTest extends BaseSearchTest {
 			// Set Margaret's first name to "margaret" (lowercase). When ignoring
 			// case, Margaret < Sally, but when taking case into account,
 			// Sally < margaret
-			find(Person.class, margretB.getId()).setFirstName("margret");
-			s.addFilterIn("id", margretB.getId(), sallyA.getId());
+			find(Person.class, margaretB.getId()).setFirstName("margaret");
+			s.addFilterIn("id", margaretB.getId(), sallyA.getId());
 			
 			Sort sort = new Sort(true, "{firstName}", false);
 			sort.setIgnoreCase(true);
@@ -214,7 +214,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 			// because ignore case is not used with a custom expression.
 			List<Person> results = target.search(s);
 			assertEquals(sallyA.getId(), results.get(0).getId());
-			assertEquals(margretB.getId(), results.get(1).getId());
+			assertEquals(margaretB.getId(), results.get(1).getId());
 		}
 	}
 	*/

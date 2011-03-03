@@ -122,7 +122,7 @@ public class FilterCollectionTest extends BaseSearchTest {
 		
 		s.clear();
 		s.addFilterNotEmpty("father");
-		assertListEqual(target.search(s), mamaB, papaA, joeA, joeB, margretB, sallyA);
+		assertListEqual(target.search(s), mamaB, papaA, joeA, joeB, margaretB, sallyA);
 		
 		//with int and string value
 		Person pete = find(Person.class, papaA.getId());
@@ -144,7 +144,7 @@ public class FilterCollectionTest extends BaseSearchTest {
 		
 		s.clear();
 		s.addFilterNotEmpty("lastName");
-		assertListEqual(target.search(s), grandmaA, grandpaA, papaB, mamaA, mamaB, joeA, joeB, sallyA, margretB);
+		assertListEqual(target.search(s), grandmaA, grandpaA, papaB, mamaA, mamaB, joeA, joeB, sallyA, margaretB);
 		
 		pete.setAge(0);
 		s.clear();
@@ -212,7 +212,7 @@ public class FilterCollectionTest extends BaseSearchTest {
 		s.clear();
 		s.setSearchClass(Person.class);
 		s.addFilterGreaterThan("home.residents.size", 2);
-		assertListEqual(target.search(s), papaA, papaB, mamaA, mamaB, sallyA, margretB, joeA, joeB);
+		assertListEqual(target.search(s), papaA, papaB, mamaA, mamaB, sallyA, margaretB, joeA, joeB);
 	}
 
 }

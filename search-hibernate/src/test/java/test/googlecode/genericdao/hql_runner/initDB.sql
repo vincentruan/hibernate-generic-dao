@@ -25,7 +25,7 @@ insert into `ingredient` (`ingredientId`,`name`) values (1,'Sugar'),(2,'Butter')
 
 /*Data for the table `person` */
 
-insert into `person` (`id`,`age`,`dob`,`first_name`,`last_name`,`weight`,`father_id`,`home_id`,`mother_id`) values (1,65,'1944-03-31 11:57:16','Grandpa','Alpha',100.65,NULL,3,NULL),(2,65,'1944-03-31 11:57:16','Grandma','Alpha',100.65,NULL,3,NULL),(3,39,'1970-03-31 11:57:16','Papa','Alpha',100.39,1,1,2),(4,40,'1969-03-31 11:57:16','Mama','Alpha',100.4,NULL,1,NULL),(5,39,'1970-03-31 11:57:16','Papa','Beta',100.39,NULL,2,NULL),(6,38,'1971-03-31 11:57:16','Mama','Beta',100.38,1,2,2),(7,10,'1999-03-31 11:57:16','Joe','Alpha',100.1,3,1,4),(8,9,'2000-03-31 11:57:16','Sally','Alpha',100.09,3,1,4),(9,10,'1999-03-31 11:57:16','Joe','Beta',100.1,5,2,6),(10,14,'1995-03-31 11:57:16','Margret','Beta',100.14,5,2,6);
+insert into `person` (`id`,`age`,`dob`,`first_name`,`last_name`,`weight`,`father_id`,`home_id`,`mother_id`) values (1,65,'1944-03-31 11:57:16','Grandpa','Alpha',100.65,NULL,3,NULL),(2,65,'1944-03-31 11:57:16','Grandma','Alpha',100.65,NULL,3,NULL),(3,39,'1970-03-31 11:57:16','Papa','Alpha',100.39,1,1,2),(4,40,'1969-03-31 11:57:16','Mama','Alpha',100.4,NULL,1,NULL),(5,39,'1970-03-31 11:57:16','Papa','Beta',100.39,NULL,2,NULL),(6,38,'1971-03-31 11:57:16','Mama','Beta',100.38,1,2,2),(7,10,'1999-03-31 11:57:16','Joe','Alpha',100.1,3,1,4),(8,9,'2000-03-31 11:57:16','Sally','Alpha',100.09,3,1,4),(9,10,'1999-03-31 11:57:16','Joe','Beta',100.1,5,2,6),(10,14,'1995-03-31 11:57:16','Margaret','Beta',100.14,5,2,6);
 
 /*Data for the table `pet` */
 

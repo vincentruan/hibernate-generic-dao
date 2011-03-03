@@ -59,7 +59,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		initDB();
 
 		Search s = new Search(Person.class);
-		s.addFilterIn("id", joeA.getId(), margretB.getId());
+		s.addFilterIn("id", joeA.getId(), margaretB.getId());
 		s.addSortAsc("firstName");
 
 		List<Object[]> resultArray;
@@ -78,10 +78,10 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Alpha", resultArray.get(0)[1]);
 		assertEquals(10, resultArray.get(0)[2]);
 		assertEquals(joeA, resultArray.get(0)[3]);
-		assertEquals("Margret", resultArray.get(1)[0]);
+		assertEquals("Margaret", resultArray.get(1)[0]);
 		assertEquals("Beta", resultArray.get(1)[1]);
 		assertEquals(14, resultArray.get(1)[2]);
-		assertEquals(margretB, resultArray.get(1)[3]);
+		assertEquals(margaretB, resultArray.get(1)[3]);
 
 		s.setResultMode(Search.RESULT_LIST);
 		resultList = target.search(s);
@@ -90,10 +90,10 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Alpha", resultList.get(0).get(1));
 		assertEquals(10, resultList.get(0).get(2));
 		assertEquals(joeA, resultList.get(0).get(3));
-		assertEquals("Margret", resultList.get(1).get(0));
+		assertEquals("Margaret", resultList.get(1).get(0));
 		assertEquals("Beta", resultList.get(1).get(1));
 		assertEquals(14, resultList.get(1).get(2));
-		assertEquals(margretB, resultList.get(1).get(3));
+		assertEquals(margaretB, resultList.get(1).get(3));
 
 		s.setResultMode(Search.RESULT_MAP);
 		resultMap = target.search(s);
@@ -102,10 +102,10 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Alpha", resultMap.get(0).get("lastName"));
 		assertEquals(10, resultMap.get(0).get("age"));
 		assertEquals(joeA, resultMap.get(0).get(""));
-		assertEquals("Margret", resultMap.get(1).get("first"));
+		assertEquals("Margaret", resultMap.get(1).get("first"));
 		assertEquals("Beta", resultMap.get(1).get("lastName"));
 		assertEquals(14, resultMap.get(1).get("age"));
-		assertEquals(margretB, resultMap.get(1).get(""));
+		assertEquals(margaretB, resultMap.get(1).get(""));
 
 		s.clearFields();
 		s.addField("firstName");
@@ -114,25 +114,25 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		resultArray = target.search(s);
 		assertEquals(2, resultArray.size());
 		assertEquals("Joe", resultArray.get(0)[0]);
-		assertEquals("Margret", resultArray.get(1)[0]);
+		assertEquals("Margaret", resultArray.get(1)[0]);
 
 		s.setResultMode(Search.RESULT_LIST);
 		resultList = target.search(s);
 		assertEquals(2, resultList.size());
 		assertEquals("Joe", resultList.get(0).get(0));
-		assertEquals("Margret", resultList.get(1).get(0));
+		assertEquals("Margaret", resultList.get(1).get(0));
 
 		s.setResultMode(Search.RESULT_MAP);
 		resultMap = target.search(s);
 		assertEquals(2, resultMap.size());
 		assertEquals("Joe", resultMap.get(0).get("firstName"));
-		assertEquals("Margret", resultMap.get(1).get("firstName"));
+		assertEquals("Margaret", resultMap.get(1).get("firstName"));
 
 		s.setResultMode(Search.RESULT_SINGLE);
 		List<String> resultSingle = target.search(s);
 		assertEquals(2, resultSingle.size());
 		assertEquals("Joe", resultSingle.get(0));
-		assertEquals("Margret", resultSingle.get(1));
+		assertEquals("Margaret", resultSingle.get(1));
 
 		s.clearFields();
 		s.addField("home.type", "homeType");
@@ -147,7 +147,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Joe", resultArray.get(0)[2]);
 		assertEquals("apartment", resultArray.get(1)[0]);
 		assertEquals(null, resultArray.get(1)[1]);
-		assertEquals("Margret", resultArray.get(1)[2]);
+		assertEquals("Margaret", resultArray.get(1)[2]);
 
 		s.setResultMode(Search.RESULT_LIST);
 		resultList = target.search(s);
@@ -157,7 +157,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Joe", resultList.get(0).get(2));
 		assertEquals("apartment", resultList.get(1).get(0));
 		assertEquals(null, resultList.get(1).get(1));
-		assertEquals("Margret", resultList.get(1).get(2));
+		assertEquals("Margaret", resultList.get(1).get(2));
 
 		s.setResultMode(Search.RESULT_MAP);
 		resultMap = target.search(s);
@@ -167,7 +167,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Joe", resultMap.get(0).get("home.type"));
 		assertEquals("apartment", resultMap.get(1).get("homeType"));
 		assertEquals(null, resultMap.get(1).get("father.mother.home.address.street"));
-		assertEquals("Margret", resultMap.get(1).get("home.type"));
+		assertEquals("Margaret", resultMap.get(1).get("home.type"));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -254,7 +254,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 
 		s.addFilterLessOrEqual("age", 15);
 		assertEquals(4, target.count(s));
-		assertListEqual(target.search(s), joeA, joeB, sallyA, margretB);
+		assertListEqual(target.search(s), joeA, joeB, sallyA, margaretB);
 
 		s.clear();
 		s.setDistinct(true);
@@ -296,29 +296,29 @@ public class FieldAndFetchTest extends BaseSearchTest {
 	public void testResultModeAuto() {
 		initDB();
 
-		Search s = new Search(Person.class).addFilterEqual("firstName", "Margret");
+		Search s = new Search(Person.class).addFilterEqual("firstName", "Margaret");
 
 		// SINGLE
-		assertEquals(margretB, target.searchUnique(s));
+		assertEquals(margaretB, target.searchUnique(s));
 
 		s.addField("firstName");
-		assertEquals("Margret", target.searchUnique(s));
+		assertEquals("Margaret", target.searchUnique(s));
 
 		// ARRAY
 		s.addField("lastName");
 		Object[] strResults = (Object[]) target.searchUnique(s);
-		assertEquals("Margret", strResults[0]);
+		assertEquals("Margaret", strResults[0]);
 		assertEquals("Beta", strResults[1]);
 
 		// MAP
 		s.clearFields();
 		s.addField("firstName", "fn");
 		Map<String, Object> mapResults = (Map<String, Object>) target.searchUnique(s);
-		assertEquals("Margret", mapResults.get("fn"));
+		assertEquals("Margaret", mapResults.get("fn"));
 
 		s.addField("lastName");
 		mapResults = (Map<String, Object>) target.searchUnique(s);
-		assertEquals("Margret", mapResults.get("fn"));
+		assertEquals("Margaret", mapResults.get("fn"));
 		assertEquals("Beta", mapResults.get("lastName"));
 	}
 
