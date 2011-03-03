@@ -481,7 +481,6 @@ public class FilterTest extends BaseSearchTest {
 			target.search(s);
 			fail("There is an unexpected parameter, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		s.clear();
@@ -490,7 +489,6 @@ public class FilterTest extends BaseSearchTest {
 			target.search(s);
 			fail("There is a missing parameter, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		s.clear();
@@ -499,7 +497,6 @@ public class FilterTest extends BaseSearchTest {
 			target.search(s);
 			fail("There is an unexpected parameter, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		// Test that no other operator allows custom expressions
@@ -507,28 +504,24 @@ public class FilterTest extends BaseSearchTest {
 			target.search(new Search(Person.class).addFilterEmpty("{firstName}"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterEqual("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterGreaterOrEqual("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterGreaterThan("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
@@ -549,77 +542,66 @@ public class FilterTest extends BaseSearchTest {
 			target.search(new Search(Person.class).addFilterLessThan("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterLike("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterIn("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterNotEmpty("{firstName}"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterNotEqual("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterNotIn("{firstName}", "Joe"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterNotNull("{firstName}"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterNull("{firstName}"));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterAll("{firstName}", Filter.equal("firstName", "Joe")));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterNone("{firstName}", Filter.equal("firstName", "Joe")));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 		
 		try {
 			target.search(new Search(Person.class).addFilterSome("{firstName}", Filter.equal("firstName", "Joe")));
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-			
 		}
 	}
 	*/
