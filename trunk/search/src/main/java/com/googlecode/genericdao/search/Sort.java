@@ -104,11 +104,11 @@ public class Sort implements Serializable {
 	 * 
 	 * <p>Here are some examples:
 	 * <pre>
-	 * Sort.ascCustom("cast({employeeno} as integer)");
-	 * Sort.ascCustom("abs({prop1} - {prop2})");
+	 * Sort.customExpressionAsc("cast({employeeno} as integer)");
+	 * Sort.customExpressionAsc("abs({prop1} - {prop2})");
 	 * </pre> 
 	 */
-	public static Sort ascCustomExpression(String expression) {
+	public static Sort customExpressionAsc(String expression) {
 		return new Sort(true, expression);
 	}
 
@@ -118,11 +118,11 @@ public class Sort implements Serializable {
 	 * 
 	 * <p>Here are some examples:
 	 * <pre>
-	 * Sort.descCustom("cast({employeeno} as integer)");
-	 * Sort.descCustom("abs({prop1} - {prop2})");
+	 * Sort.customExpressionDesc("cast({employeeno} as integer)");
+	 * Sort.customExpressionDesc("abs({prop1} - {prop2})");
 	 * </pre> 
 	 */
-	public static Sort descCustomExpression(String expression) {
+	public static Sort customExpressionDesc(String expression) {
 		return new Sort(true, expression, true);
 	}
 

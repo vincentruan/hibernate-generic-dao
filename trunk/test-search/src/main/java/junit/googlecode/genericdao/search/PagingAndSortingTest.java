@@ -20,6 +20,7 @@ import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 
 import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.Sort;
 
 public class PagingAndSortingTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")
@@ -72,13 +73,8 @@ public class PagingAndSortingTest extends BaseSearchTest {
 
 		// test single sort
 		Search s = new Search(Person.class);
-		s.addFilterNotIn("id", grandmaA.getId(), joeB.getId(), papaB.getId()); // remove
-		// duplicate
-		// ages
-		// for
-		// ease
-		// of
-		// testing
+		// remove duplicate ages for ease of testing
+		s.addFilterNotIn("id", grandmaA.getId(), joeB.getId(), papaB.getId());
 
 		s.addSortAsc("age");
 		assertListOrderEqual(new Person[] { sallyA, joeA, margretB, mamaB, papaA, mamaA, grandpaA }, target.search(s));
@@ -106,6 +102,9 @@ public class PagingAndSortingTest extends BaseSearchTest {
 
 		// Test ignore case
 		s.clear();
+		// Set Margret's first name to "margaret" (lowercase). When ignoring
+		// case, Margaret < Sally, but when taking case into account,
+		// Sally < margaret
 		find(Person.class, margretB.getId()).setFirstName("margret");
 		s.addFilterIn("id", margretB.getId(), sallyA.getId());
 
@@ -128,4 +127,95 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		assertEquals(sallyA.getId(), results.get(1).getId());
 
 	}
+	
+	/*
+	@SuppressWarnings("unchecked")
+	public void testCustomSorts() {
+		initDB();
+
+		Search s = new Search(Person.class);
+		// remove duplicate ages for ease of testing
+		s.addFilterNotIn("id", grandmaA.getId(), joeB.getId(), papaB.getId());
+		// Folks: sallyA, joeA, margretB, mamaB, papaA, mamaA, grandpaA
+		// Ages:  9       10    14        38     39     40     65
+		
+		// Test simple sorting 
+		s.addSort(Sort.customExpressionAsc("{age}"));
+		assertListOrderEqual(new Person[] { sallyA, joeA, margretB, mamaB, papaA, mamaA, grandpaA }, target.search(s));
+
+		s.clearSorts();
+		s.addSort(Sort.customExpressionDesc("{age}"));
+		assertListOrderEqual(new Person[] { grandpaA, mamaA, papaA, mamaB, margretB, joeA, sallyA }, target.search(s));
+		
+		// Test sorting with more complex expression
+		s.clearSorts();
+		s.addSort(Sort.customExpressionAsc("abs(40 - {age})"));
+		assertListOrderEqual(new Person[] { mamaA, papaA, mamaB, grandpaA, margretB, joeA, sallyA }, target.search(s));
+		
+		s.clearSorts();
+		s.addSort(Sort.customExpressionDesc("abs(40 - {age})"));
+		assertListOrderEqual(new Person[] { sallyA, joeA, margretB, grandpaA, mamaB, papaA, mamaA }, target.search(s));
+		
+		// Test multiple custEx sorts
+		s.clearSorts();
+		s.addSort(Sort.customExpressionAsc("{lastName}"));
+		s.addSort(Sort.customExpressionAsc("abs(40 - {age})"));
+		assertListOrderEqual(new Person[] { mamaA, papaA, grandpaA, joeA, sallyA, mamaB, margretB }, target.search(s));
+		
+		// Test mix of custEx and regular sorts
+		s.clearSorts();
+		s.addSort(Sort.customExpressionAsc("lastName"));
+		s.addSort(Sort.customExpressionAsc("abs(40 - {age})"));
+		assertListOrderEqual(new Person[] { mamaA, papaA, grandpaA, joeA, sallyA, mamaB, margretB }, target.search(s));
+		
+		// Test expression w/o custEx flag
+		s.clearSorts();
+		s.addSort(Sort.asc("{lastName}"));
+		try {
+			target.search(s);
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+		}
+		
+		s.clearSorts();
+		s.addSort(Sort.desc("abs(40 - {age})"));
+		try {
+			target.search(s);
+			fail("Invalid characters in property name, an exception should be thrown.");
+		} catch (RuntimeException ex) {
+		}
+		
+		// Test custEx flag w/o expression. The framework itself won't catch
+		// this but the underlying ORM should fail to parse the invalid query
+		s.clearSorts();
+		s.addSort(Sort.customExpressionAsc("home.address.street"));
+		try {
+			target.search(s);
+			fail("This should throw an error because an invalid query is created.");
+		} catch (RuntimeException ex) {
+		}		
+		
+		// Test custEx and ignore case (ignore case is "ignored" with custEx)
+
+		// [some databases (i.e. MySQL) automatically ignore case for ordering,
+		// so we won't include this test for those]
+		if (!dbIgnoresCase) {
+			// Set Margaret's first name to "margaret" (lowercase). When ignoring
+			// case, Margaret < Sally, but when taking case into account,
+			// Sally < margaret
+			find(Person.class, margretB.getId()).setFirstName("margret");
+			s.addFilterIn("id", margretB.getId(), sallyA.getId());
+			
+			Sort sort = new Sort(true, "{firstName}", false);
+			sort.setIgnoreCase(true);
+			s.addSort(sort);
+			
+			// Even though we set ignore case, case should not be ignored
+			// because ignore case is not used with a custom expression.
+			List<Person> results = target.search(s);
+			assertEquals(sallyA.getId(), results.get(0).getId());
+			assertEquals(margretB.getId(), results.get(1).getId());
+		}
+	}
+	*/
 }
