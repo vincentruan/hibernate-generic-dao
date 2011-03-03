@@ -126,9 +126,9 @@ public class TypesTest extends BaseSearchTest {
 		assertListEqual(target.search(s), grandpaA);
 		
 		s.clear();
-		s.addFilterIn(null, joeA, joeB, sallyA, margretB);
+		s.addFilterIn(null, joeA, joeB, sallyA, margaretB);
 		s.addFilterGreaterOrEqual("age", 10);
-		assertListEqual(target.search(s), joeA, joeB, margretB);
+		assertListEqual(target.search(s), joeA, joeB, margaretB);
 		
 		s.clear();
 		s.setSearchClass(Pet.class);

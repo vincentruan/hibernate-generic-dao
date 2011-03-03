@@ -123,7 +123,7 @@ public class TrickyIssueTest extends BaseSearchTest {
 		Search s = new Search(Person.class);
 
 		s.addFilterGreaterThan("id", new Integer(0)); // id should be Long
-		assertListEqual(new Person[] { sallyA, joeA, joeB, margretB, mamaB, papaA, mamaA, papaB, grandpaA, grandmaA },
+		assertListEqual(new Person[] { sallyA, joeA, joeB, margaretB, mamaB, papaA, mamaA, papaB, grandpaA, grandmaA },
 				target.search(s));
 
 		s.clear();

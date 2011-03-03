@@ -510,7 +510,7 @@ public class BaseDAOTest extends BaseTest {
 		assertFalse(target.sessionContains(joeA));
 		assertFalse(target.sessionContains(joeB));
 		assertFalse(target.sessionContains(sallyA));
-		assertFalse(target.sessionContains(margretB));
+		assertFalse(target.sessionContains(margaretB));
 
 		target.deleteById(Person.class, joeA.getId(), null, joeB.getId(), maxId + 1);
 
@@ -519,12 +519,12 @@ public class BaseDAOTest extends BaseTest {
 		assertNull(target.get(Person.class, joeB.getId()));
 		assertFalse(target.sessionContains(joeB));
 
-		target.deleteEntities(sallyA, null, margretB, catNorman);
+		target.deleteEntities(sallyA, null, margaretB, catNorman);
 
 		assertNull(target.get(Person.class, sallyA.getId()));
 		assertFalse(target.sessionContains(sallyA));
-		assertNull(target.get(Person.class, margretB.getId()));
-		assertFalse(target.sessionContains(margretB));
+		assertNull(target.get(Person.class, margaretB.getId()));
+		assertFalse(target.sessionContains(margaretB));
 		assertNull(target.get(Pet.class, catNorman.getId()));
 		assertFalse(target.sessionContains(catNorman));
 

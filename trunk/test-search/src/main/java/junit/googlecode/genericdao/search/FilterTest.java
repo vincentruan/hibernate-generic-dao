@@ -54,7 +54,7 @@ public class FilterTest extends BaseSearchTest {
 
 		Search s = new Search(Person.class);
 		s.addFilterEqual("lastName", "Beta");
-		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB }, target.search(s));
+		assertListEqual(new Person[] { joeB, margaretB, papaB, mamaB }, target.search(s));
 
 		s.clear();
 		s.addFilterEqual("age", 10);
@@ -62,11 +62,11 @@ public class FilterTest extends BaseSearchTest {
 
 		s.clear();
 		s.addFilterNotEqual("lastName", "Alpha");
-		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB }, target.search(s));
+		assertListEqual(new Person[] { joeB, margaretB, papaB, mamaB }, target.search(s));
 
 		s.clear();
 		s.addFilterNotEqual("age", 10);
-		assertListEqual(new Person[] { sallyA, margretB, mamaA, papaA, mamaB, papaB, grandmaA, grandpaA }, target
+		assertListEqual(new Person[] { sallyA, margaretB, mamaA, papaA, mamaB, papaB, grandmaA, grandpaA }, target
 				.search(s));
 
 		s.clear();
@@ -104,15 +104,15 @@ public class FilterTest extends BaseSearchTest {
 
 		s.clear();
 		s.addFilterGreaterThan("lastName", "Alpha");
-		assertListEqual(new Person[] { joeB, margretB, papaB, mamaB }, target.search(s));
+		assertListEqual(new Person[] { joeB, margaretB, papaB, mamaB }, target.search(s));
 
 		s.clear();
 		s.addFilterGreaterThan("dob", mamaB.getDob());
-		assertListEqual(new Person[] { joeA, joeB, sallyA, margretB }, target.search(s));
+		assertListEqual(new Person[] { joeA, joeB, sallyA, margaretB }, target.search(s));
 
 		s.clear();
 		s.addFilterLessOrEqual("age", 39);
-		assertListEqual(new Person[] { joeA, joeB, sallyA, margretB, mamaB, papaA, papaB }, target.search(s));
+		assertListEqual(new Person[] { joeA, joeB, sallyA, margaretB, mamaB, papaA, papaB }, target.search(s));
 
 		s.clear();
 		s.addFilterGreaterOrEqual("age", 39);
@@ -120,7 +120,7 @@ public class FilterTest extends BaseSearchTest {
 
 		s.clear();
 		s.addFilterIn("age", 9, 10, 14, 65);
-		assertListEqual(new Person[] { sallyA, joeA, joeB, margretB, grandmaA, grandpaA }, target.search(s));
+		assertListEqual(new Person[] { sallyA, joeA, joeB, margaretB, grandmaA, grandpaA }, target.search(s));
 
 		s.clear();
 		s.addFilterIn("firstName", "Joe", "Papa");
@@ -132,7 +132,7 @@ public class FilterTest extends BaseSearchTest {
 
 		s.clear();
 		s.addFilterNotIn("firstName", "Joe", "Papa", "Mama");
-		assertListEqual(new Person[] { sallyA, margretB, grandmaA, grandpaA }, target.search(s));
+		assertListEqual(new Person[] { sallyA, margaretB, grandmaA, grandpaA }, target.search(s));
 
 	}
 
@@ -147,7 +147,7 @@ public class FilterTest extends BaseSearchTest {
 
 		s.clear();
 		s.addFilterEqual("father.firstName", "Papa");
-		assertListEqual(new Person[] { joeA, sallyA, joeB, margretB }, target.search(s));
+		assertListEqual(new Person[] { joeA, sallyA, joeB, margaretB }, target.search(s));
 
 		s.clear();
 		s.addFilterEqual("father.firstName", "Grandpa");
@@ -159,7 +159,7 @@ public class FilterTest extends BaseSearchTest {
 
 		s.addFilterEqual("mother.father.firstName", "Grandpa");
 		s.setDisjunction(true);
-		assertListEqual(new Person[] { joeA, sallyA, joeB, margretB }, target.search(s));
+		assertListEqual(new Person[] { joeA, sallyA, joeB, margaretB }, target.search(s));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -183,12 +183,12 @@ public class FilterTest extends BaseSearchTest {
 		s.clear();
 		s.addFilterNot(Filter.and(Filter.equal("lastName", "Alpha"), Filter.or(Filter.lessOrEqual("age", 10), Filter
 				.greaterThan("age", 60))));
-		assertListEqual(new Person[] { joeB, margretB, papaA, papaB, mamaA, mamaB }, target.search(s));
+		assertListEqual(new Person[] { joeB, margaretB, papaA, papaB, mamaA, mamaB }, target.search(s));
 
 		s.clear();
 		s.addFilterOr(Filter.not(Filter.or(Filter.equal("firstName", "Joe"), Filter.equal("lastName", "Alpha"))),
 				Filter.and(Filter.equal("firstName", "Papa"), Filter.equal("lastName", "Alpha")));
-		assertListEqual(new Person[] { margretB, papaB, mamaB, papaA }, target.search(s));
+		assertListEqual(new Person[] { margaretB, papaB, mamaB, papaA }, target.search(s));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -321,7 +321,7 @@ public class FilterTest extends BaseSearchTest {
 		assertListEqual(findByExample(person, options), joeA, sallyA);
 
 		options.excludeProp("father.lastName");
-		assertListEqual(findByExample(person, options), joeA, sallyA, joeB, margretB);
+		assertListEqual(findByExample(person, options), joeA, sallyA, joeB, margaretB);
 
 		// like mode & ignore case
 		options = new ExampleOptions();

@@ -403,7 +403,7 @@ public class BaseDAOTest extends BaseTest {
 		assertFalse(target.contains(joeA));
 		assertFalse(target.contains(joeB));
 		assertFalse(target.contains(sallyA));
-		assertFalse(target.contains(margretB));
+		assertFalse(target.contains(margaretB));
 
 		target.removeByIds(Person.class, joeA.getId(), null, joeB.getId(), maxId + 1);
 		target.flush();
@@ -413,13 +413,13 @@ public class BaseDAOTest extends BaseTest {
 		assertNull(target.find(Person.class, joeB.getId()));
 		assertFalse(target.contains(joeB));
 
-		target.removeEntities(sallyA, null, margretB, catNorman);
+		target.removeEntities(sallyA, null, margaretB, catNorman);
 		target.flush();
 		
 		assertNull(target.find(Person.class, sallyA.getId()));
 		assertFalse(target.contains(sallyA));
-		assertNull(target.find(Person.class, margretB.getId()));
-		assertFalse(target.contains(margretB));
+		assertNull(target.find(Person.class, margaretB.getId()));
+		assertFalse(target.contains(margaretB));
 		assertNull(target.find(Pet.class, catNorman.getId()));
 		assertFalse(target.contains(catNorman));
 

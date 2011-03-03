@@ -88,9 +88,9 @@
 		<property name="age" value="10" />
 		<property name="home" ref="homeB" />
 	</bean>
-	<bean id="margretB" class="test.googlecode.genericdao.model.Person">
+	<bean id="margaretB" class="test.googlecode.genericdao.model.Person">
 		<property name="id" value="6"/>
-		<property name="firstName" value="Margret" />
+		<property name="firstName" value="Margaret" />
 		<property name="lastName" value="Beta" />
 		<property name="father" ref="papaB" />
 		<property name="mother" ref="mamaB" />

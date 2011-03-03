@@ -93,7 +93,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 			papaA, // 39
 			mamaA, // 40
 			joeB, // 10
-			margretB, // 13
+			margaretB, // 13
 			papaB, // 39
 			mamaB, // 38
 			grandpaA, // 65
@@ -127,8 +127,8 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 		this.joeB = joeB;
 	}
 
-	public void setMargretB(Person margretB) {
-		this.margretB = margretB;
+	public void setMargaretB(Person margaretB) {
+		this.margaretB = margaretB;
 	}
 
 	public void setPapaB(Person papaB) {
@@ -182,7 +182,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	}
 
 	protected void reset() {
-		for (Person p : new Person[] { joeA, sallyA, joeB, margretB, papaA, mamaA, papaB, mamaB, grandmaA, grandpaA }) {
+		for (Person p : new Person[] { joeA, sallyA, joeB, margaretB, papaA, mamaA, papaB, mamaB, grandmaA, grandpaA }) {
 			p.setId(null);
 			p.getHome().setId(null);
 			p.getHome().getAddress().setId(null);
@@ -218,7 +218,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 		insert(grandpaA.getHome().getAddress());
 		insert(grandpaA.getHome());
 
-		for (Person p : new Person[] { grandpaA, grandmaA, papaA, mamaA, papaB, mamaB, joeA, sallyA, joeB, margretB }) {
+		for (Person p : new Person[] { grandpaA, grandmaA, papaA, mamaA, papaB, mamaB, joeA, sallyA, joeB, margaretB }) {
 			insert(p);
 		}
 
