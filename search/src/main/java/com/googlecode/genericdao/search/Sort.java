@@ -173,9 +173,12 @@ public class Sort implements Serializable {
 	}
 	
 	/**
-	 * If true, the "property" of this Sort is reckoned as a free-form JPQL/HQL
+	 * <p>If true, the "property" of this Sort is reckoned as a free-form JPQL/HQL
 	 * order-by expression. Reference properties by wrapping them with curly
 	 * braces ({}).
+	 * 
+	 * <p>When set to <code>true</code>, the <code>ignoreCase</code> property
+	 * is ignored.
 	 * 
 	 * <p>Here are some examples:
 	 * <pre>
@@ -190,9 +193,12 @@ public class Sort implements Serializable {
 	}
 
 	/**
-	 * If true, the "property" of this Sort is reckoned as a free-form JPQL/HQL
+	 * <p>If true, the "property" of this Sort is reckoned as a free-form JPQL/HQL
 	 * order-by expression. Reference properties by wrapping them with curly
 	 * braces ({}).
+	 * 
+	 * <p>When set to <code>true</code>, the <code>ignoreCase</code> property
+	 * is ignored.
 	 * 
 	 * <p>Here are some examples:
 	 * <pre>

@@ -128,7 +128,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 
 	}
 	
-	/*
+	
 	@SuppressWarnings("unchecked")
 	public void testCustomSorts() {
 		initDB();
@@ -137,7 +137,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		// remove duplicate ages for ease of testing
 		s.addFilterNotIn("id", grandmaA.getId(), joeB.getId(), papaB.getId());
 		// Folks: sallyA, joeA, margaretB, mamaB, papaA, mamaA, grandpaA
-		// Ages:  9       10    14        38     39     40     65
+		// Ages:  9       10    14         38     39     40     65
 		
 		// Test simple sorting 
 		s.addSort(Sort.customExpressionAsc("{age}"));
@@ -183,17 +183,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 			target.search(s);
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
-		}
-		
-		// Test custEx flag w/o expression. The framework itself won't catch
-		// this but the underlying ORM should fail to parse the invalid query
-		s.clearSorts();
-		s.addSort(Sort.customExpressionAsc("home.address.street"));
-		try {
-			target.search(s);
-			fail("This should throw an error because an invalid query is created.");
-		} catch (RuntimeException ex) {
-		}		
+		}	
 		
 		// Test custEx and ignore case (ignore case is "ignored" with custEx)
 
@@ -208,6 +198,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 			
 			Sort sort = new Sort(true, "{firstName}", false);
 			sort.setIgnoreCase(true);
+			s.clearSorts();
 			s.addSort(sort);
 			
 			// Even though we set ignore case, case should not be ignored
@@ -217,5 +208,5 @@ public class PagingAndSortingTest extends BaseSearchTest {
 			assertEquals(margaretB.getId(), results.get(1).getId());
 		}
 	}
-	*/
+	
 }
