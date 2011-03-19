@@ -21,6 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
@@ -387,7 +388,10 @@ public abstract class BaseSearchProcessor {
 			} else {
 				sb.append(", ");
 			}
-			if (sort.isIgnoreCase() && metadataUtil.get(ctx.rootClass, sort.getProperty()).isString()) {
+			if (sort.isCustomExpression()) {
+				//TODO
+				appendCustomExpression(sb, ctx, sort.getProperty());
+			} else if (sort.isIgnoreCase() && metadataUtil.get(ctx.rootClass, sort.getProperty()).isString()) {
 				sb.append("lower(");
 				sb.append(getPathRef(ctx, sort.getProperty()));
 				sb.append(")");
@@ -758,6 +762,21 @@ public abstract class BaseSearchProcessor {
 		}, false);
 
 	}
+	
+	/**
+	 * append a custom expression to the string builder, replacing any
+	 * property tokens (i.e "{prop}") with a reference to the property. 
+	 */
+	protected void appendCustomExpression(StringBuilder sb, SearchContext ctx, String expression) {
+		Matcher matcher = Pattern.compile("\\{[\\w\\.]*\\}").matcher(expression);
+		int lastEnd = 0;
+		while (matcher.find()) {
+			sb.append(expression.substring(lastEnd, matcher.start()));
+			sb.append(getPathRef(ctx, expression.substring(matcher.start() + 1, matcher.end() - 1)));
+			lastEnd = matcher.end();
+		}
+		sb.append(expression.substring(lastEnd));
+	}
 
 	/**
 	 * Add value to paramList and return the named parameter string ":pX".
@@ -1029,7 +1048,9 @@ public abstract class BaseSearchProcessor {
 		return SearchUtil.walkList(sorts, new SearchUtil.ItemVisitor<Sort>() {
 			@Override
 			public Sort visit(Sort sort) {
-				securityCheckProperty(sort.getProperty());
+				if (!sort.isCustomExpression()) {
+					securityCheckProperty(sort.getProperty());
+				}
 				return sort;
 			}
 		}, true);
@@ -1141,7 +1162,7 @@ public abstract class BaseSearchProcessor {
 			return;
 		if (!INJECTION_CHECK.matcher(property).matches())
 			throw new IllegalArgumentException(
-					"A property used in a Search may only contain word characters (alphabetic, numberic and underscore \"_\") and dot \".\" seperators. This constraint was violated: "
+					"A property used in a Search may only contain word characters (alphabetic, numeric and underscore \"_\") and dot \".\" seperators. This constraint was violated: "
 							+ property);
 	}
 
