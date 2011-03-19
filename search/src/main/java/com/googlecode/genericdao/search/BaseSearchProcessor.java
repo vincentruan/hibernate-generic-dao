@@ -220,45 +220,55 @@ public abstract class BaseSearchProcessor {
 					sb.append(", ");
 				}
 
-				String prop;
-				if (field.getProperty() == null || "".equals(field.getProperty())) {
-					prop = ctx.getRootAlias();
+				if (field.getOperator() == Field.OP_CUSTOM) {
+					// Special case for custom operator.
+					if (field.getProperty() == null) {
+						sb.append("null");
+					} else {
+						appendCustomExpression(sb, ctx, field.getProperty());
+					}
 				} else {
-					prop = getPathRef(ctx, field.getProperty());
-				}
-
-				switch (field.getOperator()) {
-				case Field.OP_AVG:
-					sb.append("avg(");
-					useOperator = true;
-					break;
-				case Field.OP_COUNT:
-					sb.append("count(");
-					useOperator = true;
-					break;
-				case Field.OP_COUNT_DISTINCT:
-					sb.append("count(distinct ");
-					useOperator = true;
-					break;
-				case Field.OP_MAX:
-					sb.append("max(");
-					useOperator = true;
-					break;
-				case Field.OP_MIN:
-					sb.append("min(");
-					useOperator = true;
-					break;
-				case Field.OP_SUM:
-					sb.append("sum(");
-					useOperator = true;
-					break;
-				default:
-					notUseOperator = true;
-					break;
-				}
-				sb.append(prop);
-				if (useOperator) {
-					sb.append(")");
+				
+					String prop;
+					if (field.getProperty() == null || "".equals(field.getProperty())) {
+						prop = ctx.getRootAlias();
+					} else {
+						prop = getPathRef(ctx, field.getProperty());
+					}
+	
+					switch (field.getOperator()) {
+					case Field.OP_AVG:
+						sb.append("avg(");
+						useOperator = true;
+						break;
+					case Field.OP_COUNT:
+						sb.append("count(");
+						useOperator = true;
+						break;
+					case Field.OP_COUNT_DISTINCT:
+						sb.append("count(distinct ");
+						useOperator = true;
+						break;
+					case Field.OP_MAX:
+						sb.append("max(");
+						useOperator = true;
+						break;
+					case Field.OP_MIN:
+						sb.append("min(");
+						useOperator = true;
+						break;
+					case Field.OP_SUM:
+						sb.append("sum(");
+						useOperator = true;
+						break;
+					default:
+						notUseOperator = true;
+						break;
+					}
+					sb.append(prop);
+					if (useOperator) {
+						sb.append(")");
+					}
 				}
 			}
 		}
@@ -389,7 +399,6 @@ public abstract class BaseSearchProcessor {
 				sb.append(", ");
 			}
 			if (sort.isCustomExpression()) {
-				//TODO
 				appendCustomExpression(sb, ctx, sort.getProperty());
 			} else if (sort.isIgnoreCase() && metadataUtil.get(ctx.rootClass, sort.getProperty()).isString()) {
 				sb.append("lower(");
@@ -1015,7 +1024,7 @@ public abstract class BaseSearchProcessor {
 			if (field == null) {
 				throw new IllegalArgumentException("The search contains a null field.");
 			}
-			if (field.getProperty() != null)
+			if (field.getProperty() != null && field.getOperator() != Field.OP_CUSTOM)
 				securityCheckProperty(field.getProperty());
 		}
 

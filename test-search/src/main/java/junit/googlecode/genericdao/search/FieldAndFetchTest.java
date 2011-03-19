@@ -350,7 +350,6 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		s.addField("age", Field.OP_MAX);
 	}
 	
-	/* Commented out as a way of ignoring this test case until we finish implementing the feature.
 	@SuppressWarnings("unchecked")
 	public void testCustomField() {
 		initDB();
@@ -428,5 +427,5 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		} catch (RuntimeException ex) {
 		}
 	}
-	*/
+	
 }
