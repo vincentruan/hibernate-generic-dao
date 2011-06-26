@@ -109,7 +109,7 @@ public class JPABaseDAO {
 	 */
 	protected boolean _removeById(Class<?> type, Serializable id) {
 		if (id != null) {
-			Query query = em().createQuery("select _it_.id from " + getMetadataUtil().get(type).getEntityName() + " _it_ where _it_.id = ?").setParameter(1, id);
+			Query query = em().createQuery("select _it_.id from " + getMetadataUtil().get(type).getEntityName() + " _it_ where _it_.id = ?1").setParameter(1, id);
 			if (query.getResultList().size() != 0) {
 				em().remove(em().getReference(type, id));
 				return true;
@@ -513,9 +513,9 @@ public class JPABaseDAO {
 		for (Serializable id : ids) {
 			if (id != null) {
 				if (nonNulls.size() == 0)
-					sb.append("_it_.id = ?");
+					sb.append("_it_.id = 1");
 				else
-					sb.append(" or _it_.id = ?");
+					sb.append(" or _it_.id = ?").append(nonNulls.size() + 1);
 				nonNulls.add(id);
 			}
 		}

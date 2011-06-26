@@ -226,7 +226,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 			insert(p);
 		}
 		for (Pet p : new Pet[] { spiderJimmy, fishWiggles, catPrissy, catNorman }) {
-			String sql = "update pet set favoritePlaymate_id = ? where id = ?";
+			String sql = "update pet set favoritePlaymate_id = ?1 where id = ?2";
 			getJdbcTemplate().update(sql, new Object[] { p.getFavoritePlaymate().getId(), p.getId() });
 		}
 
@@ -284,7 +284,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	}
 
 	protected void insert(Person p) {
-		String sql = "INSERT INTO person (age, dob, first_name, last_name, weight, father_id, mother_id, home_id) values (?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO person (age, dob, first_name, last_name, weight, father_id, mother_id, home_id) values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)";
 		Class<?>[] types = new Class<?>[] { Integer.class, Date.class, String.class, String.class, Double.class,
 				Long.class, Long.class, Long.class };
 		Number id = insert(sql, types, p.getAge(), p.getDob(), p.getFirstName(), p.getLastName(), p.getWeight(), p
@@ -294,21 +294,21 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	}
 
 	protected void insert(Home h) {
-		String sql = "INSERT INTO home (type, address_id) values (?, ?)";
+		String sql = "INSERT INTO home (type, address_id) values (?1, ?2)";
 		Class<?>[] types = new Class<?>[] { String.class, Long.class };
 		Number id = insert(sql, types, h.getType(), h.getAddress().getId());
 		h.setId(id.longValue());
 	}
 
 	protected void insert(Address a) {
-		String sql = "INSERT INTO address (city, state, street, zip) values (?, ?, ?, ?)";
+		String sql = "INSERT INTO address (city, state, street, zip) values (?1, ?2, ?3, ?4)";
 		Class<?>[] types = new Class<?>[] { String.class, String.class, String.class, String.class };
 		Number id = insert(sql, types, a.getCity(), a.getState(), a.getStreet(), a.getZip());
 		a.setId(id.longValue());
 	}
 
 	protected void insert(Pet p) {
-		String sql = "INSERT INTO pet (idNumber, first, last, species, limbed, hasPaws) values (?, ?, ?, ?, ?, ?)";
+		String sql = "INSERT INTO pet (idNumber, first, last, species, limbed, hasPaws) values (?1, ?2, ?3, ?4, ?5, ?6)";
 		Class<?>[] types = new Class<?>[] { Integer.class, String.class, String.class, String.class, Boolean.class,
 				Boolean.class };
 		Boolean hasPaws = null;
@@ -320,7 +320,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 		p.setId(id.longValue());
 
 		if (p instanceof LimbedPet) {
-			sql = "INSERT INTO pet_limbs (Pet_id, element, idx) values (?, ?, ?)";
+			sql = "INSERT INTO pet_limbs (Pet_id, element, idx) values (?1, ?2, ?3)";
 			types = new Class<?>[] { Long.class, String.class, Integer.class };
 			int i = 0;
 			for (String s : ((LimbedPet) p).getLimbs()) {
@@ -330,26 +330,26 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	}
 
 	protected void insert(Recipe r) {
-		String sql = "INSERT INTO recipe (title) values (?)";
+		String sql = "INSERT INTO recipe (title) values (?1)";
 		Class<?>[] types = new Class<?>[] { String.class };
 		Number id = insert(sql, types, r.getTitle());
 		r.setId(id.longValue());
 	}
 
 	protected void insert(Ingredient i) {
-		String sql = "INSERT INTO ingredient (name) values (?)";
+		String sql = "INSERT INTO ingredient (name) values (?1)";
 		Class<?>[] types = new Class<?>[] { String.class };
 		Number id = insert(sql, types, i.getName());
 		i.setIngredientId(id.longValue());
 	}
 
 	protected void insert(Store s) {
-		String sql = "INSERT INTO store (name) values (?)";
+		String sql = "INSERT INTO store (name) values (?1)";
 		Class<?>[] types = new Class<?>[] { String.class };
 		Number id = insert(sql, types, s.getName());
 		s.setId(id.longValue());
 
-		sql = "INSERT INTO store_ingredient (Store_id, ingredientsCarried_ingredientId) values (?, ?)";
+		sql = "INSERT INTO store_ingredient (Store_id, ingredientsCarried_ingredientId) values (?1, ?2)";
 		types = new Class<?>[] { Long.class, Long.class };
 		for (Ingredient i : s.getIngredientsCarried()) {
 			insert(sql, types, s.getId(), i.getIngredientId());
@@ -357,19 +357,19 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	}
 
 	protected void insert(RecipeIngredient ri) {
-		String sql = "INSERT INTO recipe_x_ingredient (amount, measure, ingredient_ingredientId, recipe_id) values (?, ?, ?, ?)";
+		String sql = "INSERT INTO recipe_x_ingredient (amount, measure, ingredient_ingredientId, recipe_id) values (?1, ?2, ?3, ?4)";
 		Class<?>[] types = new Class<?>[] { Float.class, String.class, Long.class, Long.class };
 		insert(sql, types, ri.getAmount(), ri.getMeasure(), ri.getCompoundId().getIngredient().getIngredientId(), ri
 				.getCompoundId().getRecipe().getId());
 	}
 
 	protected void insert(Project p) {
-		String sql = "INSERT INTO project (id, inceptionYear, name) values (?, ?, ?)";
+		String sql = "INSERT INTO project (id, inceptionYear, name) values (?1, ?2, ?3)";
 		Class<?>[] types = new Class<?>[] { Long.class, Integer.class, String.class };
 		Number id = insert(sql, types, p.getId(), p.getInceptionYear(), p.getName());
 		p.setId(id.longValue());
 
-		sql = "INSERT INTO project_person (Project_id, members_id) values (?, ?)";
+		sql = "INSERT INTO project_person (Project_id, members_id) values (?1, ?2)";
 		types = new Class<?>[] { Long.class, Long.class };
 		for (Person m : p.getMembers()) {
 			insert(sql, types, p.getId(), m.getId());
