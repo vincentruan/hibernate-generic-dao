@@ -80,6 +80,7 @@
   * Issue 61 : Do not use PropertyNotFoundException in MetaDataUtil.get
   * Issue 50 / Issue 64 : More extensible HibernateSearchFacade and HibernateSearchProcessor
   * Issue 80 : Add paging to searchUnique()
+  * Issue 90 : Positional Parameters syntax in Query using JPA DAO
   * Deprecate "original" daos?
   * See about removing Hibernate version dependency.
 
