@@ -184,6 +184,7 @@ Find projects that I am a member of
 
 - if projects.members is a list of people
 {{{
+Search s = new Search(Project.class);
 s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, me)); //note that using Filter.ROOT_ENTITY (or just "") refers to the root entity itself
 //or equivalently...
 s.addFilterSome("members", Filter.equal("id", me.id));
@@ -199,6 +200,7 @@ There is at least one member where that member is equal to me.
  
 - if projects.members is a list of ProjectMember many-to-many relationship class which in turn has an id component with "project" and "person" properties
 {{{
+Search s = new Search(Project.class);
 s.addFilterSome("members", Filter.equal("id.person", me));
 
 /*English equivalent
@@ -211,6 +213,7 @@ There is at least one member relationship where that relationship's person is eq
 
 Find projects that have at least one of the given members
 {{{
+Search s = new Search(Project.class);
 s.addFilterSome("members", Filter.in(Filter.ROOT_ENTITY, us));
 
 /*English equivalent
@@ -223,6 +226,7 @@ There is at least one member where that member is in the collection of people ca
 
 Find projects that have all the given members
 {{{
+Search s = new Search(Project.class);
 s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, member1));
 s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, member2));
 s.addFilterSome("members", Filter.equal(Filter.ROOT_ENTITY, member3));
@@ -241,6 +245,7 @@ and there is at least one member where that member is equal to member3.
 
 Find projects that have only the given members
 {{{
+Search s = new Search(Project.class);
 s.addFilterAll("members", Filter.in(Filter.ROOT_ENTITY, us));
  
 /*English equivalent
@@ -253,6 +258,7 @@ It is true for every member that that member is in the collection of people call
 
 Find projects that have only members with top-secret clearance
 {{{
+Search s = new Search(Project.class);
 s.addFilterAll(Filter.greaterOrEqual("clearance", TOP_SECRET));
 
 /*English equivalent
@@ -265,6 +271,7 @@ It is true for every member that that member's clearance is greater than or equa
 
 Find projects with me as primary member
 {{{
+Search s = new Search(Project.class);
 s.addFilterSome("members", Filter.and( Filter.equal("id.person", me), Filter.equal("primary", true) ) );
 
 /*English equivalent
@@ -277,6 +284,7 @@ There is at least one member where that member is equal to me and that member is
 
 Find people who don't have any cats.
 {{{
+Search s = new Search(Person.class);
 s.addFilterNone("pets",Filter.equal("class", Cat.class));
 }}}
 
