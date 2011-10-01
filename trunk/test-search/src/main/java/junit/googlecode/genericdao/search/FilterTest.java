@@ -374,7 +374,6 @@ public class FilterTest extends BaseSearchTest {
 		return target.search(s);
 	}
 
-	/* Commented out as a way of ignoring this test case until we finish implementing the feature. 
 	public void testCustomExpressions() {
 		initDB();
 		
@@ -386,7 +385,7 @@ public class FilterTest extends BaseSearchTest {
 		assertEquals(sallyA.getId(), target.searchUnique(s));
 		
 		s.clearFilters();
-		s.addFilterCustom("{father} is not null and {firstName} <> {father.firstName}");
+		s.addFilterCustom("{father} is not null and {lastName} <> {father.lastName}");
 		assertEquals(mamaB.getId(), target.searchUnique(s));
 		
 		// Test single with parameters
@@ -408,8 +407,8 @@ public class FilterTest extends BaseSearchTest {
 		
 		// Test multiple
 		s.clearFilters();
-		s.addFilterCustom("{firstName} == 'Joe'");
-		s.addFilterCustom("{lastName} == 'Beta'");
+		s.addFilterCustom("{firstName} = 'Joe'");
+		s.addFilterCustom("{lastName} = 'Beta'");
 		assertEquals(joeB.getId(), target.searchUnique(s));
 		
 		s.clearFilters();
@@ -422,21 +421,21 @@ public class FilterTest extends BaseSearchTest {
 		
 		// Test multiple with parameters
 		s.clearFilters();
-		s.addFilterCustom("{firstName} == ?1", "Joe");
-		s.addFilterCustom("{lastName} == ?1", "Beta");
+		s.addFilterCustom("{firstName} = ?1", "Joe");
+		s.addFilterCustom("{lastName} = ?1", "Beta");
 		assertEquals(joeB.getId(), target.searchUnique(s));
 		
 		s.clearFilters();
 		s.addFilterOr(
 			Filter.custom("{age} > ?1", Collections.singleton(100)),
-			Filter.custom("?1 = ?2 / ?3", Arrays.asList(4, 8, 2))
+			Filter.custom("lower(?1) = ?2", Arrays.asList("Ice", "ice"))
 		);
 		s.addFilterCustom("{firstName}||{lastName} = ?1", "PapaBeta");
 		assertEquals(papaB.getId(), target.searchUnique(s));
 		
 		// Test combination with other filters
 		s.clearFilters();
-		s.addFilterCustom("{firstName} == 'Joe'");
+		s.addFilterCustom("{firstName} = 'Joe'");
 		s.addFilterEqual("lastName", "Beta");
 		assertEquals(joeB.getId(), target.searchUnique(s));
 		
@@ -450,22 +449,22 @@ public class FilterTest extends BaseSearchTest {
 		
 		// Test combination with parameters
 		s.clearFilters();
-		s.addFilterCustom("{firstName} == ?1", "Joe");
+		s.addFilterCustom("{firstName} = ?1", "Joe");
 		s.addFilterEqual("lastName", "Beta");
 		assertEquals(joeB.getId(), target.searchUnique(s));
 		
 		s.clearFilters();
 		s.addFilterOr(
 			Filter.greaterThan("age", 100),
-			Filter.custom("?1 = ?2 / ?3", Arrays.asList(4, 8, 2))
+			Filter.custom("?1 = ?2 / ?3", Arrays.asList(4.0, 8.0, 2.0))
 		);
 		s.addFilterCustom("{firstName}||{lastName} = ?1", "PapaBeta");
 		assertEquals(papaB.getId(), target.searchUnique(s));
 		
 		// Test sub-query
-		s.clear();
+		s.clearFilters();
 		s.addFilterCustom("{home} = ?1", grandmaA.getHome());
-		s.addFilterCustom("{} in (select dude from Person dude where dude.male = 1)");
+		s.addFilterCustom("{} in (select dude from Person dude where dude.isMale = 1)");
 		assertEquals(grandpaA.getId(), target.searchUnique(s));
 		
 		// Test combination with fields
@@ -475,29 +474,89 @@ public class FilterTest extends BaseSearchTest {
 		assertEquals("Beta, Papa", target.searchUnique(s));
 		
 		// Test with invalid positional parameters
+		/*
+		 * I decided this should not be an exception case. It does not actually prevent the program from functioning.
+		 * It is merely an indication that there may be a mistake in the usage. However, I can think of cases where
+		 * it may be desirable to be able to include value parameters that are not actually used in the expression.
+		 * For example, s.addFilterCustom("{firstName} = ?" + (isFemale ? "1" : "2"), "Sally", "Andy");
+		 * This example is contrived, but it demonstrates a general class of potential cases where it might be desirable
+		 * to have this option.
 		s.clear();
 		s.addFilterCustom("{firstName} = 'Sally'", "Andy");
 		try {
 			target.search(s);
 			fail("There is an unexpected parameter, an exception should be thrown.");
-		} catch (RuntimeException ex) {
+		} catch (IllegalArgumentException ex) {
 		}
+		*/
 		
+		/*
+		 * I don't think this should be an exception case. There problem is that specifying a custom filter with no
+		 * values produces a state indistinguishable from setting a single NULL value. So in the off chance that
+		 * someone actually intends to set a single value to null, I don't want to foil their plans with an unnecessary
+		 * exception. Legitimate SQL example: "... where myFunc(x, ?1) = 3" -> "... where myFunc(x, NULL) = 3"
 		s.clear();
 		s.addFilterCustom("{firstName} = ?1");
 		try {
 			target.search(s);
 			fail("There is a missing parameter, an exception should be thrown.");
-		} catch (RuntimeException ex) {
+		} catch (IllegalArgumentException ex) {
 		}
+		*/
 		
+		/*
+		 * I decided this should not be an exception case. It does not actually prevent the program from functioning.
+		 * It is merely an indication that there may be a mistake in the usage. However, I can think of cases where
+		 * it may be desirable to be able to include value parameters that are not actually used in the expression.
+		 * For example, s.addFilterCustom("{firstName} = ?" + (isFemale ? "1" : "2"), "Sally", "Andy");
+		 * This example is contrived, but it demonstrates a general class of potential cases where it might be desirable
+		 * to have this option.
 		s.clear();
 		s.addFilterCustom("{firstName} = ?1", "Sally", "Andy");
 		try {
 			target.search(s);
 			fail("There is an unexpected parameter, an exception should be thrown.");
-		} catch (RuntimeException ex) {
+		} catch (IllegalArgumentException ex) {
 		}
+		*/
+		
+		// Test nulls, sets, arrays
+		s.clear();
+		s.addFilter(new Filter(null, null, Filter.OP_CUSTOM));
+		try {
+			target.search(s);
+			fail("The property is null; an exception should be thrown.");
+		} catch (IllegalArgumentException ex) {
+		}
+		
+		s.clear();
+		s.addFilter(new Filter("", null, Filter.OP_CUSTOM));
+		try {
+			target.search(s);
+			fail("The property is empty; an exception should be thrown.");
+		} catch (IllegalArgumentException ex) {
+		}
+		
+		s.clear();
+		/*
+		 * This was the original intent for this test, but it won't actually work because x = NULL is not valid SQL. 
+		s.addFilter(new Filter("{father} = ?1", null, Filter.OP_CUSTOM));
+		*/
+		s.addFilter(new Filter("{father} is null", null, Filter.OP_CUSTOM));
+		assertListEqual(target.search(s), mamaA, papaB, grandmaA, grandpaA);
+		
+		s.clear();
+		s.addFilter(new Filter("{firstName} = ?1", "Sally", Filter.OP_CUSTOM));
+		assertListEqual(target.search(s), sallyA);
+		
+		s.clear();
+		s.addFilter(new Filter("{firstName} = ?1", new String[] { "Sally" }, Filter.OP_CUSTOM));
+		assertListEqual(target.search(s), sallyA);
+		
+		s.clear();
+		s.addFilter(new Filter("{firstName} = ?1", Collections.singleton("Sally"), Filter.OP_CUSTOM));
+		assertListEqual(target.search(s), sallyA);
+		
 		
 		// Test that no other operator allows custom expressions
 		try {
@@ -603,6 +662,7 @@ public class FilterTest extends BaseSearchTest {
 			fail("Invalid characters in property name, an exception should be thrown.");
 		} catch (RuntimeException ex) {
 		}
+		
 	}
-	*/
+	
 }

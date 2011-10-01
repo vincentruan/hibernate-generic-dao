@@ -18,6 +18,7 @@ import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -419,6 +420,57 @@ public class Filter implements Serializable {
 	public void setOperator(int operator) {
 		this.operator = operator;
 	}
+	
+	/**
+	 * Returns the value as a List, converting if necessary. If the value is a
+	 * List, it will be returned directly. If it is any other Collection type or
+	 * if it is an Array, an ArrayList will be returned with all the same
+	 * elements. If the value is any other non-null value, a List containing
+	 * just that one value will be returned. If it is <code>null</code>,
+	 * <code>null</code> will be returned.
+	 */
+	public List<?> getValuesAsList() {
+		if (value == null) {
+			return null;
+		} else if (value instanceof List<?>) {
+			return (List<?>) value;
+		} else if (value instanceof Collection<?>) {
+			return new ArrayList<Object>((Collection<?>) value);
+		} else if (value.getClass().isArray()) {
+			ArrayList<Object> list = new ArrayList<Object>(Array.getLength(value));
+			for (int i = 0; i < Array.getLength(value); i++) {
+				list.add(Array.get(value, i));
+			}
+			return list;
+		} else {
+			return Collections.singletonList(value);
+		}
+	}
+	
+	/**
+	 * Returns the value as a Collection, converting if necessary. If the value
+	 * is a Collection, it will be returned directly. If it is an Array, an
+	 * ArrayList will be returned with all the same elements. If the value is
+	 * any other non-null value, a Set containing just that one value will be
+	 * returned. If it is <code>null</code>, <code>null</code> will be returned.
+	 * 
+	 * @return
+	 */
+	public Collection<?> getValuesAsCollection() {
+		if (value == null) {
+			return null;
+		} else if (value instanceof Collection<?>) {
+			return (Collection<?>) value;
+		} else if (value.getClass().isArray()) {
+			ArrayList<Object> list = new ArrayList<Object>(Array.getLength(value));
+			for (int i = 0; i < Array.getLength(value); i++) {
+				list.add(Array.get(value, i));
+			}
+			return list;
+		} else {
+			return Collections.singleton(value);
+		}
+	}
 
 	/**
 	 * @return true if the operator should have a single value specified.
@@ -447,7 +499,7 @@ public class Filter implements Serializable {
 	 *         <code>NULL, NOT_NULL, EMPTY, NOT_EMPTY</code>
 	 */
 	public boolean isTakesNoValue() {
-		return operator >= 10 && operator <= 13;
+		return (operator >= 10 && operator <= 13) || operator == OP_CUSTOM;
 	}
 
 	/**
@@ -458,7 +510,7 @@ public class Filter implements Serializable {
 	 *         <code>NOT, ALL, SOME, NONE</code>
 	 */
 	public boolean isTakesSingleSubFilter() {
-		return operator == OP_NOT || operator >= 200;
+		return operator == OP_NOT || (operator >= 200 && operator < 300);
 	}
 
 	/**

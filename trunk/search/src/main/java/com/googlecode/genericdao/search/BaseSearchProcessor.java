@@ -16,6 +16,7 @@ package com.googlecode.genericdao.search;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -442,13 +443,6 @@ public abstract class BaseSearchProcessor {
 		Object value = filter.getValue();
 		int operator = filter.getOperator();
 
-		// If the operator needs a value and no value is specified, ignore this
-		// filter.
-		// Only NULL, NOT_NULL, EMPTY and NOT_EMPTY do not need a value.
-		if (value == null && !filter.isTakesNoValue()) {
-			return null;
-		}
-
 		// for IN and NOT IN, if value is empty list, return false, and true
 		// respectively
 		if (operator == Filter.OP_IN || operator == Filter.OP_NOT_IN) {
@@ -590,6 +584,14 @@ public abstract class BaseSearchProcessor {
 					return "not exists " + generateSubquery(ctx, property, (Filter) value);
 				}
 			}
+		case Filter.OP_CUSTOM:
+			List<?> values = filter.getValuesAsList();
+			if (values == null) {
+				values = Collections.singletonList(null);
+			}
+			StringBuilder sbCustom = new StringBuilder();
+			appendCustomExpression(sbCustom, ctx, filter.getProperty(), values);
+			return sbCustom.toString();
 		default:
 			throw new IllegalArgumentException("Filter comparison ( " + operator + " ) is invalid.");
 		}
@@ -782,6 +784,36 @@ public abstract class BaseSearchProcessor {
 		while (matcher.find()) {
 			sb.append(expression.substring(lastEnd, matcher.start()));
 			sb.append(getPathRef(ctx, expression.substring(matcher.start() + 1, matcher.end() - 1)));
+			lastEnd = matcher.end();
+		}
+		sb.append(expression.substring(lastEnd));
+	}
+	
+	/**
+	 * append a custom expression to the string builder, replacing any
+	 * property tokens (i.e "{prop}") with a reference to the property and
+	 * value tokens (i.e. "?n") with params. 
+	 */
+	protected void appendCustomExpression(StringBuilder sb, SearchContext ctx, String expression, List<?> values) {
+		Matcher matcher = Pattern.compile("(\\{[\\w\\.]*\\})|(\\?\\d+\\b)").matcher(expression);
+		int lastEnd = 0;
+		while (matcher.find()) {
+			sb.append(expression.substring(lastEnd, matcher.start()));
+			if (expression.charAt(matcher.start()) == '{') {
+				sb.append(getPathRef(ctx, expression.substring(matcher.start() + 1, matcher.end() - 1)));
+			} else {
+				int valueIndex = Integer.valueOf(expression.substring(matcher.start() + 1, matcher.end()));
+				if (valueIndex == 0) {
+					throw new IllegalArgumentException("This custom filter expression (" + expression + ") contains a value placeholder for zero (?0), but placeholders should be numbered starting at ?1.");
+				}
+				if (values == null || values.isEmpty()) {
+					throw new IllegalArgumentException("This custom filter expression (" + expression + ") calls for a value placeholder number " + valueIndex + ", but no values were specified.");
+				}
+				if (valueIndex > values.size()) {
+					throw new IllegalArgumentException("This custom filter expression (" + expression + ") calls for a value placeholder number " + valueIndex + ", but only " + values.size() + " values were specified.");
+				}
+				sb.append(param(ctx, values.get(valueIndex - 1)));
+			}
 			lastEnd = matcher.end();
 		}
 		sb.append(expression.substring(lastEnd));
@@ -1079,7 +1111,17 @@ public abstract class BaseSearchProcessor {
 			@SuppressWarnings("unchecked")
 			@Override
 			public Filter visitBefore(Filter filter) {
-				if (filter != null && filter.getValue() != null) {
+				if (filter == null) {
+					return null;
+				}
+				
+				// If the operator needs a value and no value is specified, ignore this filter.
+				// Only NULL, NOT_NULL, EMPTY, NOT_EMPTY and CUSTOM do not need a value.
+				if (filter.getValue() == null && !filter.isTakesNoValue()) {
+					return null;
+				}
+				
+				if (filter.getValue() != null) {
 					if (filter.isTakesListOfSubFilters()) {
 						// make sure that filters that take lists of filters
 						// actually have lists of filters for their values
@@ -1108,14 +1150,6 @@ public abstract class BaseSearchProcessor {
 									+ ") for which the value should be of type Filter but is of type: "
 									+ filter.getValue().getClass());
 						}
-					} else if (filter.isTakesListOfValues()) {
-						// make sure filters that take collections or arrays
-						// actually have collections or arrays for their values
-						if (!(filter.getValue() instanceof Collection) && !(filter.getValue() instanceof Object[])) {
-							throw new IllegalArgumentException("The search has a filter (" + filter
-									+ ") for which the value should be a collection or array but is of type: "
-									+ filter.getValue().getClass());
-						}
 					}
 				}
 
@@ -1128,7 +1162,11 @@ public abstract class BaseSearchProcessor {
 				if (filter == null)
 					return null;
 
-				if (!filter.isTakesNoProperty()) {
+				if (filter.getOperator() == Filter.OP_CUSTOM) {
+					if (filter.getProperty() == null || filter.getProperty().isEmpty()) {
+						 throw new IllegalArgumentException("This search has a custom filter with no expression specified.");
+					}
+				} else if (!filter.isTakesNoProperty()) {
 					securityCheckProperty(filter.getProperty());
 				}
 
