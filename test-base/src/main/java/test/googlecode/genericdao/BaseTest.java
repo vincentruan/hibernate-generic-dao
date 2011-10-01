@@ -47,7 +47,7 @@ import test.googlecode.genericdao.model.RecipeIngredient;
 import test.googlecode.genericdao.model.Store;
 
 public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests {
-	//Many properties are automatically autowired by SpringTest
+	// Many properties are automatically autowired by SpringTest
 	PersistenceHelper persistenceHelper;
 
 	public void setPersistenceHelper(PersistenceHelper persistenceHelper) {
@@ -57,7 +57,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	public <T> T find(Class<T> type, Serializable id) {
 		return persistenceHelper.find(type, id);
 	}
-	
+
 	public <T> T getProxy(Class<T> type, Serializable id) {
 		return persistenceHelper.getProxy(type, id);
 	}
@@ -65,11 +65,11 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	public void persist(Object entity) {
 		persistenceHelper.persist(entity);
 	}
-	
+
 	public void flush() {
 		persistenceHelper.flush();
 	}
-	
+
 	public void clear() {
 		persistenceHelper.clear();
 	}
@@ -284,12 +284,12 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 	}
 
 	protected void insert(Person p) {
-		String sql = "INSERT INTO person (age, dob, first_name, last_name, weight, father_id, mother_id, home_id) values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)";
+		String sql = "INSERT INTO person (age, dob, first_name, last_name, weight, isMale, father_id, mother_id, home_id) values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
 		Class<?>[] types = new Class<?>[] { Integer.class, Date.class, String.class, String.class, Double.class,
-				Long.class, Long.class, Long.class };
+				Boolean.class, Long.class, Long.class, Long.class };
 		Number id = insert(sql, types, p.getAge(), p.getDob(), p.getFirstName(), p.getLastName(), p.getWeight(), p
-				.getFather() != null ? p.getFather().getId() : null, p.getMother() != null ? p.getMother().getId()
-				: null, p.getHome().getId());
+				.getIsMale(), p.getFather() != null ? p.getFather().getId() : null, p.getMother() != null ? p
+				.getMother().getId() : null, p.getHome().getId());
 		p.setId(id.longValue());
 	}
 
@@ -399,6 +399,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 		cpy.setAge(p.getAge());
 		cpy.setDob(p.getDob());
 		cpy.setWeight(p.getWeight());
+		cpy.setIsMale(p.getIsMale());
 		return cpy;
 	}
 
