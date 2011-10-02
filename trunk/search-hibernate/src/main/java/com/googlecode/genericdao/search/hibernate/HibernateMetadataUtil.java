@@ -87,7 +87,7 @@ public class HibernateMetadataUtil implements MetadataUtil {
 		}
 	}
 
-	public Metadata get(Class<?> entityClass) {
+	public Metadata get(Class<?> entityClass) throws IllegalArgumentException {
 		entityClass = getUnproxiedClass(entityClass);
 		ClassMetadata cm = sessionFactory.getClassMetadata(entityClass);
 		if (cm == null) {
@@ -98,7 +98,7 @@ public class HibernateMetadataUtil implements MetadataUtil {
 		}
 	}
 
-	public Metadata get(Class<?> rootEntityClass, String propertyPath) {
+	public Metadata get(Class<?> rootEntityClass, String propertyPath) throws IllegalArgumentException {
 		try {
 			Metadata md = get(rootEntityClass);
 			if (propertyPath == null || "".equals(propertyPath))
@@ -113,7 +113,7 @@ public class HibernateMetadataUtil implements MetadataUtil {
 			return md;
 
 		} catch (HibernateException ex) {
-			throw new PropertyNotFoundException("Could not find property '" + propertyPath + "' on class "
+			throw new IllegalArgumentException("Could not find property '" + propertyPath + "' on class "
 					+ rootEntityClass + ".");
 		}
 	}

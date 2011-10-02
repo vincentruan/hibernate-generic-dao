@@ -45,7 +45,7 @@ public interface MetadataUtil {
 	 * @throws IllegalArgumentException
 	 *             if the class is not a Hibernate entity.
 	 */
-	public Metadata get(Class<?> klass);
+	public Metadata get(Class<?> klass) throws IllegalArgumentException;
 
 	/**
 	 * Get the Metadata for a property of an entity class. The property can be
@@ -53,10 +53,10 @@ public interface MetadataUtil {
 	 * 
 	 * @throws IllegalArgumentException
 	 *             if the root class is not a Hibernate entity.
-	 * @throws PropertyNotFoundException
+	 * @throws IllegalArgumentException
 	 *             if the class does not have the given property.
 	 */
-	public Metadata get(Class<?> rootEntityClass, String propertyPath);
+	public Metadata get(Class<?> rootEntityClass, String propertyPath) throws IllegalArgumentException;
 	
 	/**
 	 * Return the actual entity class registered with the persistence provider.
