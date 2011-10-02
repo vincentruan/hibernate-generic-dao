@@ -513,7 +513,7 @@ public class JPABaseDAO {
 		for (Serializable id : ids) {
 			if (id != null) {
 				if (nonNulls.size() == 0)
-					sb.append("_it_.id = 1");
+					sb.append("_it_.id = ?1");
 				else
 					sb.append(" or _it_.id = ?").append(nonNulls.size() + 1);
 				nonNulls.add(id);
