@@ -9,11 +9,11 @@ import com.googlecode.genericdao.search.MetadataUtil;
 
 public class JPAAnnotationMetadataUtil implements MetadataUtil {
 
-	public Metadata get(Class<?> klass) {
+	public Metadata get(Class<?> klass) throws IllegalArgumentException {
 		return JPAAnnotationMetadata.getMetadata(klass);
 	}
 
-	public Metadata get(Class<?> rootEntityClass, String propertyPath) {
+	public Metadata get(Class<?> rootEntityClass, String propertyPath) throws IllegalArgumentException {
 		Metadata md = get(rootEntityClass);
 		if (propertyPath == null || propertyPath.equals("")) {
 			return md;
