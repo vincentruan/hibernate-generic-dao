@@ -14,13 +14,13 @@
  */
 package junit.googlecode.genericdao.search;
 
-import java.util.List;
-
+import com.googlecode.genericdao.search.Search;
+import com.googlecode.genericdao.search.Sort;
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 
-import com.googlecode.genericdao.search.Search;
-import com.googlecode.genericdao.search.Sort;
+import javax.persistence.NonUniqueResultException;
+import java.util.List;
 
 public class PagingAndSortingTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")
@@ -208,5 +208,33 @@ public class PagingAndSortingTest extends BaseSearchTest {
 			assertEquals(margaretB.getId(), results.get(1).getId());
 		}
 	}
-	
+
+    public void testPagingWithSearchUnique() {
+        initDB();
+
+        //searchUnique with paging
+		// First test the filters, must return Bob and Fred
+		Search s = new Search(Person.class);
+		s.addFilterEqual("lastName", "Beta");
+		s.addSortAsc("firstName");
+		assertListEqual(new Person[] { joeB, mamaB, margaretB, papaB }, target.search(s));
+		// Then test to order by firstName in Asc order and limit results to 1, must return Bob
+		try {
+            s.setMaxResults(1);
+            assertEquals(joeB, target.searchUnique(s));
+		} catch (NonUniqueResultException e) {
+            fail("searchUnique should apply paging to the results.");
+        }
+		// Then execute the same test, but in Desc order, must return Fred
+		try {
+            s.clearSorts();
+            s.addSortDesc("firstName");
+            s.setMaxResults(1);
+            assertEquals(papaB, target.searchUnique(s));
+		} catch (NonUniqueResultException e) {
+            fail("searchUnique should apply paging to the results.");
+        }
+
+    }
+
 }
