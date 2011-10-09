@@ -6,6 +6,8 @@ https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage
 mvn clean deploy
 }}}
 
+The snapshot can then be found here: https://oss.sonatype.org/content/repositories/snapshots/com/googlecode/genericdao/
+
 ===To deploy a release===
 
 ====1. Build JavaDocs====
