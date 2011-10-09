@@ -14,27 +14,15 @@
  */
 package com.googlecode.genericdao.search.jpa;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import com.googlecode.genericdao.search.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.NonUniqueResultException;
 import javax.persistence.Query;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.googlecode.genericdao.search.BaseSearchProcessor;
-import com.googlecode.genericdao.search.Field;
-import com.googlecode.genericdao.search.ISearch;
-import com.googlecode.genericdao.search.InternalUtil;
-import com.googlecode.genericdao.search.MetadataUtil;
-import com.googlecode.genericdao.search.SearchResult;
-import com.googlecode.genericdao.search.SearchUtil;
+import java.util.*;
 
 /**
  * <p>Implementation of BaseSearchProcessor that works with JPA.
@@ -189,6 +177,7 @@ public class JPASearchProcessor extends BaseSearchProcessor {
 		String ql = generateQL(entityClass, search, paramList);
 		Query query = entityManager.createQuery(ql);
 		addParams(query, paramList);
+		addPaging(query, search);
 		try {
 			return transformResult(query.getSingleResult(), search);
 		} catch (NoResultException ex) {

@@ -14,13 +14,7 @@
  */
 package com.googlecode.genericdao.search.hibernate;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
+import com.googlecode.genericdao.search.*;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -30,12 +24,7 @@ import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.genericdao.search.BaseSearchProcessor;
-import com.googlecode.genericdao.search.Field;
-import com.googlecode.genericdao.search.ISearch;
-import com.googlecode.genericdao.search.InternalUtil;
-import com.googlecode.genericdao.search.SearchResult;
-import com.googlecode.genericdao.search.SearchUtil;
+import java.util.*;
 
 /**
  * Implementation of BaseSearchProcessor that generates Works with standard Hibernate.
@@ -196,6 +185,7 @@ public class HibernateSearchProcessor extends BaseSearchProcessor {
 		String hql = generateQL(entityClass, search, paramList);
 		Query query = session.createQuery(hql);
 		addParams(query, paramList);
+		addPaging(query, search);
 		addResultMode(query, search);
 
 		return query.uniqueResult();
