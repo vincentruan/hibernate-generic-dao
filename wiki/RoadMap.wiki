@@ -1,5 +1,12 @@
 #summary List of changes made for each release and planned changes for upcoming releases.
-==1.0.0  (2/24/2011 current release)==
+
+==1.1.0 (10/19/2011 current release)==
+  * Issue 73 : Custom filters, fields and sorts
+  * Issue 61 : Do not use PropertyNotFoundException in MetaDataUtil.get
+  * Issue 80 : Add paging to searchUnique()
+  * Issue 90 : Positional Parameters syntax in Query using JPA DAO
+
+==1.0.0  (2/24/2011)==
   * Deployment to central maven repo.
   * Refactoring of maven architecture with parent pom.xml for whole framework.
   * Issue 54 : Refactoring of package names.
@@ -74,13 +81,9 @@
 
 =Future=
 
-==1.1.0==
-  * Issue 73 : Custom filters, fields and sorts
+==1.2.0==
   * Issue 47 : Add load method with lock mode option
-  * Issue 61 : Do not use PropertyNotFoundException in MetaDataUtil.get
   * Issue 50 / Issue 64 : More extensible HibernateSearchFacade and HibernateSearchProcessor
-  * Issue 80 : Add paging to searchUnique()
-  * Issue 90 : Positional Parameters syntax in Query using JPA DAO
   * Deprecate "original" daos?
   * See about removing Hibernate version dependency.
 
