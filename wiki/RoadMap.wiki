@@ -1,5 +1,9 @@
 #summary List of changes made for each release and planned changes for upcoming releases.
 
+----
+*NOTICE* Progress on this project has been halted for now. See notice on [http://code.google.com/p/hibernate-generic-dao/ Project Home].
+----
+
 ==1.1.0 (10/19/2011 current release)==
   * Issue 73 : Custom filters, fields and sorts
   * Issue 61 : Do not use PropertyNotFoundException in MetaDataUtil.get
@@ -80,6 +84,10 @@
 
 
 =Future=
+
+==1.1.1==
+  * Issue 93 : HibernateMetadataUtil causes memory leak when dealing with many session factories
+  * Issue 94 : Why setDistinct() return IMutableSearch instead of Search?
 
 ==1.2.0==
   * Issue 47 : Add load method with lock mode option
