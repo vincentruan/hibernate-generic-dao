@@ -1,4 +1,5 @@
 #summary List of changes made for each release and planned changes for upcoming releases.
+#labels Featured
 
 ----
 *NOTICE* Progress on this project has been halted for now. See notice on [http://code.google.com/p/hibernate-generic-dao/ Project Home].
