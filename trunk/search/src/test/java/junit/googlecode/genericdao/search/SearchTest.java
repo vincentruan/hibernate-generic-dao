@@ -14,12 +14,14 @@
  */
 package junit.googlecode.genericdao.search;
 
+import static org.junit.Assert.*;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.googlecode.genericdao.search.Field;
 import com.googlecode.genericdao.search.Filter;
@@ -27,7 +29,8 @@ import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchUtil;
 import com.googlecode.genericdao.search.Sort;
 
-public class SearchTest extends TestCase {
+public class SearchTest {
+	@Test
 	public void testToString() {
 		Search s = new Search();
 		System.out.println(s);
@@ -76,6 +79,7 @@ public class SearchTest extends TestCase {
 		System.out.println(s);
 	}
 
+	@Test
 	public void testMergeSorts() {
 		Search s = new Search();
 
@@ -115,6 +119,7 @@ public class SearchTest extends TestCase {
 		assertTrue(collectionEquals(s.getSorts(), sorts.get("g+"), sorts.get("a+"), sorts.get("b+") ));
 	}
 	
+	@Test
 	public void testMergeFetches() {
 		Search s = new Search();
 		
@@ -133,6 +138,7 @@ public class SearchTest extends TestCase {
 		assertTrue(collectionEquals(s.getFetches(), "alpha", "gamma", "beta"));
 	}
 	
+	@Test
 	public void testMergeFilters() {
 		Search s = new Search();
 		
@@ -195,6 +201,7 @@ public class SearchTest extends TestCase {
 		assertTrue(s.isDisjunction());
 	}
 	
+	@Test
 	public void testMergeFields() {
 		Search s = new Search();
 		

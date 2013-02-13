@@ -14,6 +14,8 @@
  */
 package junit.googlecode.genericdao.search;
 
+import static org.junit.Assert.*;
+
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.Sort;
 import test.googlecode.genericdao.model.Person;

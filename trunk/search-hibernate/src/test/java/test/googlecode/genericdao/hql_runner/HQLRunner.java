@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
@@ -23,6 +24,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.Work;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -91,34 +93,35 @@ public class HQLRunner extends JFrame {
 	
 	private void initDB() {
 		Session session = getSessionFactory().openSession();
-		Statement statement = null;
-		try {
-			statement = session.connection().createStatement();
-			
-			InputStream is = this.getClass().getResourceAsStream("initDB.sql");
-			
-			BufferedReader br = new BufferedReader(new InputStreamReader(is));
-			
-			String line = br.readLine();
-			while (line != null) {
-				if (line.startsWith("insert"))
-					statement.executeUpdate(line);
-				line = br.readLine();
-			}
-			statement.close();
-		} catch (Throwable e) {
-			tableModel.setError(e);
-			e.printStackTrace();
-		} finally {
-			if (statement != null) {
+		
+		session.doWork(new Work() {
+			public void execute(Connection connection) throws SQLException {
+				Statement statement = null;
 				try {
-					statement.close();
-				} catch (SQLException e) {
+					statement = connection.createStatement();
+					
+					InputStream is = this.getClass().getResourceAsStream("initDB.sql");
+					
+					BufferedReader br = new BufferedReader(new InputStreamReader(is));
+					
+					String line = br.readLine();
+					while (line != null) {
+						if (line.startsWith("insert"))
+							statement.executeUpdate(line);
+						line = br.readLine();
+					}
+				} catch (Throwable e) {
+					tableModel.setError(e);
 					e.printStackTrace();
+				} finally {
+					if (statement != null) {
+						statement.close();
+					}
 				}
 			}
-			session.close();
-		}
+		});
+		session.close();
+		
 	}
 	
 	private void execute(String hql) {

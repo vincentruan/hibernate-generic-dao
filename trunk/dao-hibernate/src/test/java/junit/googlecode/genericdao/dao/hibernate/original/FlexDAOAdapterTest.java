@@ -14,6 +14,8 @@
  */
 package junit.googlecode.genericdao.dao.hibernate.original;
 
+import static org.junit.Assert.*;
+
 import java.util.HashMap;
 
 import test.googlecode.genericdao.BaseTest;

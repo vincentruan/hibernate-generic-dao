@@ -25,13 +25,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.Assert;
+import javax.annotation.Resource;
+import javax.sql.DataSource;
+
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.ApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.test.annotation.AbstractAnnotationAwareTransactionalTests;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import test.googlecode.genericdao.model.Address;
 import test.googlecode.genericdao.model.Home;
@@ -46,9 +55,16 @@ import test.googlecode.genericdao.model.Recipe;
 import test.googlecode.genericdao.model.RecipeIngredient;
 import test.googlecode.genericdao.model.Store;
 
-public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests {
-	// Many properties are automatically autowired by SpringTest
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:jUnit-applicationContext.xml" })
+public abstract class BaseTest {
+	@Autowired(required=false)
 	PersistenceHelper persistenceHelper;
+	
+	@Autowired
+	private DataSource dataSource;
+	
+	private JdbcTemplate jdbcTemplate;
 
 	public void setPersistenceHelper(PersistenceHelper persistenceHelper) {
 		this.persistenceHelper = persistenceHelper;
@@ -72,11 +88,6 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 
 	public void clear() {
 		persistenceHelper.clear();
-	}
-
-	protected String[] getConfigLocations() {
-		setAutowireMode(AUTOWIRE_BY_NAME);
-		return new String[] { "classpath:jUnit-applicationContext.xml" };
 	}
 
 	// setDbIgnoresCase((Boolean) applicationContext.getBean("dbIgnoresCase"));
@@ -107,78 +118,94 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 
 	protected List<Project> projects;
 
+	@Autowired
 	public void setJoeA(Person joeA) {
 		this.joeA = joeA;
 	}
 
+	@Autowired
 	public void setSallyA(Person sallyA) {
 		this.sallyA = sallyA;
 	}
 
+	@Autowired
 	public void setPapaA(Person papaA) {
 		this.papaA = papaA;
 	}
 
+	@Autowired
 	public void setMamaA(Person mamaA) {
 		this.mamaA = mamaA;
 	}
 
+	@Autowired
 	public void setJoeB(Person joeB) {
 		this.joeB = joeB;
 	}
 
+	@Autowired
 	public void setMargaretB(Person margaretB) {
 		this.margaretB = margaretB;
 	}
 
+	@Autowired
 	public void setPapaB(Person papaB) {
 		this.papaB = papaB;
 	}
 
+	@Autowired
 	public void setMamaB(Person mamaB) {
 		this.mamaB = mamaB;
 	}
 
+	@Autowired
 	public void setGrandpaA(Person grandpaA) {
 		this.grandpaA = grandpaA;
 	}
 
+	@Autowired
 	public void setGrandmaA(Person grandmaA) {
 		this.grandmaA = grandmaA;
 	}
 
+	@Autowired
 	public void setFishWiggles(Pet fishWiggles) {
 		this.fishWiggles = fishWiggles;
 	}
 
+	@Autowired
 	public void setCatPrissy(LimbedPet catPrissy) {
 		this.catPrissy = catPrissy;
 	}
 
+	@Autowired
 	public void setCatNorman(LimbedPet catNorman) {
 		this.catNorman = catNorman;
 	}
 
+	@Autowired
 	public void setSpiderJimmy(LimbedPet spiderJimmy) {
 		this.spiderJimmy = spiderJimmy;
 	}
 
+	@Resource // wire by name -- @Autowired @Qualifier("stores") should work, but there seems to be a bug in Spring for lists
 	public void setStores(List<Store> stores) {
 		this.stores = stores;
 	}
 
+	@Resource // wire by name -- @Autowired @Qualifier("stores") should work, but there seems to be a bug in Spring for lists
 	public void setRecipes(List<Recipe> recipes) {
 		this.recipes = recipes;
 	}
 
+	@Resource // wire by name -- @Autowired @Qualifier("stores") should work, but there seems to be a bug in Spring for lists
 	public void setProjects(List<Project> projects) {
 		this.projects = projects;
 	}
 
-	@Override
-	protected void onSetUp() throws Exception {
+	@Before
+	public void onSetUp() throws Exception {
 		reset();
-		super.onSetUp();
 	}
 
 	protected void reset() {
@@ -227,7 +254,7 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 		}
 		for (Pet p : new Pet[] { spiderJimmy, fishWiggles, catPrissy, catNorman }) {
 			String sql = "update pet set favoritePlaymate_id = ?1 where id = ?2";
-			getJdbcTemplate().update(sql, new Object[] { p.getFavoritePlaymate().getId(), p.getId() });
+			jdbcTemplate.update(sql, new Object[] { p.getFavoritePlaymate().getId(), p.getId() });
 		}
 
 		for (Ingredient i : stores.get(0).getIngredientsCarried()) {
@@ -276,10 +303,9 @@ public abstract class BaseTest extends AbstractAnnotationAwareTransactionalTests
 				stypes[i] = Types.BOOLEAN;
 			}
 		}
-		// getJdbcTemplate().update(sql, args, stypes);
 		PreparedStatementCreatorFactory factory = new PreparedStatementCreatorFactory(sql, stypes);
 		KeyHolder keyHolder = new GeneratedKeyHolder();
-		getJdbcTemplate().update(factory.newPreparedStatementCreator(args), keyHolder);
+		jdbcTemplate.update(factory.newPreparedStatementCreator(args), keyHolder);
 		return keyHolder.getKey();
 	}
 

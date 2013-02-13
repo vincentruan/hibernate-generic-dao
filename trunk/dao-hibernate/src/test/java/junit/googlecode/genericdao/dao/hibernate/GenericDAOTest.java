@@ -14,6 +14,8 @@
  */
 package junit.googlecode.genericdao.dao.hibernate;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.hibernate.ObjectNotFoundException;

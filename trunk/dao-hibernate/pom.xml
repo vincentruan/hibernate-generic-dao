@@ -33,7 +33,7 @@
 		<dependency>
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.4.GA</version>
+			<version>3.12.1.GA</version>
 			<scope>test</scope>
 		</dependency>
 

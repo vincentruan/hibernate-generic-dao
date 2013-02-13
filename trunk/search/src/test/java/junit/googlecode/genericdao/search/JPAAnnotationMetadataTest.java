@@ -1,5 +1,9 @@
 package junit.googlecode.genericdao.search;
 
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
 import test.googlecode.genericdao.BaseTest;
 import test.googlecode.genericdao.model.LimbedPet;
 import test.googlecode.genericdao.model.Person;
@@ -12,11 +16,8 @@ import com.googlecode.genericdao.search.jpa.JPAAnnotationMetadataUtil;
 
 public class JPAAnnotationMetadataTest extends BaseTest {
 	protected MetadataUtil metadataUtil = new JPAAnnotationMetadataUtil();
-	
-	{
-		setDependencyCheck(false);
-	}
 
+	@Test
 	public void testProperties() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");
@@ -65,6 +66,7 @@ public class JPAAnnotationMetadataTest extends BaseTest {
 		assertFalse(md.getPropertyType("id").isEmeddable());
 	}
 	
+	@Test
 	public void testIds() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");
@@ -80,6 +82,7 @@ public class JPAAnnotationMetadataTest extends BaseTest {
 		assertEquals(null, md4.getIdType());
 	}
 	
+	@Test
 	public void testValues() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");
@@ -100,6 +103,7 @@ public class JPAAnnotationMetadataTest extends BaseTest {
 		assertEquals(null, md4.getIdValue(ri.getCompoundId()));
 	}
 	
+	@Test
 	public void testCollections() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");

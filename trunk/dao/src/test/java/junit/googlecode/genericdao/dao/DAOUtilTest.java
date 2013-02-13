@@ -14,17 +14,20 @@
  */
 package junit.googlecode.genericdao.dao;
 
+import static org.junit.Assert.*;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import com.googlecode.genericdao.dao.DAOUtil;
 
-public class DAOUtilTest extends TestCase {
+public class DAOUtilTest {
 
+	@Test
 	public void testCallMethod() throws IllegalArgumentException, NoSuchMethodException, IllegalAccessException,
 			InvocationTargetException {
 		MyList myList = new MyList();

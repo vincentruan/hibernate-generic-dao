@@ -21,7 +21,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>3.4.0.GA</version>
+			<version>4.2.0.CR1</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
@@ -41,7 +41,7 @@
 		<dependency>
 			<groupId>javassist</groupId>
 			<artifactId>javassist</artifactId>
-			<version>3.4.GA</version>
+			<version>3.12.1.GA</version>
 			<scope>test</scope>
 		</dependency>
 

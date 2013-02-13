@@ -14,6 +14,8 @@
  */
 package junit.googlecode.genericdao.dao.hibernate.original;
 
+import static org.junit.Assert.*;
+
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
