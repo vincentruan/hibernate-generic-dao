@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 import org.hibernate.EntityMode;
 import org.hibernate.SessionFactory;
-import org.hibernate.engine.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.CollectionType;
@@ -57,15 +57,11 @@ public class HibernateEntityMetadata implements Metadata {
 	}
 
 	public Serializable getIdValue(Object object) {
-		if (object instanceof HibernateProxy) {
-			return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
-		} else {
-			return metadata.getIdentifier(object, EntityMode.POJO);
-		}
+		return (Serializable) getPropertyValue(object, getIdProperty());
 	}
 
 	public Class<?> getJavaClass() {
-		return metadata.getMappedClass(EntityMode.POJO);
+		return metadata.getMappedClass();
 	}
 
 	public String[] getProperties() {
@@ -94,10 +90,10 @@ public class HibernateEntityMetadata implements Metadata {
 	}
 
 	public Object getPropertyValue(Object object, String property) {
-		if (getIdProperty().equals(property))
-			return metadata.getIdentifier(object, EntityMode.POJO);
+		if (getIdProperty().equals(property) && object instanceof HibernateProxy)
+			return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
 		else
-			return metadata.getPropertyValue(object, property, EntityMode.POJO);
+			return metadata.getPropertyValue(object, property);
 	}
 
 	public boolean isCollection() {

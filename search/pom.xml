@@ -15,24 +15,13 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.5.6</version>
-			<type>jar</type>
-			<scope>compile</scope>
+			<version>1.7.2</version>
 		</dependency>
-		<dependency>
-			<groupId>javax.persistence</groupId>
-			<artifactId>persistence-api</artifactId>
-			<version>1.0</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.5</version>
-			<type>jar</type>
-			<scope>test</scope>
-		</dependency>
+		<!-- <dependency> TODO Don't need?
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
+		</dependency> -->
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>test-base</artifactId>

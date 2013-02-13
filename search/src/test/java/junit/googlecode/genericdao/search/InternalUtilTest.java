@@ -14,12 +14,15 @@
  */
 package junit.googlecode.genericdao.search;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
+
+import org.junit.Test;
 
 import com.googlecode.genericdao.search.InternalUtil;
 
-public class InternalUtilTest extends TestCase {
+public class InternalUtilTest {
 	
+	@Test
 	public void testConvertIfNeeded() {
 		assertEquals(null, InternalUtil.convertIfNeeded(null, Double.class));
 		

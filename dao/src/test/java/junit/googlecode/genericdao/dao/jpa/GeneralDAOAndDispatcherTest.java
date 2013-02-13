@@ -14,6 +14,8 @@
  */
 package junit.googlecode.genericdao.dao.jpa;
 
+import static org.junit.Assert.*;
+
 import java.util.HashMap;
 import java.util.Map;
 

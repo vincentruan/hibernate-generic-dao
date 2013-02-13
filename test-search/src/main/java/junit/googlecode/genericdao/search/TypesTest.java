@@ -14,6 +14,8 @@
  */
 package junit.googlecode.genericdao.search;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import test.googlecode.genericdao.model.Ingredient;

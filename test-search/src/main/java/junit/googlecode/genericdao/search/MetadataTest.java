@@ -14,6 +14,8 @@
  */
 package junit.googlecode.genericdao.search;
 
+import static org.junit.Assert.*;
+
 import test.googlecode.genericdao.model.LimbedPet;
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.model.Recipe;
