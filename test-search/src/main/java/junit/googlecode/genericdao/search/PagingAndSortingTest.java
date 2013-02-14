@@ -22,10 +22,14 @@ import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 
 import javax.persistence.NonUniqueResultException;
+
+import org.junit.Test;
+
 import java.util.List;
 
 public class PagingAndSortingTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testBasicPaging() {
 		initDB();
 
@@ -70,6 +74,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testSorting() {
 		initDB();
 
@@ -132,6 +137,7 @@ public class PagingAndSortingTest extends BaseSearchTest {
 	
 	
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCustomSorts() {
 		initDB();
 
@@ -211,7 +217,8 @@ public class PagingAndSortingTest extends BaseSearchTest {
 		}
 	}
 
-    public void testPagingWithSearchUnique() {
+	@Test
+	public void testPagingWithSearchUnique() {
         initDB();
 
         //searchUnique with paging

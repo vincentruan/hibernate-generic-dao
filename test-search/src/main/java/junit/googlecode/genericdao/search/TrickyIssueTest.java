@@ -19,6 +19,9 @@ import static org.junit.Assert.*;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import test.googlecode.genericdao.model.Home;
 import test.googlecode.genericdao.model.LimbedPet;
 import test.googlecode.genericdao.model.Person;
@@ -29,6 +32,8 @@ import com.googlecode.genericdao.search.MetadataUtil;
 import com.googlecode.genericdao.search.Search;
 
 public class TrickyIssueTest extends BaseSearchTest {
+	
+	@Autowired
 	public void setMetadataUtil(MetadataUtil metadataUtil) {
 		this.metadataUtil = metadataUtil;
 	}
@@ -41,6 +46,7 @@ public class TrickyIssueTest extends BaseSearchTest {
 	 * property that is used in a filter.
 	 */
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testAliasError() {
 		initDB();
 
@@ -90,6 +96,7 @@ public class TrickyIssueTest extends BaseSearchTest {
 	 * The building of joins to eagerly fetch collections can mess with result
 	 * counts. The latest version should be able to deal with this issue.
 	 */
+	@Test
 	public void testEagerFetchingPagingError() {
 		initDB();
 
@@ -119,6 +126,7 @@ public class TrickyIssueTest extends BaseSearchTest {
 	 * deal with this issue.
 	 */
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testNumberClassCastError() {
 		initDB();
 
@@ -167,6 +175,7 @@ public class TrickyIssueTest extends BaseSearchTest {
 	 * as a configured entity class. So MetadataUtil needs to take special care
 	 * to function properly in these situations.
 	 */
+	@Test
 	public void testMetadataForProxy() {
 		initDB();
 		

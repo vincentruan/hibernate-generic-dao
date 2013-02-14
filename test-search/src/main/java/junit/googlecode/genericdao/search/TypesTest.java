@@ -18,6 +18,8 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.junit.Test;
+
 import test.googlecode.genericdao.model.Ingredient;
 import test.googlecode.genericdao.model.LimbedPet;
 import test.googlecode.genericdao.model.Person;
@@ -29,6 +31,8 @@ import test.googlecode.genericdao.search.BaseSearchTest;
 import com.googlecode.genericdao.search.Search;
 
 public class TypesTest extends BaseSearchTest {
+	
+	@Test
 	public void testComponent() {
 		initDB();
 		
@@ -56,6 +60,7 @@ public class TypesTest extends BaseSearchTest {
 		//for example, querying on student.studentTeacher.id.teacher.firstName
 	}
 	
+	@Test
 	public void testIdProperty() {
 		initDB();
 		
@@ -90,6 +95,7 @@ public class TypesTest extends BaseSearchTest {
 		assertListEqual(target.search(s), grandpaA.getId(), grandpaA.getId());
 	}
 	
+	@Test
 	public void testClassProperty() {
 		initDB();
 		
@@ -103,6 +109,7 @@ public class TypesTest extends BaseSearchTest {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testPlymorphism() {
 		initDB();
 		
@@ -115,6 +122,7 @@ public class TypesTest extends BaseSearchTest {
 		assertEquals(3, result.size());
 	}
 	
+	@Test
 	public void testBlankProperty() {
 		initDB();
 		

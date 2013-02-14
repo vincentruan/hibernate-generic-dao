@@ -41,6 +41,8 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
+import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.model.Address;
 import test.googlecode.genericdao.model.Home;
@@ -57,15 +59,19 @@ import test.googlecode.genericdao.model.Store;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:jUnit-applicationContext.xml" })
+@Transactional
 public abstract class BaseTest {
-	@Autowired(required=false)
+	
+	private JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	public void setDataSourceForJdbcTemplate(DataSource dataSource) {
+		jdbcTemplate = new JdbcTemplate(dataSource, true);
+	}
+	
 	PersistenceHelper persistenceHelper;
 	
 	@Autowired
-	private DataSource dataSource;
-	
-	private JdbcTemplate jdbcTemplate;
-
 	public void setPersistenceHelper(PersistenceHelper persistenceHelper) {
 		this.persistenceHelper = persistenceHelper;
 	}
@@ -346,7 +352,7 @@ public abstract class BaseTest {
 		p.setId(id.longValue());
 
 		if (p instanceof LimbedPet) {
-			sql = "INSERT INTO pet_limbs (Pet_id, element, idx) values (?1, ?2, ?3)";
+			sql = "INSERT INTO LimbedPet_limbs (LimbedPet_id, limbs, idx) values (?1, ?2, ?3)";
 			types = new Class<?>[] { Long.class, String.class, Integer.class };
 			int i = 0;
 			for (String s : ((LimbedPet) p).getLimbs()) {

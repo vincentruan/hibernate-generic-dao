@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.junit.Test;
+
 import test.googlecode.genericdao.model.Home;
 import test.googlecode.genericdao.model.LimbedPet;
 import test.googlecode.genericdao.model.Person;
@@ -33,6 +35,7 @@ import com.googlecode.genericdao.search.Search;
 
 public class FilterCollectionTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCollectionFilters() {
 		initDB();
 		
@@ -110,6 +113,7 @@ public class FilterCollectionTest extends BaseSearchTest {
 		assertListEqual(target.search(s), catNorman, catPrissy);
 	}
 	
+	@Test
 	public void testEmpty() {
 		initDB();
 		
@@ -200,6 +204,7 @@ public class FilterCollectionTest extends BaseSearchTest {
 		assertListEqual(target.search(s), stores.toArray());		
 	}
 	
+	@Test
 	public void testSizeProperty() {
 		initDB();
 		

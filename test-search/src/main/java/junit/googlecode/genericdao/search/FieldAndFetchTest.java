@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 import test.googlecode.genericdao.search.InternalHelper;
@@ -31,11 +34,13 @@ public class FieldAndFetchTest extends BaseSearchTest {
 	
 	protected InternalHelper internalHelper;
 	
+	@Autowired
 	public void setInternalHelper(InternalHelper internalHelper) {
 		this.internalHelper = internalHelper;
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFetches() {
 		initDB();
 		List<Person> results;
@@ -57,6 +62,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFields() {
 		initDB();
 
@@ -172,7 +178,8 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Margaret", resultMap.get(1).get("home.type"));
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
+	@Test
 	public void testColumnOperators() {
 		initDB();
 
@@ -248,6 +255,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testDistinct() {
 		initDB();
 
@@ -295,6 +303,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testResultModeAuto() {
 		initDB();
 
@@ -324,6 +333,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 		assertEquals("Beta", mapResults.get("lastName"));
 	}
 
+	@Test
 	public void testCombineFieldAndFetch() {
 		initDB();
 
@@ -353,6 +363,7 @@ public class FieldAndFetchTest extends BaseSearchTest {
 	}
 	
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testCustomField() {
 		initDB();
 		
