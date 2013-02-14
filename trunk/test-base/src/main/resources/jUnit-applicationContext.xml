@@ -16,6 +16,7 @@
 	-->
 	<import resource="applicationContext.xml" />
 
+	<!-- TODO This may be causing a deprecation warning. See about removing it. -->
 	<!-- I'm not actually sure why this is here. I think I may have just copied it over without
 		understanding it. But it may be used for specifying the string format to use when specifying
 		date values for beans defined in spring beans XML -->

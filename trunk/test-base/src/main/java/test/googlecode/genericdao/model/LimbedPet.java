@@ -17,6 +17,7 @@ package test.googlecode.genericdao.model;
 import java.util.List;
 
 import javax.persistence.DiscriminatorValue;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.JoinTable;
 
@@ -29,7 +30,7 @@ public class LimbedPet extends Pet {
 	private List<String> limbs;
 	private boolean hasPaws;
 
-	@CollectionOfElements
+	@ElementCollection
 	@JoinTable
 	@IndexColumn(name = "idx")
 	public List<String> getLimbs() {

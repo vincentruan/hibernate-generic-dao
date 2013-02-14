@@ -16,6 +16,8 @@ package junit.googlecode.genericdao.search;
 
 import static org.junit.Assert.*;
 
+import org.junit.Test;
+
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 
@@ -24,6 +26,7 @@ import com.googlecode.genericdao.search.SearchResult;
 
 public class SearchResultTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")
+	@Test
 	public void test() {
 		initDB();
 		

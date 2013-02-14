@@ -16,6 +16,9 @@ package junit.googlecode.genericdao.search;
 
 import static org.junit.Assert.*;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import test.googlecode.genericdao.model.LimbedPet;
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.model.Recipe;
@@ -26,12 +29,15 @@ import com.googlecode.genericdao.search.Metadata;
 import com.googlecode.genericdao.search.MetadataUtil;
 
 public class MetadataTest extends BaseSearchTest {
+	
+	@Autowired
 	public void setMetadataUtil(MetadataUtil metadataUtil) {
 		this.metadataUtil = metadataUtil;
 	}
 
 	protected MetadataUtil metadataUtil;
 
+	@Test
 	public void testProperties() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");
@@ -80,6 +86,7 @@ public class MetadataTest extends BaseSearchTest {
 		assertFalse(md.getPropertyType("id").isEmeddable());
 	}
 	
+	@Test
 	public void testIds() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");
@@ -95,6 +102,7 @@ public class MetadataTest extends BaseSearchTest {
 		assertEquals(null, md4.getIdType());
 	}
 	
+	@Test
 	public void testValues() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");
@@ -115,6 +123,7 @@ public class MetadataTest extends BaseSearchTest {
 		assertEquals(null, md4.getIdValue(ri.getCompoundId()));
 	}
 	
+	@Test
 	public void testCollections() {
 		Metadata md = metadataUtil.get(Person.class);
 		Metadata md2 = md.getPropertyType("home");
@@ -134,8 +143,7 @@ public class MetadataTest extends BaseSearchTest {
 		
 	}
 	
-
-	
+	@Test
 	public void testProxyIssues() {
 		initDB();
 		Person joe = getProxy(Person.class, joeA.getId());

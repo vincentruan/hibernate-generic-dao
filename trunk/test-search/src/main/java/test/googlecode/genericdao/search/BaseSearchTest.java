@@ -14,6 +14,8 @@
  */
 package test.googlecode.genericdao.search;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import test.googlecode.genericdao.BaseTest;
 
 import com.googlecode.genericdao.search.SearchFacade;
@@ -21,7 +23,7 @@ import com.googlecode.genericdao.search.SearchFacade;
 public class BaseSearchTest extends BaseTest {
 	protected SearchFacade target;
 	
-	//This is automatically autowired by SpringTest
+	@Autowired
 	public void setSearchFacade(SearchFacade target) {
 		this.target = target;
 	}

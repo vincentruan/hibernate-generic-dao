@@ -22,6 +22,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.Test;
+
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 
@@ -32,6 +34,7 @@ import com.googlecode.genericdao.search.Search;
 
 public class FilterTest extends BaseSearchTest {
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testGeneral() {
 		initDB();
 
@@ -51,6 +54,7 @@ public class FilterTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testOperators() {
 		initDB();
 
@@ -139,6 +143,7 @@ public class FilterTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testNesting() {
 		initDB();
 
@@ -165,6 +170,7 @@ public class FilterTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testLogicOperators() {
 		initDB();
 		Search s = new Search(Person.class);
@@ -194,6 +200,7 @@ public class FilterTest extends BaseSearchTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testNull() {
 		persist(grandpaA.getHome().getAddress());
 		persist(grandpaA.getHome());
@@ -256,6 +263,7 @@ public class FilterTest extends BaseSearchTest {
 		assertListEqual(new Person[] { g2 }, target.search(s));
 	}
 
+	@Test
 	public void testExample() {
 		initDB();
 
@@ -376,6 +384,7 @@ public class FilterTest extends BaseSearchTest {
 		return target.search(s);
 	}
 
+	@Test
 	public void testCustomExpressions() {
 		initDB();
 		

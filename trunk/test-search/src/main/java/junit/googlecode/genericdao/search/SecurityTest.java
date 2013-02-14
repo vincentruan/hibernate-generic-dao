@@ -16,6 +16,8 @@ package junit.googlecode.genericdao.search;
 
 import static org.junit.Assert.*;
 
+import org.junit.Test;
+
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.search.BaseSearchTest;
 
@@ -23,6 +25,8 @@ import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.Search;
 
 public class SecurityTest extends BaseSearchTest {
+	
+	@Test
 	public void testInjectionAttack() {
 		Search s = new Search(Person.class);
 		
