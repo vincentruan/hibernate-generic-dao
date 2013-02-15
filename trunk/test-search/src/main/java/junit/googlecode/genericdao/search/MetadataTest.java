@@ -30,12 +30,12 @@ import com.googlecode.genericdao.search.MetadataUtil;
 
 public class MetadataTest extends BaseSearchTest {
 	
+	protected MetadataUtil metadataUtil;
+	
 	@Autowired
 	public void setMetadataUtil(MetadataUtil metadataUtil) {
 		this.metadataUtil = metadataUtil;
 	}
-
-	protected MetadataUtil metadataUtil;
 
 	@Test
 	public void testProperties() {
@@ -103,24 +103,54 @@ public class MetadataTest extends BaseSearchTest {
 	}
 	
 	@Test
-	public void testValues() {
-		Metadata md = metadataUtil.get(Person.class);
-		Metadata md2 = md.getPropertyType("home");
-		Metadata md3 = metadataUtil.get(RecipeIngredient.class);
-		Metadata md4 = md3.getIdType();
+	public void testGetPropertyValueOnUnpersistedEntity() {
+		assertNull(joeA.getId()); // NOTE: with the test objects not persisted to the DB, the ids are still null.
+		testGetPropertyValue(joeA, recipes.get(0));
+	}
+	
+	@Test
+	public void testGetPropertyValueOnEntityUnconnectedToORM() {
+		initDB();
+		assertNotNull(joeA.getId());
+		testGetPropertyValue(joeA, recipes.get(0));
+	}
+	
+	@Test
+	public void testGetPropertyValueOnEntityFetchedFromORM() {
+		initDB();
 		
-		assertEquals(joeA.getFirstName(), md.getPropertyValue(joeA, "firstName"));
-		assertEquals(joeA.getId(), md.getPropertyValue(joeA, "id"));
-		assertEquals(joeA.getId(), md.getIdValue(joeA));
+		Person joeFromDatabase = find(Person.class, joeA.getId());
+		Recipe recipeFromDatabase = find(Recipe.class, recipes.get(0).getId());
 		
-		Recipe recipe = recipes.get(0);
+		testGetPropertyValue(joeFromDatabase, recipeFromDatabase);
+	}
+	
+	@Test
+	public void testGetPropertyValueOnEntityFetchedFromORMAsProxy() {
+		initDB();
+		
+		Person joeFromDatabase = getProxy(Person.class, joeA.getId());
+		Recipe recipeFromDatabase = getProxy(Recipe.class, recipes.get(0).getId());
+		
+		testGetPropertyValue(joeFromDatabase, recipeFromDatabase);
+	}
+	
+	protected void testGetPropertyValue(Person person, Recipe recipe) {
+		Metadata md_Person = metadataUtil.get(Person.class);
+		Metadata md_RecipeIngredient = metadataUtil.get(RecipeIngredient.class);
+		Metadata md_RecipeIngredientId = md_RecipeIngredient.getIdType();
+		
+		assertEquals(person.getFirstName(), md_Person.getPropertyValue(person, "firstName"));
+		assertEquals(person.getId(), md_Person.getPropertyValue(person, "id"));
+		assertEquals(person.getId(), md_Person.getIdValue(person));
+		
 		RecipeIngredient ri = recipe.getIngredients().iterator().next();
 		
-		assertEquals(recipe, md4.getPropertyValue(ri.getCompoundId(), "recipe"));
-		assertEquals(recipe.getTitle(), md4.getPropertyType("recipe").getPropertyValue(recipe, "title"));
-		assertEquals(recipe.getId(), md4.getPropertyType("recipe").getIdValue(recipe));
-		assertEquals(ri.getCompoundId(), md3.getIdValue(ri));
-		assertEquals(null, md4.getIdValue(ri.getCompoundId()));
+		assertEquals(recipe, md_RecipeIngredientId.getPropertyValue(ri.getCompoundId(), "recipe"));
+		assertEquals(recipe.getTitle(), md_RecipeIngredientId.getPropertyType("recipe").getPropertyValue(recipe, "title"));
+		assertEquals(recipe.getId(), md_RecipeIngredientId.getPropertyType("recipe").getIdValue(recipe));
+		assertEquals(ri.getCompoundId(), md_RecipeIngredient.getIdValue(ri));
+		assertEquals(null, md_RecipeIngredientId.getIdValue(ri.getCompoundId()));
 	}
 	
 	@Test

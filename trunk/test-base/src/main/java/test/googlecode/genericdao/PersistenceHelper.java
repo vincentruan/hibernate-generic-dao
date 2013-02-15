@@ -21,6 +21,10 @@ public interface PersistenceHelper {
 
 	public void persist(Object entity);
 	
+	/**
+	 * Find object using lazy loading: i.e. getReference() instead of find()
+	 * and load() instead of get()
+	 */
 	public <T> T getProxy(Class<T> type, Serializable id);
 	
 	public void flush();

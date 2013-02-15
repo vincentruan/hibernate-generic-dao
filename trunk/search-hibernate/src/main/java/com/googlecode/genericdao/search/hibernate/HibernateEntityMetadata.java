@@ -16,11 +16,9 @@ package com.googlecode.genericdao.search.hibernate;
 
 import java.io.Serializable;
 
-import org.hibernate.EntityMode;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.CollectionType;
 import org.hibernate.type.EntityType;
 import org.hibernate.type.Type;
@@ -57,7 +55,9 @@ public class HibernateEntityMetadata implements Metadata {
 	}
 
 	public Serializable getIdValue(Object object) {
-		return (Serializable) getPropertyValue(object, getIdProperty());
+//		TODO... I might still need this	if (object instanceof HibernateProxy)
+//		return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
+		return metadata.getIdentifier(object, null);
 	}
 
 	public Class<?> getJavaClass() {
@@ -90,8 +90,8 @@ public class HibernateEntityMetadata implements Metadata {
 	}
 
 	public Object getPropertyValue(Object object, String property) {
-		if (getIdProperty().equals(property) && object instanceof HibernateProxy)
-			return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
+		if (getIdProperty().equals(property))
+			return getIdValue(object);
 		else
 			return metadata.getPropertyValue(object, property);
 	}

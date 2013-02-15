@@ -18,6 +18,10 @@ import static org.junit.Assert.*;
 
 import java.util.HashMap;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import test.googlecode.genericdao.BaseTest;
 import test.googlecode.genericdao.model.Person;
 
@@ -32,14 +36,17 @@ public class FlexDAOAdapterTest extends BaseTest {
 	private FlexDAOAdapter flexDAOAdapter;
 	private DAODispatcher dispatcher;
 
+	@Autowired @Qualifier("origGeneralDAO")
 	public void setOrigGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
 	}
 
+	@Autowired
 	public void setOrigFlexDAOAdapter(FlexDAOAdapter flexDAOAdapter) {
 		this.flexDAOAdapter = flexDAOAdapter;
 	}
 
+	@Autowired
 	public void setOrigDAODispatcher(DAODispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
@@ -49,6 +56,7 @@ public class FlexDAOAdapterTest extends BaseTest {
 	 * underlying implementation that is thoroughly tested elsewhere.
 	 */
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testFlexDAOAdapter() throws Exception {
 		// use general DAO
 		dispatcher.setSpecificDAOs(new HashMap<String, Object>());

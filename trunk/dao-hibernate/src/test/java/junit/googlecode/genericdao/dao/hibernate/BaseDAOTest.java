@@ -19,14 +19,15 @@ import static org.junit.Assert.*;
 import java.io.Serializable;
 import java.util.List;
 
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.SessionFactory;
-//import org.hibernate.engine.SessionImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.pojo.javassist.JavassistLazyInitializer;
 import org.hibernate.type.AnyType;
+import org.hibernate.type.StandardBasicTypes;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import test.googlecode.genericdao.dao.hibernate.HibernateBaseDAOTester;
@@ -54,10 +55,12 @@ public class BaseDAOTest extends BaseTest {
 	
 	private HibernateBaseDAOTester target;
 
+	@Autowired
 	public void setHibernateBaseDAOTester(HibernateBaseDAOTester dao) {
 		this.target = dao;
 	}
 
+	@Test
 	public void testSave() {
 		Serializable id = null;
 
@@ -88,6 +91,7 @@ public class BaseDAOTest extends BaseTest {
 		grandpaA.setFirstName("Grandpa");
 	}
 
+	@Test
 	public void testUpdate() {
 		initDB();
 		Person fred = copy(papaA);
@@ -115,7 +119,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 	
-	// TODO Rewrite this test for Hibernate 4.x. Don't let it stay commented out.
+	@Test
 	public void testProxyIssues() throws HibernateException, SecurityException,
 			NoSuchMethodException {
 		initDB();
@@ -125,28 +129,28 @@ public class BaseDAOTest extends BaseTest {
 
 			// When working with 2 different session, the session.contains(entity) returns false
 			// see in _exists(Object entity) in HibernateBaseDAO
-//			SessionImplementor openSession = (SessionImplementor) sessionFactory.openSession();
-//			
-//			Address proxy = (Address) JavassistLazyInitializer.getProxy(
-//					Address.class.getName(),
-//					Address.class,
-//					new Class[] { HibernateProxy.class },
-//					Address.class.getMethod("getId"),
-//					Address.class.getMethod("setId", Long.class),
-//					new AnyType(Hibernate.LONG, Hibernate.SERIALIZABLE),
-//					id,
-//					openSession
-//			);
-//
-//
-//			// If this is not working properly, this will throw an error
-//			target.saveOrUpdateIsNew(proxy);
-//			
-//			//So will this
-//			Address address2 = target.get(proxy.getClass(), id);
-//
-//			assertEquals("update on the proxy should work ", proxy.getCity(),
-//					address2.getCity());
+			SessionImplementor openSession = (SessionImplementor) sessionFactory.openSession();
+			
+			Address proxy = (Address) JavassistLazyInitializer.getProxy(
+					Address.class.getName(),
+					Address.class,
+					new Class[] { HibernateProxy.class },
+					Address.class.getMethod("getId"),
+					Address.class.getMethod("setId", Long.class),
+					new AnyType(StandardBasicTypes.LONG, StandardBasicTypes.SERIALIZABLE),
+					id,
+					openSession
+			);
+
+
+			// If this is not working properly, this will throw an error
+			target.saveOrUpdateIsNew(proxy);
+			
+			//So will this
+			Address address2 = target.get(proxy.getClass(), id);
+
+			assertEquals("update on the proxy should work ", proxy.getCity(),
+					address2.getCity());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,6 +160,7 @@ public class BaseDAOTest extends BaseTest {
 	}
 
 
+	@Test
 	public void testPersist() {
 		target.persist(grandpaA.getHome().getAddress());
 		target.persist(grandpaA.getHome());
@@ -181,6 +186,7 @@ public class BaseDAOTest extends BaseTest {
 		grandpaA.setFirstName("Grandpa");
 	}
 
+	@Test
 	public void testMerge() {
 		initDB();
 		Person fred = copy(papaA);
@@ -205,6 +211,7 @@ public class BaseDAOTest extends BaseTest {
 		assertEquals("The change should be made.", "Santos", target.searchUnique(s));
 	}
 
+	@Test
 	public void testDelete() {
 		initDB();
 		//remove all project member relationships to avoid integrity constraint violations
@@ -255,6 +262,7 @@ public class BaseDAOTest extends BaseTest {
 		assertFalse("return false when ID not found", target.deleteEntity(fake));
 	}
 
+	@Test
 	public void testLoad() {
 		initDB();
 
@@ -265,6 +273,7 @@ public class BaseDAOTest extends BaseTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testForceClass() {
 		Person bob = copy(grandpaA);
 		Person fred = copy(grandmaA);
@@ -326,6 +335,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 
+	@Test
 	public void testSaveMulti() {
 		Serializable id = null;
 
@@ -347,6 +357,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 
+	@Test
 	public void testSaveOrUpdate() {
 
 		initDB();
@@ -457,6 +468,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 
+	@Test
 	public void testGetLoadMulti() {
 		initDB();
 
@@ -488,6 +500,7 @@ public class BaseDAOTest extends BaseTest {
 
 	}
 
+	@Test
 	public void testDeleteMulti() {
 		initDB();
 		//remove all project member relationships to avoid integrity constraint violations
@@ -553,6 +566,7 @@ public class BaseDAOTest extends BaseTest {
 
 	}
 
+	@Test
 	public void testExists() {
 		initDB();
 
@@ -616,6 +630,7 @@ public class BaseDAOTest extends BaseTest {
 		assertTrue(target.exists(ri));
 	}
 
+	@Test
 	public void testCompoundId() {
 		initDB();
 		
@@ -674,6 +689,7 @@ public class BaseDAOTest extends BaseTest {
 		//exists (see exists test)
 	}
 	
+	@Test
 	public void testSearch() {
 		initDB();
 		
@@ -717,6 +733,7 @@ public class BaseDAOTest extends BaseTest {
 		
 	}
 	
+	@Test
 	public void testExample() {
 		initDB();
 		

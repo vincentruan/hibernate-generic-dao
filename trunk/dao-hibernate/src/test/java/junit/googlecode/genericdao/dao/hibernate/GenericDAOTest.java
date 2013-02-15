@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.SessionFactory;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import test.googlecode.genericdao.dao.hibernate.dao.PersonDAO;
@@ -40,10 +41,12 @@ public class GenericDAOTest extends BaseTest {
 	
 	private ProjectDAO projectDAO;
 
+	@Autowired
 	public void setPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
 	
+	@Autowired
 	public void setProjectDAO(ProjectDAO projectDAO) {
 		this.projectDAO = projectDAO;
 	}
@@ -57,6 +60,7 @@ public class GenericDAOTest extends BaseTest {
 	 * implementation is more thoroughly tested in the
 	 * <code>junit.googlecode.genericdao.dao.hibernate</code> package
 	 */
+	@Test
 	public void testDAO() {
 		Person fred = setup(new Person("Fred", "Smith", 35));
 		Person bob = setup(new Person("Bob", "Jones", 58));
@@ -195,6 +199,7 @@ public class GenericDAOTest extends BaseTest {
 	/**
 	 * Test an example of adding and overriding DAO methods.
 	 */
+	@Test
 	public void testExtendingDAO() {
 		initDB();
 		
@@ -224,6 +229,7 @@ public class GenericDAOTest extends BaseTest {
 		assertEquals("Third", results.get(1).getName());
 	}
 	
+	@Test
 	public void testSubclassingDAO() {
 		initDB();
 		
