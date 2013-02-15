@@ -19,6 +19,10 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import test.googlecode.genericdao.dao.hibernate.dao.original.PersonDAO;
 import test.googlecode.genericdao.dao.hibernate.dao.original.PersonService;
 import test.googlecode.genericdao.BaseTest;
@@ -35,31 +39,38 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 	private PersonDAO personDAO;
 	private PersonService personService;
 
+	@Autowired @Qualifier("origGeneralDAO")
 	public void setOrigGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
 	}
 
+	@Autowired
 	public void setOrigDAODispatcher(DAODispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
+	@Autowired
 	public void setOrigPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
 
+	@Autowired
 	public void setOrigPersonService(PersonService personService) {
 		this.personService = personService;
 	}
 
+	@Test
 	public void testGeneralDAO() {
 		testDAO(generalDAO);
 	}
 
+	@Test
 	public void testDispatcherWithGeneralDAO() {
 		dispatcher.setSpecificDAOs(new HashMap<String, Object>());
 		testDAO(dispatcher);
 	}
 
+	@Test
 	public void testDispatcherWithSpecificDAO() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Person.class.getName(), personDAO);
@@ -68,6 +79,7 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 		testDAO(dispatcher);
 	}
 
+	@Test
 	public void testDispatcherWithSpecificDAONoInterface() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Person.class.getName(), personService);
@@ -82,7 +94,7 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 	 * <code>junit.googlecode.genericdao.dao.hibernate</code> package
 	 */
 	@SuppressWarnings("unchecked")
-	public void testDAO(GeneralDAO dao) {
+	private void testDAO(GeneralDAO dao) {
 		Person fred = new Person();
 		fred.setFirstName("Fred");
 		fred.setLastName("Smith");

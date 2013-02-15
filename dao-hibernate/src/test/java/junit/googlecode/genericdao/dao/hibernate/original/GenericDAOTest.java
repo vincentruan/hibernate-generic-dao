@@ -17,6 +17,7 @@ package junit.googlecode.genericdao.dao.hibernate.original;
 import static org.junit.Assert.*;
 
 import org.hibernate.SessionFactory;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import test.googlecode.genericdao.dao.hibernate.dao.original.PersonDAO;
@@ -32,6 +33,7 @@ public class GenericDAOTest extends BaseTest {
 
 	private PersonDAO personDAO;
 
+	@Autowired
 	public void setOrigPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
@@ -44,6 +46,7 @@ public class GenericDAOTest extends BaseTest {
 	 * implementation is more thoroughly tested in the
 	 * <code>junit.googlecode.genericdao.dao.hibernate</code> package
 	 */
+	@Test
 	public void testDAO() {
 		Person fred = new Person();
 		fred.setFirstName("Fred");
@@ -180,6 +183,7 @@ public class GenericDAOTest extends BaseTest {
 		assertFalse(personDAO.isConnected(bob));
 	}
 
+	@Test
 	public void testSubclassingDAO() {
 		initDB();
 		
