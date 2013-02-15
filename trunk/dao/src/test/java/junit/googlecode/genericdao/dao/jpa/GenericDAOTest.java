@@ -22,6 +22,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.dao.jpa.dao.PersonDAO;
 import test.googlecode.genericdao.dao.jpa.dao.ProjectDAO;
@@ -36,6 +37,7 @@ import com.googlecode.genericdao.search.SearchResult;
 import com.googlecode.genericdao.search.Sort;
 import com.googlecode.genericdao.search.jpa.JPASearchProcessor;
 
+@Transactional
 public class GenericDAOTest extends BaseTest {
 
 	private PersonDAO personDAO;

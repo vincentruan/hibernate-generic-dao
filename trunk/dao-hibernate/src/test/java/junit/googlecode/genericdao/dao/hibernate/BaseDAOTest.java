@@ -29,6 +29,7 @@ import org.hibernate.type.AnyType;
 import org.hibernate.type.StandardBasicTypes;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.dao.hibernate.HibernateBaseDAOTester;
 import test.googlecode.genericdao.BaseTest;
@@ -48,6 +49,7 @@ import com.googlecode.genericdao.search.Field;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 
+@Transactional
 public class BaseDAOTest extends BaseTest {
 
 	@Autowired

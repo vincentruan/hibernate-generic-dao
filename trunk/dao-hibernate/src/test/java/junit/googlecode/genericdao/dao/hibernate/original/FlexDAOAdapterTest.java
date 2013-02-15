@@ -21,6 +21,7 @@ import java.util.HashMap;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.BaseTest;
 import test.googlecode.genericdao.model.Person;
@@ -31,6 +32,7 @@ import com.googlecode.genericdao.dao.hibernate.original.GeneralDAO;
 import com.googlecode.genericdao.search.Filter;
 import com.googlecode.genericdao.search.flex.FlexSearch;
 
+@Transactional
 public class FlexDAOAdapterTest extends BaseTest {
 	private GeneralDAO generalDAO;
 	private FlexDAOAdapter flexDAOAdapter;

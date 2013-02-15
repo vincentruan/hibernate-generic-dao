@@ -20,6 +20,8 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import test.googlecode.genericdao.dao.jpa.JPABaseDAOTester;
 import test.googlecode.genericdao.BaseTest;
 import test.googlecode.genericdao.model.Home;
@@ -37,6 +39,7 @@ import com.googlecode.genericdao.search.Field;
 import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 
+@Transactional
 public class BaseDAOTest extends BaseTest {
 
 	private JPABaseDAOTester target;

@@ -22,6 +22,7 @@ import java.util.Map;
 import org.hibernate.ObjectNotFoundException;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.dao.hibernate.dao.PersonDAO;
 import test.googlecode.genericdao.dao.hibernate.dao.PersonService;
@@ -34,6 +35,7 @@ import com.googlecode.genericdao.dao.hibernate.GeneralDAO;
 import com.googlecode.genericdao.search.ExampleOptions;
 import com.googlecode.genericdao.search.Search;
 
+@Transactional
 public class GeneralDAOAndDispatcherTest extends BaseTest {
 	private GeneralDAO generalDAO;
 	private DAODispatcher dispatcher;
