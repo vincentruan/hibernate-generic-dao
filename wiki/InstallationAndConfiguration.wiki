@@ -13,7 +13,7 @@ If you want to use standard hibernate without JPA, include the following depende
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>dao-hibernate</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0</version> <!-- use current version -->
 </dependency>
 }}}
 
@@ -23,13 +23,13 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>dao</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0</version> <!-- use current version -->
 </dependency>
 <!-- This second one includes the Hibernate Entity Manager plugin for the framework -->
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>search-jpa-hibernate</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.0</version> <!-- use current version -->
 </dependency>
 }}}
 
