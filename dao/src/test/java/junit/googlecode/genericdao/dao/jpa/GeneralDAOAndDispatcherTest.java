@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import test.googlecode.genericdao.dao.jpa.dao.PersonDAO;
 import test.googlecode.genericdao.dao.jpa.dao.PersonService;
 import test.googlecode.genericdao.BaseTest;
@@ -29,6 +31,7 @@ import com.googlecode.genericdao.dao.jpa.GeneralDAO;
 import com.googlecode.genericdao.search.ExampleOptions;
 import com.googlecode.genericdao.search.Search;
 
+@Transactional
 public class GeneralDAOAndDispatcherTest extends BaseTest {
 	private GeneralDAO generalDAO;
 	private DAODispatcher dispatcher;

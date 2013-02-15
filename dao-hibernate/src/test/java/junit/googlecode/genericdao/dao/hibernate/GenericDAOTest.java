@@ -22,6 +22,7 @@ import org.hibernate.ObjectNotFoundException;
 import org.hibernate.SessionFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.dao.hibernate.dao.PersonDAO;
 import test.googlecode.genericdao.dao.hibernate.dao.ProjectDAO;
@@ -35,6 +36,7 @@ import com.googlecode.genericdao.search.Search;
 import com.googlecode.genericdao.search.SearchResult;
 import com.googlecode.genericdao.search.Sort;
 
+@Transactional
 public class GenericDAOTest extends BaseTest {
 
 	private PersonDAO personDAO;

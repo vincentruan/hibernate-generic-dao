@@ -15,11 +15,13 @@
 package test.googlecode.genericdao.search;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.BaseTest;
 
 import com.googlecode.genericdao.search.SearchFacade;
 
+@Transactional
 public class BaseSearchTest extends BaseTest {
 	protected SearchFacade target;
 	

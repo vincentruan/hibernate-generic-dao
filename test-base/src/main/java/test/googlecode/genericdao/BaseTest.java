@@ -33,16 +33,12 @@ import org.junit.Before;
 import org.junit.runner.RunWith;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.PreparedStatementCreatorFactory;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.model.Address;
 import test.googlecode.genericdao.model.Home;
@@ -59,7 +55,6 @@ import test.googlecode.genericdao.model.Store;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "classpath:jUnit-applicationContext.xml" })
-@Transactional
 public abstract class BaseTest {
 	
 	private JdbcTemplate jdbcTemplate;
@@ -71,7 +66,7 @@ public abstract class BaseTest {
 	
 	PersistenceHelper persistenceHelper;
 	
-	@Autowired
+	@Autowired(required = false)
 	public void setPersistenceHelper(PersistenceHelper persistenceHelper) {
 		this.persistenceHelper = persistenceHelper;
 	}
