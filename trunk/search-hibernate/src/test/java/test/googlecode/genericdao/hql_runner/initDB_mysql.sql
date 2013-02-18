@@ -1,4 +1,10 @@
-/* This SQL file works with H2 database */
+/* This SQL file works with MySQL */
+
+
+SET NAMES utf8;
+
+SET SQL_MODE='';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO';
 
 /*Data for the table `address` */
 
@@ -18,11 +24,11 @@ insert into `person` (`id`,`age`,`dob`,`first_name`,`last_name`,`weight`,`father
 
 /*Data for the table `pet` */
 
-insert into `pet` (`limbed`,`id`,`idNumber`,`first`,`last`,`species`,`hasPaws`,`favoritePlaymate_id`) values (1,1,4444,'Jimmy',NULL,'spider',0,1),(0,2,1111,'Mr','Wiggles','fish',NULL,1),(1,3,2222,'Miss','Prissy','cat',0,2),(1,4,3333,'Norman',NULL,'cat',0,1);
+insert into `pet` (`limbed`,`id`,`idNumber`,`first`,`last`,`species`,`hasPaws`,`favoritePlaymate_id`) values (1,1,4444,'Jimmy',NULL,'spider','\0',1),(0,2,1111,'Mr','Wiggles','fish',NULL,1),(1,3,2222,'Miss','Prissy','cat','\0',2),(1,4,3333,'Norman',NULL,'cat','\0',1);
 
 /*Data for the table `pet_limbs` */
 
-insert into `limbedpet_limbs` (`LimbedPet_id`,`limbs`,`idx`) values (1,'left front leg',0),(1,'right front leg',1),(1,'left frontish leg',2),(1,'right frontish leg',3),(1,'left hindish leg',4),(1,'right hindish leg',5),(1,'left hind leg',6),(1,'right hind leg',7),(3,'left front leg',0),(3,'right front leg',1),(3,'left hind leg',2),(3,'right hind leg',3),(4,'left front leg',0),(4,'right front leg',1),(4,'left hind leg',2),(4,'right hind leg',3);
+insert into `pet_limbs` (`Pet_id`,`element`,`idx`) values (1,'left front leg',0),(1,'right front leg',1),(1,'left frontish leg',2),(1,'right frontish leg',3),(1,'left hindish leg',4),(1,'right hindish leg',5),(1,'left hind leg',6),(1,'right hind leg',7),(3,'left front leg',0),(3,'right front leg',1),(3,'left hind leg',2),(3,'right hind leg',3),(4,'left front leg',0),(4,'right front leg',1),(4,'left hind leg',2),(4,'right hind leg',3);
 
 /*Data for the table `project` */
 
@@ -42,8 +48,10 @@ insert into `recipe_x_ingredient` (`amount`,`measure`,`recipe_id`,`ingredient_in
 
 /*Data for the table `store` */
 
-insert into `store` (`id`,`name`) values (1,'Billy''s Mini-Mart'),(2,'Tom''s Convenience Store');
+insert into `store` (`id`,`name`) values (1,'Billy\'s Mini-Mart'),(2,'Tom\'s Convenience Store');
 
 /*Data for the table `store_ingredient` */
 
 insert into `store_ingredient` (`Store_id`,`ingredientsCarried_ingredientId`) values (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(2,1),(2,2),(2,4);
+
+SET SQL_MODE=@OLD_SQL_MODE;
