@@ -15,6 +15,8 @@
 package test.googlecode.genericdao;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public interface PersistenceHelper {
 	public <T> T find(Class<T> type, Serializable id);
@@ -30,4 +32,10 @@ public interface PersistenceHelper {
 	public void flush();
 	
 	public void clear();
+	
+	public void executeWithJdbcConnection(ExecutableWithJdbcConnection executable);
+	
+	public interface ExecutableWithJdbcConnection {
+		public void execute(Connection connection) throws SQLException;
+	}
 }

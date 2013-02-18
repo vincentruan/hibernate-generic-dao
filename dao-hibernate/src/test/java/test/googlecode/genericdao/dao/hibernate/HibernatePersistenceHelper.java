@@ -15,8 +15,11 @@
 package test.googlecode.genericdao.dao.hibernate;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import test.googlecode.genericdao.PersistenceHelper;
@@ -50,6 +53,15 @@ public class HibernatePersistenceHelper implements PersistenceHelper {
 	@SuppressWarnings("unchecked")
 	public <T> T getProxy(Class<T> type, Serializable id) {
 		return (T) sessionFactory.getCurrentSession().load(type, id);
+	}
+	
+	public void executeWithJdbcConnection(
+			final ExecutableWithJdbcConnection executable) {
+		sessionFactory.getCurrentSession().doWork(new Work() {
+			public void execute(Connection connection) throws SQLException {
+				executable.execute(connection);
+			}
+		});
 	}
 
 }

@@ -15,9 +15,14 @@
 package test.googlecode.genericdao.jpa;
 
 import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.hibernate.Session;
+import org.hibernate.jdbc.Work;
 
 import test.googlecode.genericdao.PersistenceHelper;
 
@@ -48,6 +53,16 @@ public class JPAPersistenceHelper implements PersistenceHelper {
 
 	public <T> T getProxy(Class<T> type, Serializable id) {
 		return entityManager.getReference(type, id);
+	}
+	
+	public void executeWithJdbcConnection(
+			final ExecutableWithJdbcConnection executable) {
+		Session hibernateSession = (Session) entityManager.getDelegate();
+		hibernateSession.doWork(new Work() {
+			public void execute(Connection connection) throws SQLException {
+				executable.execute(connection);
+			}
+		});
 	}
 
 }
