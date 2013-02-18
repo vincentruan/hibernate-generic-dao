@@ -108,11 +108,12 @@ public abstract class BaseSearchProcessor {
 		SearchContext ctx = new SearchContext(entityClass, rootAlias, paramList);
 
 		List<Field> fields = checkAndCleanFields(search.getFields());
-
+		
+		applyFetches(ctx, checkAndCleanFetches(search.getFetches()), fields);
+		
 		String select = generateSelectClause(ctx, fields, search.isDistinct());
 		String where = generateWhereClause(ctx, checkAndCleanFilters(search.getFilters()), search.isDisjunction());
 		String orderBy = generateOrderByClause(ctx, checkAndCleanSorts(search.getSorts()));
-		applyFetches(ctx, checkAndCleanFetches(search.getFetches()), fields);
 		String from = generateFromClause(ctx, true);
 
 		StringBuilder sb = new StringBuilder();
@@ -234,7 +235,12 @@ public abstract class BaseSearchProcessor {
 					if (field.getProperty() == null || "".equals(field.getProperty())) {
 						prop = ctx.getRootAlias();
 					} else {
-						prop = getPathRef(ctx, field.getProperty());
+						AliasNode aliasNodeForProperty = getAliasForPathIfItExists(ctx, field.getProperty());
+						if (aliasNodeForProperty != null) {
+							prop = aliasNodeForProperty.alias;
+						} else {
+							prop = getPathRef(ctx, field.getProperty());
+						}
 					}
 	
 					switch (field.getOperator()) {
@@ -294,7 +300,7 @@ public abstract class BaseSearchProcessor {
 			// apply fetches
 			boolean hasFetches = false, hasFields = false;
 			for (String fetch : fetches) {
-				getAlias(ctx, fetch, true);
+				getOrCreateAlias(ctx, fetch, true);
 				hasFetches = true;
 			}
 			if (hasFetches && fields != null) {
@@ -873,7 +879,7 @@ public abstract class BaseSearchProcessor {
 
 		String[] parts = splitPath(ctx, path);
 
-		return getAlias(ctx, parts[0], false).alias + "." + parts[1];
+		return getOrCreateAlias(ctx, parts[0], false).alias + "." + parts[1];
 	}
 
 	/**
@@ -955,19 +961,14 @@ public abstract class BaseSearchProcessor {
 	 * to reference that entity (ex. a4_manager). If there is no alias for the
 	 * given path, one will be created.
 	 */
-	protected AliasNode getAlias(SearchContext ctx, String path, boolean setFetch) {
-		if (path == null || path.equals("")) {
-			return ctx.aliases.get(ROOT_PATH);
-		} else if (ctx.aliases.containsKey(path)) {
-			AliasNode node = ctx.aliases.get(path);
-			if (setFetch) {
-				while (node.parent != null) {
-					node.fetch = true;
-					node = node.parent;
-				}
-			}
+	protected AliasNode getOrCreateAlias(SearchContext ctx, String path, boolean setFetch) {
+		AliasNode foundNode = getAliasForPathIfItExists(ctx, path);
+		
+		if (foundNode != null) {
+			if (setFetch)
+				setFetchOnAliasNodeAndAllAncestors(foundNode);
 
-			return node;
+			return foundNode;
 		} else {
 			String[] parts = splitPath(ctx, path);
 
@@ -978,12 +979,36 @@ public abstract class BaseSearchProcessor {
 			AliasNode node = new AliasNode(parts[1], alias);
 
 			// set up path recursively
-			getAlias(ctx, parts[0], setFetch).addChild(node);
+			getOrCreateAlias(ctx, parts[0], setFetch).addChild(node);
 
-			node.fetch = setFetch;
+			if (setFetch)
+				setFetchOnAliasNodeAndAllAncestors(node);
+			
 			ctx.aliases.put(path, node);
 
 			return node;
+		}
+	}
+
+	/**
+	 * Given a full path to an entity (ex. department.manager), return the alias
+	 * to reference that entity (ex. a4_manager). If there is no alias for the
+	 * given path, one will be created.
+	 * 
+	 * @return the associated AliasNode or <code>null</code> if none.
+	 */
+	protected AliasNode getAliasForPathIfItExists(SearchContext ctx, String path) {
+		if (path == null || path.equals("")) {
+			return ctx.aliases.get(ROOT_PATH);
+		} else {
+			return ctx.aliases.get(path);
+		}
+	}
+	
+	protected void setFetchOnAliasNodeAndAllAncestors(AliasNode node) {
+		while (node.parent != null) {
+			node.fetch = true;
+			node = node.parent;
 		}
 	}
 
