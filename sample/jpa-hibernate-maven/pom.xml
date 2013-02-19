@@ -91,14 +91,14 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>dao</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>search-jpa-hibernate</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<type>jar</type>
 			<scope>compile</scope>
 		</dependency>

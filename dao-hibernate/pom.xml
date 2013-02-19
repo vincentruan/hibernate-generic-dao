@@ -16,18 +16,18 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>dao</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>search-hibernate</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>test-base</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 

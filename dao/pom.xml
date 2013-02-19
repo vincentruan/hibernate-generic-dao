@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>search</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 		    <groupId>org.hibernate.javax.persistence</groupId>
@@ -28,13 +28,13 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>test-base</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>search-jpa-hibernate</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 

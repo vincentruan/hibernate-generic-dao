@@ -16,7 +16,7 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>search-hibernate</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>test-search</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 

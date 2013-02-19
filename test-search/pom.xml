@@ -16,12 +16,12 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>test-base</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>search</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 </project>
