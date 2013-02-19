@@ -11,7 +11,7 @@
 
 	<import resource="applicationContext-datasource.xml" />
 
-	<!--**** Revere Group DAO Setup ****-->
+	<!--**** Hibernate Generic DAO Setup ****-->
 	<!--
 		Need one search processor and one metadata util per persistence unit
 		(i.e. EntityManagerFactory). We're wiring these to the Generic DAOs
