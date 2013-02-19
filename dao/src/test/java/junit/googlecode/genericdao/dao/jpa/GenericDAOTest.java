@@ -21,6 +21,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,26 +44,36 @@ public class GenericDAOTest extends BaseTest {
 	private PersonDAO personDAO;
 	
 	private ProjectDAO projectDAO;
+	
+	private EntityManager entityManager;
+	
+	private JPASearchProcessor searchProcessor;
 
+	@Autowired
 	public void setPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
 	
+	@Autowired
 	public void setProjectDAO(ProjectDAO projectDAO) {
 		this.projectDAO = projectDAO;
 	}
 	
 	@PersistenceContext
-	EntityManager entityManager;
-	
-	@Autowired
-	JPASearchProcessor searchProcessor;
+	public void setEntityManager(EntityManager entityManager) {
+		this.entityManager = entityManager;
+	}
 
+	@Autowired
+	public void setSearchProcessor(JPASearchProcessor searchProcessor) {
+		this.searchProcessor = searchProcessor;
+	}
 
 	/**
 	 * Just quickly check that all the methods basically work. The underlying
 	 * implementation is more thoroughly tested elsewhere
 	 */
+	@Test
 	public void testDAO() {
 		Person fred = setup(new Person("Fred", "Smith", 35));
 		Person bob = setup(new Person("Bob", "Jones", 58));
@@ -228,6 +239,7 @@ public class GenericDAOTest extends BaseTest {
 	/**
 	 * Test an example of adding and overriding DAO methods.
 	 */
+	@Test
 	public void testExtendingDAO() {
 		initDB();
 		
@@ -257,6 +269,7 @@ public class GenericDAOTest extends BaseTest {
 		assertEquals("Third", results.get(1).getName());
 	}
 	
+	@Test
 	public void testSubclassingDAO() {
 		initDB();
 		

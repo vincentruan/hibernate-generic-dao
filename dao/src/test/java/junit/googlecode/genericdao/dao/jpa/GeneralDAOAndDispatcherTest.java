@@ -19,6 +19,8 @@ import static org.junit.Assert.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.dao.jpa.dao.PersonDAO;
@@ -38,31 +40,38 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 	private PersonDAO personDAO;
 	private PersonService personService;
 
+	@Autowired
 	public void setGeneralDAO(GeneralDAO generalDAO) {
 		this.generalDAO = generalDAO;
 	}
 
+	@Autowired
 	public void setDAODispatcher(DAODispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 	}
 
+	@Autowired
 	public void setPersonDAO(PersonDAO personDAO) {
 		this.personDAO = personDAO;
 	}
 
+	@Autowired
 	public void setPersonService(PersonService personService) {
 		this.personService = personService;
 	}
 
+	@Test
 	public void testGeneralDAO() {
 		testDAO(generalDAO);
 	}
 
+	@Test
 	public void testDispatcherWithGeneralDAO() {
 		dispatcher.setSpecificDAOs(new HashMap<String, Object>());
 		testDAO(dispatcher);
 	}
 
+	@Test
 	public void testDispatcherWithSpecificDAO() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Person.class.getName(), personDAO);
@@ -71,6 +80,7 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 		testDAO(dispatcher);
 	}
 
+	@Test
 	public void testDispatcherWithSpecificDAONoInterface() {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put(Person.class.getName(), personService);
@@ -84,7 +94,7 @@ public class GeneralDAOAndDispatcherTest extends BaseTest {
 	 * implementation is more thoroughly tested elsewhere.
 	 */
 	@SuppressWarnings("unchecked")
-	public void testDAO(GeneralDAO dao) {
+	private void testDAO(GeneralDAO dao) {
 		Person fred = setup(new Person("Fred", "Smith", 35));
 		Person bob = setup(new Person("Bob", "Jones", 58));
 		Person cyndi = setup(new Person("Cyndi", "Loo", 58));

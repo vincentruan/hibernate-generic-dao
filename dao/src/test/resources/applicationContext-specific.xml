@@ -11,6 +11,7 @@
 		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
 		
 	<import resource="applicationContext-dao.xml"/>
+	<import resource="applicationContext-jpa-hibernate.xml"/>
 	
 	<bean id="searchProcessor" class="com.googlecode.genericdao.search.jpa.JPASearchProcessor">
 		<constructor-arg ref="metadataUtil"/>
@@ -21,32 +22,6 @@
 		<constructor-arg ref="entityManagerFactory"/>
 	</bean>
 	
-	<bean id="persistenceHelper" class="test.googlecode.genericdao.jpa.JPAPersistenceHelper"/>
-	
-	<bean id="entityManagerFactory"
-		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-		<property name="persistenceUnitName" value="JPATest" />
-		<property name="persistenceXmlLocation" value="classpath:persistence.xml" />
-		<property name="dataSource" ref="dataSource" />
-		<property name="loadTimeWeaver">
-			<bean class="org.springframework.instrument.classloading.InstrumentationLoadTimeWeaver" />
-		</property>
-		<property name="jpaVendorAdapter" ref="vendorAdapter" />
-	</bean>
-
-	<bean id="vendorAdapter"
-		class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
-		<property name="databasePlatform" value="${hibernate.dialect}" />
-		<property name="showSql" value="${show_sql}" />
-		<property name="generateDdl" value="true" />
-	</bean>
-
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
-		<property name="entityManagerFactory" ref="entityManagerFactory" />
-	</bean>
-
-	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-	
-	<tx:annotation-driven />
+	<bean id="persistenceHelper" class="test.googlecode.genericdao.jpa.JPAHibernatePersistenceHelper"/>
 
 </beans>
