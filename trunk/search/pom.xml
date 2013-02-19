@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>com.googlecode.genericdao</groupId>
 			<artifactId>test-base</artifactId>
-			<version>${version}</version>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
