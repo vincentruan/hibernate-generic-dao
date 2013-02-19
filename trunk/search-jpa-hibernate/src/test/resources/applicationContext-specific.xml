@@ -27,7 +27,7 @@
 	
 <!--	<bean id="metadataUtil" class="com.googlecode.genericdao.search.jpa.JPAAnnotationMetadataUtil"/>-->
 	
-	<bean id="persistenceHelper" class="test.googlecode.genericdao.jpa.JPAPersistenceHelper"/>
+	<bean id="persistenceHelper" class="test.googlecode.genericdao.jpa.JPAHibernatePersistenceHelper"/>
 	
 	<bean id="internalHelper" class="test.googlecode.genericdao.search.jpa.hibernate.HibernateInternalHelper"/>
 

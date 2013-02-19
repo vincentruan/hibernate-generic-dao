@@ -26,7 +26,7 @@ import org.hibernate.jdbc.Work;
 
 import test.googlecode.genericdao.PersistenceHelper;
 
-public class JPAPersistenceHelper implements PersistenceHelper {
+public class JPAHibernatePersistenceHelper implements PersistenceHelper {
 
 	public <T> T find(Class<T> type, Serializable id) {
 		return (T) entityManager.find(type, id);
@@ -35,15 +35,15 @@ public class JPAPersistenceHelper implements PersistenceHelper {
 	public void persist(Object entity) {
 		entityManager.persist(entity);
 	}
-	
+
 	public void flush() {
 		entityManager.flush();
 	}
-	
+
 	public void clear() {
 		entityManager.clear();
 	}
-	
+
 	private EntityManager entityManager;
 
 	@PersistenceContext
@@ -54,7 +54,7 @@ public class JPAPersistenceHelper implements PersistenceHelper {
 	public <T> T getProxy(Class<T> type, Serializable id) {
 		return entityManager.getReference(type, id);
 	}
-	
+
 	public void executeWithJdbcConnection(
 			final ExecutableWithJdbcConnection executable) {
 		Session hibernateSession = (Session) entityManager.getDelegate();

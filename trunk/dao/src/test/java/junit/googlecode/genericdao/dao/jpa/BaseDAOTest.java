@@ -20,6 +20,8 @@ import java.util.List;
 
 import javax.persistence.EntityNotFoundException;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import test.googlecode.genericdao.dao.jpa.JPABaseDAOTester;
@@ -44,10 +46,12 @@ public class BaseDAOTest extends BaseTest {
 
 	private JPABaseDAOTester target;
 
+	@Autowired
 	public void setJpaBaseDAOTester(JPABaseDAOTester dao) {
 		this.target = dao;
 	}
 
+	@Test
 	public void testPersist() {
 		target.persist(grandpaA.getHome().getAddress());
 		target.persist(grandpaA.getHome());
@@ -73,6 +77,7 @@ public class BaseDAOTest extends BaseTest {
 		grandpaA.setFirstName("Grandpa");
 	}
 
+	@Test
 	public void testMerge() {
 		initDB();
 		Person fred = copy(papaA);
@@ -97,6 +102,7 @@ public class BaseDAOTest extends BaseTest {
 		assertEquals("The change should be made.", "Santos", target.searchUnique(s));
 	}
 
+	@Test
 	public void testRemove() {
 		initDB();
 		//remove all project member relationships to avoid integrity constraint violations
@@ -150,6 +156,7 @@ public class BaseDAOTest extends BaseTest {
 	}
 
 	@SuppressWarnings("unchecked")
+	@Test
 	public void testForceClass() {
 		Person bob = copy(grandpaA);
 		Person fred = copy(grandmaA);
@@ -211,6 +218,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 
+	@Test
 	public void testPersistMulti() {
 		target.persist(grandpaA.getHome().getAddress(), grandpaA.getHome(), grandpaA);
 
@@ -230,6 +238,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 	
+	@Test
 	public void testMergeMulti() {
 		initDB();
 		
@@ -261,6 +270,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 
+	@Test
 	public void testPersistOrMerge() {
 
 		initDB();
@@ -343,6 +353,7 @@ public class BaseDAOTest extends BaseTest {
 		}
 	}
 	
+	@Test
 	public void testGetReference() {
 		initDB();
 		
@@ -363,6 +374,7 @@ public class BaseDAOTest extends BaseTest {
 		} catch (EntityNotFoundException ex) { }
 	}
 	
+	@Test
 	public void testRefresh() {
 		//This test isn't very complete. I don't have a way to alter the underlying data so I can refresh.
 		Person p = copy(grandpaA);
@@ -371,6 +383,7 @@ public class BaseDAOTest extends BaseTest {
 		p.getId();
 	}
 
+	@Test
 	public void testFindMulti() {
 		initDB();
 
@@ -388,6 +401,7 @@ public class BaseDAOTest extends BaseTest {
 		assertEquals(papaB.getAge(), people[2].getAge());
 	}
 
+	@Test
 	public void testRemoveMulti() {
 		initDB();
 		//remove all project member relationships to avoid integrity constraint violations
@@ -452,6 +466,7 @@ public class BaseDAOTest extends BaseTest {
 
 	}
 
+	@Test
 	public void testExists() {
 		initDB();
 
@@ -515,6 +530,7 @@ public class BaseDAOTest extends BaseTest {
 		assertTrue(target.exists(ri));
 	}
 
+	@Test
 	public void testCompoundId() {
 		initDB();
 		
@@ -573,6 +589,7 @@ public class BaseDAOTest extends BaseTest {
 		//exists (see exists test)
 	}
 	
+	@Test
 	public void testSearch() {
 		initDB();
 		
@@ -616,6 +633,7 @@ public class BaseDAOTest extends BaseTest {
 		
 	}
 	
+	@Test
 	public void testExample() {
 		initDB();
 		
