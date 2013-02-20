@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="http://oldworld.trg.sample/tags" prefix="m" %>
+<%@ taglib uri="http://oldworld.genericdao.googlecode.com/tags" prefix="m" %>
 <html>
 <head>
 	<link type="text/css" rel="stylesheet" href="${pageContext.request.contextPath}/css/main.css"/>

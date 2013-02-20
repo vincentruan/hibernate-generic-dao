@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import sample.googlecode.genericdao.oldworld.dao.TownDAO;
 import sample.googlecode.genericdao.oldworld.model.Town;
@@ -21,6 +22,7 @@ import com.googlecode.genericdao.search.Search;
  * 
  */
 @Service
+@Transactional
 public class TownServiceImpl implements TownService {
 
 	TownDAO dao;

@@ -55,5 +55,13 @@ public class Citizen {
 	public void setTown(Town town) {
 		this.town = town;
 	}
+	
+	public Citizen() {}
+
+	public Citizen(String name, String job, Town town) {
+		this.name = name;
+		this.job = job;
+		this.town = town;
+	}
 
 }
