@@ -3,10 +3,10 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="
-http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
-http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
-http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
-http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.2.xsd">
 
 	<!-- Configure a JDBC datasource for Hibernate to connect with -->
 	<bean id="dataSource"
@@ -17,67 +17,26 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 		<property name="password" value="${connection.password}" />
 	</bean>
 
-	<!-- Configure a Hibernate SessionFactory -->
-	<bean id="sessionFactory"
-		class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
-		<property name="packagesToScan" value="sample.googlecode.genericdao.oldworld.model"/>
+	<!--  Configure a Hibernate SessionFactory -->
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="packagesToScan" value="test.googlecode.genericdao.model"/>
 		<property name="hibernateProperties">
-			<props>
-				<prop key="hibernate.dialect">${hibernate.dialect}</prop>
-				<prop key="hibernate.show_sql">${show_sql}</prop>
-				<prop key="hibernate.hbm2ddl.auto">update</prop>
-			</props>
+			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+				<property name="properties">
+					<props>
+						<prop key="hibernate.dialect">${hibernate.dialect}</prop>
+						<prop key="hibernate.show_sql">${show_sql}</prop>
+						<prop key="hibernate.hbm2ddl.auto">create</prop>
+					</props>
+				</property>
+			</bean>
 		</property>
 	</bean>
-
-	<!--
-		Transaction manager for a single Hibernate SessionFactory (alternative
-		to JTA)
-	-->
+	
+	<!-- Configure a Transaction Manager -->
 	<bean id="transactionManager"
-		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
-
-	<bean name="hibernateInterceptor"
-		class="org.springframework.orm.hibernate3.HibernateInterceptor">
-		<property name="sessionFactory">
-			<ref bean="sessionFactory" />
-		</property>
-	</bean>
-
-	<bean id="baseServiceProxy" class="org.springframework.aop.framework.ProxyFactoryBean"
-		abstract="true">
-		<property name="interceptorNames">
-			<list>
-				<value>hibernateInterceptor</value>
-			</list>
-		</property>
-	</bean>
-
-	<!-- Apply transactions to all methods in our service layer. -->
-	<tx:advice id="txAdvice" transaction-manager="transactionManager">
-		<!-- the transactional semantics... -->
-		<tx:attributes>
-			<tx:method name="save*" propagation="REQUIRES_NEW" />
-			<tx:method name="edit*" propagation="REQUIRES_NEW" />
-			<tx:method name="update*" propagation="REQUIRES_NEW" />
-			<tx:method name="add*" propagation="REQUIRES_NEW" />
-			<tx:method name="delete*" propagation="REQUIRES_NEW" />
-			<tx:method name="create*" propagation="REQUIRES_NEW" />
-			<tx:method name="remove*" propagation="REQUIRES_NEW" />
-			<tx:method name="reorder*" propagation="REQUIRES_NEW" />
-			<tx:method name="change*" propagation="REQUIRES_NEW" />
-			<tx:method name="batchUpdate" propagation="REQUIRES_NEW" />
-			<!-- all other methods are read-only -->
-			<tx:method name="*" read-only="true" />
-		</tx:attributes>
-	</tx:advice>
-
-	<aop:config>
-		<aop:pointcut id="serviceMethods"
-			expression="execution(* sample.googlecode.genericdao.oldworld.service.*.*(..))" />
-		<aop:advisor advice-ref="txAdvice" pointcut-ref="serviceMethods" />
-	</aop:config>
 </beans>
