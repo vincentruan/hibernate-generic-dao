@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import sample.googlecode.genericdao.oldworld.dao.CitizenDAO;
 import sample.googlecode.genericdao.oldworld.model.Citizen;
@@ -22,6 +23,7 @@ import com.googlecode.genericdao.search.SearchResult;
  * 
  */
 @Service
+@Transactional
 public class CitizenServiceImpl implements CitizenService {
 
 	CitizenDAO dao;

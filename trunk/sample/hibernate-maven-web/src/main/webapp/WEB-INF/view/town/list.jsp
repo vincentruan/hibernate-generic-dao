@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
-<%@ taglib uri="http://oldworld.trg.sample/tags" prefix="m" %>
+<%@ taglib uri="http://oldworld.genericdao.googlecode.com/tags" prefix="m" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 <html>
@@ -8,7 +8,7 @@
 </head>
 <body>
 	<p class="navigation">
-		Navigation: <span>Towns</span> / <a href="../citizen/list.do">Citizens</a>
+		Navigation: <span>Towns</span> / <a href="../citizen/list.do">Citizens</a> / ((<a href="loadSampleData.do">Load Sample Data</a>))
 	</p>
 	<h1>These are the Towns</h1>
 	<form class="filters" action="" method="GET">

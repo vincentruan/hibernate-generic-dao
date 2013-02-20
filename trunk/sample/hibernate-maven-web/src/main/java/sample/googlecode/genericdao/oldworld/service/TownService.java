@@ -18,7 +18,7 @@ import com.googlecode.genericdao.search.ISearch;
  */
 public interface TownService {
 
-	public void save(Town citizen);
+	public void save(Town town);
 
 	public List<Town> findAll();
 

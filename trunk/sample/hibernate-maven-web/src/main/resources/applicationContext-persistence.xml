@@ -20,7 +20,7 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 	<!--  Configure a Hibernate SessionFactory -->
 	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource"/>
-		<property name="packagesToScan" value="test.googlecode.genericdao.model"/>
+		<property name="packagesToScan" value="sample.googlecode.genericdao.oldworld.model"/>
 		<property name="hibernateProperties">
 			<bean class="org.springframework.beans.factory.config.PropertiesFactoryBean">
 				<property name="properties">
@@ -39,4 +39,6 @@ http://www.springframework.org/schema/util http://www.springframework.org/schema
 		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
+	
+	<tx:annotation-driven/>
 </beans>

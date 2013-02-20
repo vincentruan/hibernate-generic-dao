@@ -5,7 +5,7 @@
  <display-name>JSTL functions</display-name>
  <tlib-version>1.1</tlib-version>
  <short-name>myfn</short-name>
- <uri>http://oldworld.trg.sample/tags</uri>
+ <uri>http://oldworld.genericdao.googlecode.com/tags</uri>
  <tag>
   <description>A tag that creates a link and copies search parameters from the request to URL parameters on the link. Thus the search parameters will again be passed in the next request when the link is followed.</description>
   <name>a</name>
