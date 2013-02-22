@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.googlecode.genericdao.dao.jpa.GeneralDAO;
@@ -27,7 +28,7 @@ public class App
 	
     public static void main( String[] args )
     {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
+        ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
     	
         citizenService = (CitizenService) ctx.getBean("citizenService");
         townService = (TownService) ctx.getBean("townService");
@@ -50,31 +51,22 @@ public class App
     	}
     	
     	System.out.println("Done.");
+    	
+    	ctx.close();
     }
     
     private static void initData() {
-    	Town nottingham = new Town();
-    	nottingham.setName("Nottingham");
-    	nottingham.setPopulation(126);
+    	Town nottingham = new Town("Nottingham", 126);
     	nottingham.setCitizens(new HashSet<Citizen>());
     	townService.persist(nottingham);
     	
-    	Citizen butcher = new Citizen();
-    	butcher.setJob("butcher");
-    	butcher.setName("Tom Butcher");
-    	butcher.setTown(nottingham);
+    	Citizen butcher = new Citizen("Tom Butcher", "butcher", nottingham);
     	nottingham.getCitizens().add(butcher);
     	
-    	Citizen baker = new Citizen();
-    	baker.setJob("baker");
-    	baker.setName("Dick Baker");
-    	baker.setTown(nottingham);
+    	Citizen baker = new Citizen("Dick Baker", "baker", nottingham);
     	nottingham.getCitizens().add(baker);
     	
-    	Citizen chandler = new Citizen();
-    	chandler.setJob("candlestick maker");
-    	chandler.setName("Harry Chandler");
-    	chandler.setTown(nottingham);
+    	Citizen chandler = new Citizen("Harry Chandler", "candlestick maker", nottingham);
     	nottingham.getCitizens().add(chandler);
     	
     	citizenService.persist(butcher);
