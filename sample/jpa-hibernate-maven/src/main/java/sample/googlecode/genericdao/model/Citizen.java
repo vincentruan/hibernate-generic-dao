@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+import sample.googlecode.genericdao.model.Town;
+
 @Entity
 public class Citizen {
 	@Id
@@ -45,6 +47,14 @@ public class Citizen {
 	}
 
 	public void setTown(Town town) {
+		this.town = town;
+	}
+	
+	public Citizen() {}
+
+	public Citizen(String name, String job, Town town) {
+		this.name = name;
+		this.job = job;
 		this.town = town;
 	}
 

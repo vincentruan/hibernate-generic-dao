@@ -9,7 +9,8 @@
 	<context:annotation-config />
 	<context:property-placeholder location="classpath:target-h2.properties"/>
 
-	<import resource="applicationContext-datasource.xml" />
+	<!-- In this file we configure Hibernate Entity Manager and transactional behavior -->
+	<import resource="applicationContext-persistence.xml" />
 
 	<!--**** Hibernate Generic DAO Setup ****-->
 	<!--

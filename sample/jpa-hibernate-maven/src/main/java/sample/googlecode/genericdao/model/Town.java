@@ -49,4 +49,11 @@ public class Town {
 	public void setCitizens(Set<Citizen> citizens) {
 		this.citizens = citizens;
 	}
+	
+	public Town() {}
+	
+	public Town(String name, Integer population) {
+		this.name = name;
+		this.population = population;
+	}
 }
