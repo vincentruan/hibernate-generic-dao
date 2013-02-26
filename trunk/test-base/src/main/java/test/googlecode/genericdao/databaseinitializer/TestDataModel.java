@@ -9,12 +9,8 @@ import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import test.googlecode.genericdao.model.Address;
-import test.googlecode.genericdao.model.Home;
-import test.googlecode.genericdao.model.Ident;
 import test.googlecode.genericdao.model.Ingredient;
 import test.googlecode.genericdao.model.LimbedPet;
-import test.googlecode.genericdao.model.Name;
 import test.googlecode.genericdao.model.Person;
 import test.googlecode.genericdao.model.Pet;
 import test.googlecode.genericdao.model.Project;
@@ -193,7 +189,6 @@ public class TestDataModel {
 		return p;
 	}
 	
-	// TODO unused?
 	public static Person copy(Person p) {
 		Person cpy = new Person();
 		cpy.setId(p.getId());
@@ -205,36 +200,6 @@ public class TestDataModel {
 		cpy.setDob(p.getDob());
 		cpy.setWeight(p.getWeight());
 		cpy.setIsMale(p.getIsMale());
-		return cpy;
-	}
-
-	public static Home copy(Home h) {
-		Home cpy = new Home();
-		cpy.setId(h.getId());
-		cpy.setType(h.getType());
-		return cpy;
-	}
-
-	public static Address copy(Address a) {
-		Address cpy = new Address();
-		cpy.setId(a.getId());
-		cpy.setStreet(a.getStreet());
-		cpy.setCity(a.getCity());
-		cpy.setState(a.getState());
-		cpy.setZip(a.getZip());
-		return cpy;
-	}
-
-	public static LimbedPet copy(LimbedPet p) {
-		LimbedPet cpy = new LimbedPet();
-		cpy.setId(p.getId());
-		cpy.setIdent(new Ident(p.getIdent().getIdNumber(), new Name(p.getIdent().getName().getFirst(), p.getIdent()
-				.getName().getLast())));
-		cpy.setSpecies(p.getSpecies());
-		cpy.setHasPaws(p.isHasPaws());
-		cpy.setFavoritePlaymate(p.getFavoritePlaymate());
-		cpy.setLimbs(new ArrayList<String>(p.getLimbs().size()));
-		cpy.getLimbs().addAll(p.getLimbs());
 		return cpy;
 	}
 }

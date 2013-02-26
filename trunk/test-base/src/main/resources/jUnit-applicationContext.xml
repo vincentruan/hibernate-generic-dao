@@ -11,9 +11,7 @@
 		http://www.springframework.org/schema/util
 		http://www.springframework.org/schema/util/spring-util-3.2.xsd
 		"> 
-	<!-- 
-		| This is configuration for test-specific beans, such as mock objects, etc. Uki. 
-	-->
+
 	<import resource="applicationContext.xml" />
 
 	<!-- TODO This may be causing a deprecation warning. See about removing it. -->

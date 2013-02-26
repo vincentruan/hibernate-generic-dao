@@ -55,8 +55,6 @@ public class HibernateEntityMetadata implements Metadata {
 	}
 
 	public Serializable getIdValue(Object object) {
-//		TODO... I might still need this	if (object instanceof HibernateProxy)
-//		return ((HibernateProxy) object).getHibernateLazyInitializer().getIdentifier();
 		return metadata.getIdentifier(object, null);
 	}
 

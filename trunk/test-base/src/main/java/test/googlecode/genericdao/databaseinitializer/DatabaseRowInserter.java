@@ -1,13 +1,9 @@
 package test.googlecode.genericdao.databaseinitializer;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-import java.util.Date;
-
-import org.springframework.jdbc.core.StatementCreatorUtils;
+import java.util.Map;
+import java.util.TreeMap;
 
 import test.googlecode.genericdao.model.Address;
 import test.googlecode.genericdao.model.Home;
@@ -20,225 +16,177 @@ import test.googlecode.genericdao.model.Recipe;
 import test.googlecode.genericdao.model.RecipeIngredient;
 import test.googlecode.genericdao.model.Store;
 
-import com.mysql.jdbc.Statement;
-
 public class DatabaseRowInserter {
 	
-	Connection connection;
-	PreparedStatement statement = null;
-	ResultSet generatedKeys = null;
-	long generatedKey;
+	private SqlExecutor sqlExecutor;
+	
+	private String tableName;
+	private Map<String, Object> fields = new TreeMap<String, Object>();
+	private Map<String, Object> updateKeyValues = new TreeMap<String, Object>();
+	private boolean isInsertVsUpdate;
 	
 	public DatabaseRowInserter(Connection connection) {
-		this.connection = connection;
+		sqlExecutor = new SqlExecutor(connection);
 	}
 	
-	public void insert(Object entity) throws SQLException {
-		if (entity instanceof Person)
-			insert((Person) entity);
-		else if (entity instanceof Pet)
-			insert((Pet) entity);
-		else if (entity instanceof Store)
-			insert((Store) entity);
-		else if (entity instanceof Recipe)
-			insert((Recipe) entity);
-		else if (entity instanceof Project)
-			insert((Project) entity);
-		else
-			throw new RuntimeException("DatabaseRowInserter is not set up to handle entities of type " + entity.getClass().getName());
-	}
-	
-	protected void insert(Person p) throws SQLException {
-		if (p.getHome() != null && p.getHome().getId() == null) {
-			insert(p.getHome());
-		}
-		
-		String sql = "INSERT INTO person (age, dob, first_name, last_name, weight, isMale, father_id, mother_id, home_id) values (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9)";
-		Class<?>[] types = new Class<?>[] { Integer.class, Date.class, String.class, String.class, Double.class,
-				Boolean.class, Long.class, Long.class, Long.class };
-		executeSqlInsertWithGeneratedId(sql, types, p.getAge(), p.getDob(), p.getFirstName(), p.getLastName(), p.getWeight(), p
-				.getIsMale(), p.getFather() != null ? p.getFather().getId() : null, p.getMother() != null ? p
-				.getMother().getId() : null, p.getHome().getId());
-		p.setId(getGeneratedKey());
+	public void insert(Person p) throws SQLException {
+		startInsertForTable("person");
+		setField("age", p.getAge());
+		setField("dob", p.getDob());
+		setField("first_name", p.getFirstName());
+		setField("last_name", p.getLastName());
+		setField("weight", p.getWeight());
+		setField("isMale", p.getIsMale());
+		setField("father_id", p.getFather() != null ? p.getFather().getId() : null);
+		setField("mother_id", p.getMother() != null ? p.getMother().getId() : null);
+		setField("home_id", p.getHome().getId());
+		execute(true);
+		p.setId(getGeneratedId());
 	}
 
-	protected void insert(Home h) throws SQLException {
-		if (h.getAddress() != null && h.getAddress().getId() == null) {
-			insert(h.getAddress());
-		}
-		
-		String sql = "INSERT INTO home (type, address_id) values (?1, ?2)";
-		Class<?>[] types = new Class<?>[] { String.class, Long.class };
-		executeSqlInsertWithGeneratedId(sql, types, h.getType(), h.getAddress().getId());
-		h.setId(getGeneratedKey());
+	public void insert(Home h) throws SQLException {
+		startInsertForTable("home");
+		setField("type", h.getType());
+		setField("address_id", h.getAddress().getId());
+		execute(true);
+		h.setId(getGeneratedId());
 	}
 
-	protected void insert(Address a) throws SQLException {
-		String sql = "INSERT INTO address (city, state, street, zip) values (?1, ?2, ?3, ?4)";
-		Class<?>[] types = new Class<?>[] { String.class, String.class, String.class, String.class };
-		executeSqlInsertWithGeneratedId(sql, types, a.getCity(), a.getState(), a.getStreet(), a.getZip());
-		a.setId(getGeneratedKey());
+	public void insert(Address a) throws SQLException {
+		startInsertForTable("address");
+		setField("city", a.getCity());
+		setField("state", a.getState());
+		setField("street", a.getStreet());
+		setField("zip", a.getZip());
+		execute(true);
+		a.setId(getGeneratedId());
 	}
 
-	protected void insert(Pet p) throws SQLException {
-		String sql = "INSERT INTO pet (idNumber, first, last, species, limbed, hasPaws) values (?1, ?2, ?3, ?4, ?5, ?6)";
-		Class<?>[] types = new Class<?>[] { Integer.class, String.class, String.class, String.class, Boolean.class,
-				Boolean.class };
+	public void insert(Pet p) throws SQLException {
 		Boolean hasPaws = null;
 		if (p instanceof LimbedPet) {
 			hasPaws = ((LimbedPet) p).isHasPaws();
 		}
-		executeSqlInsertWithGeneratedId(sql, types, p.getIdent().getIdNumber(), p.getIdent().getName().getFirst(), p.getIdent()
-				.getName().getLast(), p.getSpecies(), p instanceof LimbedPet, hasPaws);
-		p.setId(getGeneratedKey());
-
-		if (p instanceof LimbedPet) {
-			sql = "INSERT INTO LimbedPet_limbs (LimbedPet_id, limbs, idx) values (?1, ?2, ?3)";
-			types = new Class<?>[] { Long.class, String.class, Integer.class };
-			int i = 0;
-			for (String s : ((LimbedPet) p).getLimbs()) {
-				executeSqlWithoutGeneratedId(sql, types, p.getId(), s, i++);
-			}
-		}
-	}
-
-	protected void insert(Recipe r) throws SQLException {
-		String sql = "INSERT INTO recipe (title) values (?1)";
-		Class<?>[] types = new Class<?>[] { String.class };
-		executeSqlInsertWithGeneratedId(sql, types, r.getTitle());
-		r.setId(getGeneratedKey());
 		
-		for (RecipeIngredient ri : r.getIngredients()) {
-			insert(ri);
-		}
+		startInsertForTable("pet");
+		setField("idNumber", p.getIdent().getIdNumber());
+		setField("first", p.getIdent().getName().getFirst());
+		setField("last", p.getIdent().getName().getLast());
+		setField("species", p.getSpecies());
+		setField("limbed", p instanceof LimbedPet);
+		setField("hasPaws", hasPaws);
+		execute(true);
+		p.setId(getGeneratedId());
+	}
+	
+	public void insertLimbedPetLimb(LimbedPet pet, String limb, int orderIndex) throws SQLException {
+		startInsertForTable("LimbedPet_limbs");
+		setField("LimbedPet_id", pet.getId());
+		setField("limbs", limb);
+		setField("idx", orderIndex);
+		execute(false);
 	}
 
-	protected void insert(Ingredient i) throws SQLException {
-		String sql = "INSERT INTO ingredient (name) values (?1)";
-		Class<?>[] types = new Class<?>[] { String.class };
-		executeSqlInsertWithGeneratedId(sql, types, i.getName());
-		i.setIngredientId(getGeneratedKey());
+	public void insert(Recipe r) throws SQLException {
+		startInsertForTable("recipe");
+		setField("title", r.getTitle());
+		execute(true);
+		r.setId(getGeneratedId());
 	}
 
-	protected void insert(Store s) throws SQLException {
-		String sql = "INSERT INTO store (name) values (?1)";
-		Class<?>[] types = new Class<?>[] { String.class };
-		executeSqlInsertWithGeneratedId(sql, types, s.getName());
-		s.setId(getGeneratedKey());
-
-		sql = "INSERT INTO store_ingredient (Store_id, ingredientsCarried_ingredientId) values (?1, ?2)";
-		types = new Class<?>[] { Long.class, Long.class };
-		for (Ingredient i : s.getIngredientsCarried()) {
-			if (i.getIngredientId() == 0) {
-				insert(i);
-			}
-			
-			executeSqlWithoutGeneratedId(sql, types, s.getId(), i.getIngredientId());
-		}
+	public void insert(Ingredient i) throws SQLException {
+		startInsertForTable("ingredient");
+		setField("name", i.getName());
+		execute(true);
+		i.setIngredientId(getGeneratedId());
 	}
 
-	protected void insert(RecipeIngredient ri) throws SQLException {
-		if (ri.getCompoundId().getIngredient().getIngredientId() == 0) {
-			insert(ri.getCompoundId().getIngredient());
-		}
-		
-		String sql = "INSERT INTO recipe_x_ingredient (amount, measure, ingredient_ingredientId, recipe_id) values (?1, ?2, ?3, ?4)";
-		Class<?>[] types = new Class<?>[] { Float.class, String.class, Long.class, Long.class };
-		executeSqlWithoutGeneratedId(sql, types, ri.getAmount(), ri.getMeasure(), ri.getCompoundId().getIngredient().getIngredientId(), ri
-				.getCompoundId().getRecipe().getId());
+	public void insert(Store s) throws SQLException {		
+		startInsertForTable("store");
+		setField("name", s.getName());
+		execute(true);
+		s.setId(getGeneratedId());
+	}
+	
+	public void insert(Store s, Ingredient i) throws SQLException {		
+		startInsertForTable("store_ingredient");
+		setField("Store_id", s.getId());
+		setField("ingredientsCarried_ingredientId", i.getIngredientId());
+		execute(false);
 	}
 
-	protected void insert(Project p) throws SQLException {
-		String sql = "INSERT INTO project (id, inceptionYear, name) values (?1, ?2, ?3)";
-		Class<?>[] types = new Class<?>[] { Long.class, Integer.class, String.class };
-		executeSqlInsertWithGeneratedId(sql, types, p.getId(), p.getInceptionYear(), p.getName());
-		p.setId(getGeneratedKey());
+	public void insert(RecipeIngredient ri) throws SQLException {
+		startInsertForTable("recipe_x_ingredient");
+		setField("amount", ri.getAmount());
+		setField("measure", ri.getMeasure());
+		setField("ingredient_ingredientId", ri.getCompoundId().getIngredient().getIngredientId());
+		setField("recipe_id", ri.getCompoundId().getRecipe().getId());
+		execute(false);
+	}
 
-		sql = "INSERT INTO project_person (Project_id, members_id) values (?1, ?2)";
-		types = new Class<?>[] { Long.class, Long.class };
-		for (Person m : p.getMembers()) {
-			executeSqlWithoutGeneratedId(sql, types, p.getId(), m.getId());
-		}
+	public void insert(Project p) throws SQLException {
+		startInsertForTable("project");
+		setField("id", p.getId());
+		setField("inceptionYear", p.getInceptionYear());
+		setField("name", p.getName());
+		execute(true);
+		p.setId(getGeneratedId());
 	}
 	
-	private void executeSqlInsertWithGeneratedId(String sql, Class<?>[] argTypes, Object... args) throws SQLException {
-	    try {
-	    	doExecuteSqlInsertWithGeneratedId(sql, argTypes, args);
-	    } finally {
-    		if (statement != null) statement.close();
-	    }
-	}
-	
-	private void doExecuteSqlInsertWithGeneratedId(String sql, Class<?>[] argTypes, Object... args) throws SQLException {
-		executeSql(sql, argTypes, args, true);
-		updateGeneratedKey();
-	}
-	
-	private void executeSql(String sql, Class<?>[] argTypes, Object[] args, boolean returnGeneratedKeys) throws SQLException {
-		int flag = returnGeneratedKeys ? Statement.RETURN_GENERATED_KEYS : Statement.NO_GENERATED_KEYS;
-		statement = connection.prepareStatement(sql, flag);
-		
-		for (int i = 0; i < args.length; i++) {
-			int sqlType = getSQLTypeFromJavaType(argTypes[i]);
-			StatementCreatorUtils.setParameterValue(statement, i + 1, sqlType, args[i]);
-		}
-		
-		statement.executeUpdate();
-	}
-	
-	private int getSQLTypeFromJavaType(Class<?> javaType) {
-		if (javaType.equals(Long.class)) {
-			return Types.INTEGER;
-		} else if (javaType.equals(Integer.class)) {
-			return Types.INTEGER;
-		} else if (javaType.equals(String.class)) {
-			return Types.VARCHAR;
-		} else if (javaType.equals(Date.class)) {
-			return Types.DATE;
-		} else if (javaType.equals(Float.class)) {
-			return Types.FLOAT;
-		} else if (javaType.equals(Double.class)) {
-			return Types.DOUBLE;
-		} else if (javaType.equals(Boolean.class)) {
-			return Types.BOOLEAN;
-		} else {
-			throw new RuntimeException("Unexpected Java Type for Argument");
-		}
-	}
-	
-	private void updateGeneratedKey() throws SQLException {
-		try {
-			doUpdateGeneratedKey();
-		} finally {
-			if (generatedKeys != null) generatedKeys.close();
-		}
-	}
-	
-	private void doUpdateGeneratedKey() throws SQLException {
-		generatedKeys = statement.getGeneratedKeys();
-        if (generatedKeys.next()) {
-            generatedKey = generatedKeys.getLong(1);
-        } else {
-            throw new SQLException("Inserting entity failed, no generated key obtained.");
-        }
-	}
-	
-	private long getGeneratedKey() {
-		return generatedKey;
+	public void insertProjectMember(Project project, Person member) throws SQLException {
+		startInsertForTable("project_person");
+		setField("Project_id", project.getId());
+		setField("members_id", member.getId());
+		execute(false);		
 	}
 	
 	public void updateFavoritePlaymate(Pet pet) throws SQLException {
-		String sql = "update pet set favoritePlaymate_id = ?1 where id = ?2";
-		Class<?>[] types = new Class<?>[] { Long.class, Long.class };
-		executeSqlWithoutGeneratedId(sql, types, pet.getFavoritePlaymate().getId(), pet.getId());
+		startUpdateForTable("pet");
+		setField("favoritePlaymate_id", pet.getFavoritePlaymate().getId());
+		whereKeyEquals("id", pet.getId());
+		execute(false);
+	}
+
+	private void startInsertForTable(String tableName) {
+		clearState();		
+		this.tableName = tableName;
+		isInsertVsUpdate = true;
 	}
 	
-	private void executeSqlWithoutGeneratedId(String sql, Class<?>[] argTypes, Object... args) throws SQLException {
-	    try {
-	    	executeSql(sql, argTypes, args, false);
-	    } finally {
-    		if (statement != null) statement.close();
-	    }
+	private void startUpdateForTable(String tableName) {
+		clearState();
+		this.tableName = tableName;
+		isInsertVsUpdate = false;
+	}
+	
+	private void clearState() {
+		fields.clear();
+		updateKeyValues.clear();
+	}
+	
+	private void setField(String fieldName, Object fieldValue) {
+		fields.put(fieldName, fieldValue);
+	}
+	
+	private void whereKeyEquals(String keyColumnName, Object value) {
+		updateKeyValues.put(keyColumnName, value);
+	}
+	
+	private void execute(boolean fetchGeneratedId) throws SQLException {
+		SqlStatementBuilder statementBuilder;
+		if (isInsertVsUpdate)
+			statementBuilder = SqlStatementBuilder.insert(tableName, fields);
+		else 
+			statementBuilder = SqlStatementBuilder.update(tableName, fields, updateKeyValues);
+		
+		if (fetchGeneratedId)
+			sqlExecutor.executeWithGeneratedId(statementBuilder);
+		else
+			sqlExecutor.executeWithoutGeneratedId(statementBuilder);
+	}
+	
+	private long getGeneratedId() {
+		return sqlExecutor.getGeneratedKey();
 	}
 
 }
