@@ -1,0 +1,34 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.googlecode.genericdao</groupId>
+	<artifactId>search</artifactId>
+	<packaging>jar</packaging>
+	<version>1.2.0</version>
+	<name>Hibernate Generic DAO - Search</name>
+	<parent>
+		<artifactId>genericdao-parent</artifactId>
+		<groupId>com.googlecode.genericdao</groupId>
+		<version>1.2.0</version>
+	</parent>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.2</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.hibernate.javax.persistence</groupId>
+		    <artifactId>hibernate-jpa-2.0-api</artifactId>
+		    <version>1.0.1.Final</version>
+		    <scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.googlecode.genericdao</groupId>
+			<artifactId>test-base</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
