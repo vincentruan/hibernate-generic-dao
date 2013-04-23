@@ -4,8 +4,11 @@
 ----
 *NOTICE* Progress on this project has been halted for now. See notice on [http://code.google.com/p/hibernate-generic-dao/ Project Home].
 ----
+==1.2.0 (4/22/2013 current release)==
+  * Issue 99 : Hibernate 4 Upgrade 
+  * Issue 98 : search-1.1.0.jar is incompatible with java 5 
 
-==1.1.0 (10/19/2011 current release)==
+==1.1.0 (10/19/2011)==
   * Issue 73 : Custom filters, fields and sorts
   * Issue 61 : Do not use PropertyNotFoundException in MetaDataUtil.get
   * Issue 80 : Add paging to searchUnique()
@@ -86,11 +89,11 @@
 
 =Future=
 
-==1.1.1==
+==1.2.1==
   * Issue 93 : HibernateMetadataUtil causes memory leak when dealing with many session factories
   * Issue 94 : Why setDistinct() return IMutableSearch instead of Search?
 
-==1.2.0==
+==1.2.2==
   * Issue 47 : Add load method with lock mode option
   * Issue 50 / Issue 64 : More extensible HibernateSearchFacade and HibernateSearchProcessor
   * Deprecate "original" daos?
