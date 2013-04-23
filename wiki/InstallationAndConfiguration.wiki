@@ -13,7 +13,7 @@ If you want to use standard hibernate without JPA, include the following depende
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>dao-hibernate</artifactId>
-	<version>1.0.0</version> <!-- use current version -->
+	<version>1.2.0</version> <!-- use current version -->
 </dependency>
 }}}
 
@@ -23,13 +23,13 @@ If you want to use JPA with the Hibernate JPA implementation, include these depe
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>dao</artifactId>
-	<version>1.0.0</version> <!-- use current version -->
+	<version>1.2.0</version> <!-- use current version -->
 </dependency>
 <!-- This second one includes the Hibernate Entity Manager plugin for the framework -->
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>search-jpa-hibernate</artifactId>
-	<version>1.0.0</version> <!-- use current version -->
+	<version>1.2.0</version> <!-- use current version -->
 </dependency>
 }}}
 
@@ -43,34 +43,34 @@ We also release periodic development builds. These include the latest bug fixes 
 </repository>
 }}}
 
-Add this repository to your pom.xml and set the version number of the Hibernate Generic DAO dependencies to the snapshot version, (i.e. {{{"1.1.0-SNAPSHOT"}}})
+Add this repository to your pom.xml and set the version number of the Hibernate Generic DAO dependencies to the snapshot version, (i.e. {{{"1.2.1-SNAPSHOT"}}})
 
 ==Without Maven==
 If you're not using Maven, you can manually download the jars from the Maven repository at http://repo1.maven.org/maven2/com/googlecode/genericdao/
 
 The DAO requires both the _search_ jar and the _dao_ jar.
 
-http://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0.jar <br/>
-http://repo1.maven.org/maven2/com/googlecode/genericdao/search/1.0.0/search-1.0.0.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.2.0/dao-1.2.0.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search/1.2.0/search-1.2.0.jar
 
 If you are using standard Hibernate without JPA, you will also need the _search-hibernate_ and _dao-hibernate_ jars.
 
-http://repo1.maven.org/maven2/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0.jar <br/>
-http://repo1.maven.org/maven2/com/googlecode/genericdao/search-hibernate/1.0.0/search-hibernate-1.0.0.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao-hibernate/1.2.0/dao-hibernate-1.2.0.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-hibernate/1.2.0/search-hibernate-1.2.0.jar
 
 If you are using JPA with Hibernate Entity Manager, download just the _search-jpa-hibernate_ jar instead.
 
-http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.0.0/search-jpa-hibernate-1.0.0.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.2.0/search-jpa-hibernate-1.2.0.jar
 
 If you like, you can also get the source jars to help out your IDE with Javadocs and to help yourself out being able to see what's going on (XXX-X.X.X-sources.jar).
 
-http://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.0.0/dao-1.0.0-sources.jar <br/>
-http://repo1.maven.org/maven2/com/googlecode/genericdao/search/1.0.0/search-1.0.0-sources.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao/1.2.0/dao-1.2.0-sources.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search/1.2.0/search-1.2.0-sources.jar
 
-http://repo1.maven.org/maven2/com/googlecode/genericdao/dao-hibernate/1.0.0/dao-hibernate-1.0.0-sources.jar <br/>
-http://repo1.maven.org/maven2/com/googlecode/genericdao/search-hibernate/1.0.0/search-hibernate-1.0.0-sources.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/dao-hibernate/1.2.0/dao-hibernate-1.2.0-sources.jar <br/>
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-hibernate/1.2.0/search-hibernate-1.2.0-sources.jar
 
-http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.0.0/search-jpa-hibernate-1.0.0-sources.jar
+http://repo1.maven.org/maven2/com/googlecode/genericdao/search-jpa-hibernate/1.2.0/search-jpa-hibernate-1.2.0-sources.jar
 
 You will also need the Hibernate 3.3 (or later) jars and their dependencies. I'll leave you to do all the hibernate configuration.
 
@@ -83,7 +83,7 @@ For the first case, use this dependency instead:
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>search-hibernate</artifactId>
-	<version>1.0.0</version>
+	<version>1.2.0</version>
 </dependency>
 }}}
 
@@ -92,7 +92,7 @@ For the second you only need:
 <dependency>
 	<groupId>com.googlecode.genericdao</groupId>
 	<artifactId>search-jpa-hibernate</artifactId>
-	<version>1.0.0</version>
+	<version>1.2.0</version>
 </dependency>
 }}}
 
@@ -123,6 +123,6 @@ The *JPASearchProcessor* is designed to be used as a singleton. The constructor 
 
 In theory, different implementations of MetadataUtil will require different configurations. The Hibernate implementation is *`com.googlecode.genericdao.search.hibernate.HibernateMetadataUtil`*. You will need one instance per persistence unit (i.e. EntityManagerFactory). Use `com.googlecode.genericdao.search.jpa.hibernate.HibernateMetadataUtil.getInstanceForEntityManagerFactory(HibernateEntityManagerFactory)` to get these instances.
 
-To see an example project configuration using Spring auto-wiring, have a look at the project in SVN at /tags/1.0.0/sample/jpa-hibernate-maven.
+To see an example project configuration using Spring auto-wiring, have a look at the project in SVN at /tags/1.2.0/sample/jpa-hibernate-maven.
 
 *JPASearchFacade* is configured in basically the same way as the DAOs.
