@@ -473,7 +473,7 @@ public class Search implements IMutableSearch, Serializable {
 		return distinct;
 	}
 	
-	public IMutableSearch setDistinct(boolean distinct) {
+	public Search setDistinct(boolean distinct) {
 		this.distinct = distinct;
 		return this;
 	}
