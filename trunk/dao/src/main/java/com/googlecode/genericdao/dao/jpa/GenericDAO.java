@@ -64,8 +64,12 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * This increases performance if a another entity is being saved that should
 	 * reference this entity but the values of this entity are not needed.
 	 * 
-	 * @throws a
-	 *             HibernateException if no matching entity is found
+	 * @throws IllegalArgumentException if the first argument does
+     *         not denote an entity type or the second argument is
+     *         not a valid type for that entitys primary key or
+     *         is null
+     * @throws javax.persistence.EntityNotFoundException if the entity state
+     *         cannot be accessed
 	 */
 	public T getReference(ID id);
 
@@ -80,9 +84,12 @@ public interface GenericDAO<T, ID extends Serializable> {
 	 * This increases performance if a another entity is being saved that should
 	 * reference these entities but the values of these entities are not needed.
 	 * 
-	 * @throws a
-	 *             HibernateException if any of the matching entities are not
-	 *             found.
+	 * @throws IllegalArgumentException if the first argument does
+     *         not denote an entity type or the second argument is
+     *         not a valid type for that entitys primary key or
+     *         is null
+     * @throws javax.persistence.EntityNotFoundException if the entity state
+     *         cannot be accessed
 	 */
 	public T[] getReferences(ID... ids);
 
