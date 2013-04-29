@@ -49,11 +49,11 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		return _count(persistentClass, search);
 	}
 
-	public T find(Serializable id) {
+	public T find(ID id) {
 		return _get(persistentClass, id);
 	}
 
-	public T[] find(Serializable... ids) {
+	public T[] find(ID... ids) {
 		return _get(persistentClass, ids);
 	}
 
@@ -65,11 +65,11 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		_flush();
 	}
 
-	public T getReference(Serializable id) {
+	public T getReference(ID id) {
 		return _load(persistentClass, id);
 	}
 
-	public T[] getReferences(Serializable... ids) {
+	public T[] getReferences(ID... ids) {
 		return _load(persistentClass, ids);
 	}
 
@@ -89,11 +89,11 @@ public class GenericDAOImpl<T, ID extends Serializable> extends
 		_deleteEntities(entities);
 	}
 
-	public boolean removeById(Serializable id) {
+	public boolean removeById(ID id) {
 		return _deleteById(persistentClass, id);
 	}
 
-	public void removeByIds(Serializable... ids) {
+	public void removeByIds(ID... ids) {
 		_deleteById(persistentClass, ids);
 	}
 
