@@ -126,12 +126,15 @@ Find forms where the maiden name is blank (either null or empty string).
 s.addFilterEmpty("maidenName");
 
 //HQL equivalent...
- select f from Form f where f.maidenName is not null and f.maidenName != ''
+ select f from Form f where f.maidenName is null or f.maidenName = ''
 }}}
 
 Find people with the middle name specified (neither null nor empty string).
 {{{
 s.addFilterNotEmpty("middleName");
+
+//HQL equivalent...
+ select f from Form f where f.middleName is not null and f.middleName != ''
 }}}
 
 *_EMPTY with collection_*
