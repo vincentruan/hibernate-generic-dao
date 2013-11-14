@@ -21,7 +21,7 @@ public interface ProjectDAO extends GenericDAO<Project, Long> {
 public class ProjectDAOImpl extends GenericDAOImpl<Project, Long> implements ProjectDAO {
 	//basic added method
 	public Project findByName(String name) {
-		Criteria crit getSession().createCriteria(Project.class);
+		Criteria crit = getSession().createCriteria(Project.class);
 		crit.add(Restrictions.eq("name", name));
 		return (Project) crit.uniqueResult();
 	}
