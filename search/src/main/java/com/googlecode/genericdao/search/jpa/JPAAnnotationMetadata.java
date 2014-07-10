@@ -136,7 +136,7 @@ public class JPAAnnotationMetadata implements Metadata {
 		return false;
 	}
 
-	public boolean isEmeddable() {
+	public boolean isEmbeddable() {
 		return null != klass.getAnnotation(Embeddable.class);
 	}
 
@@ -160,7 +160,7 @@ public class JPAAnnotationMetadata implements Metadata {
 
 		props = new TreeMap<String, Property>();
 		
-		if (!isEntity() && !isEmeddable())
+		if (!isEntity() && !isEmbeddable())
 			return props; //Will have no persistable properties.
 
 		for (Field field : klass.getFields()) {

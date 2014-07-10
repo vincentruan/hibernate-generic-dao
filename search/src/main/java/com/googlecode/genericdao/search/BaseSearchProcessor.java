@@ -1266,7 +1266,7 @@ public abstract class BaseSearchProcessor {
 
 	private void getFilterFromExampleRecursive(Object example, Metadata metadata, ExampleOptions options,
 			LinkedList<String> path, List<Filter> filters) {
-		if (metadata.isEntity() && !metadata.getIdType().isEmeddable()) {
+		if (metadata.isEntity() && !metadata.getIdType().isEmbeddable()) {
 			Object id = metadata.getIdValue(example);
 			if (id != null) {
 				filters.add(Filter.equal(listToPath(path, "id"), id));
@@ -1292,7 +1292,7 @@ public abstract class BaseSearchProcessor {
 				} else if (options.isExcludeZeros() && value instanceof Number && ((Number) value).longValue() == 0) {
 					// ignore zeros
 				} else {
-					if (pMetadata.isEntity() || pMetadata.isEmeddable()) {
+					if (pMetadata.isEntity() || pMetadata.isEmbeddable()) {
 						path.add(property);
 						getFilterFromExampleRecursive(value, pMetadata, options, path, filters);
 						path.removeLast();

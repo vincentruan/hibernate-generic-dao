@@ -102,7 +102,7 @@ public class HibernateEntityMetadata implements Metadata {
 		return collectionType;
 	}
 
-	public boolean isEmeddable() {
+	public boolean isEmbeddable() {
 		return false;
 	}
 
