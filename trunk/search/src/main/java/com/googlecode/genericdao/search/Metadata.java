@@ -38,7 +38,7 @@ public interface Metadata {
 	 * Return true if the type is an embeddable class (a component class in
 	 * Hibernate).
 	 */
-	public boolean isEmeddable();
+	public boolean isEmbeddable();
 
 	/**
 	 * Return true if the type is a collection.

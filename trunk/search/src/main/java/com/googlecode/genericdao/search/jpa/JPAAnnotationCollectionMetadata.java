@@ -54,8 +54,8 @@ public class JPAAnnotationCollectionMetadata implements Metadata {
 		return true;
 	}
 
-	public boolean isEmeddable() {
-		return classMetadata.isEmeddable();
+	public boolean isEmbeddable() {
+		return classMetadata.isEmbeddable();
 	}
 
 	public boolean isEntity() {
