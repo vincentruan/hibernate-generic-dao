@@ -54,37 +54,37 @@ public class MetadataTest extends BaseSearchTest {
 		assertFalse(md2.getPropertyType("address").isString());
 		assertFalse(md2.getPropertyType("address").isNumeric());
 		assertTrue(md2.getPropertyType("address").isEntity());
-		assertFalse(md2.getPropertyType("address").isEmeddable());
+		assertFalse(md2.getPropertyType("address").isEmbeddable());
 		
 		assertFalse(md2.getPropertyType("type").isCollection());
 		assertTrue(md2.getPropertyType("type").isString());
 		assertFalse(md2.getPropertyType("type").isNumeric());
 		assertFalse(md2.getPropertyType("type").isEntity());
-		assertFalse(md2.getPropertyType("type").isEmeddable());
+		assertFalse(md2.getPropertyType("type").isEmbeddable());
 		
 		assertFalse(md.getPropertyType("age").isCollection());
 		assertFalse(md.getPropertyType("age").isString());
 		assertTrue(md.getPropertyType("age").isNumeric());
 		assertFalse(md.getPropertyType("age").isEntity());
-		assertFalse(md.getPropertyType("age").isEmeddable());
+		assertFalse(md.getPropertyType("age").isEmbeddable());
 		
 		assertFalse(md3.getPropertyType("compoundId").isCollection());
 		assertFalse(md3.getPropertyType("compoundId").isString());
 		assertFalse(md3.getPropertyType("compoundId").isNumeric());
 		assertFalse(md3.getPropertyType("compoundId").isEntity());
-		assertTrue(md3.getPropertyType("compoundId").isEmeddable());
+		assertTrue(md3.getPropertyType("compoundId").isEmbeddable());
 		
 		assertFalse(md4.getPropertyType("recipe").isCollection());
 		assertFalse(md4.getPropertyType("recipe").isString());
 		assertFalse(md4.getPropertyType("recipe").isNumeric());
 		assertTrue(md4.getPropertyType("recipe").isEntity());
-		assertFalse(md4.getPropertyType("recipe").isEmeddable());
+		assertFalse(md4.getPropertyType("recipe").isEmbeddable());
 		
 		assertFalse(md.getPropertyType("id").isCollection());
 		assertFalse(md.getPropertyType("id").isString());
 		assertTrue(md.getPropertyType("id").isNumeric());
 		assertFalse(md.getPropertyType("id").isEntity());
-		assertFalse(md.getPropertyType("id").isEmeddable());
+		assertFalse(md.getPropertyType("id").isEmbeddable());
 	}
 	
 	@Test
@@ -164,13 +164,13 @@ public class MetadataTest extends BaseSearchTest {
 		assertFalse(md2.getPropertyType("residents").isString());
 		assertFalse(md2.getPropertyType("residents").isNumeric());
 		assertTrue(md2.getPropertyType("residents").isEntity());
-		assertFalse(md2.getPropertyType("residents").isEmeddable());
+		assertFalse(md2.getPropertyType("residents").isEmbeddable());
 		
 		assertTrue(md3.getPropertyType("limbs").isCollection());
 		assertTrue(md3.getPropertyType("limbs").isString());
 		assertFalse(md3.getPropertyType("limbs").isNumeric());
 		assertFalse(md3.getPropertyType("limbs").isEntity());
-		assertFalse(md3.getPropertyType("limbs").isEmeddable());
+		assertFalse(md3.getPropertyType("limbs").isEmbeddable());
 		
 	}
 	
