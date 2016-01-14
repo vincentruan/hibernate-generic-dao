@@ -71,6 +71,7 @@ Details and Tips
 Hibernate session strategy
 By default the DAOs and SearchFacade use SessionFactory.getCurrentSession() to get the session to use. However, you can change this behavior by overriding the protected getSession() method of a DAO. For example if you want to set the session manually, you could write something like this.
 
+```java
 public class MyBaseGenericDAOImpl<T, ID extends Serializable> extends GenericDAOImpl<T, ID> implements AddressDAO {
         private Session session;
         
@@ -83,6 +84,5 @@ public class MyBaseGenericDAOImpl<T, ID extends Serializable> extends GenericDAO
                 this.session = session;
                 setSessionFactory(session.getSessionFactory());
         }
-
-        ...
 }
+```
